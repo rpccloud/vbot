@@ -2,7 +2,6 @@ package vbot
 
 import (
 	"errors"
-	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -115,14 +114,8 @@ func TestReadFile(t *testing.T) {
 	t.Run("read local file ok", func(t *testing.T) {
 		assert := assert.New(t)
 
-		_ = os.WriteFile("util_test_read_file.js", []byte("hello"), 0644)
-		defer func() {
-			os.Remove("util_test_read_file.js")
-		}()
-
-		v, e := ReadFile("util_test_read_file.js")
-		assert(string(v)).Equals("hello")
-		assert(e).IsNil()
+		assert(ReadFile("examples/test.js")).
+			Equals([]byte("console.log(\"hello vbot\")"), nil)
 	})
 
 	t.Run("read local file error", func(t *testing.T) {
@@ -136,5 +129,11 @@ func TestReadFile(t *testing.T) {
 		)).IsTrue()
 	})
 
-	
+	t.Run("read remote file ok", func(t *testing.T) {
+		assert := assert.New(t)
+		path := "https://github.com/rpccloud/vbot/blob/master/examples/test.js"
+		assert(ReadFile(path)).
+			Equals("console.log(\"hello vbot\")", nil)
+	})
+
 }
