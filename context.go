@@ -29,5 +29,3 @@ func NewRootContext(file string) *Context {
 		}
 	}
 }
-
-
