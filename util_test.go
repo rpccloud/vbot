@@ -2,6 +2,7 @@ package vbot
 
 import (
 	"errors"
+	"io"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -132,8 +133,55 @@ func TestReadFile(t *testing.T) {
 	t.Run("read remote file ok", func(t *testing.T) {
 		assert := assert.New(t)
 		path := "https://github.com/rpccloud/vbot/blob/master/examples/test.js"
-		assert(ReadFile(path)).
-			Equals("console.log(\"hello vbot\")", nil)
+		v, e := ReadFile(path)
+
+		assert(e).IsNil()
+		assert(strings.Contains(string(v), "hello vbot")).IsTrue()
 	})
 
+	t.Run("read remote file error", func(t *testing.T) {
+		assert := assert.New(t)
+		path := "https://err.error.err/err.js"
+		v, e := ReadFile(path)
+		assert(v).IsNil()
+		assert(e).IsNotNil()
+		assert(strings.Contains(e.Error(), "no such host")).IsTrue()
+	})
+
+	t.Run("url error", func(t *testing.T) {
+		assert := assert.New(t)
+		assert(ReadFile("test.go")).
+			Equals(nil, errors.New("extension \".go\" is invalid"))
+	})
+
+	t.Run("fnIOCopy error", func(t *testing.T) {
+		assert := assert.New(t)
+		path := "https://github.com/rpccloud/vbot/blob/master/examples/test.js"
+		fnIOCopy = func(_ io.Writer, _ io.Reader) (int64, error) {
+			return 0, errors.New("custom")
+		}
+
+		defer func() {
+			fnIOCopy = io.Copy
+		}()
+
+		assert(ReadFile(path)).
+			Equals(nil, errors.New("custom"))
+	})
+
+	t.Run("fnCheckBytes error", func(t *testing.T) {
+		assert := assert.New(t)
+		path := "https://github.com/rpccloud/vbot/blob/master/examples/test.js"
+
+		saveCheckBytes := fnCheckBytes
+		fnCheckBytes = func(b []byte) error {
+			return errors.New("custom")
+		}
+		defer func() {
+			fnCheckBytes = saveCheckBytes
+		}()
+
+		assert(ReadFile(path)).
+			Equals(nil, errors.New("custom"))
+	})
 }

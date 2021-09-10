@@ -12,8 +12,8 @@ import (
 )
 
 var fnGetAbsPath = filepath.Abs
-
-func CheckBytes(b []byte) error {
+var fnIOCopy = io.Copy
+var fnCheckBytes = func(b []byte) error {
 	return nil
 }
 
@@ -81,13 +81,13 @@ func ReadFile(uri string) ([]byte, error) {
 		}
 		defer resp.Body.Close()
 
-		_, e = io.Copy(buffer, resp.Body)
+		_, e = fnIOCopy(buffer, resp.Body)
 		if e != nil {
 			return nil, e
 		}
 
 		ret := buffer.Bytes()
-		e = CheckBytes(ret)
+		e = fnCheckBytes(ret)
 		if e != nil {
 			return nil, e
 		}
