@@ -1,6 +1,7 @@
 package vbot
 
 import (
+	"io"
 	"path/filepath"
 
 	"rogchap.com/v8go"
@@ -11,6 +12,9 @@ type Context struct {
 	vm     *v8go.Isolate
 	v8Ctx  *v8go.Context
 	file   string
+	stdlog io.Writer
+	stdout io.Writer
+	stderr io.Writer
 }
 
 func NewRootContext(file string) *Context {
