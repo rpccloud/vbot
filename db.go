@@ -18,3 +18,5 @@ func NewDB(file string) (*DB, error) {
 
 	return &DB{db: db}, nil
 }
+
+

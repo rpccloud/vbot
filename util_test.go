@@ -168,20 +168,19 @@ func TestReadFile(t *testing.T) {
 		assert(ReadFile(path)).
 			Equals(nil, errors.New("custom"))
 	})
+}
 
-	t.Run("fnCheckBytes error", func(t *testing.T) {
+func TestEncrypt(t *testing.T) {
+	t.Run("test ok", func(t *testing.T) {
 		assert := assert.New(t)
-		path := "https://github.com/rpccloud/vbot/blob/master/examples/test.js"
 
-		saveCheckBytes := fnCheckBytes
-		fnCheckBytes = func(b []byte) error {
-			return errors.New("custom")
+		for i := 0; i < 100; i++ {
+			data := []byte(GetRandString(100))
+			password := []byte(GetRandString(10))
+			enData, e := Encrypt(password, data)
+			assert(e).IsNil()
+			assert(Decrypt(password, enData)).Equals(data, nil)
 		}
-		defer func() {
-			fnCheckBytes = saveCheckBytes
-		}()
 
-		assert(ReadFile(path)).
-			Equals(nil, errors.New("custom"))
 	})
 }

@@ -2,18 +2,33 @@ package vbot
 
 import (
 	"bytes"
+	"crypto/aes"
+	"crypto/cipher"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"path/filepath"
 	"strings"
+
+	"golang.org/x/crypto/scrypt"
 )
 
 var fnGetAbsPath = filepath.Abs
 var fnIOCopy = io.Copy
-var fnCheckBytes = func(b []byte) error {
+var base64String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+	"abcdefghijklmnopqrstuvwxyz" +
+	"0123456789" +
+	"+/"
+
+func CheckBytes(b []byte) error {
+	if len(b) == 0 {
+		return errors.New("bytes is empty")
+	}
+
 	return nil
 }
 
@@ -87,7 +102,7 @@ func ReadFile(uri string) ([]byte, error) {
 		}
 
 		ret := buffer.Bytes()
-		e = fnCheckBytes(ret)
+		e = CheckBytes(ret)
 		if e != nil {
 			return nil, e
 		}
@@ -95,4 +110,76 @@ func ReadFile(uri string) ([]byte, error) {
 	} else {
 		return ioutil.ReadFile(sUri)
 	}
+}
+
+func Encrypt(password, data []byte) ([]byte, error) {
+	salt := []byte(GetRandString(32))
+
+	key, e := scrypt.Key(password, salt, 32768, 8, 1, 32)
+	if e != nil {
+		return nil, e
+	}
+
+	blockCipher, e := aes.NewCipher(key)
+	if e != nil {
+		return nil, e
+	}
+
+	gcm, e := cipher.NewGCM(blockCipher)
+	if e != nil {
+		return nil, e
+	}
+
+	nonce := make([]byte, gcm.NonceSize())
+	if _, e = rand.Read(nonce); e != nil {
+		return nil, e
+	}
+	ciphertext := gcm.Seal(nonce, nonce, data, nil)
+
+	ciphertext = append(ciphertext, salt...)
+
+	return ciphertext, nil
+}
+
+func Decrypt(password, data []byte) ([]byte, error) {
+	salt, data := data[len(data)-32:], data[:len(data)-32]
+
+	key, e := scrypt.Key(password, salt, 32768, 8, 1, 32)
+	if e != nil {
+		return nil, e
+	}
+
+	blockCipher, e := aes.NewCipher(key)
+	if e != nil {
+		return nil, e
+	}
+
+	gcm, e := cipher.NewGCM(blockCipher)
+	if e != nil {
+		return nil, e
+	}
+
+	nonce, ciphertext := data[:gcm.NonceSize()], data[gcm.NonceSize():]
+
+	plaintext, e := gcm.Open(nil, nonce, ciphertext, nil)
+	if e != nil {
+		return nil, e
+	}
+
+	return plaintext, nil
+}
+
+func GetRandString(length int) string {
+	buf := &bytes.Buffer{}
+
+	for length > 0 {
+		rand64 := rand.Uint64()
+		for used := 0; used < 10 && length > 0; used++ {
+			buf.WriteByte(base64String[rand64%64])
+			rand64 = rand64 / 64
+			length--
+		}
+	}
+
+	return buf.String()
 }
