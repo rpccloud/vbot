@@ -1,7 +1,6 @@
 package vbot
 
 import (
-	"io"
 	"path/filepath"
 
 	"rogchap.com/v8go"
@@ -12,24 +11,41 @@ type Context struct {
 	vm     *v8go.Isolate
 	v8Ctx  *v8go.Context
 	file   string
-	stdlog io.Writer
-	stdout io.Writer
-	stderr io.Writer
+	logCH  chan *LogItem
 }
 
-func NewRootContext(file string) *Context {
+func NewRootContext(file string) (*Context, error) {
 	if absFile, e := filepath.Abs(file); e != nil {
-		panic(e)
+		return nil, e
 	} else if vm, e := v8go.NewIsolate(); e != nil {
-		panic(e)
+		return nil, e
 	} else if v8Ctx, e := v8go.NewContext(vm); e != nil {
-		panic(e)
+		return nil, e
 	} else {
 		return &Context{
 			parent: nil,
 			vm:     vm,
 			v8Ctx:  v8Ctx,
 			file:   absFile,
-		}
+			logCH:  make(chan *LogItem, 1024000),
+		}, nil
+	}
+}
+
+func (p *Context) GetLogItem() *LogItem {
+	return <-p.logCH
+}
+
+func (p *Context) Report(kind LogKind, data []byte) bool {
+	logItem := &LogItem{
+		kind: kind,
+		data: data,
+	}
+
+	select {
+	case p.logCH <- logItem:
+		return true
+	default:
+		return false
 	}
 }
