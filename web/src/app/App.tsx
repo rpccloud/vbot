@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Redirect
 } from "react-router-dom";
 
 import Main from "./main/Main"
@@ -13,20 +13,7 @@ import Register from "./register/Register"
 export default function App() {
   return (
     <Router>
-      <div>
-        <ul>
-          <li>
-            <Link to="/main">Main</Link>
-          </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
-          <li>
-            <Link to="/register">Register</Link>
-          </li>
-        </ul>
-      </div>
-
+      <Redirect exact from="/" to="login" />
       <Switch>
           <Route path="/main">
             <Main />

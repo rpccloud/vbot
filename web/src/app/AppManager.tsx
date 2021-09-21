@@ -1,9 +1,11 @@
 
 import { makeAutoObservable } from "mobx"
-import { observer } from "mobx-react"
+
 
 class AppManager {
-
+    public getLocalString(): RootData {
+        return this.rootData
+    }
 }
 
 const gAppManager = new AppManager()
