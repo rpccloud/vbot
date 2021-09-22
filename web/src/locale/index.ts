@@ -1,5 +1,3 @@
-import { makeAutoObservable } from "mobx"
-
 export default interface Lang {
     register: Register
 }
@@ -13,19 +11,27 @@ export class Locale {
     antd: any
     app: any
 
-    constructor() {
-        makeAutoObservable(this)
+    static async new(lang: string) {
+        let ret = new Locale()
+        switch (lang) {
+            case "en-US":
+                ret.antd = (await import("antd/lib/locale/en_US")).default
+                ret.app = (await import("./en_US")).default
+                return ret
+            case "zh-CN":
+                ret.antd = (await import("antd/lib/locale/zh_CN")).default
+                ret.app = (await import("./en_US")).default
+                return ret
+            default:
+                ret.antd = (await import("antd/lib/locale/en_US")).default
+                ret.app = (await import("./en_US")).default
+                return ret
+        }
+    }
+
+    private constructor() {
+
     }
 }
 
-export async function newLocale(name: string): Promise<Locale> {
-    let ret = new Locale()
-    switch (name) {
-        case "en_US":
-            ret.antd = (await import("antd/lib/locale/zh_CN")).default
-            ret.app = (await import("./en_US")).default
-            return ret
-        default:
-            return ret
-    }
-}
+

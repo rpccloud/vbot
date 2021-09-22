@@ -16,24 +16,26 @@ import {AppData} from "./AppData"
 import { ConfigProvider } from "antd";
 
 interface AppProps {
-    appData?: AppData
+    appData: AppData
 }
 
-export default observer(({ appData }: AppProps) => (
-    <ConfigProvider locale={appData?.locale.antd}>
-        <Router>
-            <Redirect exact from="/" to="login" />
-            <Switch>
-                <Route path="/main">
-                    <Main />
-                </Route>
-                <Route path="/login">
-                    <Login />
-                </Route>
-                <Route path="/register">
-                    <Register />
-                </Route>
-            </Switch>
-        </Router>
-    </ConfigProvider>
-))
+export default observer(({ appData }: AppProps) => {
+    return appData.isValid() ? (
+        <ConfigProvider locale={appData.locale?.antd} >
+            <Router>
+                <Redirect exact from="/" to="login" />
+                <Switch>
+                    <Route path="/main">
+                        <Main />
+                    </Route>
+                    <Route path="/login">
+                        <Login />
+                    </Route>
+                    <Route path="/register">
+                        <Register />
+                    </Route>
+                </Switch>
+            </Router>
+        </ConfigProvider>
+    ) : null
+})
