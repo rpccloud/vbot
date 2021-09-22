@@ -2,11 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
-import { gAppData } from './app/AppData';
 
 ReactDOM.render(
     <React.StrictMode>
-      <App appData={gAppData}/>
+      <App/>
     </React.StrictMode>,
     document.getElementById('root')
 );

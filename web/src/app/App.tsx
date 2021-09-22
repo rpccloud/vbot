@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -12,16 +11,13 @@ import Main from "./main/Main"
 import Login from "./login/Login"
 import Register from "./register/Register"
 
-import {AppData} from "./AppData"
+import {gAppData} from "./AppData"
 import { ConfigProvider } from "antd";
+import "./App.css"
 
-interface AppProps {
-    appData: AppData
-}
-
-export default observer(({ appData }: AppProps) => {
-    return appData.isValid() ? (
-        <ConfigProvider locale={appData.locale?.antd} >
+export default observer(() => {
+    return gAppData.isValid() ? (
+        <ConfigProvider locale={gAppData.locale?.antd} >
             <Router>
                 <Redirect exact from="/" to="login" />
                 <Switch>

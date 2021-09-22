@@ -8,11 +8,9 @@ export default function Login() {
         <DatePicker />
         <Button onClick={async () => {
             gAppData.setLang("zh-CN")
-            gAppData.setDisplayMode("light")
             }}>zh-CN</Button>
         <Button onClick={async () => {
             gAppData.setLang("en-US")
-            gAppData.setDisplayMode("dark")
             }}>en-US</Button>
         </div>
     )
