@@ -6,15 +6,14 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+
 import { observer } from "mobx-react-lite";
-
 import { makeAutoObservable, runInAction } from "mobx"
-import { Locale } from "./locale"
 
+import { Locale } from "./locale"
 import Main from "./pages/main"
 import Login from "./pages/login"
 import Register from "./pages/register"
-
 import { ConfigProvider } from "antd";
 
 export default observer(() => {
