@@ -1,2 +1,6 @@
+@import "../base/var.scss";
 @import "../base/base.scss";
-@import "./node_modules/antd/dist/antd.dark.scss";
+@import "../../../node_modules/antd/dist/antd.dark.scss";
+
+@import "../component/icon.scss"
+

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/pro-form": "^1.41.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -29,7 +30,8 @@
   "scripts": {
     "antd": "cd ./node_modules/antd/dist/ && cp antd.css antd.scss && cp antd.dark.css antd.dark.scss",
     "sass:release": "node-sass --output-style compressed src/theme/export -o public",
-    "sass:watch": "node-sass src/theme/export -wo public",
+    "sass:watch": "node-sass src/theme/export -wro public",
+    "prestart": "yarn antd",
     "start": "concurrently --kill-others \"react-scripts start\" \"yarn sass:watch\"",
     "prebuild": "yarn antd && yarn sass:release",
     "build": "react-scripts build",
