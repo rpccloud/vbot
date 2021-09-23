@@ -22,12 +22,12 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "antd": "cd ./node_modules/antd/dist/ && cp antd.css antd.scss && cp antd.dark.css antd.dark.scss ",
-    "css:release": "node-sass --output-style compressed src/theme/export -o public",
-    "css:watch": "node-sass src/theme/export -wo public",
-    "prestart": "yarn antd && yarn css:watch &",
+    "antd": "cd ./node_modules/antd/dist/ && cp antd.css antd.scss && cp antd.dark.css antd.dark.scss",
+    "sass:release": "node-sass --output-style compressed src/theme/export -o public",
+    "sass:debug": "node-sass src/theme/export -wo public",
+    "prestart": "yarn antd && yarn sass:debug &",
     "start": "react-scripts start",
-    "prebuild": "yarn antd && yarn css:release",
+    "prebuild": "yarn antd && yarn sass:release",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
