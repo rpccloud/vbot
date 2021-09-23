@@ -15,17 +15,17 @@ export class Locale {
         switch (lang) {
             case "en-US": {
                 const antd = (await import("antd/lib/locale/en_US")).default
-                const app = (await import("./en_US")).default
+                const app = (await import("./en-US")).default
                 return new Locale(antd, app)
             }
             case "zh-CN": {
                 const antd = (await import("antd/lib/locale/zh_CN")).default
-                const app = (await import("./zh_CN")).default
+                const app = (await import("./zh-CN")).default
                 return new Locale(antd, app)
             }
             default: {
                 const antd = (await import("antd/lib/locale/en_US")).default
-                const app = (await import("./en_US")).default
+                const app = (await import("./en-US")).default
                 return new Locale(antd, app)
             }
         }
