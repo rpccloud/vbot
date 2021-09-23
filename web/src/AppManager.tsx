@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -17,8 +18,8 @@ import Register from "./pages/register"
 import { ConfigProvider } from "antd";
 
 export default observer(() => {
-    return gAppData.isValid() ? (
-        <ConfigProvider locale={gAppData.locale?.antd} >
+    return AppData.get().isValid() ? (
+        <ConfigProvider locale={AppData.get().locale?.antd} >
             <Router>
                 <Redirect exact from="/" to="login" />
                 <Switch>
@@ -37,11 +38,11 @@ export default observer(() => {
     ) : null
 })
 
-export class ThemeManager {
+export class AppTheme {
     private styleElem: HTMLLinkElement
     private displayMode: string
 
-    constructor() {
+    private constructor() {
         this.displayMode = ""
         this.styleElem = document.createElement('link')
         this.styleElem.rel = 'stylesheet';
@@ -67,12 +68,17 @@ export class ThemeManager {
     isDark(): boolean {
         return this.displayMode === "dark"
     }
+
+    private static instance = new AppTheme()
+    static get(): AppTheme {
+        return AppTheme.instance
+    }
 }
 
 export class AppData {
     locale?: Locale
 
-    constructor() {
+    private constructor() {
         makeAutoObservable(this)
         this.setLang(window.navigator.language)
     }
@@ -87,8 +93,9 @@ export class AppData {
     isValid(): boolean {
         return !!this.locale
     }
+
+    private static instance = new AppData()
+    static get(): AppData {
+        return AppData.instance
+    }
 }
-
-export const gThemeManager = new ThemeManager()
-export const gAppData = new AppData()
-
