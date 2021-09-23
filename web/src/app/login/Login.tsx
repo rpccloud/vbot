@@ -12,6 +12,7 @@ export default function Login() {
         <Button onClick={async () => {
             gAppData.setLang("en-US")
             }}>en-US</Button>
+        <div>{gAppData.locale?.app?.register.title1}</div>
         </div>
     )
 }

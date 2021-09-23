@@ -9,28 +9,31 @@ export interface Register {
 
 export class Locale {
     antd: any
-    app: any
+    app: Lang
 
     static async new(lang: string) {
-        let ret = new Locale()
         switch (lang) {
-            case "en-US":
-                ret.antd = (await import("antd/lib/locale/en_US")).default
-                ret.app = (await import("./en_US")).default
-                return ret
-            case "zh-CN":
-                ret.antd = (await import("antd/lib/locale/zh_CN")).default
-                ret.app = (await import("./en_US")).default
-                return ret
-            default:
-                ret.antd = (await import("antd/lib/locale/en_US")).default
-                ret.app = (await import("./en_US")).default
-                return ret
+            case "en-US": {
+                const antd = (await import("antd/lib/locale/en_US")).default
+                const app = (await import("./en_US")).default
+                return new Locale(antd, app)
+            }
+            case "zh-CN": {
+                const antd = (await import("antd/lib/locale/zh_CN")).default
+                const app = (await import("./zh_CN")).default
+                return new Locale(antd, app)
+            }
+            default: {
+                const antd = (await import("antd/lib/locale/en_US")).default
+                const app = (await import("./en_US")).default
+                return new Locale(antd, app)
+            }
         }
     }
 
-    private constructor() {
-
+    private constructor(antd: any, app: Lang) {
+        this.antd = antd
+        this.app = app
     }
 }
 
