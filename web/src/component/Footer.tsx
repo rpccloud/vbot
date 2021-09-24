@@ -1,11 +1,10 @@
 import React from "react";
-import { Layout } from "antd";
 
 const Footer = () => {
     return (
-        <Layout.Footer>
+        <div className="vbot-footer"style={{background: "var(--PrimaryColor)"}} >
             Vbot rpccloud.com ©2021 Created by tianshuo
-        </Layout.Footer>
+        </div>
     )
 }
 export default Footer

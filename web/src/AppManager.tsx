@@ -14,13 +14,14 @@ import { Locale } from "./locale"
 import Main from "./pages/main"
 import Login from "./pages/login"
 import Register from "./pages/register"
+import Debug from "./pages/debug";
 import { ConfigProvider } from "antd";
 
 export default observer(() => {
     return AppData.get().isValid() ? (
         <ConfigProvider locale={AppData.get().locale?.antd} >
             <Router>
-                <Redirect exact from="/" to="login" />
+                <Redirect exact from="/" to="register" />
                 <Switch>
                     <Route path="/main">
                         <Main />
@@ -30,6 +31,9 @@ export default observer(() => {
                     </Route>
                     <Route path="/register">
                         <Register />
+                    </Route>
+                    <Route path="/debug">
+                        <Debug />
                     </Route>
                 </Switch>
             </Router>

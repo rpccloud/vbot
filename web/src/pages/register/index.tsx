@@ -6,28 +6,32 @@ import {
 } from '@ant-design/icons';
 
 import  { ProFormText } from "@ant-design/pro-form";
-import { Layout, Card, Carousel } from 'antd';
+import { Card, Carousel } from 'antd';
 import Footer from "../../component/Footer";
 import Header from "../../component/Header";
+import VLayout from "../../component/VLayout";
+import Page from "../../component/Page";
 
 const styles = {
-    layout: {
-        minHeight: "100vh"
+    card: {
+        width: 400,
+        height: 360,
+        margin: 100
     },
     carousel: {
-        margin: 0,
-        flex: 1,
-        backgroundColor: "#364d79",
+        width:"100%",
+        height:"100%",
+        backgroundColor: "var(--PrimaryColor)",
     }
 }
 
 const CardUser = () => (
-    <Card title="创建用户" bordered={true} className={"autoMargin"}>
+    <Card title="创建用户" bordered={true} style={styles.card}>
         <ProFormText
             name="username"
             fieldProps={{
                 size: 'large',
-                prefix: <UserOutlined className={"prefixIcon"} />,
+                prefix: <UserOutlined className="vbot-icon-prefix" />,
             }}
             placeholder={"创建用户名!"}
         />
@@ -35,12 +39,12 @@ const CardUser = () => (
 )
 
 const CardPassword = () => (
-    <Card title="设置密码" bordered={true} style={{ width: 360 }} className={"autoMargin"}>
+    <Card title="设置密码" bordered={true} style={styles.card}>
         <ProFormText.Password
             name="password"
             fieldProps={{
                 size: 'large',
-                prefix: <LockOutlined className={"prefixIcon"} />,
+                prefix: <LockOutlined className="vbot-icon-prefix" />,
             }}
             placeholder={"创建密码！"}
         />
@@ -48,24 +52,30 @@ const CardPassword = () => (
             name="password"
             fieldProps={{
                 size: 'large',
-                prefix: <LockOutlined className={"prefixIcon"} />,
+                prefix: <LockOutlined className="vbot-icon-prefix" />,
             }}
             placeholder={"确认密码！"}
         />
     </Card>
 )
 
+const CardAgree = () => (
+    <Card title="同意协议" bordered={true} style={styles.card}>
+        <div>用户协议内容</div>
+    </Card>
+)
+
 const CarouselView = () => {
     return (
-        <Carousel effect="fade" style={styles.carousel} className={"fullView"}>
-            <div>
-            <CardUser />
+        <Carousel effect="fade" style={styles.carousel}>
+            <div className="vbot-center-container">
+                <CardUser />
             </div>
-            <div>
-            <CardPassword />
+            <div className="vbot-center-container">
+                <CardPassword />
             </div>
-            <div>
-            <h3>123234232</h3>
+            <div className="vbot-center-container">
+                <CardAgree />
             </div>
         </Carousel>
     )
@@ -73,15 +83,16 @@ const CarouselView = () => {
 
 export default function Register() {
     return (
-        <Layout style={styles.layout}>
-            <Header/>
-            <Layout.Content>
-                <div style={{background: "red"}} className="fullView">
+        <Page>
+            <VLayout.Container>
+                <Header/>
+                <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
                     <CarouselView/>
-                </div>
-            </Layout.Content>
-            <Footer/>
-        </Layout>
+                </VLayout.Dynamic>
+                <Footer/>
+            </VLayout.Container>
+        </Page>
+
     )
 }
 

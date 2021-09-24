@@ -11,6 +11,22 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+.vbot-need-ant-carousel-auto-fill > .ant-carousel {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.vbot-center-container {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.vbot-auto-fill {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 .vbot-header {
     height: $header-height;
 }
