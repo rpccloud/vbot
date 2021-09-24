@@ -1,11 +1,13 @@
 :root{
     --PrimaryColor: #1890ff;
-}
+    --PrimaryBGColor: #FFFFFF;
+    --PrimaryBGColorDarken: #DDDDDD;
 
-$font-size-tiny: 9px;
-$font-size-small: 11px;
-$font-size-middle: 16px;
-$font-size-large: 22px;
+    --FontSizeTiny: 9px;
+    --FontSizeSmall: 11px;
+    --FontSizeMiddle: 16px;
+    --FontSizeLarge: 22px;
+}
 
 $header-height: 64px;
 $footer-height: 32px;

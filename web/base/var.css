@@ -1,2 +1,8 @@
 :root {
-  --PrimaryColor: #1890ff; }
+  --PrimaryColor: #1890ff;
+  --PrimaryBGColor: #FFFFFF;
+  --PrimaryBGColorDarken: #DDDDDD;
+  --FontSizeTiny: 9px;
+  --FontSizeSmall: 11px;
+  --FontSizeMiddle: 16px;
+  --FontSizeLarge: 22px; }

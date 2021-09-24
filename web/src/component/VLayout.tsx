@@ -11,19 +11,19 @@ const dynamicStyle = {
     flex:1
 }
 
-const Container = (props: { children: any, className?: string }) => (
+const Container = (props: { children?: any, className?: string }) => (
     <div className={props.className} style={containerStyle}>
         {props.children}
     </div>
 )
 
-const Fixed = (props: { children: any, className?: string }) => (
+const Fixed = (props: { children?: any, className?: string }) => (
     <div className={props.className}>
         {props.children}
     </div>
 )
 
-const Dynamic = (props: { children: any, className?: string }) => (
+const Dynamic = (props: { children?: any, className?: string }) => (
     <div className={props.className} style={dynamicStyle}>
         {props.children}
     </div>
