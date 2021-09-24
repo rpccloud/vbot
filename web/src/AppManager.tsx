@@ -20,7 +20,7 @@ export default observer(() => {
     return AppData.get().isValid() ? (
         <ConfigProvider locale={AppData.get().locale?.antd} >
             <Router>
-                <Redirect exact from="/" to="register" />
+                <Redirect exact from="/" to="login" />
                 <Switch>
                     <Route path="/main">
                         <Main />
