@@ -4,19 +4,62 @@ import {
     LockOutlined,
 } from '@ant-design/icons';
 
-import  { ProFormText } from "@ant-design/pro-form";
-import { Button, Carousel } from 'antd';
+import { Button, Carousel, Input } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import VLayout from "../../component/VLayout";
 import HLayout from "../../component/HLayout";
 import Divider from "../../component/Divider";
 import VSpacer from "../../component/VSpacer";
+import { makeAutoObservable, runInAction } from "mobx";
+import { observer } from "mobx-react-lite";
+import { passwordStrength } from "check-password-strength";
+
+class InitPassword {
+    private password: string
+    private confirm: string
+
+    constructor() {
+        makeAutoObservable(this)
+        this.password = ""
+        this.confirm = ""
+    }
+
+    getPassword(): string {
+        return this.password
+    }
+
+    getConfirm(): string {
+        return this.confirm
+    }
+
+    setPassword(password: string) {
+        runInAction(() => {
+            this.password = password
+        })
+    }
+
+    setConfirm(confirm: string) {
+        runInAction(() => {
+            this.confirm = confirm
+        })
+    }
+
+    reset() {
+        runInAction(() => {
+            this.password = ""
+            this.confirm = ""
+        })
+    }
+}
+
+const gInitPassword = new InitPassword()
 
 const styles = {
     card: {
         title: {
-            fontSize: "var(--FontSizeLarge)"
+            marginTop: 6,
+            fontSize: "var(--FontSizeLarge)",
         },
         container: {
             width: 420,
@@ -33,13 +76,19 @@ const styles = {
             height: 1,
             backgroundColor: "var(--PrimaryBGColorDarken)",
             marginTop: 8,
-            marginBottom: 16,
+            marginBottom: 8,
         },
     },
     carousel: {
         width:"100%",
         height:"100%",
         backgroundColor: "var(--PrimaryBGColor)",
+    },
+    password: {
+        wrong: {
+            fontSize: "var(--FontSizeSmall)",
+            color: "var(--WarnColor)",
+        },
     }
 }
 
@@ -91,6 +140,7 @@ const Card = (props: CardProps) => {
                     {props.children}
                 </VLayout.Dynamic>
                 <Divider style={styles.card.divider} />
+                <VSpacer size={10} />
                 <VLayout.Fixed>
                     <HLayout.Container>
                         <HLayout.Dynamic />
@@ -103,32 +153,80 @@ const Card = (props: CardProps) => {
     )
 }
 
-const CardPassword = (props: {onNext: () => void}) => (
-    <Card
-        title="初始化系统 - 设置admin密码"
-        nextName="下一步"
-        canNext={false}
-        onNext={props.onNext}
-    >
-        <VSpacer size={9} />
-        <ProFormText.Password
-            name="password"
-            fieldProps={{
-                size: 'large',
-                prefix: <LockOutlined className="vbot-icon-prefix" />,
-            }}
-            placeholder={"输入admin密码"}
-        />
-        <ProFormText.Password
-            name="password"
-            fieldProps={{
-                size: 'large',
-                prefix: <LockOutlined className="vbot-icon-prefix" />,
-            }}
-            placeholder={"确认密码"}
-        />
-    </Card>
-)
+const CardPassword = observer((props: {onNext: () => void}) => {
+    const password = gInitPassword.getPassword()
+    const confirm =  gInitPassword.getConfirm()
+    let indicator: any = null
+    let canNext = false
+
+    if (password !== confirm) {
+        indicator = (
+            <ul>
+                <li style={styles.password.wrong}>密码不一致</li>
+            </ul>
+        )
+    } else {
+        const passwordInfo = passwordStrength(password)
+        const hasLowerChar = passwordInfo.contains.includes("lowercase")
+        const hasUpperChar = passwordInfo.contains.includes("uppercase")
+        const hasNumberChar = passwordInfo.contains.includes("number")
+        const hasSymbolChar = passwordInfo.contains.includes("symbol")
+        const lengthOK = passwordInfo.length > 8
+        const lowerView =  hasLowerChar ? null :
+            <li style={styles.password.wrong}>密码必须包含小写字母</li>
+        const upperView = hasUpperChar ? null:
+            <li style={styles.password.wrong}>密码必须包含大写字母</li>
+        const numberView = hasNumberChar ? null:
+            <li style={styles.password.wrong}>密码必须包含数字</li>
+        const symbolView = hasSymbolChar ? null :
+            <li style={styles.password.wrong}>密码必须包含特殊字符</li>
+        const lengthView = lengthOK ? null :
+            <li style={styles.password.wrong}>密码长度必须大于8</li>
+        indicator = (
+            <ul>
+                {lowerView}
+                {upperView}
+                {numberView}
+                {symbolView}
+                {lengthView}
+            </ul>
+        )
+
+        canNext = hasLowerChar && hasUpperChar && hasNumberChar && hasSymbolChar
+            && lengthOK
+    }
+
+    return (
+        <Card
+            title="初始化系统 - 设置admin密码"
+            nextName="下一步"
+            canNext={canNext}
+            onNext={props.onNext}
+        >
+            <VSpacer size={12} />
+            <Input.Password
+                size="large"
+                placeholder="输入密码"
+                defaultValue={gInitPassword.getPassword()}
+                prefix={<LockOutlined className="vbot-icon-prefix" />}
+                onChange={(e) => {
+                    gInitPassword.setPassword(e.target.value)
+                }}
+            />
+            <VSpacer size={20} />
+            <Input.Password
+                size="large"
+                placeholder="确认密码"
+                prefix={<LockOutlined className="vbot-icon-prefix" />}
+                onChange={(e) => {
+                    gInitPassword.setConfirm(e.target.value)
+                }}
+            />
+            <VSpacer size={16} />
+            {indicator}
+        </Card>
+    )
+})
 
 const CardAgree = (props: {onPrev: () => void, onNext: () => void}) => (
     <Card

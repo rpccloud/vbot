@@ -11,11 +11,12 @@
   --SecondaryFontColorLighten: rgb(220, 225, 230);
   --SecondaryFontColorDarken: rgb(160, 165, 170);
   --SecondaryBGColor: rgb(0, 21, 41);
-  --DangerColor: rgb(255, 40, 40);
+  --WarnColor: rgba(243, 85, 57, 0.8);
+  --ConfirmColor: rgba(13, 182, 13, 0.8);
   --ShadowColor: #888888;
   --FontSizeTiny: 9px;
-  --FontSizeSmall: 11px;
+  --FontSizeSmall: 13px;
   --FontSizeMiddle: 16px;
-  --FontSizeLarge: 22px;
+  --FontSizeLarge: 20px;
   --VbotHeaderHeight: 50px;
   --VbotFooterHeight: 32px; }
