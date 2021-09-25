@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import {
     LockOutlined,
@@ -131,7 +131,10 @@ const Card = (props: CardProps) => {
     ): null
 
     return (
-        <div style={styles.card.container} className="vbot-container-round vbot-container-shadow">
+        <div
+            className="vbot-container-round vbot-container-shadow"
+            style={styles.card.container}
+        >
             <VLayout.Container>
                 <VLayout.Fixed>
                     <div style={styles.card.title}>
@@ -190,7 +193,6 @@ const CardPassword = observer((props: {onNext: () => void}) => {
                 {lengthView}
             </ul>
         )
-
         canNext = hasLowerChar && hasUpperChar && hasNumberChar && lengthOK
     }
 
@@ -240,39 +242,34 @@ const CardAgree = (props: {onPrev: () => void, onNext: () => void}) => (
     </Card>
 )
 
-class Register extends React.Component {
-    private refCarousel: any
-
-    constructor(props: {}) {
-      super(props);
-      this.refCarousel = React.createRef();
-    }
-
-    render() {
-        return (
-            <VLayout.Container className="vbot-fill-viewport">
-                <Header/>
-                <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
-                    <Carousel ref={this.refCarousel} effect="scrollx" style={styles.carousel}>
-                        <div className="vbot-container-center">
-                            <CardPassword onNext={() => {
-                                this.refCarousel.current.next()
-                                }} />
-                        </div>
-                        <div className="vbot-container-center">
-                            <CardAgree
-                                onPrev={() => {
-                                    this.refCarousel.current.prev()
-                                }}
-                                onNext={() => {alert("ok")}}/>
-                        </div>
-                    </Carousel>
-                </VLayout.Dynamic>
-                <Footer/>
-            </VLayout.Container>
-        )
-    }
+const Register = () => {
+    const carouselRef: any = useRef(null);
+    return (
+        <VLayout.Container className="vbot-fill-viewport">
+            <Header/>
+            <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
+                <Carousel
+                    ref={carouselRef}
+                    effect="scrollx"
+                    style={styles.carousel}
+                >
+                    <div className="vbot-container-center">
+                        <CardPassword onNext={() => {
+                            carouselRef.current.next()
+                        }} />
+                    </div>
+                    <div className="vbot-container-center">
+                        <CardAgree
+                            onPrev={() => {
+                                carouselRef.current.prev()
+                            }}
+                            onNext={() => {alert("ok")}}/>
+                    </div>
+                </Carousel>
+            </VLayout.Dynamic>
+            <Footer/>
+        </VLayout.Container>
+    )
 }
 
 export default Register
-
