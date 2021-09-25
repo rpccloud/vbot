@@ -1,13 +1,13 @@
 import React from "react";
 import { Layout, Menu } from 'antd';
 import {
-  DesktopOutlined,
-  PieChartOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
+    DesktopOutlined,
+    PieChartOutlined,
+    FileOutlined,
+    TeamOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
-import Header from "../../component/Header";
+import Header from "../common/Header";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;

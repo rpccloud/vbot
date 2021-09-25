@@ -1,8 +1,21 @@
 :root {
   --PrimaryColor: #1890ff;
-  --PrimaryBGColor: #FFFFFF;
-  --PrimaryBGColorDarken: #DDDDDD;
+  --PrimaryFontColor: #333333;
+  --PrimaryFontColorLighten: #666666;
+  --PrimaryFontColorDarken: #000000;
+  --PrimaryBGColor: rgb(240, 242, 245);
+  --PrimaryBGColorLighten: rgb(250, 252, 255);
+  --PrimaryBGColorDarken: rgb(230, 232, 235);
+  --SecondaryColor: rgb(190, 195, 200);
+  --SecondaryFontColor: rgb(190, 195, 200);
+  --SecondaryFontColorLighten: rgb(220, 225, 230);
+  --SecondaryFontColorDarken: rgb(160, 165, 170);
+  --SecondaryBGColor: rgb(0, 21, 41);
+  --DangerColor: rgb(255, 40, 40);
+  --ShadowColor: #888888;
   --FontSizeTiny: 9px;
   --FontSizeSmall: 11px;
   --FontSizeMiddle: 16px;
-  --FontSizeLarge: 22px; }
+  --FontSizeLarge: 22px;
+  --VbotHeaderHeight: 50px;
+  --VbotFooterHeight: 32px; }

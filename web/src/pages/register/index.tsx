@@ -6,64 +6,111 @@ import {
 
 import  { ProFormText } from "@ant-design/pro-form";
 import { Button, Carousel } from 'antd';
-import Footer from "../../component/Footer";
-import Header from "../../component/Header";
+import Footer from "../common/Footer";
+import Header from "../common/Header";
 import VLayout from "../../component/VLayout";
-import Page from "../../component/Page";
 import HLayout from "../../component/HLayout";
 import Divider from "../../component/Divider";
+import VSpacer from "../../component/VSpacer";
 
 const styles = {
     card: {
-        width: 420,
-        height: 380,
-        margin: 100,
-        background: "white",
-        padding: 20,
+        title: {
+            fontSize: "var(--FontSizeLarge)"
+        },
+        container: {
+            width: 420,
+            height: 380,
+            margin: 120,
+            background: "var(--PrimaryBGColorLighten)",
+            padding: "16px 24px 16px 24px",
+        },
+        button: {
+            marginRight: 8,
+        },
+        divider: {
+            width: "100%",
+            height: 1,
+            backgroundColor: "var(--PrimaryBGColorDarken)",
+            marginTop: 8,
+            marginBottom: 16,
+        },
     },
     carousel: {
         width:"100%",
         height:"100%",
-        backgroundColor: "var(--PrimaryColor)",
+        backgroundColor: "var(--PrimaryBGColor)",
     }
 }
 
 interface CardProps {
     title: string,
-    message?: string,
     prevName?: string,
     nextName?: string,
-    canPrev: boolean,
-    canNext: boolean,
+    canPrev?: boolean,
+    canNext?: boolean,
     onPrev?: () => void,
     onNext?: () => void,
     children: any,
 }
 
-const Card = (props: CardProps) => (
-    <div style={styles.card}>
-        <VLayout.Container>
-            <VLayout.Fixed>
-                <div style={{fontSize: "var(--FontSizeLarge)"}}>{props.title}</div>
-            </VLayout.Fixed>
-            <Divider size="1" top="16" bottom="16"  color="var(--PrimaryBGColorDarken)" />
-            <VLayout.Dynamic>
-                {props.children}
-            </VLayout.Dynamic>
-            <Divider size="1" top="16" bottom="16" color="var(--PrimaryBGColorDarken)"/>
-            <VLayout.Fixed>
-                <HLayout.Container>
-                    <HLayout.Dynamic />
-                    {props.canPrev ? <Button type="primary" onClick={props.onPrev} style={{marginRight: 8}}>{props.prevName}</Button> : null }
-                    {props.canNext ? <Button type="primary" onClick={props.onNext}>{props.nextName}</Button> : null}
-                </HLayout.Container>
-            </VLayout.Fixed>
-        </VLayout.Container>
-    </div>
-)
+const Card = (props: CardProps) => {
+    const buttonPrev = props.prevName ? (
+        <Button
+            type="primary"
+            ghost={true}
+            disabled={props.canPrev === false}
+            onClick={props.onPrev}
+            style={styles.card.button}
+        >
+            {props.prevName}
+        </Button>
+    ) : null
+
+    const buttonNext = props.nextName ? (
+        <Button
+            type="primary"
+            ghost={true}
+            disabled={props.canNext === false}
+            onClick={props.onNext}
+        >
+            {props.nextName}
+        </Button>
+    ): null
+
+    return (
+        <div style={styles.card.container} className="vbot-container-round vbot-container-shadow">
+            <VLayout.Container>
+                <VLayout.Fixed>
+                    <div style={styles.card.title}>
+                        {props.title}
+                    </div>
+                </VLayout.Fixed>
+                <Divider style={styles.card.divider} />
+                <VLayout.Dynamic>
+                    {props.children}
+                </VLayout.Dynamic>
+                <Divider style={styles.card.divider} />
+                <VLayout.Fixed>
+                    <HLayout.Container>
+                        <HLayout.Dynamic />
+                        {buttonPrev}
+                        {buttonNext}
+                    </HLayout.Container>
+                </VLayout.Fixed>
+            </VLayout.Container>
+        </div>
+    )
+}
 
 const CardPassword = (props: {onNext: () => void}) => (
-    <Card title="初始化admin密码" nextName="下一步" canPrev={false} canNext={true} onNext={props.onNext}>
+    <Card
+        title="初始化系统 - 设置admin密码"
+        nextName="下一步"
+        canNext={false}
+        onNext={props.onNext}
+    >
+        <VSpacer size={9} />
         <ProFormText.Password
             name="password"
             fieldProps={{
@@ -84,7 +131,15 @@ const CardPassword = (props: {onNext: () => void}) => (
 )
 
 const CardAgree = (props: {onPrev: () => void, onNext: () => void}) => (
-    <Card title="同意协议" prevName="上一步" nextName="同意并初始化" canPrev={true} canNext={true} onPrev={props.onPrev} onNext={props.onNext}>
+    <Card
+        title="同意协议"
+        prevName="上一步"
+        nextName="同意并初始化"
+        canPrev={true}
+        canNext={true}
+        onPrev={props.onPrev}
+        onNext={props.onNext}
+    >
         <div>用户协议内容</div>
     </Card>
 )
@@ -99,28 +154,26 @@ class Register extends React.Component {
 
     render() {
         return (
-            <Page>
-                <VLayout.Container>
-                    <Header/>
-                    <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
-                        <Carousel ref={this.refCarousel} effect="fade" style={styles.carousel}>
-                            <div className="vbot-center-container">
-                                <CardPassword onNext={() => {
-                                    this.refCarousel.current.next()
-                                    }} />
-                            </div>
-                            <div className="vbot-center-container">
-                                <CardAgree
-                                    onPrev={() => {
-                                        this.refCarousel.current.prev()
-                                    }}
-                                    onNext={() => {alert("ok")}}/>
-                            </div>
-                        </Carousel>
-                    </VLayout.Dynamic>
-                    <Footer/>
-                </VLayout.Container>
-            </Page>
+            <VLayout.Container className="vbot-fill-viewport">
+                <Header/>
+                <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
+                    <Carousel ref={this.refCarousel} effect="scrollx" style={styles.carousel}>
+                        <div className="vbot-container-center">
+                            <CardPassword onNext={() => {
+                                this.refCarousel.current.next()
+                                }} />
+                        </div>
+                        <div className="vbot-container-center">
+                            <CardAgree
+                                onPrev={() => {
+                                    this.refCarousel.current.prev()
+                                }}
+                                onNext={() => {alert("ok")}}/>
+                        </div>
+                    </Carousel>
+                </VLayout.Dynamic>
+                <Footer/>
+            </VLayout.Container>
         )
     }
 }
