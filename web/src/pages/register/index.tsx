@@ -63,7 +63,7 @@ const styles = {
         },
         container: {
             width: 420,
-            height: 380,
+            height: 360,
             margin: 120,
             background: "var(--PrimaryBGColorLighten)",
             padding: "16px 24px 16px 24px",
@@ -85,6 +85,9 @@ const styles = {
         backgroundColor: "var(--PrimaryBGColor)",
     },
     password: {
+        container: {
+            marginBottom: 0,
+        },
         wrong: {
             fontSize: "var(--FontSizeSmall)",
             color: "var(--WarnColor)",
@@ -140,7 +143,7 @@ const Card = (props: CardProps) => {
                     {props.children}
                 </VLayout.Dynamic>
                 <Divider style={styles.card.divider} />
-                <VSpacer size={10} />
+                <VSpacer size={4} />
                 <VLayout.Fixed>
                     <HLayout.Container>
                         <HLayout.Dynamic />
@@ -161,7 +164,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
 
     if (password !== confirm) {
         indicator = (
-            <ul>
+            <ul style={styles.password.container}>
                 <li style={styles.password.wrong}>密码不一致</li>
             </ul>
         )
@@ -170,7 +173,6 @@ const CardPassword = observer((props: {onNext: () => void}) => {
         const hasLowerChar = passwordInfo.contains.includes("lowercase")
         const hasUpperChar = passwordInfo.contains.includes("uppercase")
         const hasNumberChar = passwordInfo.contains.includes("number")
-        const hasSymbolChar = passwordInfo.contains.includes("symbol")
         const lengthOK = passwordInfo.length > 8
         const lowerView =  hasLowerChar ? null :
             <li style={styles.password.wrong}>密码必须包含小写字母</li>
@@ -178,22 +180,18 @@ const CardPassword = observer((props: {onNext: () => void}) => {
             <li style={styles.password.wrong}>密码必须包含大写字母</li>
         const numberView = hasNumberChar ? null:
             <li style={styles.password.wrong}>密码必须包含数字</li>
-        const symbolView = hasSymbolChar ? null :
-            <li style={styles.password.wrong}>密码必须包含特殊字符</li>
         const lengthView = lengthOK ? null :
             <li style={styles.password.wrong}>密码长度必须大于8</li>
         indicator = (
-            <ul>
+            <ul style={styles.password.container}>
                 {lowerView}
                 {upperView}
                 {numberView}
-                {symbolView}
                 {lengthView}
             </ul>
         )
 
-        canNext = hasLowerChar && hasUpperChar && hasNumberChar && hasSymbolChar
-            && lengthOK
+        canNext = hasLowerChar && hasUpperChar && hasNumberChar && lengthOK
     }
 
     return (
