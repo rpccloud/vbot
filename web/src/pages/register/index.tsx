@@ -103,6 +103,7 @@ interface CardProps {
     canNext?: boolean,
     onPrev?: () => void,
     onNext?: () => void,
+    onKeyDown?: (e: any) => void,
     children: any,
 }
 
@@ -134,6 +135,7 @@ const Card = (props: CardProps) => {
         <div
             className="vbot-container-round vbot-container-shadow"
             style={styles.card.container}
+            onKeyDown={props.onKeyDown}
         >
             <VLayout.Container>
                 <VLayout.Fixed>
@@ -160,10 +162,13 @@ const Card = (props: CardProps) => {
 }
 
 const CardPassword = observer((props: {onNext: () => void}) => {
+    let passwordRef: any = useRef(null)
+    let confirmRef: any = useRef(null)
     const password = gInitPassword.getPassword()
     const confirm =  gInitPassword.getConfirm()
     let indicator: any = null
     let canNext = false
+    let focusInput: any = null
 
     if (password !== confirm) {
         indicator = (
@@ -202,22 +207,36 @@ const CardPassword = observer((props: {onNext: () => void}) => {
             nextName="下一步"
             canNext={canNext}
             onNext={props.onNext}
+            onKeyDown={(e: any) => {
+                if (e.key === "Tab") {
+                    e.preventDefault()
+                    if (focusInput === passwordRef) {
+                        confirmRef.current.focus()
+                    } else {
+                        passwordRef.current.focus()
+                    }
+                }
+            }}
         >
             <VSpacer size={12} />
             <Input.Password
+                ref={passwordRef}
                 size="large"
                 placeholder="输入密码"
                 defaultValue={gInitPassword.getPassword()}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
+                onFocus={() => {focusInput = passwordRef}}
                 onChange={(e) => {
                     gInitPassword.setPassword(e.target.value)
                 }}
             />
             <VSpacer size={20} />
             <Input.Password
+                ref={confirmRef}
                 size="large"
                 placeholder="确认密码"
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
+                onFocus={() => {focusInput = confirmRef}}
                 onChange={(e) => {
                     gInitPassword.setConfirm(e.target.value)
                 }}
@@ -250,18 +269,20 @@ const Register = () => {
             <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
                 <Carousel
                     ref={carouselRef}
+                    dots={false}
                     effect="scrollx"
                     style={styles.carousel}
+                    beforeChange={() => {return false}}
                 >
                     <div className="vbot-container-center">
                         <CardPassword onNext={() => {
-                            carouselRef.current.next()
+                            carouselRef.current.goTo(1)
                         }} />
                     </div>
                     <div className="vbot-container-center">
                         <CardAgree
                             onPrev={() => {
-                                carouselRef.current.prev()
+                                carouselRef.current.goTo(0)
                             }}
                             onNext={() => {alert("ok")}}/>
                     </div>
