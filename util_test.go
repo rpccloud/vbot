@@ -124,7 +124,8 @@ func TestReadFile(t *testing.T) {
 
 	t.Run("read remote file ok", func(t *testing.T) {
 		assert := assert.New(t)
-		path := "https://github.com/rpccloud/vbot/blob/master/.github/workflows/release.yml"
+		path := "https://github.com/rpccloud/vbot" +
+			"/blob/master/.github/workflows/release.yml"
 		v, e := ReadFile(path)
 
 		assert(e).IsNil()
@@ -152,7 +153,8 @@ func TestReadFile(t *testing.T) {
 
 	t.Run("fnIOCopy error", func(t *testing.T) {
 		assert := assert.New(t)
-		path := "https://github.com/rpccloud/vbot/blob/master/.github/workflows/release.yml"
+		path := "https://github.com/rpccloud/vbot" +
+			"/blob/master/.github/workflows/release.yml"
 		fnIOCopy = func(_ io.Writer, _ io.Reader) (int64, error) {
 			return 0, errors.New("custom")
 		}
