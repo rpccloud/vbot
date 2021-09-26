@@ -10,6 +10,6 @@ func main() {
 		SetNumOfThreads(4096)
 	rpc.NewServer(serverConfig).
 		AddService("user", service.UserService, nil).
-		Listen("wss", "0.0.0.0:443", nil).
+		Listen("ws", "0.0.0.0:8080", nil).
 		Open()
 }

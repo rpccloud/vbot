@@ -6,6 +6,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import Client from "./client/client";
 
 import { observer } from "mobx-react-lite";
 import { makeAutoObservable, runInAction } from "mobx"
@@ -21,7 +22,7 @@ export default observer(() => {
     return AppData.get().isValid() ? (
         <ConfigProvider locale={AppData.get().locale?.antd} >
             <Router>
-                <Redirect exact from="/" to="register" />
+                <Redirect exact from="/" to="debug" />
                 <Switch>
                     <Route path="/main">
                         <Main />
@@ -100,5 +101,13 @@ export class AppData {
     private static instance = new AppData()
     static get(): AppData {
         return AppData.instance
+    }
+}
+
+export class AppClient {
+    private static instance = new Client("ws://127.0.0.1:8080")
+
+    static get(): Client {
+        return AppClient.instance
     }
 }

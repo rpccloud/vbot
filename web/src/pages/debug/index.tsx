@@ -1,23 +1,17 @@
 import React from "react";
-import VLayout from "../../component/VLayout";
+import { AppClient } from "../../AppManager";
 
 export default function Debug() {
     return (
-        <div style={{height: 200, width: 200}}>
-        <VLayout.Container>
-            <VLayout.Fixed>
-                <div>Hello</div>
-            </VLayout.Fixed>
-            <VLayout.Dynamic>
-                <div>Hello</div>
-            </VLayout.Dynamic>
-            <VLayout.Fixed>
-                <div>Hello</div>
-            </VLayout.Fixed>
-            <VLayout.Fixed>
-                <div>Hello</div>
-            </VLayout.Fixed>
-        </VLayout.Container>
+        <div style={{height: 200, width: 200, background: "red"}}
+            onClick={async () => {
+                try {
+                    let v = await AppClient.get().send(1000, "#.user:login", "ts", "pass")
+                    alert(v)
+                } catch(e) {
+                    alert(e)
+                }
+            }}>
         </div>
     )
 }
