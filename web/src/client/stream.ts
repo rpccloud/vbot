@@ -117,10 +117,10 @@ export class RPCStream {
 
     public putBytes(value: Uint8Array): void {
         this.enlarge(this.writePos + value.byteLength)
-        for (const n of value) {
+        value.forEach(n => {
             this.data[this.writePos] = n
             this.writePos++
-        }
+        })
     }
 
     private peekByte(): number {
@@ -401,7 +401,7 @@ export class RPCStream {
             return RPCStream.StreamWriteOK
         } else {
             const bytes = value.getBytes()
-            if (bytes != null && bytes.byteLength == 8) {
+            if (bytes != null && bytes.byteLength === 8) {
                 this.putByte(11)
                 this.putBytes(bytes)
                 return RPCStream.StreamWriteOK
@@ -456,7 +456,7 @@ export class RPCStream {
 
         const length = v.byteLength
 
-        if (length == 0) {
+        if (length === 0) {
             this.putByte(192)
             return RPCStream.StreamWriteOK
         } else if (length < 63) {
@@ -538,7 +538,7 @@ export class RPCStream {
             this.writePos += 4
         }
 
-        for (const [key, value] of v) {
+        v.forEach((value, key) => {
             const errCode1 = this.writeString(key)
             if (errCode1 !== RPCStream.StreamWriteOK) {
                 this.setWritePos(startPos)
@@ -549,7 +549,7 @@ export class RPCStream {
                 this.setWritePos(startPos)
                 return `["${key}"]${errCode2}`
             }
-        }
+        })
 
         // write total length
         this.setUint32(startPos + 1, this.writePos - startPos)
@@ -867,7 +867,7 @@ export class RPCStream {
         let mapLen = 0
         let totalLen = 0
 
-        if (ch == 96) {
+        if (ch === 96) {
             if (this.canRead()) {
                 this.readPos++
                 return [new Map<string, RPCAny>(), true]
@@ -898,7 +898,7 @@ export class RPCStream {
                 }
                 ret.set(name, value)
             }
-            if (this.getReadPos() == readStart + totalLen) {
+            if (this.getReadPos() === readStart + totalLen) {
                 return [ret, true]
             }
         }
