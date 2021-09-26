@@ -1,4 +1,4 @@
-package vbot
+package core
 
 import (
 	"fmt"

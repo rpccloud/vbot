@@ -1,4 +1,4 @@
-package vbot
+package core
 
 import (
 	"time"
@@ -18,5 +18,3 @@ func NewDB(file string) (*DB, error) {
 
 	return &DB{db: db}, nil
 }
-
-
