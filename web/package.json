@@ -30,7 +30,7 @@
   "scripts": {
     "antd": "cd ./node_modules/antd/dist/ && cp antd.css antd.scss && cp antd.dark.css antd.dark.scss",
     "sass:release": "node-sass --output-style compressed src/theme/export -o public",
-    "sass:watch": "node-sass src/theme/export -wro public",
+    "sass:watch": "node-sass src/theme/export -wo public",
     "prestart": "yarn antd",
     "start": "concurrently --kill-others \"react-scripts start\" \"yarn sass:watch\"",
     "prebuild": "yarn antd && yarn sass:release",

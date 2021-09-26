@@ -85,15 +85,6 @@ func TestStandradURI(t *testing.T) {
 		assert(StandradURI("/user/home")).Equals("", errors.New("custom"))
 	})
 
-	t.Run("extension error", func(t *testing.T) {
-		assert := assert.New(t)
-		assert(StandradURI("/user/test.go")).
-			Equals("", errors.New("extension \".go\" is invalid"))
-
-		assert(StandradURI("https://example.com/test.go")).
-			Equals("", errors.New("extension \".go\" is invalid"))
-	})
-
 	t.Run("test ok", func(t *testing.T) {
 		assert := assert.New(t)
 
@@ -115,8 +106,9 @@ func TestReadFile(t *testing.T) {
 	t.Run("read local file ok", func(t *testing.T) {
 		assert := assert.New(t)
 
-		assert(ReadFile("examples/test.js")).
-			Equals([]byte("console.log(\"hello vbot\")"), nil)
+		v, e := ReadFile(".github/workflows/release.yml")
+		assert(e).Equals(nil)
+		assert(strings.Contains(string(v), "Release")).IsTrue()
 	})
 
 	t.Run("read local file error", func(t *testing.T) {
@@ -132,11 +124,11 @@ func TestReadFile(t *testing.T) {
 
 	t.Run("read remote file ok", func(t *testing.T) {
 		assert := assert.New(t)
-		path := "https://github.com/rpccloud/vbot/blob/master/examples/test.js"
+		path := "https://github.com/rpccloud/vbot/blob/master/.github/workflows/release.yml"
 		v, e := ReadFile(path)
 
 		assert(e).IsNil()
-		assert(strings.Contains(string(v), "hello vbot")).IsTrue()
+		assert(strings.Contains(string(v), "Release")).IsTrue()
 	})
 
 	t.Run("read remote file error", func(t *testing.T) {
@@ -150,13 +142,17 @@ func TestReadFile(t *testing.T) {
 
 	t.Run("url error", func(t *testing.T) {
 		assert := assert.New(t)
-		assert(ReadFile("test.go")).
-			Equals(nil, errors.New("extension \".go\" is invalid"))
+		v, e := ReadFile("test.go")
+		assert(v).IsNil()
+		assert(strings.Contains(
+			e.Error(),
+			"no such file or directory",
+		)).IsTrue()
 	})
 
 	t.Run("fnIOCopy error", func(t *testing.T) {
 		assert := assert.New(t)
-		path := "https://github.com/rpccloud/vbot/blob/master/examples/test.js"
+		path := "https://github.com/rpccloud/vbot/blob/master/.github/workflows/release.yml"
 		fnIOCopy = func(_ io.Writer, _ io.Reader) (int64, error) {
 			return 0, errors.New("custom")
 		}
@@ -181,6 +177,5 @@ func TestEncrypt(t *testing.T) {
 			assert(e).IsNil()
 			assert(Decrypt(password, enData)).Equals(data, nil)
 		}
-
 	})
 }
