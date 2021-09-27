@@ -6,7 +6,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import Client from "./client/client";
+import Client from "rpccloud-client-js";
 
 import { observer } from "mobx-react-lite";
 import { makeAutoObservable, runInAction } from "mobx"
