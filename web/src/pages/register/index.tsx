@@ -4,7 +4,9 @@ import {
     LockOutlined,
 } from '@ant-design/icons';
 
-import { Button, Carousel, Input } from 'antd';
+import { useHistory } from "react-router-dom";
+
+import { Button, Carousel, Input, Spin } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import VLayout from "../../component/VLayout";
@@ -14,23 +16,18 @@ import VSpacer from "../../component/VSpacer";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
+import { AppClient } from "../../AppManager";
 
-class InitPassword {
-    private password: string
-    private confirm: string
+class PageData {
+    password: string
+    confirm: string
+    busy: boolean
 
     constructor() {
         makeAutoObservable(this)
         this.password = ""
         this.confirm = ""
-    }
-
-    getPassword(): string {
-        return this.password
-    }
-
-    getConfirm(): string {
-        return this.confirm
+        this.busy = false
     }
 
     setPassword(password: string) {
@@ -45,15 +42,36 @@ class InitPassword {
         })
     }
 
+    async sendInitRequest() {
+        let ok = false
+
+        runInAction(() => {
+            this.busy = true
+        })
+
+        try {
+            ok = !! await AppClient.get().send(8000, "#.user:create", "ts", "pass")
+        } catch(e) {
+            ok = false
+        }
+
+        runInAction(() => {
+            this.busy = false
+        })
+
+        return ok
+    }
+
     reset() {
         runInAction(() => {
             this.password = ""
             this.confirm = ""
+            this.busy = false
         })
     }
 }
 
-const gInitPassword = new InitPassword()
+const pageData = new PageData()
 
 const styles = {
     card: {
@@ -164,8 +182,8 @@ const Card = (props: CardProps) => {
 const CardPassword = observer((props: {onNext: () => void}) => {
     let passwordRef: any = useRef(null)
     let confirmRef: any = useRef(null)
-    const password = gInitPassword.getPassword()
-    const confirm =  gInitPassword.getConfirm()
+    const password = pageData.password
+    const confirm =  pageData.confirm
     let indicator: any = null
     let canNext = false
     let focusInput: any = null
@@ -223,11 +241,11 @@ const CardPassword = observer((props: {onNext: () => void}) => {
                 ref={passwordRef}
                 size="large"
                 placeholder="输入密码"
-                defaultValue={gInitPassword.getPassword()}
+                defaultValue={pageData.password}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onFocus={() => {focusInput = passwordRef}}
                 onChange={(e) => {
-                    gInitPassword.setPassword(e.target.value)
+                    pageData.password = e.target.value
                 }}
             />
             <VSpacer size={20} />
@@ -235,10 +253,11 @@ const CardPassword = observer((props: {onNext: () => void}) => {
                 ref={confirmRef}
                 size="large"
                 placeholder="确认密码"
+                defaultValue={pageData.confirm}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onFocus={() => {focusInput = confirmRef}}
                 onChange={(e) => {
-                    gInitPassword.setConfirm(e.target.value)
+                    pageData.confirm = e.target.value
                 }}
             />
             <VSpacer size={16} />
@@ -247,21 +266,30 @@ const CardPassword = observer((props: {onNext: () => void}) => {
     )
 })
 
-const CardAgree = (props: {onPrev: () => void, onNext: () => void}) => (
+const CardAgree = observer((props: {onPrev: () => void, onNext: () => void}) => (
     <Card
-        title="同意协议"
+        title="初始化系统 - 同意协议"
         prevName="上一步"
         nextName="同意并初始化"
-        canPrev={true}
-        canNext={true}
+        canPrev={!pageData.busy}
+        canNext={!pageData.busy}
         onPrev={props.onPrev}
         onNext={props.onNext}
     >
         <div>用户协议内容</div>
     </Card>
-)
+))
 
-const Register = () => {
+const CardWaiting = observer(() => (
+    <Card title="初始化系统 - 进行中...">
+        <div className="vbot-fill-auto vbot-container-center">
+         <Spin size="large" />
+        </div>
+    </Card>
+))
+
+const Register = observer((props: any) => {
+    let history = useHistory();
     const carouselRef: any = useRef(null);
     return (
         <VLayout.Container className="vbot-fill-viewport">
@@ -284,13 +312,25 @@ const Register = () => {
                             onPrev={() => {
                                 carouselRef.current.goTo(0)
                             }}
-                            onNext={() => {alert("ok")}}/>
+                            onNext={async () => {
+                                carouselRef.current.goTo(2)
+                                let ok = await pageData.sendInitRequest()
+                                pageData.reset()
+                                if (ok) {
+                                    history.push("/main")
+                                } else {
+                                    carouselRef.current.goTo(0)
+                                }
+                            }}/>
+                    </div>
+                    <div className="vbot-container-center">
+                        <CardWaiting />
                     </div>
                 </Carousel>
             </VLayout.Dynamic>
             <Footer/>
         </VLayout.Container>
     )
-}
+})
 
 export default Register
