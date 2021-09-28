@@ -21,6 +21,29 @@ func NewDB(file string) (*DB, error) {
 	return &DB{db: db}, nil
 }
 
+func (p *DB) CreateBucket(name string) error {
+	return p.db.Update(func(tx *bolt.Tx) error {
+		_, e := tx.CreateBucket([]byte(name))
+		return e
+	})
+}
+
+func (p *DB) IsBucketExist(name string) bool {
+	ret := false
+	_ = p.db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(name))
+		ret = (b != nil)
+		return nil
+	})
+	return ret
+}
+
+func (p *DB) DeleteBucket(name string) error {
+	return p.db.Update(func(tx *bolt.Tx) error {
+		return tx.DeleteBucket([]byte(name))
+	})
+}
+
 func (p *DB) Put(bucketName string, key string, value []byte) error {
 	return p.db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucketName))
@@ -37,7 +60,7 @@ func (p *DB) Get(bucketName string, key string) ([]byte, error) {
 		b := tx.Bucket([]byte(bucketName))
 
 		if b == nil {
-			return fmt.Errorf("bucket \"%s\" not exist", bucketName)
+			return fmt.Errorf("bucket \"%s\" does not exist", bucketName)
 		}
 
 		k, v := b.Cursor().Seek([]byte(key))

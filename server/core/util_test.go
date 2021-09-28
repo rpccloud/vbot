@@ -106,7 +106,7 @@ func TestReadFile(t *testing.T) {
 	t.Run("read local file ok", func(t *testing.T) {
 		assert := assert.New(t)
 
-		v, e := ReadFile(".github/workflows/release.yml")
+		v, e := ReadFile("../../.github/workflows/release.yml")
 		assert(e).Equals(nil)
 		assert(strings.Contains(string(v), "Release")).IsTrue()
 	})
@@ -172,7 +172,7 @@ func TestEncrypt(t *testing.T) {
 	t.Run("test ok", func(t *testing.T) {
 		assert := assert.New(t)
 
-		for i := 0; i < 100; i++ {
+		for i := 0; i < 50; i++ {
 			data := []byte(GetRandString(100))
 			password := []byte(GetRandString(10))
 			enData, e := Encrypt(password, data)
