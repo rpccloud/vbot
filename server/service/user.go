@@ -1,8 +1,11 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
+	"sync"
+	"time"
 
 	"github.com/boltdb/bolt"
 	"github.com/rpccloud/rpc"
@@ -13,9 +16,75 @@ var (
 	userNameRegex = regexp.MustCompile(`^[_0-9a-zA-Z]+$`)
 )
 
+type User struct {
+	name       string
+	sessionID  string
+	activeTime time.Time
+}
+
+func NewUser(name string, sessionID string) *User {
+	return &User{
+		name:       name,
+		sessionID:  sessionID,
+		activeTime: time.Now(),
+	}
+}
+
+func (p *User) ToMap() rpc.Map {
+	return rpc.Map{
+		"name":      p.name,
+		"sessionID": p.sessionID,
+	}
+}
+
+type UserManager struct {
+	sessionMap map[string]*User
+	mu         sync.Mutex
+}
+
+func NewUserManager() *UserManager {
+	return &UserManager{
+		sessionMap: make(map[string]*User),
+	}
+}
+
+func (p *UserManager) AddUser(user *User) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	p.sessionMap[user.sessionID] = user
+}
+
+func (p *UserManager) OnTimer(timeout time.Duration) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	now := time.Now()
+	for key, user := range p.sessionMap {
+		if now.Sub(user.activeTime) > timeout {
+			delete(p.sessionMap, key)
+		}
+	}
+}
+
 var UserService = rpc.NewService().
+	On("$onTimer", onTimer).
 	On("create", userCreate).
 	On("login", userLogin)
+
+func onTimer(rt rpc.Runtime, seq uint64) rpc.Return {
+	if seq%10 == 0 {
+		if configMgr, ok := rt.GetServiceConfig("manager"); !ok {
+			return rt.Reply(errors.New("user service config error"))
+		} else if manager, ok := configMgr.(*UserManager); !ok {
+			return rt.Reply(errors.New("user service config error"))
+		} else {
+			manager.OnTimer(core.GetConfig().GetSessionTimeout())
+		}
+	}
+
+	return rt.Reply(nil)
+}
 
 func userCreate(rt rpc.Runtime, name string, password string) rpc.Return {
 	fnUpdate := func(db *core.DB, enOK []byte, enSecret []byte) error {
@@ -57,7 +126,11 @@ func userCreate(rt rpc.Runtime, name string, password string) rpc.Return {
 }
 
 func userLogin(rt rpc.Runtime, name string, password string) rpc.Return {
-	if !userNameRegex.MatchString(name) {
+	if configMgr, ok := rt.GetServiceConfig("manager"); !ok {
+		return rt.Reply(errors.New("user service config error"))
+	} else if manager, ok := configMgr.(*UserManager); !ok {
+		return rt.Reply(errors.New("user service config error"))
+	} else if !userNameRegex.MatchString(name) {
 		return rt.Reply(fmt.Errorf("invalid user name \"%s\"", name))
 	} else if db, e := core.GetManager().GetDB(core.GetConfig().GetDBFile()); e != nil {
 		return rt.Reply(e)
@@ -71,7 +144,11 @@ func userLogin(rt rpc.Runtime, name string, password string) rpc.Return {
 		return rt.Reply(e)
 	} else if string(ok) != "OK" {
 		return rt.Reply(fmt.Errorf("internal error"))
+	} else if sessionID, e := core.GetRandString(32); e != nil {
+		return rt.Reply(e)
 	} else {
-		return rt.Reply(true)
+		user := NewUser(name, sessionID)
+		manager.AddUser(user)
+		return rt.Reply(user.ToMap())
 	}
 }
