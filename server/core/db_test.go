@@ -27,7 +27,7 @@ func TestDB_CreateBucket(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		assert(db.CreateBucket("test")).IsNil()
+		assert(db.CreateBucketIsNotExist("test")).IsNil()
 		assert(db.IsBucketExist("test")).IsTrue()
 	})
 
@@ -37,9 +37,8 @@ func TestDB_CreateBucket(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		_ = db.CreateBucket("test")
-		assert(db.CreateBucket("test")).
-			Equals(errors.New("bucket already exists"))
+		_ = db.CreateBucketIsNotExist("test")
+		assert(db.CreateBucketIsNotExist("test")).IsNil()
 	})
 }
 
@@ -50,7 +49,7 @@ func TestDB_IsBucketExist(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		assert(db.CreateBucket("test")).IsNil()
+		assert(db.CreateBucketIsNotExist("test")).IsNil()
 		assert(db.IsBucketExist("test")).IsTrue()
 	})
 
@@ -71,7 +70,7 @@ func TestDB_DeleteBucket(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		_ = db.CreateBucket("test")
+		_ = db.CreateBucketIsNotExist("test")
 		assert(db.DeleteBucket("test")).IsNil()
 	})
 
@@ -92,7 +91,7 @@ func TestDB_Put(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		_ = db.CreateBucket("test")
+		_ = db.CreateBucketIsNotExist("test")
 		assert(db.Put("test", "key", []byte("hello"))).Equals(nil)
 		assert(db.Get("test", "key")).Equals([]byte("hello"), nil)
 	})
@@ -126,7 +125,7 @@ func TestDB_Get(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		_ = db.CreateBucket("test")
+		_ = db.CreateBucketIsNotExist("test")
 		_ = db.Put("test", "a", []byte("hello"))
 		_ = db.Put("test", "b", []byte("hello"))
 		_ = db.Put("test", "c", []byte("hello"))
@@ -142,7 +141,7 @@ func TestDB_Get(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		_ = db.CreateBucket("test")
+		_ = db.CreateBucketIsNotExist("test")
 		_ = db.Put("test", "key", []byte("hello"))
 		assert(db.Get("test", "key")).Equals([]byte("hello"), nil)
 	})
@@ -165,7 +164,7 @@ func TestDB_Search(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		_ = db.CreateBucket("test")
+		_ = db.CreateBucketIsNotExist("test")
 		_ = db.Put("test", "a.1", []byte("hello"))
 		_ = db.Put("test", "a.2", []byte("hello"))
 		_ = db.Put("test", "a.3", []byte("hello"))
@@ -178,7 +177,7 @@ func TestDB_Search(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		_ = db.CreateBucket("test")
+		_ = db.CreateBucketIsNotExist("test")
 		_ = db.Put("test", "a.1", []byte("hello"))
 		_ = db.Put("test", "a.2", []byte("hello"))
 		_ = db.Put("test", "a.3", []byte("hello"))
@@ -207,7 +206,7 @@ func TestDB_GetBucketID(t *testing.T) {
 		defer func() {
 			os.Remove("test.db")
 		}()
-		_ = db.CreateBucket("test")
+		_ = db.CreateBucketIsNotExist("test")
 		for i := uint64(1); i < 100; i++ {
 			assert(db.GetBucketID("test")).Equals(i, nil)
 		}

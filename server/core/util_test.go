@@ -172,12 +172,12 @@ func TestEncrypt(t *testing.T) {
 	t.Run("test ok", func(t *testing.T) {
 		assert := assert.New(t)
 
-		for i := 0; i < 50; i++ {
-			data := []byte(GetRandString(100))
-			password := []byte(GetRandString(10))
-			enData, e := Encrypt(password, data)
+		for i := 0; i < 100; i++ {
+			data, _ := GetRandString(50)
+			password, _ := GetRandString(10)
+			enData, e := Encrypt([]byte(password), []byte(data))
 			assert(e).IsNil()
-			assert(Decrypt(password, enData)).Equals(data, nil)
+			assert(Decrypt([]byte(password), enData)).Equals([]byte(data), nil)
 		}
 	})
 }

@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"math/rand"
 	"net/http"
 	"net/url"
 	"path/filepath"
@@ -105,9 +105,12 @@ func ReadFile(uri string) ([]byte, error) {
 }
 
 func Encrypt(password, data []byte) ([]byte, error) {
-	salt := []byte(GetRandString(32))
+	salt, e := GetRandString(32)
+	if e != nil {
+		return nil, e
+	}
 
-	key, e := scrypt.Key(password, salt, 32768, 8, 1, 32)
+	key, e := scrypt.Key(password, []byte(salt), 16384, 8, 1, 32)
 	if e != nil {
 		return nil, e
 	}
@@ -136,7 +139,7 @@ func Encrypt(password, data []byte) ([]byte, error) {
 func Decrypt(password, data []byte) ([]byte, error) {
 	salt, data := data[len(data)-32:], data[:len(data)-32]
 
-	key, e := scrypt.Key(password, salt, 32768, 8, 1, 32)
+	key, e := scrypt.Key(password, salt, 16384, 8, 1, 32)
 	if e != nil {
 		return nil, e
 	}
@@ -161,17 +164,19 @@ func Decrypt(password, data []byte) ([]byte, error) {
 	return plaintext, nil
 }
 
-func GetRandString(length int) string {
+func GetRandString(length int) (string, error) {
 	buf := &bytes.Buffer{}
 
-	for length > 0 {
-		rand64 := rand.Uint64()
-		for used := 0; used < 10 && length > 0; used++ {
-			buf.WriteByte(base64String[rand64%64])
-			rand64 = rand64 / 64
-			length--
-		}
+	b := make([]byte, length)
+
+	_, e := rand.Read(b)
+	if e != nil {
+		return "", e
 	}
 
-	return buf.String()
+	for i := 0; i < length; i++ {
+		buf.WriteByte(base64String[b[i]%64])
+	}
+
+	return buf.String(), nil
 }
