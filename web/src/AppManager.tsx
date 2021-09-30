@@ -4,6 +4,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from "react-router-dom";
 import Client from "./libs/client";
 
@@ -22,8 +23,9 @@ export default observer(() => {
     return AppData.get().isValid() ? (
         <ConfigProvider locale={AppData.get().locale?.antd} >
             <Router>
+                <Redirect path="/" to="/start"/>
                 <Switch>
-                    <Route path="/">
+                    <Route path="/start">
                         <StartPage />
                     </Route>
                     <Route path="/main">
