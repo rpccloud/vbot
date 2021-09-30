@@ -6,7 +6,7 @@ import {
 
 import { useHistory } from "react-router-dom";
 
-import { Button, Carousel, Input, Spin } from 'antd';
+import { message, Button, Carousel, Input, Spin } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import VLayout from "../../component/VLayout";
@@ -18,16 +18,18 @@ import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
 import { AppClient } from "../../AppManager";
 
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
+
 class PageData {
     password: string
     confirm: string
-    busy: boolean
 
     constructor() {
         makeAutoObservable(this)
         this.password = ""
         this.confirm = ""
-        this.busy = false
     }
 
     setPassword(password: string) {
@@ -42,31 +44,10 @@ class PageData {
         })
     }
 
-    async sendInitRequest() {
-        let ok = false
-
-        runInAction(() => {
-            this.busy = true
-        })
-
-        try {
-            ok = !! await AppClient.get().send(8000, "#.user:create", "ts", "pass")
-        } catch(e) {
-            ok = false
-        }
-
-        runInAction(() => {
-            this.busy = false
-        })
-
-        return ok
-    }
-
     reset() {
         runInAction(() => {
             this.password = ""
             this.confirm = ""
-            this.busy = false
         })
     }
 }
@@ -271,8 +252,8 @@ const CardAgree = observer((props: {onPrev: () => void, onNext: () => void}) => 
         title="初始化系统 - 同意协议"
         prevName="上一步"
         nextName="同意并初始化"
-        canPrev={!pageData.busy}
-        canNext={!pageData.busy}
+        canPrev={true}
+        canNext={true}
         onPrev={props.onPrev}
         onNext={props.onNext}
     >
@@ -315,10 +296,14 @@ const Register = observer((props: any) => {
                             onNext={async () => {
                                 carouselRef.current.goTo(2)
                                 try {
-                                    await pageData.sendInitRequest()
+                                    await AppClient.get().send(8000, "#.user:create", "admin", pageData.password)
+                                    carouselRef.current.goTo(0)
                                     history.push("/login")
                                 } catch(e) {
+                                    message.error((e as any).getMessage())
+                                    await delay(1000)
                                     carouselRef.current.goTo(0)
+                                    history.push("/")
                                 }
                             }}/>
                     </div>

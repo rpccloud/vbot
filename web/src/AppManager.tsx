@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect
 } from "react-router-dom";
 import Client from "./libs/client";
 
@@ -17,13 +16,16 @@ import Login from "./pages/login"
 import Register from "./pages/register"
 import Debug from "./pages/debug";
 import { ConfigProvider } from "antd";
+import StartPage from "./pages/start";
 
 export default observer(() => {
     return AppData.get().isValid() ? (
         <ConfigProvider locale={AppData.get().locale?.antd} >
             <Router>
-                <Redirect exact from="/" to="register" />
                 <Switch>
+                    <Route path="/">
+                        <StartPage />
+                    </Route>
                     <Route path="/main">
                         <Main />
                     </Route>

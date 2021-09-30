@@ -69,8 +69,9 @@ func (p *UserManager) OnTimer(timeout time.Duration) {
 
 var UserService = rpc.NewService().
 	On("$onTimer", onTimer).
-	On("create", userCreate).
-	On("login", userLogin)
+	On("Create", userCreate).
+	On("Login", userLogin).
+	On("IsInitialized", isInitialized)
 
 func onTimer(rt rpc.Runtime, seq uint64) rpc.Return {
 	if seq%10 == 0 {
@@ -156,5 +157,13 @@ func userLogin(rt rpc.Runtime, name string, password string) rpc.Return {
 		user := NewUser(name, sessionID)
 		manager.AddUser(user)
 		return rt.Reply(user.ToMap())
+	}
+}
+
+func isInitialized(rt rpc.Runtime) rpc.Return {
+	if db, e := core.GetManager().GetDB(core.GetConfig().GetDBFile()); e != nil {
+		return rt.Reply(e)
+	} else {
+		return rt.Reply(db.IsBucketExist("auth"))
 	}
 }
