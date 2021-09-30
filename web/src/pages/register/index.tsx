@@ -314,11 +314,10 @@ const Register = observer((props: any) => {
                             }}
                             onNext={async () => {
                                 carouselRef.current.goTo(2)
-                                let ok = await pageData.sendInitRequest()
-                                pageData.reset()
-                                if (ok) {
-                                    history.push("/main")
-                                } else {
+                                try {
+                                    await pageData.sendInitRequest()
+                                    history.push("/login")
+                                } catch(e) {
                                     carouselRef.current.goTo(0)
                                 }
                             }}/>

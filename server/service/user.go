@@ -90,6 +90,11 @@ func userCreate(rt rpc.Runtime, name string, password string) rpc.Return {
 	fnUpdate := func(db *core.DB, enOK []byte, enSecret []byte) error {
 		return db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte("auth"))
+
+			if b.Get(core.DBKey("user.%s.ok", name)) != nil {
+				return fmt.Errorf("user \"%s\" has been initialized", name)
+			}
+
 			if e := b.Put(core.DBKey("user.%s.ok", name), enOK); e != nil {
 				return e
 			} else if e = b.Put(core.DBKey("user.%s.secret", name), enSecret); e != nil {
@@ -119,6 +124,7 @@ func userCreate(rt rpc.Runtime, name string, password string) rpc.Return {
 	} else if e = db.CreateBucketIsNotExist("template"); e != nil {
 		return rt.Reply(e)
 	} else if e = fnUpdate(db, enOK, enSecret); e != nil {
+		fmt.Println(e)
 		return rt.Reply(e)
 	} else {
 		return rt.Reply(true)
