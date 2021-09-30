@@ -71,13 +71,10 @@ const styles = {
 }
 
 const CardPassword = observer((props: {onNext: () => void}) => {
-    let passwordRef: any = useRef(null)
-    let confirmRef: any = useRef(null)
     const password = pageData.password
     const confirm =  pageData.confirm
     let indicator: any = null
     let canNext = false
-    let focusInput: any = null
 
     if (password !== confirm) {
         indicator = (
@@ -116,37 +113,23 @@ const CardPassword = observer((props: {onNext: () => void}) => {
             nextName="下一步"
             canNext={canNext}
             onNext={props.onNext}
-            onKeyDown={(e: any) => {
-                if (e.key === "Tab") {
-                    e.preventDefault()
-                    if (focusInput === passwordRef) {
-                        confirmRef.current.focus()
-                    } else {
-                        passwordRef.current.focus()
-                    }
-                }
-            }}
         >
             <VSpacer size={12} />
             <Input.Password
-                ref={passwordRef}
                 size="large"
                 placeholder="输入密码"
                 defaultValue={pageData.password}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
-                onFocus={() => {focusInput = passwordRef}}
                 onChange={(e) => {
                     pageData.password = e.target.value
                 }}
             />
             <VSpacer size={20} />
             <Input.Password
-                ref={confirmRef}
                 size="large"
                 placeholder="确认密码"
                 defaultValue={pageData.confirm}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
-                onFocus={() => {focusInput = confirmRef}}
                 onChange={(e) => {
                     pageData.confirm = e.target.value
                 }}
@@ -189,7 +172,7 @@ const Register = observer((props: any) => {
                 <Carousel
                     ref={carouselRef}
                     dots={false}
-                    effect="scrollx"
+                    effect="fade"
                     style={styles.carousel}
                     beforeChange={() => {return false}}
                 >
