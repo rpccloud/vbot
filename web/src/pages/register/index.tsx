@@ -6,17 +6,16 @@ import {
 
 import { useHistory } from "react-router-dom";
 
-import { message, Button, Carousel, Input, Spin } from 'antd';
+import { message, Carousel, Input, Spin } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import VLayout from "../../component/VLayout";
-import HLayout from "../../component/HLayout";
-import Divider from "../../component/Divider";
 import VSpacer from "../../component/VSpacer";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
 import { AppClient } from "../../AppManager";
+import Card from "../../component/Card";
 
 function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
@@ -55,29 +54,6 @@ class PageData {
 const pageData = new PageData()
 
 const styles = {
-    card: {
-        title: {
-            marginTop: 6,
-            fontSize: "var(--FontSizeLarge)",
-        },
-        container: {
-            width: 420,
-            height: 360,
-            margin: 120,
-            background: "var(--PrimaryBGColorLighten)",
-            padding: "16px 24px 16px 24px",
-        },
-        button: {
-            marginRight: 8,
-        },
-        divider: {
-            width: "100%",
-            height: 1,
-            backgroundColor: "var(--PrimaryBGColorDarken)",
-            marginTop: 8,
-            marginBottom: 8,
-        },
-    },
     carousel: {
         width:"100%",
         height:"100%",
@@ -92,72 +68,6 @@ const styles = {
             color: "var(--WarnColor)",
         },
     }
-}
-
-interface CardProps {
-    title: string,
-    prevName?: string,
-    nextName?: string,
-    canPrev?: boolean,
-    canNext?: boolean,
-    onPrev?: () => void,
-    onNext?: () => void,
-    onKeyDown?: (e: any) => void,
-    children: any,
-}
-
-const Card = (props: CardProps) => {
-    const buttonPrev = props.prevName ? (
-        <Button
-            type="primary"
-            ghost={true}
-            disabled={props.canPrev === false}
-            onClick={props.onPrev}
-            style={styles.card.button}
-        >
-            {props.prevName}
-        </Button>
-    ) : null
-
-    const buttonNext = props.nextName ? (
-        <Button
-            type="primary"
-            ghost={true}
-            disabled={props.canNext === false}
-            onClick={props.onNext}
-        >
-            {props.nextName}
-        </Button>
-    ): null
-
-    return (
-        <div
-            className="vbot-container-round vbot-container-shadow"
-            style={styles.card.container}
-            onKeyDown={props.onKeyDown}
-        >
-            <VLayout.Container>
-                <VLayout.Fixed>
-                    <div style={styles.card.title}>
-                        {props.title}
-                    </div>
-                </VLayout.Fixed>
-                <Divider style={styles.card.divider} />
-                <VLayout.Dynamic>
-                    {props.children}
-                </VLayout.Dynamic>
-                <Divider style={styles.card.divider} />
-                <VSpacer size={4} />
-                <VLayout.Fixed>
-                    <HLayout.Container>
-                        <HLayout.Dynamic />
-                        {buttonPrev}
-                        {buttonNext}
-                    </HLayout.Container>
-                </VLayout.Fixed>
-            </VLayout.Container>
-        </div>
-    )
 }
 
 const CardPassword = observer((props: {onNext: () => void}) => {
@@ -303,7 +213,7 @@ const Register = observer((props: any) => {
                                     message.error((e as any).getMessage())
                                     await delay(1000)
                                     carouselRef.current.goTo(0)
-                                    history.push("/")
+                                    history.push("/start")
                                 }
                             }}/>
                     </div>
