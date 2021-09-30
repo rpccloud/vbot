@@ -3,6 +3,9 @@ import { message, Spin } from "antd";
 import { AppClient } from "../../AppManager";
 import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import VLayout from "../../component/VLayout";
+import Header from "../common/Header";
+import Footer from "../common/Footer";
 
 function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
@@ -34,10 +37,16 @@ const StartPage = observer((props: any) => {
     })
 
     return (
-        <div className="vbot-fill-viewport vbot-container-center">
-            <Spin size="default" />
-            <div style={styles.text}>Loading ...</div>
-        </div>
+        <VLayout.Container className="vbot-fill-viewport">
+            <Header/>
+            <VLayout.Dynamic>
+                <div className="vbot-fill-auto vbot-container-center">
+                    <Spin size="default" />
+                    <div style={styles.text}>Loading ...</div>
+                </div>
+            </VLayout.Dynamic>
+            <Footer/>
+        </VLayout.Container>
     )
 })
 

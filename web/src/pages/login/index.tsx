@@ -1,43 +1,64 @@
-import React, { useState } from "react";
-import { Button, DatePicker, Modal } from "antd";
-import { AppData, AppTheme } from "../../AppManager";
+import React, { useRef } from "react";
 
-export default function Login() {
-    const [isModalVisible, setIsModalVisible] = useState(false);
+import {
+    UserOutlined,
+    LockOutlined,
+} from '@ant-design/icons';
 
-    const showModal = () => {
-      setIsModalVisible(true);
-    };
+import { Input } from 'antd';
+import Footer from "../common/Footer";
+import Header from "../common/Header";
+import VLayout from "../../component/VLayout";
+import VSpacer from "../../component/VSpacer";
+import { observer } from "mobx-react-lite";
+import Card from "../../component/Card";
+import { useState } from "react";
 
-    const handleOk = () => {
-      setIsModalVisible(false);
-    };
-
-    const handleCancel = () => {
-      setIsModalVisible(false);
-    };
+const CardPassword = observer(() => {
+    let passwordRef: any = useRef(null)
+    let confirmRef: any = useRef(null)
+    let [next] = useState()
 
     return (
-        <>
-            <DatePicker />
-            <Button onClick={async () => {
-                AppTheme.get().setDark()
-                AppData.get().setLang("zh-CN")
-                }}>zh-CN</Button>
-            <Button onClick={async () => {
-                AppTheme.get().setLight()
-                AppData.get().setLang("en-US")
-                }}>en-US</Button>
-            <div className={"red"}>{AppData.get().locale?.app.register.title1}</div>
+        <Card
+            title="系统登陆"
+            nextName="立即登陆"
+            canNext={next}
+            onNext={() => {
 
-            <Button type="primary" onClick={showModal}>
-                Open Modal
-            </Button>
-            <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-            </Modal>
-        </>
+            }}
+        >
+            <VSpacer size={12} />
+            <Input.Password
+                ref={passwordRef}
+                size="large"
+                placeholder="输入用户名"
+                prefix={<UserOutlined className="vbot-icon-prefix" />}
+            />
+            <VSpacer size={20} />
+            <Input.Password
+                ref={confirmRef}
+                size="large"
+                placeholder="确认密码"
+                prefix={<LockOutlined className="vbot-icon-prefix" />}
+            />
+            <VSpacer size={16} />
+        </Card>
     )
-}
+})
+
+const Register = observer(() => {
+    return (
+        <VLayout.Container className="vbot-fill-viewport">
+            <Header/>
+            <VLayout.Dynamic>
+                <div className="vbot-container-center">
+                    <CardPassword/>
+                </div>
+            </VLayout.Dynamic>
+            <Footer/>
+        </VLayout.Container>
+    )
+})
+
+export default Register
