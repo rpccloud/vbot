@@ -55,9 +55,14 @@ const pageData = new PageData()
 
 const styles = {
     carousel: {
-        width:"100%",
-        height:"100%",
-        backgroundColor: "var(--PrimaryBGColor)",
+        container: {
+            width:"100%",
+            height:"100%",
+            backgroundColor: "var(--PrimaryBGColor)",
+        },
+        content: {
+            height: "calc(100vh - var(--VbotHeaderHeight) - var(--VbotFooterHeight))"
+        }
     },
     password: {
         container: {
@@ -171,37 +176,48 @@ const Register = observer((props: any) => {
             <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
                 <Carousel
                     ref={carouselRef}
+                    className={"vbot-need-ant-carousel-auto-fill"}
                     dots={false}
                     effect="fade"
-                    style={styles.carousel}
-                    beforeChange={() => {return false}}
+                    style={styles.carousel.container}
                 >
-                    <div className="vbot-container-center">
-                        <CardPassword onNext={() => {
-                            carouselRef.current.goTo(1)
-                        }} />
+                    <div>
+                        <div style={styles.carousel.content} className="vbot-container-center">
+                            <CardPassword
+                                onNext={() => {
+                                    carouselRef.current.goTo(1)
+                                }}
+                            />
+                        </div>
                     </div>
-                    <div className="vbot-container-center">
-                        <CardAgree
-                            onPrev={() => {
-                                carouselRef.current.goTo(0)
-                            }}
-                            onNext={async () => {
-                                carouselRef.current.goTo(2)
-                                try {
-                                    await AppClient.get().send(8000, "#.user:Create", "admin", pageData.password)
+
+                    <div>
+                        <div style={styles.carousel.content} className="vbot-container-center">
+                            <CardAgree
+                                onPrev={() => {
                                     carouselRef.current.goTo(0)
-                                    history.push("/login")
-                                } catch(e) {
-                                    message.error((e as any).getMessage())
-                                    await delay(1000)
-                                    carouselRef.current.goTo(0)
-                                    history.push("/start")
-                                }
-                            }}/>
+                                }}
+                                onNext={async () => {
+                                    carouselRef.current.goTo(2)
+                                    try {
+                                        await AppClient.get().send(8000, "#.user:Create", "admin", pageData.password)
+                                        carouselRef.current.goTo(0)
+                                        history.push("/login")
+                                    } catch(e) {
+                                        message.error((e as any).getMessage())
+                                        await delay(1000)
+                                        carouselRef.current.goTo(0)
+                                        history.push("/start")
+                                    }
+                                }}
+                            />
+                        </div>
                     </div>
-                    <div className="vbot-container-center">
-                        <CardWaiting />
+
+                    <div>
+                        <div style={styles.carousel.content} className="vbot-container-center">
+                            <CardWaiting />
+                        </div>
                     </div>
                 </Carousel>
             </VLayout.Dynamic>

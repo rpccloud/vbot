@@ -15,7 +15,6 @@ const styles = {
     container: {
         width: 420,
         height: 360,
-        margin: 120,
         background: "var(--PrimaryBGColorLighten)",
         padding: "16px 24px 16px 24px",
     },

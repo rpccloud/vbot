@@ -8,62 +8,59 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import Header from "../common/Header";
+import VLayout from "../../component/VLayout";
+import Footer from "../common/Footer";
+import HLayout from "../../component/HLayout";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-class Main extends React.Component {
-    state = {
-      collapsed: false,
-    };
-
-    onCollapse = (collapsed: boolean) => {
-      console.log(collapsed);
-      this.setState({ collapsed });
-    };
-
-    render() {
-      const { collapsed } = this.state;
-      return (
-        <Layout style={{width: "100%"}}>
-            <Header/>
-
-          <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse} style={{
+const styles = {
+    sider: {
         overflow: 'auto',
-        height: '100%',
-        position: 'fixed',
-        left: 0,
-        top:64,
-      }}>
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-              <Menu.Item key="1" icon={<PieChartOutlined />}>
-                Option 1
-              </Menu.Item>
-              <Menu.Item key="2" icon={<DesktopOutlined />}>
-                Option 2
-              </Menu.Item>
-              <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-                <Menu.Item key="3">Tom</Menu.Item>
-                <Menu.Item key="4">Bill</Menu.Item>
-                <Menu.Item key="5">Alex</Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-                <Menu.Item key="6">Team 1</Menu.Item>
-                <Menu.Item key="8">Team 2</Menu.Item>
-              </SubMenu>
-              <Menu.Item key="9" icon={<FileOutlined />}>
-                Files
-              </Menu.Item>
-            </Menu>
-          </Sider>
+        height: "calc(100vh - var(--VbotHeaderHeight) - var(--VbotFooterHeight))",
+    } as any
+}
 
-          <Layout className="site-layout" style={{height: '100%', width:"100%"}}>
-            <div style={{width: "100%", height: "100%", background: "red"}}></div>
-          </Layout>
-        </Layout>
+class Main extends React.Component {
+    render() {
+      return (
+          <VLayout.Container>
+                   <Header/>
+                   <VLayout.Dynamic>
+                       <HLayout.Container>
+                            <Sider theme="light" style={styles.sider}>
+                                <Menu  defaultSelectedKeys={['1']} mode="inline">
+                                <Menu.Item key="1" icon={<PieChartOutlined />}>
+                                    Option 1
+                                </Menu.Item>
+                                <Menu.Item key="2" icon={<DesktopOutlined />}>
+                                    Option 2
+                                </Menu.Item>
+                                <SubMenu key="sub1" icon={<UserOutlined />} title="User">
+                                    <Menu.Item key="3">Tom</Menu.Item>
+                                    <Menu.Item key="4">Bill</Menu.Item>
+                                    <Menu.Item key="5">Alex</Menu.Item>
+                                </SubMenu>
+                                <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
+                                    <Menu.Item key="6">Team 1</Menu.Item>
+                                    <Menu.Item key="8">Team 2</Menu.Item>
+                                </SubMenu>
+                                <Menu.Item key="9" icon={<FileOutlined />}>
+                                    Files
+                                </Menu.Item>
+                                </Menu>
+                            </Sider>
+                       </HLayout.Container>
+                       <HLayout.Dynamic>
+                            <div style={{width: "100%", height: "100%", background: "red"}}></div>
+                       </HLayout.Dynamic>
+                   </VLayout.Dynamic>
+                   <Footer/>
+          </VLayout.Container>
       );
     }
-  }
+}
 
 export default Main
 
