@@ -4,7 +4,6 @@ const styles = {
     container: {
         fontSize: "var(--FontSizeSmall)",
         height: "var(--VbotFooterHeight)",
-        backgroundColor: "var(--PrimaryBGColor)",
         color: "var(--SecondaryFontColorDarken)",
     }
 }
