@@ -1,6 +1,6 @@
 import React from "react";
 import { message, Spin } from "antd";
-import { AppClient } from "../../AppManager";
+import { AppUser } from "../../AppManager";
 import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import VLayout from "../../component/VLayout";
@@ -24,7 +24,7 @@ const StartPage = observer((props: any) => {
 
     setTimeout(async () => {
         try {
-            let ret = await AppClient.get().send(3000, "#.user:IsInitialized")
+            let ret = await AppUser.send(3000, "#.user:IsInitialized")
             if (ret) {
                 history.push("/login")
             } else {

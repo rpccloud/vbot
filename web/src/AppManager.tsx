@@ -18,6 +18,7 @@ import Register from "./pages/register"
 import Debug from "./pages/debug";
 import { ConfigProvider } from "antd";
 import StartPage from "./pages/start";
+import { RPCAny } from "rpccloud-client-js/build/types";
 
 export default observer(() => {
     return AppData.get().isValid() ? (
@@ -108,10 +109,15 @@ export class AppData {
     }
 }
 
-export class AppClient {
-    private static instance = new Client("ws://127.0.0.1:8080")
+export class AppUser {
+    private static client = new Client("ws://127.0.0.1:8080/rpc")
+    private static sessionID = ""
 
-    static get(): Client {
-        return AppClient.instance
+    static getSessionID(): string {
+        return AppUser.sessionID
+    }
+
+    static send(timeoutMS: number, target: string, ...args: Array<RPCAny>): Promise<RPCAny> {
+        return AppUser.client.send(timeoutMS, target, ...args)
     }
 }

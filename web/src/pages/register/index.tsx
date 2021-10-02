@@ -14,7 +14,7 @@ import VSpacer from "../../component/VSpacer";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
-import { AppClient } from "../../AppManager";
+import { AppUser } from "../../AppManager";
 import Card from "../../component/Card";
 
 function delay(ms: number) {
@@ -200,7 +200,7 @@ const Register = observer((props: any) => {
                                 onNext={async () => {
                                     carouselRef.current.goTo(2)
                                     try {
-                                        await AppClient.get().send(8000, "#.user:Create", "admin", pageData.password)
+                                        await AppUser.send(8000, "#.user:Create", "admin", pageData.password)
                                         carouselRef.current.goTo(0)
                                         history.push("/login")
                                     } catch(e) {

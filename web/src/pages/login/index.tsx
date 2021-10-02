@@ -13,7 +13,7 @@ import VSpacer from "../../component/VSpacer";
 import { observer } from "mobx-react-lite";
 import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
-import { AppClient } from "../../AppManager";
+import { AppUser } from "../../AppManager";
 import { useHistory } from "react-router";
 
 function delay(ms: number) {
@@ -79,7 +79,7 @@ const CardPassword = observer(() => {
             canNext={!!pageData.user && !!pageData.password && !pageData.loading}
             onNext={async () => {
                 try {
-                    let ret = await AppClient.get().send(
+                    let ret = await AppUser.send(
                         8000, "#.user:Login", pageData.user, pageData.password,
                     )
                     if (ret) {
