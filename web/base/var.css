@@ -1,0 +1,22 @@
+:root {
+  --PrimaryColor: #1890ff;
+  --PrimaryFontColor: #333333;
+  --PrimaryFontColorLighten: #666666;
+  --PrimaryFontColorDarken: #000000;
+  --PrimaryBGColor: rgb(238, 240, 243);
+  --PrimaryBGColorLighten: rgb(246, 250, 255);
+  --PrimaryBGColorDarken: rgb(230, 233, 236);
+  --SecondaryColor: rgb(253, 143, 0);
+  --SecondaryFontColor: rgb(190, 195, 200);
+  --SecondaryFontColorLighten: rgb(220, 225, 230);
+  --SecondaryFontColorDarken: rgb(160, 165, 170);
+  --SecondaryBGColor: rgb(0, 21, 41);
+  --WarnColor: rgba(201, 84, 94, 0.8);
+  --ConfirmColor: rgba(13, 182, 13, 0.8);
+  --ShadowColor: #7e7796;
+  --FontSizeTiny: 9px;
+  --FontSizeSmall: 13px;
+  --FontSizeMiddle: 16px;
+  --FontSizeLarge: 20px;
+  --VbotHeaderHeight: 50px;
+  --VbotFooterHeight: 32px; }

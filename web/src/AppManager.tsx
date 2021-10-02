@@ -24,7 +24,7 @@ export default observer(() => {
     return AppData.get().isValid() ? (
         <ConfigProvider locale={AppData.get().locale?.antd} >
             <Router>
-                <Redirect path="/" to="/start"/>
+                <Redirect path="/" to="/main"/>
                 <Switch>
                     <Route path="/start">
                         <StartPage />

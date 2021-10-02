@@ -4,12 +4,13 @@ import HLayout from "../../component/HLayout";
 const styles = {
     container: {
         height: "var(--VbotHeaderHeight)",
-        color: "var(--SecondaryFontColorLighten)",
-        backgroundColor: "var(--SecondaryBGColor)",
+        color: "var(--PrimaryColor)",
+        backgroundColor: "var(--PrimaryBGColor)",
     },
     logo: {
         fontSize: "var(--FontSizeLarge)",
-        marginLeft: 20,
+        marginLeft: 24,
+        fontWeight: 900,
     },
     version: {
         fontSize: "var(--FontSizeSmall)",
