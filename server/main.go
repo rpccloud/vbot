@@ -6,10 +6,11 @@ import (
 )
 
 func main() {
+	staticFileMap := map[string]string{"/": "./web"}
 	serverConfig := rpc.GetDefaultServerConfig().
 		SetNumOfThreads(4096)
 	rpc.NewServer(serverConfig).
-		AddService("user", service.UserService, rpc.Map{"manager": service.NewUserManager()}).
-		Listen("ws", "0.0.0.0:8080", nil).
+		AddService("user", service.UserService, nil).
+		Listen("ws", "0.0.0.0:8080", "/ws", nil, staticFileMap).
 		Open()
 }

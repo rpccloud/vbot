@@ -67,7 +67,7 @@ func (p *UserManager) OnTimer(timeout time.Duration) {
 	}
 }
 
-var UserService = rpc.NewService().
+var UserService = rpc.NewService(rpc.Map{"manager": NewUserManager()}).
 	On("$onTimer", onTimer).
 	On("Create", userCreate).
 	On("Login", userLogin).
