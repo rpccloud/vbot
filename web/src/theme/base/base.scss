@@ -27,7 +27,7 @@
 
 
 body {
-    background-color: var(--Vbot-BackgroundColor);
+    background-image: radial-gradient(var(--Vbot-BackgroundColor) 30%, var(--Vbot-BackgroundColorDarken) 90%);
     overflow: hidden;
     margin: 0;
     font-weight: 400;
