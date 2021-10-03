@@ -15,14 +15,10 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const styles = {
-    left: {
-        outerContainer: {
-            overflow: "hidden",
-            backgroundColor: "var(--Vbot-BackgroundColorLighten)",
-        },
-        innerContainer: {
-            overflow: 'hidden auto',
-        }
+    bar: {
+        overflow: "hidden auto",
+        height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))",
+        backgroundColor: "var(--Vbot-BackgroundColorLighten)",
     },
     content: {
         backgroundColor: "var(--Vbot-BackgroundColorLighten)",
@@ -67,7 +63,7 @@ const Main = () => {
     )
 
     const contentView = (
-        <VLayout.Container className="vbot-fill-auto">
+        <VLayout.Container>
             <VLayout.Dynamic>
                 <HLayout.Container>
                     <HSpacer size={16}/>
@@ -94,14 +90,17 @@ const Main = () => {
                 <HLayout.Container>
                     <HLayout.Fixed>
                         <VLayout.Container>
+
                             <VLayout.Fixed>
                                 <Header/>
                             </VLayout.Fixed>
-                            <div style={styles.left.outerContainer} className="vbot-container-round-right vbot-container-shadow vbot-fill-auto" >
-                                <div style={styles.left.innerContainer} className="vbot-fill-auto">
-                                        {siderView}
+                            <VLayout.Dynamic>
+                                <div className="vbot-container-round-right vbot-container-shadow vbot-fill-auto" style={{overflow:"hidden"}} >
+                                    <div style={styles.bar}>
+                                            {siderView}
+                                    </div>
                                 </div>
-                            </div>
+                            </VLayout.Dynamic>
                         </VLayout.Container>
                     </HLayout.Fixed>
 
@@ -109,7 +108,9 @@ const Main = () => {
                         <VLayout.Fixed>
                             <div style={{height: "var(--Vbot-HeaderHeight)"}} />
                         </VLayout.Fixed>
-                        {contentView}
+                        <VLayout.Dynamic>
+                            {contentView}
+                        </VLayout.Dynamic>
                     </VLayout.Container>
                 </HLayout.Container>
             </VLayout.Dynamic>

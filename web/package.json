@@ -22,17 +22,12 @@
     "typescript": "^4.1.2"
   },
   "devDependencies": {
-    "concurrently": "^6.2.1",
     "node-sass": "^6.0.1",
     "sass-loader": "^12.1.0"
   },
   "scripts": {
-    "antd": "cd ./node_modules/antd/dist/ && cp antd.css antd.scss && cp antd.dark.css antd.dark.scss",
-    "sass:release": "node-sass --output-style compressed src/theme/export -o public",
-    "sass:watch": "node-sass src/theme/export -wo public",
-    "prestart": "yarn antd",
-    "start": "concurrently --kill-others \"react-scripts start\" \"yarn sass:watch\"",
-    "prebuild": "yarn antd && yarn sass:release && rm -rf ../server/vbot",
+    "start": "react-scripts start",
+    "prebuild": "rm -rf ../server/vbot",
     "build": "react-scripts build",
     "postbuild": "mv ./build ../server/vbot",
     "test": "react-scripts test",

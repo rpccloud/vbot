@@ -13,10 +13,6 @@ import { ConfigProvider } from "antd"
 import StartPage from "./pages/start"
 import { RPCAny } from "rpccloud-client-js/build/types"
 
-import 'antd/dist/antd.variable.min.css';
-import "./theme/base/base.scss";
-import "./theme/base/var.scss";
-import "./theme/component/icon.scss";
 import { setAppTheme, Themes } from "./AppTheme";
 
 const routeMap: Map<string, any> = new Map([

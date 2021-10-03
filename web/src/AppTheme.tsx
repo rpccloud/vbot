@@ -1,20 +1,25 @@
 import { ConfigProvider } from "antd"
 
+import 'antd/dist/antd.variable.min.css';
+import "./theme/base/base.scss";
+import "./theme/base/antd.scss";
+import "./theme/component/icon.scss";
+
 export const Themes = {
     light: {
-        primaryColor: "rgb(108, 50, 116)",
-        infoColor: "rgb(46, 116, 223)",
+        primaryColor: "rgb(98, 141, 235)",
+        infoColor: "rgb(44, 105, 238)",
         successColor: "rgb(27, 199, 21)",
-        processingColor: "rgb(218, 205, 24)",
+        processingColor: "rgb(218, 189, 24)",
         errorColor: "rgb(236, 20, 20)",
         warningColor: "rgb(185, 78, 64)",
         backgroundColor: "rgb(233, 235, 238)",
         backgroundColorLighten: "rgb(255, 255, 255)",
         backgroundColorDarken: "rgb(220, 222, 225)",
-        fontColor: "#333333",
-        fontColorLighten: "#888888",
-        fontColorDarken: "#111111",
-        shadowColor: "#8f8ba0",
+        fontColor: "rgb(50, 50, 50)",
+        fontColorLighten: "rgb(128, 128, 128)",
+        fontColorDarken: "rgb(25, 25, 25)",
+        shadowColor: "rgb(117, 114, 133)",
         dividerColor: "rgb(220, 222, 225)",
     }
 }

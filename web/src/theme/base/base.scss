@@ -1,8 +1,37 @@
+:root{
+    // --Vbot-PrimaryColor: rgb(98, 141, 235);
+    // --Vbot-InfoColor: rgb(44, 105, 238);
+    // --Vbot-SuccessColor: rgb(27, 199, 21);
+    // --Vbot-ProcessingColor: rgb(218, 189, 24);
+    // --Vbot-ErrorColor: rgb(236, 20, 20);
+    // --Vbot-WarningColor: rgb(185, 78, 64);
+
+    // --Vbot-BackgroundColor: rgb(233, 235, 238);
+    // --Vbot-BackgroundColorLighten: rgb(255, 255, 255);
+    // --Vbot-BackgroundColorDarken: rgb(220, 222, 225);
+
+    // --Vbot-FontColor: rgb(50, 50, 50);
+    // --Vbot-FontColorLighten: rgb(128, 128, 128);
+    // --Vbot-FontColorDarken: rgb(25, 25, 25);
+
+    // --Vbot-ShadowColor: rgb(117, 114, 133);
+    // --Vbot-DividerColor: rgb(220, 222, 225);
+
+    --Vbot-FontSizeSmall: 12px;
+    --Vbot-FontSizeMiddle: 16px;
+    --Vbot-FontSizeLarge: 20px;
+
+    --Vbot-HeaderHeight: 50px;
+    --Vbot-FooterHeight: 32px;
+}
+
 
 body {
     background-color: var(--Vbot-BackgroundColor);
     overflow: hidden;
     margin: 0;
+    font-weight: 400;
+    color:  var(--Vbot-FontColor) !important;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
@@ -17,7 +46,7 @@ code {
 
 /* width */
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 /* Handle */
