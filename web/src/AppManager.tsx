@@ -1,17 +1,23 @@
 import React from "react";
-import Client from "rpccloud-client-js";
+import Client from "rpccloud-client-js"
 
-import { observer } from "mobx-react-lite";
+import { observer } from "mobx-react-lite"
 import { makeAutoObservable, runInAction } from "mobx"
 
 import { Locale } from "./locale"
 import Main from "./pages/main"
 import Login from "./pages/login"
 import Register from "./pages/register"
-import Debug from "./pages/debug";
-import { ConfigProvider } from "antd";
-import StartPage from "./pages/start";
-import { RPCAny } from "rpccloud-client-js/build/types";
+import Debug from "./pages/debug"
+import { ConfigProvider } from "antd"
+import StartPage from "./pages/start"
+import { RPCAny } from "rpccloud-client-js/build/types"
+
+import 'antd/dist/antd.variable.min.css';
+import "./theme/base/base.scss";
+import "./theme/base/var.scss";
+import "./theme/component/icon.scss";
+import { setAppTheme, Themes } from "./AppTheme";
 
 const routeMap: Map<string, any> = new Map([
     ["start", (<StartPage />)],
@@ -23,48 +29,11 @@ const routeMap: Map<string, any> = new Map([
 
 export default observer(() => {
     return AppData.get().isValid() ? (
-        <ConfigProvider locale={AppData.get().locale?.antd} >
+        <ConfigProvider locale={AppData.get().locale?.antd}>
             {routeMap.get(AppData.get().rootRoute)}
         </ConfigProvider>
     ) : null
 })
-
-export class AppTheme {
-    private styleElem: HTMLLinkElement
-    private displayMode: string
-
-    private constructor() {
-        this.displayMode = ""
-        this.styleElem = document.createElement('link')
-        this.styleElem.rel = 'stylesheet';
-        this.styleElem.type = 'text/css';
-        document.head.appendChild(this.styleElem);
-        this.setLight()
-    }
-
-    setLight() {
-        this.displayMode = "light"
-        this.styleElem.href = "./light.css"
-    }
-
-    setDark() {
-        this.displayMode = "dark"
-        this.styleElem.href = "./dark.css"
-    }
-
-    isLight(): boolean {
-        return this.displayMode === "light"
-    }
-
-    isDark(): boolean {
-        return this.displayMode === "dark"
-    }
-
-    private static instance = new AppTheme()
-    static get(): AppTheme {
-        return AppTheme.instance
-    }
-}
 
 export class AppData {
     locale?: Locale
@@ -112,6 +81,12 @@ export class AppUser {
     }
 }
 
+window.onload = function() {
+    setAppTheme(Themes.light)
+}
+
 // window.onbeforeunload = function(event) {
 //     event.returnValue = "false";
 // }
+
+

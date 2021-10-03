@@ -1,27 +1,26 @@
 :root{
-    --PrimaryColor: #1890ff;
-    --PrimaryFontColor: #333333;
-    --PrimaryFontColorLighten: #666666;
-    --PrimaryFontColorDarken: #000000;
-    --PrimaryBGColor: rgb(233, 235, 238);
-    --PrimaryBGColorLighten: rgb(255, 255, 255);
-    --PrimaryBGColorDarken: rgb(220, 222, 225);
+    // --Vbot-PrimaryColor: rgb(108, 50, 116);;
+    // --Vbot-InfoColor: rgb(46, 116, 223);;
+    // --Vbot-SuccessColor: rgb(27, 199, 21);
+    // --Vbot-ProcessingColor: rgb(218, 205, 24);
+    // --Vbot-ErrorColor: rgb(236, 20, 20);
+    // --Vbot-WarningColor: rgb(185, 78, 64);
 
-    --SecondaryColor: rgb(253, 143, 0);
-    --SecondaryFontColor: rgb(190, 195, 200);
-    --SecondaryFontColorLighten: rgb(220, 225, 230);
-    --SecondaryFontColorDarken: rgb(160, 165, 170);
-    --SecondaryBGColor: rgb(0, 21, 41);
+    // --Vbot-BackgroundColor: rgb(233, 235, 238);
+    // --Vbot-BackgroundColorLighten: rgb(255, 255, 255);
+    // --Vbot-BackgroundColorDarken: rgb(220, 222, 225);
 
-    --WarnColor: rgba(201, 84, 94, 0.8);
-    --ConfirmColor: rgba(13, 182, 13, 0.8);
-    --ShadowColor: #8f8ba0;
+    // --Vbot-FontColor: #333333;
+    // --Vbot-FontColorLighten: #888888;
+    // --Vbot-FontColorDarken: #111111;
 
-    --FontSizeTiny: 9px;
-    --FontSizeSmall: 13px;
-    --FontSizeMiddle: 16px;
-    --FontSizeLarge: 20px;
+    // --Vbot-ShadowColor: #8f8ba0;
+    // --Vbot-DividerColor: rgb(220, 222, 225);
 
-    --VbotHeaderHeight: 50px;
-    --VbotFooterHeight: 32px;
+    --Vbot-FontSizeSmall: 12px;
+    --Vbot-FontSizeMiddle: 16px;
+    --Vbot-FontSizeLarge: 20px;
+
+    --Vbot-HeaderHeight: 50px;
+    --Vbot-FooterHeight: 32px;
 }

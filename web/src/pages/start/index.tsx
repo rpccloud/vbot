@@ -12,8 +12,8 @@ function delay(ms: number) {
 
 const styles = {
     text: {
-        fontSize: "var(--FontSizeLarge)",
-        color: "var(--PrimaryFontColor)",
+        fontSize: "var(--Vbot-FontSizeLarge)",
+        color: "var(--Vbot-FontColor)",
         marginLeft: 10,
     },
 }

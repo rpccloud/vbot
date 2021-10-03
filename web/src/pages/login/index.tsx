@@ -19,13 +19,6 @@ function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
-const styles = {
-    container: {
-        backgroundColor: "var(--PrimaryBGColor)",
-    }
-}
-
-
 class PageData {
     user: string
     password: string
@@ -126,7 +119,7 @@ const Register = observer(() => {
         <VLayout.Container className="vbot-fill-viewport">
             <Header/>
             <VLayout.Dynamic>
-                <div className="vbot-fill-auto vbot-container-center" style={styles.container}>
+                <div className="vbot-fill-auto vbot-container-center">
                     <CardPassword/>
                 </div>
             </VLayout.Dynamic>

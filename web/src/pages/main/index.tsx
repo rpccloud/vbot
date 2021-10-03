@@ -18,14 +18,14 @@ const styles = {
     left: {
         outerContainer: {
             overflow: "hidden",
-            backgroundColor: "var(--PrimaryBGColorLighten)",
+            backgroundColor: "var(--Vbot-BackgroundColorLighten)",
         },
         innerContainer: {
             overflow: 'hidden auto',
         }
     },
     content: {
-        backgroundColor: "var(--PrimaryBGColorLighten)",
+        backgroundColor: "var(--Vbot-BackgroundColorLighten)",
     }
 }
 
@@ -53,6 +53,14 @@ const Main = () => {
                     <Menu.Item key="10" className="vbot-menu">option10</Menu.Item>
                     <Menu.Item key="11" className="vbot-menu">option11</Menu.Item>
                     <Menu.Item key="12" className="vbot-menu">option12</Menu.Item>
+                    <Menu.Item key="13" className="vbot-menu">option9</Menu.Item>
+                    <Menu.Item key="14" className="vbot-menu">option10</Menu.Item>
+                    <Menu.Item key="15" className="vbot-menu">option11</Menu.Item>
+                    <Menu.Item key="16" className="vbot-menu">option12</Menu.Item>
+                    <Menu.Item key="17" className="vbot-menu">option9</Menu.Item>
+                    <Menu.Item key="18" className="vbot-menu">option10</Menu.Item>
+                    <Menu.Item key="19" className="vbot-menu">option11</Menu.Item>
+                    <Menu.Item key="20" className="vbot-menu">option12</Menu.Item>
                 </SubMenu>
             </Menu>
         </Sider>
@@ -82,27 +90,30 @@ const Main = () => {
 
     return (
         <VLayout.Container className="vbot-fill-viewport">
-            <HLayout.Container>
-                <HLayout.Fixed>
+            <VLayout.Dynamic>
+                <HLayout.Container>
+                    <HLayout.Fixed>
+                        <VLayout.Container>
+                            <VLayout.Fixed>
+                                <Header/>
+                            </VLayout.Fixed>
+                            <div style={styles.left.outerContainer} className="vbot-container-round-right vbot-container-shadow vbot-fill-auto" >
+                                <div style={styles.left.innerContainer} className="vbot-fill-auto">
+                                        {siderView}
+                                </div>
+                            </div>
+                        </VLayout.Container>
+                    </HLayout.Fixed>
+
                     <VLayout.Container>
                         <VLayout.Fixed>
-                            <Header/>
+                            <div style={{height: "var(--Vbot-HeaderHeight)"}} />
                         </VLayout.Fixed>
-                        <div style={styles.left.outerContainer} className="vbot-container-round-right vbot-container-shadow vbot-fill-auto" >
-                            <div style={styles.left.innerContainer} className="vbot-fill-auto">
-                                    {siderView}
-                            </div>
-                        </div>
+                        {contentView}
                     </VLayout.Container>
-                </HLayout.Fixed>
+                </HLayout.Container>
+            </VLayout.Dynamic>
 
-                <VLayout.Container>
-                    <VLayout.Fixed>
-                        <div style={{height: "var(--VbotHeaderHeight)"}} />
-                    </VLayout.Fixed>
-                    {contentView}
-                </VLayout.Container>
-            </HLayout.Container>
             <VLayout.Fixed>
                 <Footer/>
             </VLayout.Fixed>

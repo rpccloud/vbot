@@ -2,9 +2,9 @@ import React from "react";
 
 const styles = {
     container: {
-        fontSize: "var(--FontSizeSmall)",
-        height: "var(--VbotFooterHeight)",
-        color: "var(--SecondaryFontColorDarken)",
+        fontSize: "var(--Vbot-FontSizeSmall)",
+        minHeight: "var(--Vbot-FooterHeight)",
+        color: "var(--Vbot-FontColorLighten)",
     }
 }
 

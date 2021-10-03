@@ -53,13 +53,8 @@ const pageData = new PageData()
 
 const styles = {
     carousel: {
-        container: {
-            width:"100%",
-            height:"100%",
-            backgroundColor: "var(--PrimaryBGColor)",
-        },
         content: {
-            height: "calc(100vh - var(--VbotHeaderHeight) - var(--VbotFooterHeight))"
+            height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))"
         }
     },
     password: {
@@ -67,8 +62,8 @@ const styles = {
             marginBottom: 0,
         },
         wrong: {
-            fontSize: "var(--FontSizeSmall)",
-            color: "var(--WarnColor)",
+            fontSize: "var(--Vbot-FontSizeSmall)",
+            color: "var(--Vbot-WarningColor)",
         },
     }
 }
@@ -173,10 +168,9 @@ const Register = observer((props: any) => {
             <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
                 <Carousel
                     ref={carouselRef}
-                    className={"vbot-need-ant-carousel-auto-fill"}
+                    className={"vbot-need-ant-carousel-auto-fill vbot-auto-fill"}
                     dots={false}
                     effect="fade"
-                    style={styles.carousel.container}
                 >
                     <div>
                         <div style={styles.carousel.content} className="vbot-container-center">

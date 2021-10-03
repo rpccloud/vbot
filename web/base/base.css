@@ -1,5 +1,5 @@
 body {
-  background-color: var(--PrimaryBGColor) !important;
+  background-color: var(--Vbot-BackgroundColor);
   overflow: hidden;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -16,7 +16,7 @@ code {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: var(--PrimaryColor); }
+  background: var(--Vbot-PrimaryColor); }
 
 .vbot-container-center {
   display: flex !important;
@@ -26,7 +26,7 @@ code {
 .vbot-menu::after {
   border-right: 0px !important;
   left: 0px !important;
-  border-left: 3px solid var(--PrimaryColor); }
+  border-left: 3px solid var(--Vbot-PrimaryColor); }
 
 .vbot-container-round {
   border-radius: 8px; }
@@ -35,7 +35,7 @@ code {
   border-radius: 0px 8px 8px 0px; }
 
 .vbot-container-shadow {
-  box-shadow: 0px 0px 5px var(--ShadowColor); }
+  box-shadow: 0px 0px 5px var(--Vbot-ShadowColor); }
 
 .vbot-fill-auto {
   width: 100%;

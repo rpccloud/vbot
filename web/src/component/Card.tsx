@@ -10,12 +10,12 @@ import VSpacer from "./VSpacer";
 const styles = {
     title: {
         marginTop: 6,
-        fontSize: "var(--FontSizeLarge)",
+        fontSize: "var(--Vbot-FontSizeLarge)",
     },
     container: {
         width: 420,
         height: 360,
-        background: "var(--PrimaryBGColorLighten)",
+        background: "var(--Vbot-BackgroundColorLighten)",
         padding: "16px 24px 16px 24px",
     },
     button: {
@@ -24,7 +24,7 @@ const styles = {
     divider: {
         width: "100%",
         height: 1,
-        backgroundColor: "var(--PrimaryBGColorDarken)",
+        backgroundColor: "var(--Vbot-DividerColor)",
         marginTop: 8,
         marginBottom: 8,
     },
