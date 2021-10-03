@@ -29,13 +29,13 @@ code {
   border-left: 3px solid var(--PrimaryColor); }
 
 .vbot-container-round {
-  border-radius: 6px; }
+  border-radius: 8px; }
 
 .vbot-container-round-right {
-  border-radius: 0px 6px 6px 0px; }
+  border-radius: 0px 8px 8px 0px; }
 
 .vbot-container-shadow {
-  box-shadow: 1px 1px 4px var(--ShadowColor); }
+  box-shadow: 0px 0px 4px var(--ShadowColor); }
 
 .vbot-fill-auto {
   width: 100%;
