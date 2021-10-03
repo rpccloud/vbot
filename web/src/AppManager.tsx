@@ -1,11 +1,4 @@
 import React from "react";
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
 import Client from "rpccloud-client-js";
 
 import { observer } from "mobx-react-lite";
@@ -20,29 +13,18 @@ import { ConfigProvider } from "antd";
 import StartPage from "./pages/start";
 import { RPCAny } from "rpccloud-client-js/build/types";
 
+const routeMap: Map<string, any> = new Map([
+    ["start", (<StartPage />)],
+    ["main", (<Main />)],
+    ["login", (<Login />)],
+    ["register", (<Register />)],
+    ["debug", (<Debug />)],
+]);
+
 export default observer(() => {
     return AppData.get().isValid() ? (
         <ConfigProvider locale={AppData.get().locale?.antd} >
-            <Router>
-                <Redirect path="/" to="/start"/>
-                <Switch>
-                    <Route path="/start">
-                        <StartPage />
-                    </Route>
-                    <Route path="/main">
-                        <Main />
-                    </Route>
-                    <Route path="/login">
-                        <Login />
-                    </Route>
-                    <Route path="/register">
-                        <Register />
-                    </Route>
-                    <Route path="/debug">
-                        <Debug />
-                    </Route>
-                </Switch>
-            </Router>
+            {routeMap.get(AppData.get().rootRoute)}
         </ConfigProvider>
     ) : null
 })
@@ -62,12 +44,12 @@ export class AppTheme {
 
     setLight() {
         this.displayMode = "light"
-        this.styleElem.href = "/light.css"
+        this.styleElem.href = "./light.css"
     }
 
     setDark() {
         this.displayMode = "dark"
-        this.styleElem.href = "/dark.css"
+        this.styleElem.href = "./dark.css"
     }
 
     isLight(): boolean {
@@ -86,16 +68,24 @@ export class AppTheme {
 
 export class AppData {
     locale?: Locale
+    rootRoute: string
 
     private constructor() {
         makeAutoObservable(this)
         this.setLang(window.navigator.language)
+        this.rootRoute = "start"
     }
 
     async setLang(lang: string) {
         let ret = await Locale.new(lang)
         runInAction(() => {
             this.locale  = ret
+        })
+    }
+
+    setRootRoute(rootRoute: string) {
+        runInAction(() => {
+            this.rootRoute  = rootRoute
         })
     }
 
@@ -121,3 +111,7 @@ export class AppUser {
         return AppUser.client.send(timeoutMS, target, ...args)
     }
 }
+
+// window.onbeforeunload = function(event) {
+//     event.returnValue = "false";
+// }

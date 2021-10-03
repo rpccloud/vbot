@@ -1,7 +1,6 @@
 import React from "react";
 import { message, Spin } from "antd";
-import { AppUser } from "../../AppManager";
-import { useHistory } from "react-router-dom";
+import { AppData, AppUser } from "../../AppManager";
 import { observer } from "mobx-react-lite";
 import VLayout from "../../component/VLayout";
 import Header from "../common/Header";
@@ -20,15 +19,13 @@ const styles = {
 }
 
 const StartPage = observer((props: any) => {
-    let history = useHistory();
-
     setTimeout(async () => {
         try {
             let ret = await AppUser.send(3000, "#.user:IsInitialized")
             if (ret) {
-                history.push("/login")
+                AppData.get().setRootRoute("login")
             } else {
-                history.push("/register")
+                AppData.get().setRootRoute("register")
             }
         } catch(e) {
             message.error((e as any).getMessage())

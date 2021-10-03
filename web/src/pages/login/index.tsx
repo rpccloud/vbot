@@ -13,8 +13,7 @@ import VSpacer from "../../component/VSpacer";
 import { observer } from "mobx-react-lite";
 import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
-import { AppUser } from "../../AppManager";
-import { useHistory } from "react-router";
+import { AppData, AppUser } from "../../AppManager";
 
 function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
@@ -68,7 +67,6 @@ class PageData {
 const pageData = new PageData()
 
 const CardPassword = observer(() => {
-    let history = useHistory()
     let userRef: any = useRef(null)
     let passwordRef: any = useRef(null)
 
@@ -83,16 +81,16 @@ const CardPassword = observer(() => {
                         8000, "#.user:Login", pageData.user, pageData.password,
                     )
                     if (ret) {
-                        history.push("/main")
+                        AppData.get().setRootRoute("main")
                     } else {
                         message.error("用户名或密码不正确")
                         await delay(2000)
-                        history.push("/start")
+                        AppData.get().setRootRoute("start")
                     }
                 } catch(e) {
                     message.error((e as any).getMessage())
                     await delay(2000)
-                    history.push("/start")
+                    AppData.get().setRootRoute("start")
                 }
             }}
         >

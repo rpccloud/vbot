@@ -4,8 +4,6 @@ import {
     LockOutlined,
 } from '@ant-design/icons';
 
-import { useHistory } from "react-router-dom";
-
 import { message, Carousel, Input, Spin } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
@@ -14,7 +12,7 @@ import VSpacer from "../../component/VSpacer";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
-import { AppUser } from "../../AppManager";
+import { AppData, AppUser } from "../../AppManager";
 import Card from "../../component/Card";
 
 function delay(ms: number) {
@@ -168,7 +166,6 @@ const CardWaiting = observer(() => (
 ))
 
 const Register = observer((props: any) => {
-    let history = useHistory();
     const carouselRef: any = useRef(null);
     return (
         <VLayout.Container className="vbot-fill-viewport">
@@ -202,12 +199,12 @@ const Register = observer((props: any) => {
                                     try {
                                         await AppUser.send(8000, "#.user:Create", "admin", pageData.password)
                                         carouselRef.current.goTo(0)
-                                        history.push("/login")
+                                        AppData.get().setRootRoute("login")
                                     } catch(e) {
                                         message.error((e as any).getMessage())
                                         await delay(1000)
                                         carouselRef.current.goTo(0)
-                                        history.push("/start")
+                                        AppData.get().setRootRoute("start")
                                     }
                                 }}
                             />
