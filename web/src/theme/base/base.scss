@@ -27,7 +27,7 @@
 
 
 body {
-    background-image: radial-gradient(var(--Vbot-BackgroundColor) 30%, var(--Vbot-BackgroundColorDarken) 90%);
+    background-image: radial-gradient(var(--Vbot-BackgroundColord) 30%, var(--Vbot-BackgroundColorDarken) 90%);
     overflow: hidden;
     margin: 0;
     font-weight: 400;
@@ -42,6 +42,11 @@ body {
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--Vbot-FontColorLighten) !important;
+    opacity: 1;
 }
 
 /* width */

@@ -17,7 +17,6 @@ const { SubMenu } = Menu;
 const styles = {
     bar: {
         overflow: "hidden auto",
-        height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))",
         backgroundColor: "var(--Vbot-BackgroundColorLighten)",
     },
     content: {
@@ -97,7 +96,7 @@ const Main = () => {
                             <VLayout.Dynamic>
                                 <div className="vbot-container-round-right vbot-container-shadow vbot-fill-auto" style={{overflow:"hidden"}} >
                                     <div style={styles.bar}>
-                                            {siderView}
+                                        {siderView}
                                     </div>
                                 </div>
                             </VLayout.Dynamic>
