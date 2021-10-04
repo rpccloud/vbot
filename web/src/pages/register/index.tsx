@@ -54,6 +54,7 @@ const pageData = new PageData()
 const styles = {
     carousel: {
         content: {
+            color: "var(--Vbot-FontColor)",
             height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))"
         }
     },
