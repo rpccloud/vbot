@@ -78,7 +78,7 @@ export class AppUser {
 }
 
 window.onload = function() {
-    setAppTheme(Themes.light)
+    setAppTheme(Themes.dark)
 }
 
 // window.onbeforeunload = function(event) {

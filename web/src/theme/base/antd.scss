@@ -1,21 +1,36 @@
 .ant-menu {
     color: var(--Vbot-FontColor) !important;
+    background-color: transparent !important;
+    border-right: 0px !important;
 }
 
 .ant-menu-submenu-selected .ant-menu-submenu-arrow {
     color: var(--Vbot-PrimaryColor) !important;
 }
 
+.ant-menu-item-selected {
+    background-color: transparent !important;
+}
+
 .ant-menu-submenu-arrow  {
     color: var(--Vbot-FontColor) !important;
 }
 
+.ant-layout-sider {
+    background-color: transparent !important;
+}
+
 .ant-input {
     color: var(--Vbot-FontColor);
+    background-color:  var(--Vbot-BackgroundColorLighten) !important;
 }
 
 .ant-input-password-icon {
     color: var(--Vbot-PrimaryColor);
+}
+
+.ant-input-affix-wrapper {
+    background-color: var(--Vbot-BackgroundColorLighten) !important;
 }
 
 .ant-btn-background-ghost.ant-btn-primary[disabled] {

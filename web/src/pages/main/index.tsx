@@ -17,10 +17,11 @@ const { SubMenu } = Menu;
 const styles = {
     bar: {
         overflow: "hidden auto",
-        backgroundColor: "var(--Vbot-BackgroundColorLighten)",
+        backgroundColor: "var(--Vbot-BackgroundColor)",
+        height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))",
     },
     content: {
-        backgroundColor: "var(--Vbot-BackgroundColorLighten)",
+        backgroundColor: "var(--Vbot-BackgroundColor)",
     }
 }
 
@@ -29,7 +30,7 @@ const Main = () => {
     const [selectKeys, setSelectKeys] = useState(['1'])
 
     const siderView = (
-        <Sider theme="light" width={190}>
+        <Sider width={190}>
             <Menu mode="inline" selectedKeys={selectKeys}  openKeys={openKeys}>
                 <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
                     <Menu.Item key="1" className="vbot-menu">option1</Menu.Item>

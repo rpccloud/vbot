@@ -10,6 +10,7 @@ import VSpacer from "./VSpacer";
 const styles = {
     title: {
         marginTop: 6,
+        color: "var(--Vbot-PrimaryColor)",
         fontSize: "var(--Vbot-FontSizeLarge)",
     },
     container: {

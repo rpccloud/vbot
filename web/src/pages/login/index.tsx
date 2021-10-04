@@ -84,6 +84,8 @@ const CardPassword = observer(() => {
                     message.error((e as any).getMessage())
                     await delay(2000)
                     AppData.get().setRootRoute("start")
+                } finally {
+                    pageData.reset()
                 }
             }}
         >
@@ -95,7 +97,7 @@ const CardPassword = observer(() => {
                 placeholder="输入用户名"
                 prefix={<UserOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
-                    pageData.user = e.target.value
+                    pageData.setUser(e.target.value)
                 }}
             />
             <VSpacer size={20} />
@@ -106,7 +108,7 @@ const CardPassword = observer(() => {
                 placeholder="确认密码"
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
-                    pageData.password = e.target.value
+                    pageData.setPassword(e.target.value)
                 }}
             />
             <VSpacer size={16} />

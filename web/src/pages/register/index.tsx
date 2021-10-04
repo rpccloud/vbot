@@ -119,7 +119,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
                 defaultValue={pageData.password}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
-                    pageData.password = e.target.value
+                    pageData.setPassword(e.target.value)
                 }}
             />
             <VSpacer size={20} />
@@ -129,7 +129,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
                 defaultValue={pageData.confirm}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
-                    pageData.confirm = e.target.value
+                    pageData.setConfirm(e.target.value)
                 }}
             />
             <VSpacer size={16} />
@@ -199,6 +199,8 @@ const Register = observer((props: any) => {
                                         await delay(1000)
                                         carouselRef.current.goTo(0)
                                         AppData.get().setRootRoute("start")
+                                    } finally {
+                                        pageData.reset()
                                     }
                                 }}
                             />

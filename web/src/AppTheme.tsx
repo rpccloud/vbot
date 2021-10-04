@@ -23,6 +23,24 @@ export const Themes = {
         dividerColor: "rgb(220, 222, 225)",
         disabledColor: "rgb(190, 190, 190)",
         disabledBackground: "rgb(235, 235, 235)"
+    },
+    dark: {
+        primaryColor: "rgb(255, 159, 51)",
+        infoColor: "rgb(44, 105, 238)",
+        successColor: "rgb(27, 199, 21)",
+        processingColor: "rgb(218, 189, 24)",
+        errorColor: "rgb(236, 20, 20)",
+        warningColor: "rgb(185, 78, 64)",
+        backgroundColor: "rgb(20, 20, 20)",
+        backgroundColorLighten: "rgb(35, 35, 35)",
+        backgroundColorDarken: "rgb(10, 10, 10)",
+        fontColor: "rgb(200, 200, 200)",
+        fontColorLighten: "rgb(100, 100, 100)",
+        fontColorDarken: "rgb(240, 240, 240)",
+        shadowColor: "rgb(255, 255, 255)",
+        dividerColor: "rgb(70, 70, 70)",
+        disabledColor: "rgb(70, 70, 70)",
+        disabledBackground: "rgb(40, 40, 40)"
     }
 }
 
