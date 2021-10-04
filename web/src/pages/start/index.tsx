@@ -14,7 +14,7 @@ const styles = {
     text: {
         fontSize: "var(--Vbot-FontSizeLarge)",
         color: "var(--Vbot-FontColor)",
-        marginLeft: 10,
+        marginLeft: 16,
     },
 }
 
@@ -38,7 +38,7 @@ const StartPage = observer((props: any) => {
             <Header/>
             <VLayout.Dynamic>
                 <div className="vbot-fill-auto vbot-container-center">
-                    <Spin size="default" />
+                    <Spin size="large" />
                     <div style={styles.text}>Loading ...</div>
                 </div>
             </VLayout.Dynamic>
