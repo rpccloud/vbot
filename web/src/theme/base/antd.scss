@@ -22,7 +22,7 @@
 
 .ant-input {
     color: var(--Vbot-FontColor);
-    background-color:  var(--Vbot-BackgroundColorLighten) !important;
+    background-color:  transparent !important;
 }
 
 .ant-input-password-icon {
@@ -30,7 +30,7 @@
 }
 
 .ant-input-affix-wrapper {
-    background-color: var(--Vbot-BackgroundColorLighten) !important;
+    background-color: transparent !important;
 }
 
 .ant-btn-background-ghost.ant-btn-primary[disabled] {
