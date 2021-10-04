@@ -120,6 +120,15 @@ func (p *DB) Update(fn func(tx *bolt.Tx) error) error {
 	})
 }
 
+func (p *DB) View(fn func(tx *bolt.Tx) error) error {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	return p.db.View(func(tx *bolt.Tx) error {
+		return fn(tx)
+	})
+}
+
 func (p *DB) Put(bucketName string, key string, value []byte) error {
 	p.mu.Lock()
 	defer p.mu.Unlock()

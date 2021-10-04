@@ -30,6 +30,7 @@ func main() {
 		SetNumOfThreads(4096)
 	rpc.NewServer(serverConfig).
 		AddService("user", service.UserService, nil).
+		AddService("server", service.ServerService, nil).
 		Listen("ws", "0.0.0.0:8080", "/rpc", nil, staticFileMap).
 		Open()
 }

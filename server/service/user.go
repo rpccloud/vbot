@@ -69,9 +69,10 @@ func (p *UserManager) OnTimer(timeout time.Duration) {
 
 var UserService = rpc.NewService(rpc.Map{"manager": NewUserManager()}).
 	On("$onTimer", onTimer).
-	On("Create", userCreate).
-	On("Login", userLogin).
-	On("IsInitialized", isInitialized)
+	On("Create", createUser).
+	On("Login", login).
+	On("IsInitialized", isInitialized).
+	On("getNameBySessionID", getNameBySessionID)
 
 func onTimer(rt rpc.Runtime, seq uint64) rpc.Return {
 	if seq%10 == 0 {
@@ -87,27 +88,27 @@ func onTimer(rt rpc.Runtime, seq uint64) rpc.Return {
 	return rt.Reply(nil)
 }
 
-func userCreate(rt rpc.Runtime, name string, password string) rpc.Return {
-	fnUpdate := func(db *core.DB, enOK []byte, enSecret []byte) error {
-		return db.Update(func(tx *bolt.Tx) error {
-			b := tx.Bucket([]byte("auth"))
+func dbCreateUser(db *core.DB, name string, enOK []byte, enSecret []byte) error {
+	return db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("auth"))
 
-			if b.Get(core.DBKey("user.%s.ok", name)) != nil {
-				return fmt.Errorf("user \"%s\" has been initialized", name)
-			}
+		if b.Get(core.DBKey("user.%s.ok", name)) != nil {
+			return fmt.Errorf("user \"%s\" has been initialized", name)
+		}
 
-			if e := b.Put(core.DBKey("user.%s.ok", name), enOK); e != nil {
-				return e
-			} else if e = b.Put(core.DBKey("user.%s.secret", name), enSecret); e != nil {
-				return e
-			} else if e = b.Put(core.DBKey("system.user.%s", name), []byte{1}); e != nil {
-				return e
-			} else {
-				return nil
-			}
-		})
-	}
+		if e := b.Put(core.DBKey("user.%s.ok", name), enOK); e != nil {
+			return e
+		} else if e = b.Put(core.DBKey("user.%s.secret", name), enSecret); e != nil {
+			return e
+		} else if e = b.Put(core.DBKey("system.user.%s", name), []byte{1}); e != nil {
+			return e
+		} else {
+			return nil
+		}
+	})
+}
 
+func createUser(rt rpc.Runtime, name string, password string) rpc.Return {
 	if !userNameRegex.MatchString(name) {
 		return rt.Reply(fmt.Errorf("invalid user name \"%s\"", name))
 	} else if secret, e := core.GetRandString(100); e != nil {
@@ -120,11 +121,11 @@ func userCreate(rt rpc.Runtime, name string, password string) rpc.Return {
 		return rt.Reply(e)
 	} else if e = db.CreateBucketIsNotExist("auth"); e != nil {
 		return rt.Reply(e)
-	} else if e = db.CreateBucketIsNotExist("user"); e != nil {
+	} else if e = db.CreateBucketIsNotExist(fmt.Sprintf("-%s", name)); e != nil {
 		return rt.Reply(e)
 	} else if e = db.CreateBucketIsNotExist("template"); e != nil {
 		return rt.Reply(e)
-	} else if e = fnUpdate(db, enOK, enSecret); e != nil {
+	} else if e = dbCreateUser(db, name, enOK, enSecret); e != nil {
 		fmt.Println(e)
 		return rt.Reply(e)
 	} else {
@@ -132,7 +133,7 @@ func userCreate(rt rpc.Runtime, name string, password string) rpc.Return {
 	}
 }
 
-func userLogin(rt rpc.Runtime, name string, password string) rpc.Return {
+func login(rt rpc.Runtime, name string, password string) rpc.Return {
 	if configMgr, ok := rt.GetServiceConfig("manager"); !ok {
 		return rt.Reply(errors.New("user service config error"))
 	} else if manager, ok := configMgr.(*UserManager); !ok {
@@ -165,5 +166,17 @@ func isInitialized(rt rpc.Runtime) rpc.Return {
 		return rt.Reply(e)
 	} else {
 		return rt.Reply(db.IsBucketExist("auth"))
+	}
+}
+
+func getNameBySessionID(rt rpc.Runtime, sessionID string) rpc.Return {
+	if configMgr, ok := rt.GetServiceConfig("manager"); !ok {
+		return rt.Reply(errors.New("user service config error"))
+	} else if manager, ok := configMgr.(*UserManager); !ok {
+		return rt.Reply(errors.New("user service config error"))
+	} else if user, ok := manager.sessionMap[sessionID]; !ok {
+		return rt.Reply(errors.New("sessionID does not find"))
+	} else {
+		return rt.Reply(user.name)
 	}
 }
