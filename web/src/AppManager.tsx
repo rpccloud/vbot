@@ -67,9 +67,18 @@ export class AppData {
 export class AppUser {
     private static client = new Client("ws://127.0.0.1:8080/rpc")
     private static sessionID = ""
+    private static userName = ""
 
     static getSessionID(): string {
         return AppUser.sessionID
+    }
+
+    static setSessionID(sessionID: string) {
+        AppUser.sessionID = sessionID
+    }
+
+    static setUserName(userName: string) {
+        AppUser.userName = userName
     }
 
     static send(timeoutMS: number, target: string, ...args: Array<RPCAny>): Promise<RPCAny> {

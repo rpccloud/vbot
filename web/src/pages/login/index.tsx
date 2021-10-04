@@ -14,6 +14,7 @@ import { observer } from "mobx-react-lite";
 import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
 import { AppData, AppUser } from "../../AppManager";
+import { RPCMap } from "rpccloud-client-js/build/types";
 
 function delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
@@ -74,6 +75,10 @@ const CardPassword = observer(() => {
                         8000, "#.user:Login", pageData.user, pageData.password,
                     )
                     if (ret) {
+                        const userName = (ret as RPCMap).get("name")
+                        const sessionID = (ret as RPCMap).get("sessionID")
+                        AppUser.setUserName(userName as string)
+                        AppUser.setSessionID(sessionID as string)
                         AppData.get().setRootRoute("main")
                     } else {
                         message.error("用户名或密码不正确")
