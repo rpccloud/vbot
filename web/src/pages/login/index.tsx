@@ -27,8 +27,8 @@ class PageData {
 
     constructor() {
         makeAutoObservable(this)
-        this.user = ""
-        this.password = ""
+        this.user = "admin"
+        this.password = "Test123456"
         this.loading = false
     }
 

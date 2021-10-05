@@ -7,21 +7,21 @@ import "./theme/component/icon.scss";
 
 export const Themes = {
     light: {
-        primaryColor: "rgb(98, 141, 235)",
+        primaryColor: "rgb(24, 144, 255)",
         infoColor: "rgb(44, 105, 238)",
         successColor: "rgb(27, 199, 21)",
         processingColor: "rgb(218, 189, 24)",
         errorColor: "rgb(236, 20, 20)",
         warningColor: "rgb(185, 78, 64)",
-        backgroundColor: "rgb(233, 235, 238)",
+        backgroundColor: "rgb(235, 236, 237)",
         backgroundColorLighten: "rgb(255, 255, 255)",
-        backgroundColorDarken: "rgb(225, 227, 230)",
-        fontColor: "rgb(60, 60, 60)",
-        fontColorLighten: "rgb(160, 160, 160)",
-        fontColorDarken: "rgb(25, 25, 25)",
-        shadowColor: "rgb(130, 133, 138)",
-        dividerColor: "rgb(130, 130, 130)",
-        disabledColor: "rgb(190, 190, 190)",
+        backgroundColorDarken: "rgb(215, 215, 215)",
+        fontColor: "rgba(0, 0, 0, 0.85)",
+        fontColorLighten:  "rgba(0, 0, 0, 0.6)",
+        fontColorDarken:  "rgba(0, 0, 0, 0.95)",
+        shadowColor: "rgb(150, 150, 150)",
+        dividerColor: "rgb(160, 160, 160)",
+        disabledColor: "rgb(195, 195, 195)",
         disabledBackground: "rgb(235, 235, 235)"
     },
     dark: {

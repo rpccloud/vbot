@@ -6,7 +6,6 @@ import HLayout from "./HLayout";
 import Divider from "./Divider";
 import VSpacer from "./VSpacer";
 
-
 const styles = {
     title: {
         marginTop: 6,
