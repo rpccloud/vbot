@@ -10,13 +10,14 @@ import VSpacer from "./VSpacer";
 const styles = {
     title: {
         marginTop: 6,
-        color: "var(--Vbot-PrimaryColor)",
+        color: "var(--Vbot-FontColor)",
         fontSize: "var(--Vbot-FontSizeLarge)",
     },
     container: {
         width: 420,
         height: 360,
-        background: "var(--Vbot-BackgroundColorLighten)",
+        border: "1px solid var(--Vbot-DividerColor)",
+        background: "transparent",
         padding: "16px 24px 16px 24px",
     },
     button: {
@@ -30,7 +31,6 @@ const styles = {
         marginBottom: 8,
     },
 }
-
 
 interface CardProps {
     title: string,

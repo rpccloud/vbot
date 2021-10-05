@@ -20,7 +20,7 @@ export const Themes = {
         fontColorLighten: "rgb(160, 160, 160)",
         fontColorDarken: "rgb(25, 25, 25)",
         shadowColor: "rgb(130, 133, 138)",
-        dividerColor: "rgb(220, 222, 225)",
+        dividerColor: "rgb(130, 130, 130)",
         disabledColor: "rgb(190, 190, 190)",
         disabledBackground: "rgb(235, 235, 235)"
     },
@@ -31,14 +31,14 @@ export const Themes = {
         processingColor: "rgb(218, 189, 24)",
         errorColor: "rgb(236, 20, 20)",
         warningColor: "rgb(185, 78, 64)",
-        backgroundColor: "rgb(20, 20, 20)",
-        backgroundColorLighten: "rgb(35, 35, 35)",
-        backgroundColorDarken: "rgb(10, 10, 10)",
+        backgroundColor: "rgb(25, 25, 25)",
+        backgroundColorLighten: "rgb(38, 38, 38)",
+        backgroundColorDarken: "rgb(6, 6, 6)",
         fontColor: "rgb(200, 200, 200)",
         fontColorLighten: "rgb(100, 100, 100)",
         fontColorDarken: "rgb(240, 240, 240)",
         shadowColor: "rgb(255, 255, 255)",
-        dividerColor: "rgb(70, 70, 70)",
+        dividerColor: "rgb(120, 120, 120)",
         disabledColor: "rgb(70, 70, 70)",
         disabledBackground: "rgb(40, 40, 40)"
     }

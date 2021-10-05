@@ -6,10 +6,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import Header from "../common/Header";
-import VLayout from "../../component/VLayout";
 import Footer from "../common/Footer";
-import HLayout from "../../component/HLayout";
-import HSpacer from "../../component/HSpacer";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -17,11 +14,16 @@ const { SubMenu } = Menu;
 const styles = {
     bar: {
         overflow: "hidden auto",
-        backgroundColor: "var(--Vbot-BackgroundColor)",
-        height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))",
+        flex: "1 1 0",
+        borderTop: "1px solid var(--Vbot-DividerColor)",
+        borderRight: "1px solid var(--Vbot-DividerColor)",
+        borderBottom: "1px solid var(--Vbot-DividerColor)",
     },
     content: {
-        backgroundColor: "var(--Vbot-BackgroundColor)",
+        overflow: "hidden auto",
+        flex: "1 1 0",
+        borderTop: "1px solid var(--Vbot-DividerColor)",
+        borderBottom: "1px solid var(--Vbot-DividerColor)",
     }
 }
 
@@ -63,62 +65,40 @@ const Main = () => {
     )
 
     const contentView = (
-        <VLayout.Container>
-            <VLayout.Dynamic>
-                <HLayout.Container>
-                    <HSpacer size={16}/>
-                    <HLayout.Dynamic>
-                        <div
-                            className="vbot-container-round vbot-container-shadow vbot-fill-auto"
-                            style={styles.content}
-                            onClick={() => {
-                                setOpenKeys(["sub3"])
-                                setSelectKeys(["9"])
-                            }}
-                        >
-                        </div>
-                    </HLayout.Dynamic>
-                    <HSpacer size={16}/>
-                </HLayout.Container>
-            </VLayout.Dynamic>
-        </VLayout.Container>
+        <div
+            style={styles.content}
+            onClick={() => {
+                setOpenKeys(["sub3"])
+                setSelectKeys(["9"])
+            }}
+        >
+            <div>hi</div><div>hi</div><div>hi</div><div>hi</div><div>hi</div>
+            <div>hi</div><div>hi</div><div>hi</div><div>hi</div><div>hi</div>
+            <div>hi</div><div>hi</div><div>hi</div><div>hi</div><div>hi</div>
+            <div>hi</div><div>hi</div><div>hi</div><div>hi</div><div>hi</div>
+            <div>hi</div><div>hi</div><div>hi</div><div>hi</div><div>hi</div>
+            <div>hi</div><div>hi</div><div>hi</div><div>hi</div><div>hi</div>
+        </div>
     )
 
     return (
-        <VLayout.Container className="vbot-fill-viewport">
-            <VLayout.Dynamic>
-                <HLayout.Container>
-                    <HLayout.Fixed>
-                        <VLayout.Container>
+        <div className="vbot-fill-viewport" style={{display: "flex", flexFlow: "column"}} >
+            <div style={{display: "flex", flex:"1 0 0", flexFlow: "row"}}>
+                <div style={{display: "flex", flexFlow: "column"}}>
+                    <Header/>
+                    <div style={styles.bar}>
+                        {siderView}
+                    </div>
+                </div>
 
-                            <VLayout.Fixed>
-                                <Header/>
-                            </VLayout.Fixed>
-                            <VLayout.Dynamic>
-                                <div className="vbot-container-round-right vbot-container-shadow vbot-fill-auto" style={{overflow:"hidden"}} >
-                                    <div style={styles.bar}>
-                                        {siderView}
-                                    </div>
-                                </div>
-                            </VLayout.Dynamic>
-                        </VLayout.Container>
-                    </HLayout.Fixed>
+                <div style={{display: "flex", flex:"1 0 0", flexFlow: "column"}}>
+                    <div style={{height: "var(--Vbot-HeaderHeight)"}}></div>
+                    {contentView}
+                </div>
+            </div>
 
-                    <VLayout.Container>
-                        <VLayout.Fixed>
-                            <div style={{height: "var(--Vbot-HeaderHeight)"}} />
-                        </VLayout.Fixed>
-                        <VLayout.Dynamic>
-                            {contentView}
-                        </VLayout.Dynamic>
-                    </VLayout.Container>
-                </HLayout.Container>
-            </VLayout.Dynamic>
-
-            <VLayout.Fixed>
-                <Footer/>
-            </VLayout.Fixed>
-        </VLayout.Container>
+            <Footer/>
+        </div>
     );
 }
 

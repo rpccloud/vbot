@@ -100,6 +100,7 @@ const CardPassword = observer(() => {
                 ref={userRef}
                 size="large"
                 placeholder="输入用户名"
+                autoComplete="off"
                 prefix={<UserOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
                     pageData.setUser(e.target.value)

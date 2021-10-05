@@ -27,7 +27,7 @@
 
 
 body {
-    background-image: radial-gradient(var(--Vbot-BackgroundColorLighten) 10%, var(--Vbot-BackgroundColorDarken) 70%);
+    background-image: radial-gradient(var(--Vbot-BackgroundColorLighten) 0%, var(--Vbot-BackgroundColorDarken) 100%);
     overflow: hidden;
     margin: 0;
     font-weight: 400;
@@ -51,7 +51,7 @@ code {
 
 /* width */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 /* Handle */
