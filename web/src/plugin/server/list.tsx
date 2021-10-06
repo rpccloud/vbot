@@ -2,7 +2,6 @@ import React, { Key } from "react";
 import { makeAutoObservable, runInAction } from "mobx";
 import { Button, Table } from "antd";
 import { observer } from "mobx-react-lite";
-import SearchOutlined from "@ant-design/icons/lib/icons/SearchOutlined";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import ReloadOutlined from "@ant-design/icons/lib/icons/ReloadOutlined";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
@@ -60,11 +59,11 @@ interface ServerListProps {
 const ServerList = observer((props: ServerListProps) => {
     const deleteText = data.selectedRowKeys.length > 0 ? `Delete ${data.selectedRowKeys.length} items` : ""
     return (
-        <div style={{padding: 24}}>
+        <div style={{padding: 28}}>
             <div style={{ marginBottom: 16 }}>
-                <Button type="primary" shape="circle" icon={<PlusOutlined />} />
-                <Button type="primary" shape="circle" icon={<ReloadOutlined />} style={{marginLeft: 10}} />
-                <Button type="primary" shape="round" icon={<DeleteOutlined />} style={{marginLeft: 10}}>
+                <Button type="primary" shape="circle" icon={<PlusOutlined />} disabled={data.selectedRowKeys.length > 0 }/>
+                <Button type="primary" shape="circle" icon={<ReloadOutlined />} style={{marginLeft: 10}} disabled={data.selectedRowKeys.length > 0 }/>
+                <Button type="primary" shape="round" icon={<DeleteOutlined />} style={{marginLeft: 10}} disabled={data.selectedRowKeys.length === 0 }>
                     {deleteText}
                 </Button>
             </div>
@@ -76,6 +75,7 @@ const ServerList = observer((props: ServerListProps) => {
                 columns={columns}
                 dataSource={data.servers}
             />
+
         </div>
     )
 })

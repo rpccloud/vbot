@@ -15,7 +15,7 @@ const styles = {
     container: {
         width: 420,
         height: 360,
-        border: "1px solid var(--Vbot-OutlineColor)",
+        border: "1px solid var(--Vbot-DividerColor)",
         background: "transparent",
         padding: "16px 24px 16px 24px",
     },
@@ -25,7 +25,7 @@ const styles = {
     divider: {
         width: "100%",
         height: 1,
-        backgroundColor: "var(--Vbot-OutlineColor)",
+        backgroundColor: "var(--Vbot-DividerColor)",
         marginTop: 8,
         marginBottom: 8,
     },

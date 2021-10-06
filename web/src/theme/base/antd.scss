@@ -33,17 +33,31 @@
     background-color: transparent !important;
 }
 
-.ant-btn-background-ghost.ant-btn-primary[disabled] {
+.ant-btn-primary[disabled] {
     color: var(--Vbot-DisabledColor) !important;
     border-color:  var(--Vbot-DisabledColor) !important;
     background-color: var(--Vbot-DisabledBackground) !important;
 }
 
 .ant-checkbox-inner {
-    background-color: transparent;
+    color: var(--Vbot-PrimaryColor) !important;
+    background-color: transparent !important;
 }
 
+.ant-checkbox-checked > .ant-checkbox-inner {
+    background-color: var(--Vbot-PrimaryColor) !important;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// .ant-table
+////////////////////////////////////////////////////////////////////////////////
 .ant-table {
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: var(--Vbot-DividerColor);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-right-color: var(--Vbot-DividerColor);
     background-color: var(--Vbot-BackgroundColorLighten) !important;
 }
 
@@ -51,8 +65,10 @@
     background-color: transparent !important;
 }
 
-th.ant-table-cell::before {
-    background-color: var(--Vbot-DividerColor) !important;
+.ant-table-thead>tr>th {
+    border-top-style: solid;
+    border-top-width: 1px;
+    border-top-color: var(--Vbot-DividerColor);
 }
 
 .ant-table-cell {
@@ -61,9 +77,12 @@ th.ant-table-cell::before {
     border-bottom-color: var(--Vbot-DividerColor) !important;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// .ant-pagination
+////////////////////////////////////////////////////////////////////////////////
 .ant-pagination-item {
     background-color: transparent !important;
-    border-color: var(--Vbot-DividerColor);
+    border-color: var(--Vbot-OutlineColor);
 }
 
 .ant-pagination-item > a {
@@ -71,7 +90,6 @@ th.ant-table-cell::before {
 }
 
 .ant-pagination-item-active {
-    background-color: transparent !important;
     border-color: var(--Vbot-PrimaryColor);
 }
 
@@ -79,22 +97,14 @@ th.ant-table-cell::before {
     color: var(--Vbot-PrimaryColor);
 }
 
-.ant-pagination-prev > button {
-    color: var(--Vbot-PrimaryColor);
-    border-color: var(--Vbot-PrimaryColor) !important;
-}
-
-.ant-pagination-next > button {
-    color: var(--Vbot-PrimaryColor);
-    border-color: var(--Vbot-PrimaryColor) !important;
-}
-
 .ant-pagination-disabled > button {
-    color: var(--Vbot-FontColor) !important;
-    border-color: var(--Vbot-FontColor) !important;
+    color: var(--Vbot-DisabledColor) !important;
+    border-color:  var(--Vbot-DisabledColor) !important;
+    background-color: var(--Vbot-DisabledBackground) !important;
 }
 
 .ant-pagination-item-link {
+    color: var(--Vbot-FontColor) !important;
     background-color: transparent !important;
 }
 
@@ -102,3 +112,42 @@ th.ant-table-cell::before {
     color: var(--Vbot-DividerColor) !important;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// .ant-select
+////////////////////////////////////////////////////////////////////////////////
+.ant-select-dropdown {
+    border: 1px solid var(--Vbot-PrimaryColor);
+    background-color:  var(--Vbot-BackgroundColor)  !important;
+}
+
+.ant-select-selector {
+    color: var(--Vbot-FontColor);
+    background-color: transparent !important;
+}
+
+.ant-select-arrow {
+    color: var(--Vbot-FontColor) !important;
+}
+
+.ant-select-item-option-content {
+    color: var(--Vbot-FontColor);
+    background-color:  transparent !important;
+}
+
+.ant-select-item-option-active > .ant-select-item-option-content {
+    color: var(--Vbot-PrimaryColor) !important;
+}
+
+.ant-select-item-option-selected > .ant-select-item-option-content {
+    color: var(--Vbot-PrimaryColor) !important;
+}
+
+.ant-select-item-option-active {
+    color: var(--Vbot-PrimaryColor) !important;
+    background-color: transparent !important;
+}
+
+.ant-select-item-option-selected {
+    color: var(--Vbot-PrimaryColor) !important;
+    background-color: transparent !important;
+}
