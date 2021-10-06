@@ -39,3 +39,66 @@
     background-color: var(--Vbot-DisabledBackground) !important;
 }
 
+.ant-checkbox-inner {
+    background-color: transparent;
+}
+
+.ant-table {
+    background-color: var(--Vbot-BackgroundColorLighten) !important;
+}
+
+.ant-table-row {
+    background-color: transparent !important;
+}
+
+th.ant-table-cell::before {
+    background-color: var(--Vbot-DividerColor) !important;
+}
+
+.ant-table-cell {
+    color: var(--Vbot-FontColor) !important;
+    background-color: transparent !important;
+    border-bottom-color: var(--Vbot-DividerColor) !important;
+}
+
+.ant-pagination-item {
+    background-color: transparent !important;
+    border-color: var(--Vbot-DividerColor);
+}
+
+.ant-pagination-item > a {
+    color: var(--Vbot-FontColor);
+}
+
+.ant-pagination-item-active {
+    background-color: transparent !important;
+    border-color: var(--Vbot-PrimaryColor);
+}
+
+.ant-pagination-item-active > a {
+    color: var(--Vbot-PrimaryColor);
+}
+
+.ant-pagination-prev > button {
+    color: var(--Vbot-PrimaryColor);
+    border-color: var(--Vbot-PrimaryColor) !important;
+}
+
+.ant-pagination-next > button {
+    color: var(--Vbot-PrimaryColor);
+    border-color: var(--Vbot-PrimaryColor) !important;
+}
+
+.ant-pagination-disabled > button {
+    color: var(--Vbot-FontColor) !important;
+    border-color: var(--Vbot-FontColor) !important;
+}
+
+.ant-pagination-item-link {
+    background-color: transparent !important;
+}
+
+.ant-pagination-item-ellipsis {
+    color: var(--Vbot-DividerColor) !important;
+}
+

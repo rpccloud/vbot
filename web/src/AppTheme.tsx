@@ -20,7 +20,8 @@ export const Themes = {
         fontColorLighten:  "rgba(0, 0, 0, 0.6)",
         fontColorDarken:  "rgba(0, 0, 0, 0.95)",
         shadowColor: "rgb(150, 150, 150)",
-        dividerColor: "rgb(160, 160, 160)",
+        outlineColor: "rgb(120, 120, 120)",
+        dividerColor: "rgb(190, 190, 190)",
         disabledColor: "rgb(195, 195, 195)",
         disabledBackground: "rgb(235, 235, 235)"
     },
@@ -34,11 +35,12 @@ export const Themes = {
         backgroundColor: "rgb(25, 25, 25)",
         backgroundColorLighten: "rgb(38, 38, 38)",
         backgroundColorDarken: "rgb(6, 6, 6)",
-        fontColor: "rgb(200, 200, 200)",
-        fontColorLighten: "rgb(100, 100, 100)",
-        fontColorDarken: "rgb(240, 240, 240)",
+        fontColor: "rgb(240, 240, 240)",
+        fontColorLighten: "rgb(255, 255, 255)",
+        fontColorDarken: "rgb(220, 220, 220)",
         shadowColor: "rgb(255, 255, 255)",
-        dividerColor: "rgb(120, 120, 120)",
+        outlineColor: "rgb(180, 180, 180)",
+        dividerColor: "rgb(110, 110, 110)",
         disabledColor: "rgb(70, 70, 70)",
         disabledBackground: "rgb(40, 40, 40)"
     }
@@ -58,6 +60,7 @@ export function setAppTheme(theme: {
     fontColorLighten: string,
     fontColorDarken: string,
     shadowColor: string,
+    outlineColor: string,
     dividerColor: string,
     disabledColor: string,
     disabledBackground: string,
@@ -87,8 +90,8 @@ export function setAppTheme(theme: {
     docStyle.setProperty("--Vbot-FontColorLighten", theme.fontColorLighten)
     docStyle.setProperty("--Vbot-FontColorDarken", theme.fontColorDarken);
     docStyle.setProperty("--Vbot-ShadowColor", theme.shadowColor);
+    docStyle.setProperty("--Vbot-OutlineColor", theme.outlineColor);
     docStyle.setProperty("--Vbot-DividerColor", theme.dividerColor);
-
     docStyle.setProperty("--Vbot-DisabledColor", theme.disabledColor);
     docStyle.setProperty("--Vbot-DisabledBackground", theme.disabledBackground);
 }
