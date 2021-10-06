@@ -39,7 +39,6 @@ interface CardProps {
     canNext?: boolean,
     onPrev?: () => void,
     onNext?: () => void,
-    onKeyDown?: (e: any) => void,
     children: any,
 }
 
@@ -71,7 +70,6 @@ const Card = (props: CardProps) => {
         <div
             className="vbot-container-round vbot-container-shadow"
             style={styles.container}
-            onKeyDown={props.onKeyDown}
         >
             <VLayout.Container>
                 <VLayout.Fixed>

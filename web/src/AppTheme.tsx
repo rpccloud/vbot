@@ -15,7 +15,7 @@ export const Themes = {
         warningColor: "rgb(185, 78, 64)",
         backgroundColor: "rgb(235, 236, 237)",
         backgroundColorLighten: "rgb(255, 255, 255)",
-        backgroundColorDarken: "rgb(215, 215, 215)",
+        backgroundColorDarken: "rgb(220, 222, 224)",
         fontColor: "rgba(0, 0, 0, 0.85)",
         fontColorLighten:  "rgba(0, 0, 0, 0.6)",
         fontColorDarken:  "rgba(0, 0, 0, 0.95)",
