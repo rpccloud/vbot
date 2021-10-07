@@ -13,8 +13,6 @@ const styles = {
         fontSize: "var(--Vbot-FontSizeLarge)",
     },
     container: {
-        width: 420,
-        height: 360,
         border: "1px solid var(--Vbot-DividerColor)",
         background: "transparent",
         padding: "16px 24px 16px 24px",
@@ -33,6 +31,8 @@ const styles = {
 
 interface CardProps {
     title: string,
+    width: number,
+    height: number,
     prevName?: string,
     nextName?: string,
     canPrev?: boolean,
@@ -69,7 +69,7 @@ const Card = (props: CardProps) => {
     return (
         <div
             className="vbot-container-round vbot-container-shadow"
-            style={styles.container}
+            style={{...styles.container, width: `${props.width}px`, height: `${props.height}px`}}
         >
             <VLayout.Container>
                 <VLayout.Fixed>

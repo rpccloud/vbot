@@ -14,12 +14,9 @@ import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
 import { AppData, AppUser } from "../../AppManager";
 import Card from "../../component/Card";
+import { delay } from "../../util/util";
 
-function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-}
-
-class PageData {
+class Data {
     password: string
     confirm: string
 
@@ -49,7 +46,7 @@ class PageData {
     }
 }
 
-const pageData = new PageData()
+const data = new Data()
 
 const styles = {
     carousel: {
@@ -70,8 +67,8 @@ const styles = {
 }
 
 const CardPassword = observer((props: {onNext: () => void}) => {
-    const password = pageData.password
-    const confirm =  pageData.confirm
+    const password = data.password
+    const confirm =  data.confirm
     let indicator: any = null
     let canNext = false
 
@@ -109,6 +106,8 @@ const CardPassword = observer((props: {onNext: () => void}) => {
     return (
         <Card
             title="初始化系统 - 设置admin密码"
+            width={420}
+            height={360}
             nextName="下一步"
             canNext={canNext}
             onNext={props.onNext}
@@ -117,20 +116,20 @@ const CardPassword = observer((props: {onNext: () => void}) => {
             <Input.Password
                 size="large"
                 placeholder="输入密码"
-                defaultValue={pageData.password}
+                defaultValue={data.password}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
-                    pageData.setPassword(e.target.value)
+                    data.setPassword(e.target.value)
                 }}
             />
             <VSpacer size={20} />
             <Input.Password
                 size="large"
                 placeholder="确认密码"
-                defaultValue={pageData.confirm}
+                defaultValue={data.confirm}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
-                    pageData.setConfirm(e.target.value)
+                    data.setConfirm(e.target.value)
                 }}
             />
             <VSpacer size={16} />
@@ -142,6 +141,8 @@ const CardPassword = observer((props: {onNext: () => void}) => {
 const CardAgree = observer((props: {onPrev: () => void, onNext: () => void}) => (
     <Card
         title="初始化系统 - 同意协议"
+        width={420}
+        height={360}
         prevName="上一步"
         nextName="同意并初始化"
         canPrev={true}
@@ -154,7 +155,7 @@ const CardAgree = observer((props: {onPrev: () => void, onNext: () => void}) => 
 ))
 
 const CardWaiting = observer(() => (
-    <Card title="初始化系统 - 进行中...">
+    <Card title="初始化系统 - 进行中..." width={420} height={360}>
         <div className="vbot-fill-auto vbot-container-center">
          <Spin size="large" />
         </div>
@@ -192,7 +193,7 @@ const Register = observer((props: any) => {
                                 onNext={async () => {
                                     carouselRef.current.goTo(2)
                                     try {
-                                        await AppUser.send(8000, "#.user:Create", "admin", pageData.password)
+                                        await AppUser.send(8000, "#.user:Create", "admin", data.password)
                                         carouselRef.current.goTo(0)
                                         AppData.get().setRootRoute("login")
                                     } catch(e) {
@@ -201,7 +202,7 @@ const Register = observer((props: any) => {
                                         carouselRef.current.goTo(0)
                                         AppData.get().setRootRoute("start")
                                     } finally {
-                                        pageData.reset()
+                                        data.reset()
                                     }
                                 }}
                             />

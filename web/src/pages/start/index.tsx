@@ -5,10 +5,7 @@ import { observer } from "mobx-react-lite";
 import VLayout from "../../component/VLayout";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
-
-function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-}
+import { delay } from "../../util/util";
 
 const styles = {
     text: {

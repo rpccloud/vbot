@@ -15,12 +15,9 @@ import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
 import { AppData, AppUser } from "../../AppManager";
 import { RPCMap } from "rpccloud-client-js/build/types";
+import { delay } from "../../util/util";
 
-function delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-}
-
-class PageData {
+class Data {
     user: string
     password: string
     loading: boolean
@@ -58,7 +55,7 @@ class PageData {
     }
 }
 
-const pageData = new PageData()
+const data = new Data()
 
 const CardPassword = observer(() => {
     let userRef: any = useRef(null)
@@ -67,12 +64,14 @@ const CardPassword = observer(() => {
     return (
         <Card
             title="系统登陆"
+            width={420}
+            height={360}
             nextName="立即登陆"
-            canNext={!!pageData.user && !!pageData.password && !pageData.loading}
+            canNext={!!data.user && !!data.password && !data.loading}
             onNext={async () => {
                 try {
                     let ret = await AppUser.send(
-                        8000, "#.user:Login", pageData.user, pageData.password,
+                        8000, "#.user:Login", data.user, data.password,
                     )
                     if (ret) {
                         const userName = (ret as RPCMap).get("name")
@@ -90,7 +89,7 @@ const CardPassword = observer(() => {
                     await delay(2000)
                     AppData.get().setRootRoute("start")
                 } finally {
-                    pageData.reset()
+                    data.reset()
                 }
             }}
         >
@@ -103,7 +102,7 @@ const CardPassword = observer(() => {
                 autoComplete="off"
                 prefix={<UserOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
-                    pageData.setUser(e.target.value)
+                    data.setUser(e.target.value)
                 }}
             />
             <VSpacer size={20} />
@@ -114,7 +113,7 @@ const CardPassword = observer(() => {
                 placeholder="确认密码"
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {
-                    pageData.setPassword(e.target.value)
+                    data.setPassword(e.target.value)
                 }}
             />
             <VSpacer size={16} />

@@ -30,7 +30,7 @@ const styles = {
     }
 }
 
-class PageData {
+class Data {
     openKeys: string[]
     selectKeys: string[]
     kind: string
@@ -78,17 +78,17 @@ class PageData {
     }
 }
 
-const pageData = new PageData()
+const data = new Data()
 
 const Main = observer(() => {
     const siderView = (
         <Sider width={190}>
-            <Menu mode="inline" selectedKeys={pageData.selectKeys}  openKeys={pageData.openKeys}>
+            <Menu mode="inline" selectedKeys={data.selectKeys}  openKeys={data.openKeys}>
                 <Menu.Item
                     className="vbot-menu"
                     key="home"
                     icon={<HomeOutlined />}
-                    onClick={(o) => pageData.openKeyPath(o.keyPath)}
+                    onClick={(o) => data.openKeyPath(o.keyPath)}
                 >
                     Home
                 </Menu.Item>
@@ -96,7 +96,7 @@ const Main = observer(() => {
                     className="vbot-menu"
                     key="server.list"
                     icon={<LaptopOutlined />}
-                    onClick={(o) => pageData.openKeyPath(o.keyPath)}
+                    onClick={(o) => data.openKeyPath(o.keyPath)}
                 >
                     Server
                 </Menu.Item>
@@ -105,12 +105,12 @@ const Main = observer(() => {
                     key="group.list"
                     title="Group"
                     icon={<UserOutlined />}
-                    onTitleClick={(o) => pageData.openKey(o.key)}
+                    onTitleClick={(o) => data.openKey(o.key)}
                 >
-                    <Menu.Item key="1" className="vbot-menu" onClick={(o) => pageData.openKeyPath(o.keyPath)}>option1</Menu.Item>
-                    <Menu.Item key="2" className="vbot-menu" onClick={(o) => pageData.openKeyPath(o.keyPath)}>option2</Menu.Item>
-                    <Menu.Item key="3" className="vbot-menu" onClick={(o) => pageData.openKeyPath(o.keyPath)}>option3</Menu.Item>
-                    <Menu.Item key="4" className="vbot-menu" onClick={(o) => pageData.openKeyPath(o.keyPath)}>option4</Menu.Item>
+                    <Menu.Item key="1" className="vbot-menu" onClick={(o) => data.openKeyPath(o.keyPath)}>option1</Menu.Item>
+                    <Menu.Item key="2" className="vbot-menu" onClick={(o) => data.openKeyPath(o.keyPath)}>option2</Menu.Item>
+                    <Menu.Item key="3" className="vbot-menu" onClick={(o) => data.openKeyPath(o.keyPath)}>option3</Menu.Item>
+                    <Menu.Item key="4" className="vbot-menu" onClick={(o) => data.openKeyPath(o.keyPath)}>option4</Menu.Item>
                 </SubMenu>
             </Menu>
         </Sider>
@@ -118,7 +118,7 @@ const Main = observer(() => {
 
     const contentView = (
         <div style={styles.content} >
-            <Plugin kind={pageData.kind} param={pageData.id}/>
+            <Plugin kind={data.kind} param={data.id}/>
         </div>
     )
 

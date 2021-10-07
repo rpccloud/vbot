@@ -7,6 +7,8 @@ import ReloadOutlined from "@ant-design/icons/lib/icons/ReloadOutlined";
 import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
+import ServerCreate from "./create";
+import LeftOutlined from "@ant-design/icons/lib/icons/LeftOutlined";
 
 const stringSorter = (a:any, b:any) => {
     if (a.addr > b.addr) {
@@ -48,8 +50,9 @@ const columns = [
 ];
 
 class Data {
-    selectedRowKeys: Key[]
     loading: boolean
+    creating: boolean
+    selectedRowKeys: Key[]
     servers: object[]
     isInit: boolean
 
@@ -57,6 +60,7 @@ class Data {
         makeAutoObservable(this)
         this.selectedRowKeys = []
         this.loading = false
+        this.creating = false
         this.servers = []
         this.isInit = false
     }
@@ -74,6 +78,12 @@ class Data {
         }
     }
 
+    setCreating(creating: boolean) {
+        runInAction(() => {
+            this.creating = creating
+        })
+    }
+
     async load() {
         runInAction(() => {
             this.loading = true
@@ -84,11 +94,9 @@ class Data {
                 8000, "#.server:List", AppUser.getSessionID(), false,
             )
 
-
             runInAction(() => {
                 this.servers = toObject(ret)
             })
-
         } catch(e) {
             message.error((e as any).getMessage())
         } finally {
@@ -117,8 +125,7 @@ const ServerList = observer((props: ServerListProps) => {
             </Button>
         </div>
     )
-
-    return (
+    const tableView = (
         <div style={{padding: 28}}>
             <div style={{ marginBottom: 20 }}>
                 <Button
@@ -126,7 +133,7 @@ const ServerList = observer((props: ServerListProps) => {
                     shape="circle"
                     icon={<PlusOutlined />}
                     disabled={ !data.loading && data.selectedRowKeys.length > 0 }
-                    onClick={() => {}}
+                    onClick={() => {data.setCreating(true)}}
                 />
                 <Button
                     type="primary"
@@ -160,6 +167,21 @@ const ServerList = observer((props: ServerListProps) => {
             </ConfigProvider>
         </div>
     )
+    const createView = (
+        <div style={{padding: 28}}>
+            <div style={{ marginBottom: 20, flexDirection: "row"}}>
+                <Button
+                    type="primary"
+                    shape="circle"
+                    icon={<LeftOutlined />}
+                    onClick={() => {data.setCreating(false)}}
+                />
+            </div>
+            <ServerCreate param={""} />
+        </div>
+    )
+
+    return data.creating ? createView : tableView
 })
 
 export default ServerList
