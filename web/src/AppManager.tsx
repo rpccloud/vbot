@@ -81,6 +81,8 @@ export class AppUser {
         AppUser.userName = userName
     }
 
+
+
     static send(timeoutMS: number, target: string, ...args: Array<RPCAny>): Promise<RPCAny> {
         return AppUser.client.send(timeoutMS, target, ...args)
     }

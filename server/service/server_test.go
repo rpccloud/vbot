@@ -7,6 +7,7 @@ import (
 
 	"github.com/rpccloud/assert"
 	"github.com/rpccloud/rpc"
+	"github.com/rpccloud/vbot/server/core"
 )
 
 func TestDebug(t *testing.T) {
@@ -21,8 +22,17 @@ func TestDebug(t *testing.T) {
 
 		// sessionID string,
 		// sshName string, sshUser string, sshPort string, sshAddr string, sshComment string,
-
-		_, _ = client.Send(5*time.Second, "#.server:Create", user["sessionID"], "sshName", "sshUser", "22", "sshAddr", "sshComment")
+		rand, _ := core.GetRandString(10)
+		_, _ = client.Send(
+			5*time.Second,
+			"#.server:Create",
+			user["sessionID"],
+			"name"+rand,
+			"user"+rand,
+			"22",
+			"addr"+rand,
+			"sshComment",
+		)
 		listRet, err := client.Send(5*time.Second, "#.server:List", user["sessionID"], false)
 		fmt.Println(listRet, err)
 	})

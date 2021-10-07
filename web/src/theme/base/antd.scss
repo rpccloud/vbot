@@ -77,6 +77,10 @@
     border-bottom-color: var(--Vbot-DividerColor) !important;
 }
 
+th.ant-table-cell::before {
+    background-color: var(--Vbot-FontColor) !important;
+}
+
 .ant-table-selection-column {
     padding-left: 16px !important;
 }

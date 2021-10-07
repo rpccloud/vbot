@@ -71,6 +71,9 @@ func dbListServers(db *core.DB, bucket string, detail bool) (rpc.Array, error) {
 				ret = append(ret, rpc.Map{
 					"id":   id,
 					"name": string(b.Get(core.DBKey("ssh.%s.name", id))),
+					"user": string(b.Get(core.DBKey("ssh.%s.user", id))),
+					"port": string(b.Get(core.DBKey("ssh.%s.port", id))),
+					"addr": string(b.Get(core.DBKey("ssh.%s.addr", id))),
 				})
 			} else {
 				ret = append(ret, rpc.Map{
@@ -99,15 +102,3 @@ func listServers(rt rpc.Runtime, sessionID string, detail bool) rpc.Return {
 		return rt.Reply(ret)
 	}
 }
-
-// func createServer(rt rpc.Runtime, user string, port string, addr string, comment string) rpc.Return {
-// 	if db, e := core.GetManager().GetDB(core.GetConfig().GetDBFile()); e != nil {
-// 		return rt.Reply(e)
-// 	} else if id, e := db.GetBucketID("user"); e != nil {
-// 		return rt.Reply(e)
-// 	} else if e = dbCreateServer(db, fmt.Sprintf("%d", id), user, port, addr, comment); e != nil {
-// 		return rt.Reply(e)
-// 	} else {
-// 		return rt.Reply(true)
-// 	}
-// }
