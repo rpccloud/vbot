@@ -88,6 +88,7 @@ class Data {
             runInAction(() => {
                 this.servers = toObject(ret)
             })
+
         } catch(e) {
             message.error((e as any).getMessage())
         } finally {
@@ -120,9 +121,29 @@ const ServerList = observer((props: ServerListProps) => {
     return (
         <div style={{padding: 28}}>
             <div style={{ marginBottom: 20 }}>
-                <Button type="primary" shape="circle" icon={<PlusOutlined />} disabled={data.selectedRowKeys.length > 0 }/>
-                <Button type="primary" shape="circle" icon={<ReloadOutlined />} style={{marginLeft: 10}} disabled={data.selectedRowKeys.length > 0 }/>
-                <Button type="primary" shape="round" icon={<DeleteOutlined />} style={{marginLeft: 10}} disabled={data.selectedRowKeys.length === 0 }>
+                <Button
+                    type="primary"
+                    shape="circle"
+                    icon={<PlusOutlined />}
+                    disabled={ !data.loading && data.selectedRowKeys.length > 0 }
+                    onClick={() => {}}
+                />
+                <Button
+                    type="primary"
+                    shape="circle"
+                    icon={<ReloadOutlined />}
+                    style={{marginLeft: 10}}
+                    disabled={ !data.loading  && data.selectedRowKeys.length > 0 }
+                    onClick={() => {data.load()}}
+                />
+                <Button
+                    type="primary"
+                    shape="round"
+                    icon={<DeleteOutlined />}
+                    style={{marginLeft: 10}}
+                    disabled={ !data.loading  && data.selectedRowKeys.length === 0 }
+                    onClick={() => {}}
+                >
                     {deleteText}
                 </Button>
             </div>
