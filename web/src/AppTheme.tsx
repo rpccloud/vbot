@@ -33,7 +33,7 @@ export const Themes = {
         errorColor: "rgb(236, 20, 20)",
         warningColor: "rgb(185, 78, 64)",
         backgroundColor: "rgb(25, 25, 25)",
-        backgroundColorLighten: "rgb(40, 40, 40)",
+        backgroundColorLighten: "rgb(45, 45, 45)",
         backgroundColorDarken: "rgb(10, 10, 10)",
         fontColor: "rgba(255, 255, 255, 0.85)",
         fontColorLighten: "rgba(255, 255, 255, 0.6)",

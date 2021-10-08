@@ -1,6 +1,8 @@
 import React from "react";
 
 import {
+    MessageOutlined,
+    IdcardOutlined,
     AimOutlined,
     GlobalOutlined,
     UserOutlined,
@@ -14,6 +16,7 @@ import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
 import { AppUser } from "../../AppManager";
 import { isValidHost, isValidPort } from "../../util/util";
+import Divider from "../../component/Divider";
 
 class Data {
     loading: boolean
@@ -21,6 +24,9 @@ class Data {
     port: string
     user: string
     password: string
+    name: string
+    comment: string
+
     isValidHost: boolean
     isValidPort: boolean
 
@@ -31,6 +37,8 @@ class Data {
         this.port = "22"
         this.user = ""
         this.password = ""
+        this.name = ""
+        this.comment = ""
         this.isValidHost = false
         this.isValidPort = true
     }
@@ -68,6 +76,18 @@ class Data {
         })
     }
 
+    setName(name: string) {
+        runInAction(() => {
+            this.name = name
+        })
+    }
+
+    setComment(comment: string) {
+        runInAction(() => {
+            this.comment = comment
+        })
+    }
+
     reset() {
         runInAction(() => {
             this.loading = false
@@ -75,6 +95,8 @@ class Data {
             this.port = "22"
             this.user = ""
             this.password = ""
+            this.name = ""
+            this.comment = ""
             this.isValidHost = false
             this.isValidPort = true
         })
@@ -83,16 +105,16 @@ class Data {
 
 const data = new Data()
 
-interface ServerCreateProps {
+interface ServerEditProps {
     param: any,
 }
 
-const ServerCreate = observer((props: ServerCreateProps) => {
+const ServerEdit = observer((props: ServerEditProps) => {
     return (
         <Card
             title="Add SSH Server"
-            width={500}
-            height={390}
+            width={600}
+            height={540}
             prevName={(!!props.param && !!props.param.goBack) ? "Cancel" : ""}
             onPrev={() => {
                 if (props.param && props.param.goBack) {
@@ -102,19 +124,17 @@ const ServerCreate = observer((props: ServerCreateProps) => {
             nextName="Add"
             canNext={ data.isValidPort && data.isValidHost && !!data.user && !!data.password}
             onNext={async () => {
-                let ok = false
                 try {
                     await AppUser.send(
-                        8000, "#.server:Create", AppUser.getSessionID(),
+                        8000, "#.server:Edit", AppUser.getSessionID(),
                         data.host, data.port, data.user, data.password,
-                        "", "", false,
+                        data.name, data.comment, false,
                     )
-                    ok = true
                 } catch(e) {
                     message.error((e as any).getMessage())
                 } finally {
                     if (props.param && props.param.goBack) {
-                        props.param.goBack(ok)
+                        props.param.goBack()
                     }
                 }
             }}
@@ -154,8 +174,26 @@ const ServerCreate = observer((props: ServerCreateProps) => {
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {  data.setPassword(e.target.value) }}
             />
+            <VSpacer size={26} />
+            <Divider style={{height: 1, width: "100%", margin:0, backgroundColor: "var(--Vbot-DividerColor)"}}/>
+            <VSpacer size={26} />
+            <Input
+                size="large"
+                placeholder="Name (optional)"
+                autoComplete="off"
+                prefix={<IdcardOutlined className="vbot-icon-prefix" />}
+                onChange={(e) => {  data.setName(e.target.value) }}
+            />
+            <VSpacer size={20} />
+            <Input
+                size="large"
+                placeholder="Comment (optional)"
+                autoComplete="off"
+                prefix={<MessageOutlined className="vbot-icon-prefix" />}
+                onChange={(e) => {  data.setComment(e.target.value) }}
+            />
         </Card>
     )
 })
 
-export default ServerCreate
+export default ServerEdit

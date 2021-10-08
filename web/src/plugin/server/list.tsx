@@ -1,6 +1,6 @@
 import React, { Key } from "react";
 import { makeAutoObservable, runInAction } from "mobx";
-import { Button, ConfigProvider, message, Table } from "antd";
+import { Button, ConfigProvider, message, Modal, Table } from "antd";
 import { observer } from "mobx-react-lite";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import ReloadOutlined from "@ant-design/icons/lib/icons/ReloadOutlined";
@@ -8,8 +8,6 @@ import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
 import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import ServerCreate from "./create";
-import LeftOutlined from "@ant-design/icons/lib/icons/LeftOutlined";
-
 
 const columns = [
     {
@@ -71,22 +69,40 @@ const columns = [
         title: 'Comment',
         dataIndex: 'comment',
     },
+    {
+        title: 'Action',
+        dataIndex: 'id',
+        render: (text:string, data: any) => (
+            <>
+                <Button style={{padding: 4}} type="link" onClick={(e) => {alert(JSON.stringify(data))}}>Connect</Button>
+                <Button style={{padding: 4}} type="link" onClick={(e) => {alert(JSON.stringify(data))}}>Edit</Button>
+                <Button style={{padding: 4}} type="link" onClick={(e) => {alert(JSON.stringify(data))}}>Delete</Button>
+            </>
+
+        ),
+    },
 ];
 
 class Data {
+    createModal: boolean
     loading: boolean
-    creating: boolean
     selectedRowKeys: Key[]
     servers: object[]
     isInit: boolean
 
     constructor() {
         makeAutoObservable(this)
+        this.createModal = false
         this.selectedRowKeys = []
         this.loading = false
-        this.creating = false
         this.servers = []
         this.isInit = false
+    }
+
+    setCreateModal(createModal: boolean) {
+        runInAction(() => {
+            this.createModal = createModal
+        })
     }
 
     setSelectedRowKeys(selectedRowKeys: Key[]) {
@@ -102,14 +118,6 @@ class Data {
         }
     }
 
-    setCreating(creating: boolean) {
-        runInAction(() => {
-            this.creating = creating
-        })
-
-        this.load()
-    }
-
     async load() {
         runInAction(() => {
             this.loading = true
@@ -119,7 +127,6 @@ class Data {
             let ret = await AppUser.send(
                 8000, "#.server:List", AppUser.getSessionID(), true,
             )
-
             runInAction(() => {
                 this.servers = toObject(ret)
             })
@@ -151,15 +158,15 @@ const ServerList = observer((props: ServerListProps) => {
             </Button>
         </div>
     )
-    const tableView = (
-        <div style={{padding: 28}}>
+    return (
+        <div style={{padding: 26}}>
             <div style={{ marginBottom: 20 }}>
                 <Button
                     type="primary"
                     shape="circle"
                     icon={<PlusOutlined />}
                     disabled={ !data.loading && data.selectedRowKeys.length > 0 }
-                    onClick={() => {data.setCreating(true)}}
+                    onClick={() => {data.setCreateModal(true)}}
                 />
                 <Button
                     type="primary"
@@ -179,6 +186,17 @@ const ServerList = observer((props: ServerListProps) => {
                 >
                     {deleteText}
                 </Button>
+                <Modal title="Basic Modal" visible={data.createModal} className="vbot-modal">
+                    <ServerCreate
+                        param={{goBack: (ok: boolean) => {
+                            data.setCreateModal(false)
+
+                            if (ok) {
+                                data.load()
+                            }
+                        }}}
+                    />
+                </Modal>
             </div>
             <ConfigProvider renderEmpty={() => emptyView}>
                 <Table
@@ -193,30 +211,6 @@ const ServerList = observer((props: ServerListProps) => {
             </ConfigProvider>
         </div>
     )
-    const createView = (
-        <div style={{padding: 28, display: "flex", flexFlow: "column"}} className="vbot-fill-auto">
-            <div style={{ marginBottom: 20 }}>
-                <Button
-                    type="primary"
-                    shape="circle"
-                    icon={<LeftOutlined />}
-                    onClick={() => {data.setCreating(false)}}
-                />
-            </div>
-            <div style={{flex: "1 0 0"}} className="vbot-container-center">
-                <div style={{background:"var(--Vbot-BackgroundColorLighten)"}}>
-                    <ServerCreate
-                        param={{goBack: () => {
-                            data.setCreating(false)
-                        }}}
-                    />
-                </div>
-
-            </div>
-        </div>
-    )
-
-    return data.creating ? createView : tableView
 })
 
 export default ServerList

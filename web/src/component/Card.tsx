@@ -14,7 +14,7 @@ const styles = {
     },
     container: {
         border: "1px solid var(--Vbot-DividerColor)",
-        background: "transparent",
+        backgroundColor: "var(--Vbot-BackgroundColorLighten)",
         padding: "16px 24px 16px 24px",
     },
     button: {
@@ -69,7 +69,11 @@ const Card = (props: CardProps) => {
     return (
         <div
             className="vbot-container-round vbot-container-shadow"
-            style={{...styles.container, width: `${props.width}px`, height: `${props.height}px`}}
+            style={{
+                ...styles.container,
+                width: `${props.width}px`,
+                height: `${props.height}px`,
+            }}
         >
             <VLayout.Container>
                 <VLayout.Fixed>

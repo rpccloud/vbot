@@ -164,3 +164,19 @@
     color: var(--Vbot-PrimaryColor) !important;
     background-color: transparent !important;
 }
+
+.vbot-modal .ant-modal-content {
+    background-color: transparent !important;
+}
+
+.vbot-modal .ant-modal-header {
+    display: none;
+}
+
+.vbot-modal .ant-modal-close {
+    display: none;
+}
+
+.vbot-modal .ant-modal-footer {
+    display: none;
+}
