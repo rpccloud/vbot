@@ -97,9 +97,7 @@ const CardPassword = observer(() => {
                 placeholder="输入用户名"
                 autoComplete="off"
                 prefix={<UserOutlined className="vbot-icon-prefix" />}
-                onChange={(e) => {
-                    data.setUser(e.target.value)
-                }}
+                onChange={(e) => {  data.setUser(e.target.value) }}
             />
             <VSpacer size={20} />
             <Input.Password
@@ -107,9 +105,7 @@ const CardPassword = observer(() => {
                 size="large"
                 placeholder="确认密码"
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
-                onChange={(e) => {
-                    data.setPassword(e.target.value)
-                }}
+                onChange={(e) => { data.setPassword(e.target.value) }}
             />
             <VSpacer size={16} />
         </Card>
