@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 
 import {
     UserOutlined,
@@ -58,9 +58,6 @@ class Data {
 const data = new Data()
 
 const CardPassword = observer(() => {
-    let userRef: any = useRef(null)
-    let passwordRef: any = useRef(null)
-
     return (
         <Card
             title="系统登陆"
@@ -96,7 +93,6 @@ const CardPassword = observer(() => {
             <VSpacer size={12} />
             <Input
                 id="user"
-                ref={userRef}
                 size="large"
                 placeholder="输入用户名"
                 autoComplete="off"
@@ -108,7 +104,6 @@ const CardPassword = observer(() => {
             <VSpacer size={20} />
             <Input.Password
                 id="password"
-                ref={passwordRef}
                 size="large"
                 placeholder="确认密码"
                 prefix={<LockOutlined className="vbot-icon-prefix" />}

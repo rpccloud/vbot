@@ -1,7 +1,7 @@
 import React from "react";
 
 interface ServerShowProps {
-    param: string,
+    param: any,
 }
 
 const ServerShow = (props: ServerShowProps) => {

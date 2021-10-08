@@ -5,7 +5,7 @@ import ServerShow from "./server/show";
 
 interface PluginProps {
     kind: string,
-    param: string,
+    param: any,
 }
 
 function getPlugin(props: PluginProps): any {

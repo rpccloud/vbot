@@ -25,6 +25,11 @@
     background-color:  transparent !important;
 }
 
+.ant-input-error > input {
+    color: var(--Vbot-ErrorColor) !important;
+    background-color:  transparent !important;
+}
+
 .ant-input-password-icon {
     color: var(--Vbot-PrimaryColor);
 }
@@ -77,8 +82,8 @@
     border-bottom-color: var(--Vbot-DividerColor) !important;
 }
 
-th.ant-table-cell::before {
-    background-color: var(--Vbot-FontColor) !important;
+.ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan]):before {
+    background-color: var(--Vbot-DividerColor) !important;
 }
 
 .ant-table-selection-column {

@@ -110,7 +110,7 @@ class Data {
 const data = new Data()
 
 interface ServerListProps {
-    param: string,
+    param: any,
 }
 
 const ServerList = observer((props: ServerListProps) => {
@@ -168,8 +168,8 @@ const ServerList = observer((props: ServerListProps) => {
         </div>
     )
     const createView = (
-        <div style={{padding: 28}}>
-            <div style={{ marginBottom: 20, flexDirection: "row"}}>
+        <div style={{padding: 28, display: "flex", flexFlow: "column"}} className="vbot-fill-auto">
+            <div style={{ marginBottom: 20 }}>
                 <Button
                     type="primary"
                     shape="circle"
@@ -177,7 +177,16 @@ const ServerList = observer((props: ServerListProps) => {
                     onClick={() => {data.setCreating(false)}}
                 />
             </div>
-            <ServerCreate param={""} />
+            <div style={{flex: "1 0 0"}} className="vbot-container-center">
+                <div style={{background:"var(--Vbot-BackgroundColorLighten)"}}>
+                    <ServerCreate
+                        param={{goBack: () => {
+                            data.setCreating(false)
+                        }}}
+                    />
+                </div>
+
+            </div>
         </div>
     )
 
