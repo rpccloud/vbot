@@ -10,15 +10,6 @@ import { toObject } from "rpccloud-client-js/build/types";
 import ServerCreate from "./create";
 import LeftOutlined from "@ant-design/icons/lib/icons/LeftOutlined";
 
-const stringSorter = (a:any, b:any) => {
-    if (a.addr > b.addr) {
-        return 1
-    } else if (a.addr === b.addr) {
-        return 0
-    } else {
-        return -1
-    }
-}
 
 const columns = [
     {
@@ -27,21 +18,54 @@ const columns = [
         render: (text:string, data: any) => (
             <Button style={{padding: 0}} type="link" onClick={(e) => {alert(JSON.stringify(data))}}>{text}</Button>
         ),
-        sorter: stringSorter,
+        sorter: (a:any, b:any) => {
+            if (a.name > b.name) {
+                return 1
+            } else if (a.name === b.name) {
+                return 0
+            } else {
+                return -1
+            }
+        },
     },
     {
-        title: 'Address',
-        dataIndex: 'addr',
-        sorter: stringSorter,
+        title: 'Host',
+        dataIndex: 'host',
+        sorter: (a:any, b:any) => {
+            if (a.host > b.host) {
+                return 1
+            } else if (a.host === b.host) {
+                return 0
+            } else {
+                return -1
+            }
+        },
     },
     {
         title: 'User',
         dataIndex: 'user',
-        sorter: stringSorter,
+        sorter: (a:any, b:any) => {
+            if (a.user > b.user) {
+                return 1
+            } else if (a.user === b.user) {
+                return 0
+            } else {
+                return -1
+            }
+        },
     },
     {
         title: 'Port',
         dataIndex: 'port',
+        sorter: (a:any, b:any) => {
+            if (a.user > b.user) {
+                return 1
+            } else if (a.port === b.port) {
+                return 0
+            } else {
+                return -1
+            }
+        },
     },
     {
         title: 'Comment',
@@ -82,6 +106,8 @@ class Data {
         runInAction(() => {
             this.creating = creating
         })
+
+        this.load()
     }
 
     async load() {
@@ -91,7 +117,7 @@ class Data {
 
         try {
             let ret = await AppUser.send(
-                8000, "#.server:List", AppUser.getSessionID(), false,
+                8000, "#.server:List", AppUser.getSessionID(), true,
             )
 
             runInAction(() => {

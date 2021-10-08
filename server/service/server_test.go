@@ -27,11 +27,13 @@ func TestDebug(t *testing.T) {
 			5*time.Second,
 			"#.server:Create",
 			user["sessionID"],
-			"name"+rand,
-			"user"+rand,
+			"host"+rand,
 			"22",
-			"addr"+rand,
+			"user"+rand,
+			"password",
+			"name"+rand,
 			"sshComment",
+			false,
 		)
 		listRet, err := client.Send(5*time.Second, "#.server:List", user["sessionID"], false)
 		fmt.Println(listRet, err)

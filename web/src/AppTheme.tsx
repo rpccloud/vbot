@@ -41,7 +41,7 @@ export const Themes = {
         shadowColor: "rgb(255, 255, 255)",
         outlineColor: "rgb(180, 180, 180)",
         dividerColor: "rgb(110, 110, 110)",
-        disabledColor: "rgb(70, 70, 70)",
+        disabledColor: "rgb(100, 100, 100)",
         disabledBackground: "rgb(40, 40, 40)"
     }
 }

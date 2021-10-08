@@ -14,23 +14,26 @@ var ServerService = rpc.NewService(nil).
 	On("List", listServers)
 
 func dbCreateServer(
-	db *core.DB, bucket string,
-	id string, sshName string, sshUser string, sshPort string, sshAddr string, sshComment string,
+	db *core.DB, bucket string, id string,
+	host string, port string, user string, password string, privateKey string, name string, comment string,
 ) error {
 	return db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucket))
-
 		if e := b.Put(core.DBKey("servers.%s", id), []byte(id)); e != nil {
 			return e
-		} else if e := b.Put(core.DBKey("ssh.%s.name", id), []byte(sshName)); e != nil {
+		} else if e = b.Put(core.DBKey("ssh.%s.host", id), []byte(host)); e != nil {
 			return e
-		} else if e := b.Put(core.DBKey("ssh.%s.user", id), []byte(sshUser)); e != nil {
+		} else if e = b.Put(core.DBKey("ssh.%s.port", id), []byte(port)); e != nil {
 			return e
-		} else if e = b.Put(core.DBKey("ssh.%s.port", id), []byte(sshPort)); e != nil {
+		} else if e := b.Put(core.DBKey("ssh.%s.user", id), []byte(user)); e != nil {
 			return e
-		} else if e = b.Put(core.DBKey("ssh.%s.addr", id), []byte(sshAddr)); e != nil {
+		} else if e = b.Put(core.DBKey("ssh.%s.password", id), []byte(password)); e != nil {
 			return e
-		} else if e = b.Put(core.DBKey("ssh.%s.comment", id), []byte(sshComment)); e != nil {
+		} else if e = b.Put(core.DBKey("ssh.%s.privateKey", id), []byte(privateKey)); e != nil {
+			return e
+		} else if e := b.Put(core.DBKey("ssh.%s.name", id), []byte(name)); e != nil {
+			return e
+		} else if e = b.Put(core.DBKey("ssh.%s.comment", id), []byte(comment)); e != nil {
 			return e
 		} else {
 			return nil
@@ -40,15 +43,19 @@ func dbCreateServer(
 
 func createServer(
 	rt rpc.Runtime, sessionID string,
-	sshName string, sshUser string, sshPort string, sshAddr string, sshComment string,
+	host string, port string, user string, password string, name string, comment string, auto bool,
 ) rpc.Return {
+	if name == "" {
+		name = fmt.Sprintf("%s@%s", user, host)
+	}
+
 	if userName, e := rt.Call("#.user:getNameBySessionID", sessionID).ToString(); e != nil {
 		return rt.Reply(e)
 	} else if db, e := core.GetManager().GetDB(core.GetConfig().GetDBFile()); e != nil {
 		return rt.Reply(e)
 	} else if id, e := db.GetBucketID("-" + userName); e != nil {
 		return rt.Reply(e)
-	} else if e = dbCreateServer(db, "-"+userName, fmt.Sprintf("%d", id), sshName, sshUser, sshPort, sshAddr, sshComment); e != nil {
+	} else if e = dbCreateServer(db, "-"+userName, fmt.Sprintf("%d", id), host, port, user, password, "", name, comment); e != nil {
 		return rt.Reply(e)
 	} else {
 		return rt.Reply(true)
@@ -73,7 +80,8 @@ func dbListServers(db *core.DB, bucket string, detail bool) (rpc.Array, error) {
 					"name": string(b.Get(core.DBKey("ssh.%s.name", id))),
 					"user": string(b.Get(core.DBKey("ssh.%s.user", id))),
 					"port": string(b.Get(core.DBKey("ssh.%s.port", id))),
-					"addr": string(b.Get(core.DBKey("ssh.%s.addr", id))),
+					"host": string(b.Get(core.DBKey("ssh.%s.host", id))),
+					"auto": string(b.Get(core.DBKey("ssh.%s.privateKey", id))) != "",
 				})
 			} else {
 				ret = append(ret, rpc.Map{
@@ -81,7 +89,8 @@ func dbListServers(db *core.DB, bucket string, detail bool) (rpc.Array, error) {
 					"name":    string(b.Get(core.DBKey("ssh.%s.name", id))),
 					"user":    string(b.Get(core.DBKey("ssh.%s.user", id))),
 					"port":    string(b.Get(core.DBKey("ssh.%s.port", id))),
-					"addr":    string(b.Get(core.DBKey("ssh.%s.addr", id))),
+					"host":    string(b.Get(core.DBKey("ssh.%s.host", id))),
+					"auto":    string(b.Get(core.DBKey("ssh.%s.privateKey", id))) != "",
 					"comment": string(b.Get(core.DBKey("ssh.%s.comment", id))),
 				})
 			}

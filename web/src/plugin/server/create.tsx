@@ -14,9 +14,8 @@ import VSpacer from "../../component/VSpacer";
 import { observer } from "mobx-react-lite";
 import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
-import { AppData, AppUser } from "../../AppManager";
-import { RPCMap } from "rpccloud-client-js/build/types";
-import { delay, isValidHost, isValidPort } from "../../util/util";
+import { AppUser } from "../../AppManager";
+import { isValidHost, isValidPort } from "../../util/util";
 import Divider from "../../component/Divider";
 
 class Data {
@@ -106,7 +105,6 @@ class Data {
 
 const data = new Data()
 
-
 interface ServerCreateProps {
     param: any,
 }
@@ -127,26 +125,17 @@ const ServerCreate = observer((props: ServerCreateProps) => {
             canNext={ data.isValidPort && data.isValidHost && !!data.user && !!data.password}
             onNext={async () => {
                 try {
-                    let ret = await AppUser.send(
-                        8000, "#.user:Login", data.user, data.password,
+                    await AppUser.send(
+                        8000, "#.server:Create", AppUser.getSessionID(),
+                        data.host, data.port, data.user, data.password,
+                        data.name, data.comment, false,
                     )
-                    if (ret) {
-                        const userName = (ret as RPCMap).get("name")
-                        const sessionID = (ret as RPCMap).get("sessionID")
-                        AppUser.setUserName(userName as string)
-                        AppUser.setSessionID(sessionID as string)
-                        AppData.get().setRootRoute("main")
-                    } else {
-                        message.error("用户名或密码不正确")
-                        await delay(2000)
-                        AppData.get().setRootRoute("start")
-                    }
                 } catch(e) {
                     message.error((e as any).getMessage())
-                    await delay(2000)
-                    AppData.get().setRootRoute("start")
                 } finally {
-                    data.reset()
+                    if (props.param && props.param.goBack) {
+                        props.param.goBack()
+                    }
                 }
             }}
         >
