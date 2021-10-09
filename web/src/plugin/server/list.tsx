@@ -1,10 +1,16 @@
 import React, { Key } from "react";
 import { makeAutoObservable, runInAction } from "mobx";
-import { Button, ConfigProvider, message, Modal, Table } from "antd";
+import { Button, ConfigProvider, message, Modal, Table, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
-import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
-import ReloadOutlined from "@ant-design/icons/lib/icons/ReloadOutlined";
-import DeleteOutlined from "@ant-design/icons/lib/icons/DeleteOutlined";
+
+
+import {
+    EyeOutlined,
+    PlusOutlined,
+    ReloadOutlined,
+    DeleteOutlined,
+} from '@ant-design/icons';
+
 import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import ServerCreate from "./create";
@@ -14,7 +20,15 @@ const columns = [
         title: 'Name',
         dataIndex: 'name',
         render: (text:string, data: any) => (
-            <Button style={{padding: 0}} type="link" onClick={(e) => {alert(JSON.stringify(data))}}>{text}</Button>
+            <Tooltip title="View detail">
+                <Button
+                    style={{padding: 0}}
+                    type="link"
+                    onClick={(e) => {alert(JSON.stringify(data))}}
+                >
+                    {text}
+                </Button>
+            </Tooltip>
         ),
         sorter: (a:any, b:any) => {
             if (a.name > b.name) {
@@ -74,9 +88,24 @@ const columns = [
         dataIndex: 'id',
         render: (text:string, data: any) => (
             <>
-                <Button style={{padding: 4}} type="link" onClick={(e) => {alert(JSON.stringify(data))}}>Connect</Button>
-                <Button style={{padding: 4}} type="link" onClick={(e) => {alert(JSON.stringify(data))}}>Edit</Button>
-                <Button style={{padding: 4}} type="link" onClick={(e) => {alert(JSON.stringify(data))}}>Delete</Button>
+                <Tooltip title="View detail">
+                    <Button
+                        type="ghost"
+                        shape="circle"
+                        icon={<EyeOutlined />}
+                        onClick={(e) => {alert(JSON.stringify(data))}}
+                    />
+                </Tooltip>
+
+                <Tooltip title="Remove SSH server">
+                    <Button
+                        style={{margin: 6}}
+                        type="ghost"
+                        shape="circle"
+                        icon={<DeleteOutlined />}
+                        onClick={(e) => {alert(JSON.stringify(data))}}
+                    />
+                </Tooltip>
             </>
 
         ),
@@ -149,7 +178,6 @@ interface ServerListProps {
 const ServerList = observer((props: ServerListProps) => {
     data.init()
 
-    const deleteText = data.selectedRowKeys.length > 0 ? `Delete ${data.selectedRowKeys.length} items` : ""
     const emptyView = (
         <div>
             <div style={{margin: 10, fontSize:"var(--Vbot-FontSizeMiddle)"}}>No Data</div>
@@ -158,34 +186,29 @@ const ServerList = observer((props: ServerListProps) => {
             </Button>
         </div>
     )
+
     return (
         <div style={{padding: 26}}>
             <div style={{ marginBottom: 20 }}>
-                <Button
-                    type="primary"
-                    shape="circle"
-                    icon={<PlusOutlined />}
-                    disabled={ !data.loading && data.selectedRowKeys.length > 0 }
-                    onClick={() => {data.setCreateModal(true)}}
-                />
-                <Button
-                    type="primary"
-                    shape="circle"
-                    icon={<ReloadOutlined />}
-                    style={{marginLeft: 10}}
-                    disabled={ !data.loading  && data.selectedRowKeys.length > 0 }
-                    onClick={() => {data.load()}}
-                />
-                <Button
-                    type="primary"
-                    shape="round"
-                    icon={<DeleteOutlined />}
-                    style={{marginLeft: 10}}
-                    disabled={ !data.loading  && data.selectedRowKeys.length === 0 }
-                    onClick={() => {}}
-                >
-                    {deleteText}
-                </Button>
+                <Tooltip title="Add SSH server">
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        icon={<PlusOutlined />}
+                        disabled={ !data.loading && data.selectedRowKeys.length > 0 }
+                        onClick={() => {data.setCreateModal(true)}}
+                    />
+                </Tooltip>
+                <Tooltip title="Reload">
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        icon={<ReloadOutlined />}
+                        style={{marginLeft: 10}}
+                        disabled={ !data.loading  && data.selectedRowKeys.length > 0 }
+                        onClick={() => {data.load()}}
+                    />
+                </Tooltip>
                 <Modal title="Basic Modal" visible={data.createModal} className="vbot-modal">
                     <ServerCreate
                         param={{goBack: (ok: boolean) => {
@@ -200,10 +223,6 @@ const ServerList = observer((props: ServerListProps) => {
             </div>
             <ConfigProvider renderEmpty={() => emptyView}>
                 <Table
-                    rowSelection={{
-                        selectedRowKeys: data.selectedRowKeys,
-                        onChange:  selectedRowKeys => data.setSelectedRowKeys(selectedRowKeys),
-                    }}
                     columns={columns}
                     dataSource={data.servers}
                     rowKey={o => (o as any).id}
