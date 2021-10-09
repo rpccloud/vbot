@@ -11,7 +11,8 @@ import (
 
 var ServerService = rpc.NewService(nil).
 	On("Create", createServer).
-	On("List", listServers)
+	On("List", listServers).
+	On("Delete", deleteServer)
 
 func dbCreateServer(
 	db *core.DB, bucket string, id string,
@@ -109,5 +110,35 @@ func listServers(rt rpc.Runtime, sessionID string, detail bool) rpc.Return {
 		return rt.Reply(e)
 	} else {
 		return rt.Reply(ret)
+	}
+}
+
+func dbDeleteServer(db *core.DB, bucket string, id string) error {
+	return db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(bucket))
+		if b == nil {
+			return fmt.Errorf("bucket \"%s\" not exist", bucket)
+		}
+
+		c := b.Cursor()
+		p := core.DBKey("ssh.%s", id)
+		for k, _ := c.Seek(p); k != nil && bytes.HasPrefix(k, p); k, _ = c.Next() {
+			fmt.Printf("delete %s\n", string(k))
+			_ = b.Delete(k)
+		}
+
+		_ = b.Delete(core.DBKey("servers.%s", id))
+		return nil
+	})
+}
+func deleteServer(rt rpc.Runtime, sessionID string, serverID string) rpc.Return {
+	if userName, e := rt.Call("#.user:getNameBySessionID", sessionID).ToString(); e != nil {
+		return rt.Reply(e)
+	} else if db, e := core.GetManager().GetDB(core.GetConfig().GetDBFile()); e != nil {
+		return rt.Reply(e)
+	} else if e := dbDeleteServer(db, "-"+userName, serverID); e != nil {
+		return rt.Reply(e)
+	} else {
+		return rt.Reply(true)
 	}
 }

@@ -44,6 +44,14 @@
     background-color: var(--Vbot-DisabledBackground) !important;
 }
 
+.ant-btn-ghost {
+    color: var(--Vbot-FontColor) !important;
+}
+
+.ant-btn-ghost:focus, .ant-btn-ghost:hover {
+    color: var(--Vbot-PrimaryColor) !important;
+}
+
 .ant-checkbox-inner {
     color: var(--Vbot-PrimaryColor) !important;
     background-color: transparent !important;
@@ -180,4 +188,13 @@
 
 .vbot-modal .ant-modal-footer {
     display: none;
+}
+
+.ant-tooltip-arrow-content {
+    background-color: var(--Vbot-FontColor);
+}
+
+.ant-tooltip-inner {
+    color: var(--Vbot-BackgroundColor);
+    background-color: var(--Vbot-FontColor);
 }

@@ -15,6 +15,78 @@ import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import ServerCreate from "./create";
 
+
+class Data {
+    createModal: boolean
+    loading: boolean
+    selectedRowKeys: Key[]
+    servers: object[]
+    isInit: boolean
+
+    constructor() {
+        makeAutoObservable(this)
+        this.createModal = false
+        this.selectedRowKeys = []
+        this.loading = false
+        this.servers = []
+        this.isInit = false
+    }
+
+    setCreateModal(createModal: boolean) {
+        runInAction(() => {
+            this.createModal = createModal
+        })
+    }
+
+    setSelectedRowKeys(selectedRowKeys: Key[]) {
+        runInAction(() => {
+            this.selectedRowKeys = selectedRowKeys
+        })
+    }
+
+    init() {
+        if (!this.isInit) {
+            this.isInit = true
+            this.load()
+        }
+    }
+
+    async load() {
+        runInAction(() => {
+            this.loading = true
+        })
+
+        try {
+            let ret = await AppUser.send(
+                8000, "#.server:List", AppUser.getSessionID(), true,
+            )
+            runInAction(() => {
+                this.servers = toObject(ret)
+            })
+        } catch(e) {
+            message.error((e as any).getMessage())
+        } finally {
+            runInAction(() => {
+                this.loading = false
+            })
+        }
+    }
+
+    async delete(id: string) {
+        try {
+            await AppUser.send(
+                8000, "#.server:Delete", AppUser.getSessionID(), id,
+            )
+        } catch(e) {
+            message.error((e as any).getMessage())
+        } finally {
+            data.load()
+        }
+    }
+}
+
+const data = new Data()
+
 const columns = [
     {
         title: 'Name',
@@ -86,7 +158,7 @@ const columns = [
     {
         title: 'Action',
         dataIndex: 'id',
-        render: (text:string, data: any) => (
+        render: (id:string) => (
             <>
                 <Tooltip title="View detail">
                     <Button
@@ -99,11 +171,11 @@ const columns = [
 
                 <Tooltip title="Remove SSH server">
                     <Button
-                        style={{margin: 6}}
+                        style={{margin: 8, color:"--VBot-FontColor"}}
                         type="ghost"
                         shape="circle"
                         icon={<DeleteOutlined />}
-                        onClick={(e) => {alert(JSON.stringify(data))}}
+                        onClick={() => data.delete(id)}
                     />
                 </Tooltip>
             </>
@@ -111,65 +183,6 @@ const columns = [
         ),
     },
 ];
-
-class Data {
-    createModal: boolean
-    loading: boolean
-    selectedRowKeys: Key[]
-    servers: object[]
-    isInit: boolean
-
-    constructor() {
-        makeAutoObservable(this)
-        this.createModal = false
-        this.selectedRowKeys = []
-        this.loading = false
-        this.servers = []
-        this.isInit = false
-    }
-
-    setCreateModal(createModal: boolean) {
-        runInAction(() => {
-            this.createModal = createModal
-        })
-    }
-
-    setSelectedRowKeys(selectedRowKeys: Key[]) {
-        runInAction(() => {
-            this.selectedRowKeys = selectedRowKeys
-        })
-    }
-
-    init() {
-        if (!this.isInit) {
-            this.isInit = true
-            this.load()
-        }
-    }
-
-    async load() {
-        runInAction(() => {
-            this.loading = true
-        })
-
-        try {
-            let ret = await AppUser.send(
-                8000, "#.server:List", AppUser.getSessionID(), true,
-            )
-            runInAction(() => {
-                this.servers = toObject(ret)
-            })
-        } catch(e) {
-            message.error((e as any).getMessage())
-        } finally {
-            runInAction(() => {
-                this.loading = false
-            })
-        }
-    }
-}
-
-const data = new Data()
 
 interface ServerListProps {
     param: any,
