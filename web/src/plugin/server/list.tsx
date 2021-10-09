@@ -14,27 +14,43 @@ import {
 import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import ServerCreate from "./create";
+import ServerDelete from "./delete";
 
 
 class Data {
     createModal: boolean
+    deleteModal: boolean
     loading: boolean
     selectedRowKeys: Key[]
     servers: object[]
     isInit: boolean
+    deleteItem?: object
 
     constructor() {
         makeAutoObservable(this)
         this.createModal = false
+        this.deleteModal = false
         this.selectedRowKeys = []
         this.loading = false
         this.servers = []
         this.isInit = false
     }
 
+    setDeleteModal(deleteModal: boolean) {
+        runInAction(() => {
+            this.deleteModal = deleteModal
+        })
+    }
+
     setCreateModal(createModal: boolean) {
         runInAction(() => {
             this.createModal = createModal
+        })
+    }
+
+    setDeleteItem(deleteItem: object | undefined) {
+        runInAction(() => {
+            this.deleteItem = deleteItem
         })
     }
 
@@ -69,18 +85,6 @@ class Data {
             runInAction(() => {
                 this.loading = false
             })
-        }
-    }
-
-    async delete(id: string) {
-        try {
-            await AppUser.send(
-                8000, "#.server:Delete", AppUser.getSessionID(), id,
-            )
-        } catch(e) {
-            message.error((e as any).getMessage())
-        } finally {
-            data.load()
         }
     }
 }
@@ -158,7 +162,7 @@ const columns = [
     {
         title: 'Action',
         dataIndex: 'id',
-        render: (id:string) => (
+        render: (id:string, item: object) => (
             <>
                 <Tooltip title="View detail">
                     <Button
@@ -175,7 +179,10 @@ const columns = [
                         type="ghost"
                         shape="circle"
                         icon={<DeleteOutlined />}
-                        onClick={() => data.delete(id)}
+                        onClick={() => {
+                            data.setDeleteItem(item)
+                            data.setDeleteModal(true)
+                        }}
                     />
                 </Tooltip>
             </>
@@ -222,7 +229,7 @@ const ServerList = observer((props: ServerListProps) => {
                         onClick={() => {data.load()}}
                     />
                 </Tooltip>
-                <Modal title="Basic Modal" visible={data.createModal} className="vbot-modal">
+                <Modal visible={data.createModal} className="vbot-modal">
                     <ServerCreate
                         param={{goBack: (ok: boolean) => {
                             data.setCreateModal(false)
@@ -231,6 +238,20 @@ const ServerList = observer((props: ServerListProps) => {
                                 data.load()
                             }
                         }}}
+                    />
+                </Modal>
+                <Modal visible={data.deleteModal} className="vbot-modal">
+                    <ServerDelete
+                        param={{
+                            goBack: (ok: boolean) => {
+                                data.setDeleteModal(false)
+
+                                if (ok) {
+                                    data.load()
+                                }
+                            },
+                            item: data.deleteItem
+                        }}
                     />
                 </Modal>
             </div>

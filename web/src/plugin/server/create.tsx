@@ -96,26 +96,22 @@ const ServerCreate = observer((props: ServerCreateProps) => {
             prevName={(!!props.param && !!props.param.goBack) ? "Cancel" : ""}
             onPrev={() => {
                 if (props.param && props.param.goBack) {
-                    props.param.goBack()
+                    props.param.goBack(false)
                 }
             }}
             nextName="Add"
             canNext={ data.isValidPort && data.isValidHost && !!data.user && !!data.password}
             onNext={async () => {
-                let ok = false
                 try {
                     await AppUser.send(
                         8000, "#.server:Create", AppUser.getSessionID(),
                         data.host, data.port, data.user, data.password,
                         "", "", false,
                     )
-                    ok = true
+                    data.reset()
+                    props.param.goBack(true)
                 } catch(e) {
                     message.error((e as any).getMessage())
-                } finally {
-                    if (props.param && props.param.goBack) {
-                        props.param.goBack(ok)
-                    }
                 }
             }}
         >
