@@ -8,7 +8,6 @@ import {
 } from '@ant-design/icons';
 
 import { message, Input } from 'antd';
-import VSpacer from "../../component/VSpacer";
 import { observer } from "mobx-react-lite";
 import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
@@ -91,8 +90,7 @@ const ServerCreate = observer((props: ServerCreateProps) => {
     return (
         <Card
             title="Add SSH Server"
-            width={500}
-            height={390}
+            width={460}
             prevName={(!!props.param && !!props.param.goBack) ? "Cancel" : ""}
             onPrev={() => {
                 if (props.param && props.param.goBack) {
@@ -115,41 +113,45 @@ const ServerCreate = observer((props: ServerCreateProps) => {
                 }
             }}
         >
-            <VSpacer size={12} />
+            <div style={{height:20}} />
             <Input
                 size="large"
                 placeholder="SSH Host (192.168.0.1 or www.example.com)"
                 autoComplete="off"
+                value={data.host}
                 prefix={<GlobalOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => { data.setHost(e.target.value) }}
                 className={data.isValidHost ? "" : "ant-input-error"}
             />
-            <VSpacer size={20} />
+            <div style={{height:20}} />
             <Input
                 size="large"
                 placeholder="SSH Port (0 - 65535)"
-                defaultValue={data.port}
                 autoComplete="off"
+                value={data.port}
                 prefix={<AimOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => { data.setPort(e.target.value) }}
                 className={data.isValidPort ? "" : "ant-input-error"}
             />
-            <VSpacer size={20} />
+            <div style={{height:20}} />
             <Input
                 size="large"
                 placeholder="SSH Username"
                 autoComplete="off"
+                value={data.user}
                 prefix={<UserOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => { data.setUser(e.target.value) }}
             />
-            <VSpacer size={20} />
+            <div style={{height:20}} />
             <Input.Password
                 id="password"
                 size="large"
                 placeholder="SSH Password"
+                value={data.password}
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {  data.setPassword(e.target.value) }}
             />
+            <div style={{height:20}} />
         </Card>
     )
 })

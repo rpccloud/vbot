@@ -8,8 +8,6 @@ import {
 import { message, Input } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
-import VLayout from "../../component/VLayout";
-import VSpacer from "../../component/VSpacer";
 import { observer } from "mobx-react-lite";
 import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
@@ -61,8 +59,7 @@ const CardPassword = observer(() => {
     return (
         <Card
             title="系统登陆"
-            width={420}
-            height={360}
+            width={460}
             nextName="立即登陆"
             canNext={!!data.user && !!data.password && !data.loading}
             onNext={async () => {
@@ -90,7 +87,7 @@ const CardPassword = observer(() => {
                 }
             }}
         >
-            <VSpacer size={12} />
+            <div style={{height:20}}/>
             <Input
                 id="user"
                 size="large"
@@ -99,7 +96,7 @@ const CardPassword = observer(() => {
                 prefix={<UserOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => {  data.setUser(e.target.value) }}
             />
-            <VSpacer size={20} />
+            <div style={{height:20}}/>
             <Input.Password
                 id="password"
                 size="large"
@@ -107,22 +104,20 @@ const CardPassword = observer(() => {
                 prefix={<LockOutlined className="vbot-icon-prefix" />}
                 onChange={(e) => { data.setPassword(e.target.value) }}
             />
-            <VSpacer size={16} />
+            <div style={{height:20}}/>
         </Card>
     )
 })
 
 const Register = observer(() => {
     return (
-        <VLayout.Container className="vbot-fill-viewport">
+        <div className="vbot-fill-viewport" style={{display: "flex", flexFlow: "column"}} >
             <Header/>
-            <VLayout.Dynamic>
-                <div className="vbot-fill-auto vbot-container-center">
-                    <CardPassword/>
-                </div>
-            </VLayout.Dynamic>
+            <div style={{display: "flex", flex:"1 0 0", flexFlow: "row"}} className="vbot-container-center">
+            <CardPassword/>
+            </div>
             <Footer/>
-        </VLayout.Container>
+        </div>
     )
 })
 

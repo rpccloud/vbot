@@ -1,10 +1,11 @@
 import React from "react";
-import HLayout from "../../component/HLayout";
 
 const styles = {
     container: {
         height: "var(--Vbot-HeaderHeight)",
         color: "var(--Vbot-PrimaryColor)",
+        display: "flex",
+        alignItems: "center",
     },
     logo: {
         fontSize: "var(--Vbot-FontSizeLarge)",
@@ -16,11 +17,7 @@ const styles = {
 const Header = () => {
     return (
         <div className="vbot-header" style={styles.container}>
-            <HLayout.Container className="vbot-container-center">
-                <div style={styles.logo}>Vbot</div>
-                <HLayout.Dynamic/>
-            </HLayout.Container>
-
+            <div style={styles.logo}>Vbot</div>
         </div>
     )
 }

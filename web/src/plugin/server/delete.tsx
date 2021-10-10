@@ -14,15 +14,14 @@ const ServerDelete = observer((props: ServerDeleteProps) => {
     return (
         <Card
             title="Remove SSH"
-            width={500}
-            height={240}
             prevName= "Cancel"
+            width={460}
             onPrev={() => {
                 if (props.param && props.param.goBack) {
                     props.param.goBack(false)
                 }
             }}
-            nextName="Delete"
+            nextName="Remove"
             onNext={async () => {
                 try {
                     await AppUser.send(
@@ -35,7 +34,7 @@ const ServerDelete = observer((props: ServerDeleteProps) => {
                 }
             }}
         >
-            <div style={{color: "var(--Vbot-FontColor)"}}>
+            <div style={{color: "var(--Vbot-FontColor)", marginTop: 20, marginBottom: 20}}>
                 Are you sure to remove ssh item "{item.user}@{item.host}:{item.port}" ?
             </div>
         </Card>

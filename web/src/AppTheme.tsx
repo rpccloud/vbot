@@ -38,8 +38,8 @@ export const Themes = {
         fontColor: "rgba(255, 255, 255, 0.85)",
         fontColorLighten: "rgba(255, 255, 255, 0.6)",
         fontColorDarken: "rgba(255, 255, 255, 1)",
-        shadowColor: "rgb(255, 255, 255)",
-        outlineColor: "rgb(180, 180, 180)",
+        shadowColor: "rgb(150, 150, 150)",
+        outlineColor: "rgb(150, 150, 150)",
         dividerColor: "rgb(110, 110, 110)",
         disabledColor: "rgb(100, 100, 100)",
         disabledBackground: "rgb(40, 40, 40)"

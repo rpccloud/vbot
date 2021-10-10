@@ -1,38 +1,41 @@
 import React from "react";
 
 import { Button } from 'antd';
-import VLayout from "./VLayout";
-import HLayout from "./HLayout";
-import Divider from "./Divider";
-import VSpacer from "./VSpacer";
 
 const styles = {
-    title: {
-        marginTop: 6,
+    header: {
+        height: 50,
         color: "var(--Vbot-FontColor)",
         fontSize: "var(--Vbot-FontSizeLarge)",
+        borderBottom: "1px solid var(--Vbot-DividerColor)",
+        display: "flex",
+        alignItems: "center",
     },
     container: {
         border: "1px solid var(--Vbot-DividerColor)",
         backgroundColor: "var(--Vbot-BackgroundColorLighten)",
-        padding: "16px 24px 16px 24px",
+        padding: "0px 24px 0px 24px",
+        display: "flex",
+        flexFlow: "column"
     },
     button: {
         marginRight: 8,
     },
-    divider: {
-        width: "100%",
-        height: 1,
-        backgroundColor: "var(--Vbot-DividerColor)",
-        marginTop: 8,
-        marginBottom: 8,
+    footer: {
+        height: 60,
+        display: "flex",
+        justifyContent: "center",
+        alignContent: "center",
+        flexFlow: "row",
+        alignItems: "center",
+        borderTop: "1px solid var(--Vbot-DividerColor)",
     },
 }
 
 interface CardProps {
     title: string,
-    width: number,
-    height: number,
+    width?: number,
+    height?: number,
     prevName?: string,
     nextName?: string,
     canPrev?: boolean,
@@ -66,35 +69,31 @@ const Card = (props: CardProps) => {
         </Button>
     ): null
 
+    let containerStyle: any = {...styles.container}
+
+    if (props.width !== undefined) {
+        containerStyle.width = `${props.width}px`
+    }
+
+    if (props.height !== undefined) {
+        containerStyle.height = `${props.height}px`
+    }
+
     return (
-        <div
-            className="vbot-container-round vbot-container-shadow"
-            style={{
-                ...styles.container,
-                width: `${props.width}px`,
-                height: `${props.height}px`,
-            }}
-        >
-            <VLayout.Container>
-                <VLayout.Fixed>
-                    <div style={styles.title}>
-                        {props.title}
-                    </div>
-                </VLayout.Fixed>
-                <Divider style={styles.divider} />
-                <VLayout.Dynamic>
-                    {props.children}
-                </VLayout.Dynamic>
-                <Divider style={styles.divider} />
-                <VSpacer size={4} />
-                <VLayout.Fixed>
-                    <HLayout.Container>
-                        <HLayout.Dynamic />
-                        {buttonPrev}
-                        {buttonNext}
-                    </HLayout.Container>
-                </VLayout.Fixed>
-            </VLayout.Container>
+        <div className="vbot-container-round vbot-container-shadow" style={containerStyle}>
+            <div style={styles.header}>
+                <div>{props.title}</div>
+            </div>
+
+            <div style={{display: "flex", flex:"1 0 0", flexFlow: "column"}}>
+                {props.children}
+            </div>
+
+            <div style={styles.footer}>
+                <div style={{flex:"1 0 0"}}></div>
+                {buttonPrev}
+                {buttonNext}
+            </div>
         </div>
     )
 }

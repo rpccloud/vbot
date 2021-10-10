@@ -2,7 +2,6 @@ import React from "react";
 import { message, Spin } from "antd";
 import { AppData, AppUser } from "../../AppManager";
 import { observer } from "mobx-react-lite";
-import VLayout from "../../component/VLayout";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import { delay } from "../../util/util";
@@ -31,16 +30,14 @@ const StartPage = observer((props: any) => {
     })
 
     return (
-        <VLayout.Container className="vbot-fill-viewport">
+        <div className="vbot-fill-viewport" style={{display: "flex", flexFlow: "column"}} >
             <Header/>
-            <VLayout.Dynamic>
-                <div className="vbot-fill-auto vbot-container-center">
-                    <Spin size="large" />
-                    <div style={styles.text}>Loading ...</div>
-                </div>
-            </VLayout.Dynamic>
+            <div style={{display: "flex", flex:"1 0 0", flexFlow: "row"}} className="vbot-container-center">
+                <Spin size="large" />
+                <div style={styles.text}>Loading ...</div>
+            </div>
             <Footer/>
-        </VLayout.Container>
+        </div>
     )
 })
 

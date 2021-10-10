@@ -7,8 +7,6 @@ import {
 import { message, Carousel, Input, Spin } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
-import VLayout from "../../component/VLayout";
-import VSpacer from "../../component/VSpacer";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
@@ -112,7 +110,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
             canNext={canNext}
             onNext={props.onNext}
         >
-            <VSpacer size={12} />
+            <div style={{height:12}}/>
             <Input.Password
                 size="large"
                 placeholder="输入密码"
@@ -122,7 +120,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
                     data.setPassword(e.target.value)
                 }}
             />
-            <VSpacer size={20} />
+            <div style={{height:20}}/>
             <Input.Password
                 size="large"
                 placeholder="确认密码"
@@ -132,7 +130,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
                     data.setConfirm(e.target.value)
                 }}
             />
-            <VSpacer size={16} />
+            <div style={{height:16}}/>
             {indicator}
         </Card>
     )
@@ -165,10 +163,10 @@ const CardWaiting = observer(() => (
 const Register = observer((props: any) => {
     const carouselRef: any = useRef(null);
     return (
-        <VLayout.Container className="vbot-fill-viewport">
-            <Header/>
-            <VLayout.Dynamic className="vbot-need-ant-carousel-auto-fill">
-                <Carousel
+        <div className="vbot-fill-viewport" style={{display: "flex", flexFlow: "column"}} >
+        <Header/>
+        <div style={{display: "flex", flex:"1 0 0", flexFlow: "row"}} className="vbot-container-center">
+        <Carousel
                     ref={carouselRef}
                     className={"vbot-need-ant-carousel-auto-fill vbot-auto-fill"}
                     dots={false}
@@ -215,9 +213,10 @@ const Register = observer((props: any) => {
                         </div>
                     </div>
                 </Carousel>
-            </VLayout.Dynamic>
-            <Footer/>
-        </VLayout.Container>
+        </div>
+        <Footer/>
+    </div>
+
     )
 })
 

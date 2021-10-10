@@ -198,3 +198,17 @@
     color: var(--Vbot-BackgroundColor);
     background-color: var(--Vbot-FontColor);
 }
+
+
+.ant-divider-inner-text {
+    color: var(--Vbot-FontColor);
+    font-size: var(--Vbot-FontSizeLarge);
+}
+
+.ant-divider-horizontal.ant-divider-with-text:before {
+    border-top-color: var(--Vbot-DividerColor);
+}
+
+.ant-divider-horizontal.ant-divider-with-text:after {
+    border-top-color: var(--Vbot-DividerColor);
+}
