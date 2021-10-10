@@ -1,17 +1,20 @@
-import React from "react";
-import { AppUser } from "../../AppManager";
+import React, { useContext } from "react";
+import Input from "../../ui/component/Input";
+import ThemeConfig from "../../ui/theme/config";
+
 
 export default function Debug() {
+    const config = useContext(ThemeConfig);
+
     return (
-        <div style={{height: 200, width: 200, background: "red"}}
-            onClick={async () => {
-                try {
-                    let v = await AppUser.send(1000, "#.user:login", "ts", "pass")
-                    alert(v)
-                } catch(e) {
-                    alert(e)
-                }
-            }}>
+        <div>
+            <div style={{margin: 100}}>
+                <Input size="large" editable={true}></Input>
+
+                <Input size="large" editable={true}></Input>
+            </div>
         </div>
+
     )
 }
+
