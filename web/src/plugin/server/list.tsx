@@ -16,7 +16,6 @@ import { toObject } from "rpccloud-client-js/build/types";
 import ServerCreate from "./create";
 import ServerDelete from "./delete";
 
-
 class Data {
     createModal: boolean
     deleteModal: boolean
@@ -166,7 +165,7 @@ const columns = [
             <>
                 <Tooltip title="View detail">
                     <Button
-                        type="ghost"
+                        type="primary"
                         shape="circle"
                         icon={<EyeOutlined />}
                         onClick={(e) => {alert(JSON.stringify(data))}}
@@ -176,7 +175,7 @@ const columns = [
                 <Tooltip title="Remove SSH server">
                     <Button
                         style={{margin: 8, color:"--VBot-FontColor"}}
-                        type="ghost"
+                        type="primary"
                         shape="circle"
                         icon={<DeleteOutlined />}
                         onClick={() => {
