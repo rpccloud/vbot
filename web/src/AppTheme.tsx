@@ -4,7 +4,7 @@ import 'antd/dist/antd.variable.min.css';
 import "./theme/base/base.scss";
 import "./theme/base/antd.scss";
 import "./theme/component/icon.scss";
-import Theme, { ThemeConfig } from "./ui/theme/config";
+import { ThemeConfig } from "./ui/theme/config";
 import { AppData } from "./AppManager";
 
 export const Themes = {

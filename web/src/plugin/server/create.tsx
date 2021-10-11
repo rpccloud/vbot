@@ -7,12 +7,13 @@ import {
     LockOutlined,
 } from '@ant-design/icons';
 
-import { message, Input } from 'antd';
+import { message } from 'antd';
 import { observer } from "mobx-react-lite";
 import Card from "../../component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
 import { AppUser } from "../../AppManager";
 import { isValidHost, isValidPort } from "../../util/util";
+import Input from "../../ui/component/Input";
 
 class Data {
     loading: boolean
@@ -115,41 +116,47 @@ const ServerCreate = observer((props: ServerCreateProps) => {
         >
             <div style={{height:20}} />
             <Input
-                size="large"
+                type="text"
+                size="middle"
                 placeholder="SSH Host (192.168.0.1 or www.example.com)"
-                autoComplete="off"
+                edit={true}
                 value={data.host}
-                prefix={<GlobalOutlined className="vbot-icon-prefix" />}
-                onChange={(e) => { data.setHost(e.target.value) }}
-                className={data.isValidHost ? "" : "ant-input-error"}
+                prefixIcon={<GlobalOutlined/>}
+                onChange={(e) => { data.setHost(e.target.value); } }
+                validator={() => data.isValidHost}
             />
             <div style={{height:20}} />
             <Input
-                size="large"
+                type="text"
+                size="middle"
                 placeholder="SSH Port (0 - 65535)"
-                autoComplete="off"
+                edit={true}
                 value={data.port}
-                prefix={<AimOutlined className="vbot-icon-prefix" />}
+                prefixIcon={<AimOutlined/>}
                 onChange={(e) => { data.setPort(e.target.value) }}
-                className={data.isValidPort ? "" : "ant-input-error"}
+                validator={() => data.isValidPort}
             />
             <div style={{height:20}} />
             <Input
-                size="large"
+                type="text"
+                size="middle"
                 placeholder="SSH Username"
-                autoComplete="off"
+                edit={true}
                 value={data.user}
-                prefix={<UserOutlined className="vbot-icon-prefix" />}
+                prefixIcon={<UserOutlined/>}
                 onChange={(e) => { data.setUser(e.target.value) }}
+                validator={(v) => v !== ""}
             />
             <div style={{height:20}} />
-            <Input.Password
-                id="password"
-                size="large"
+            <Input
+                type="password"
+                size="middle"
                 placeholder="SSH Password"
+                edit={true}
                 value={data.password}
-                prefix={<LockOutlined className="vbot-icon-prefix" />}
+                prefixIcon={<LockOutlined/>}
                 onChange={(e) => {  data.setPassword(e.target.value) }}
+                validator={(v) => v !== ""}
             />
             <div style={{height:20}} />
         </Card>
