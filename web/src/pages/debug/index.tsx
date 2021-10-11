@@ -1,20 +1,28 @@
-import React, { useContext } from "react";
+import React from "react";
 import Input from "../../ui/component/Input";
-import ThemeConfig from "../../ui/theme/config";
+import {
+    UserOutlined,
+} from '@ant-design/icons';
 
 
 export default function Debug() {
-    const config = useContext(ThemeConfig);
-
     return (
         <div>
             <div style={{margin: 100}}>
-                <Input size="large" editable={true}></Input>
-
-                <Input size="large" editable={true}></Input>
+                <Input
+                    size="large"
+                    label="Password:"
+                    type="password"
+                    value={""}
+                    prefixIcon={<UserOutlined/>}
+                    onSubmit={v => {}}
+                />
+                <div style={{height: 100}}></div>
+                <Input size="large" type="text" onSubmit={v => {}}/>
+                <div style={{height: 100}}></div>
+                <input style={{backgroundColor: "transparent"}}/>
             </div>
         </div>
-
     )
 }
 
