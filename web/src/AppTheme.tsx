@@ -4,6 +4,8 @@ import 'antd/dist/antd.variable.min.css';
 import "./theme/base/base.scss";
 import "./theme/base/antd.scss";
 import "./theme/component/icon.scss";
+import Theme, { ThemeConfig } from "./ui/theme/config";
+import { AppData } from "./AppManager";
 
 export const Themes = {
     light: {
@@ -75,6 +77,21 @@ export function setAppTheme(theme: {
             warningColor: theme.warningColor,
         },
     });
+
+    AppData.get().setThemeConfig(new ThemeConfig({
+        primaryColor: theme.primaryColor,
+        borderColor: theme.outlineColor,
+        fontColor: theme.fontColor,
+        errorColor: theme.errorColor,
+        successColor: theme.successColor,
+        dividerColor: theme.dividerColor,
+        shadowColor: theme.shadowColor,
+        maskColor: "rgba(0,0,0,0)",
+        fontSizeSmall: "12px",
+        fontSizeMiddle: "16px",
+        fontSizeLarge: "22px",
+        fontWeight: 400,
+    }))
 
     const docStyle = document.documentElement.style
     docStyle.setProperty("--Vbot-PrimaryColor", theme.primaryColor)

@@ -14,6 +14,7 @@ import StartPage from "./pages/start"
 import { RPCAny } from "rpccloud-client-js/build/types"
 
 import { setAppTheme, Themes } from "./AppTheme";
+import Theme, { ThemeConfig } from "./ui/theme/config";
 
 const routeMap: Map<string, any> = new Map([
     ["start", (<StartPage />)],
@@ -24,21 +25,25 @@ const routeMap: Map<string, any> = new Map([
 ]);
 
 export default observer(() => {
-    return AppData.get().isValid() ? (
-        <ConfigProvider locale={AppData.get().locale?.antd}>
-            {routeMap.get(AppData.get().rootRoute)}
-        </ConfigProvider>
+    const appData = AppData.get()
+    return appData.isValid() && appData.themeConfig ? (
+        <Theme.Provider value={appData.themeConfig}>
+            <ConfigProvider locale={AppData.get().locale?.antd}>
+                {routeMap.get(AppData.get().rootRoute)}
+            </ConfigProvider>
+        </Theme.Provider>
     ) : null
 })
 
 export class AppData {
+    themeConfig?: ThemeConfig
     locale?: Locale
     rootRoute: string
 
     private constructor() {
         makeAutoObservable(this)
         this.setLang(window.navigator.language)
-        this.rootRoute = "debug"
+        this.rootRoute = "start"
     }
 
     async setLang(lang: string) {
@@ -46,6 +51,10 @@ export class AppData {
         runInAction(() => {
             this.locale  = ret
         })
+    }
+
+    setThemeConfig(themeConfig?: ThemeConfig) {
+        this.themeConfig = themeConfig
     }
 
     setRootRoute(rootRoute: string) {
@@ -87,7 +96,7 @@ export class AppUser {
 }
 
 window.onload = function() {
-    setAppTheme(Themes.dark)
+    setAppTheme(Themes.light)
 }
 
 // window.onbeforeunload = function(event) {

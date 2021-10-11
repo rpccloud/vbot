@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 
 import {
     LockOutlined,
 } from '@ant-design/icons';
 
-import { message, Carousel, Input, Spin } from 'antd';
+import { message, Spin } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import { makeAutoObservable, runInAction } from "mobx";
@@ -13,6 +13,7 @@ import { passwordStrength } from "check-password-strength";
 import { AppData, AppUser } from "../../AppManager";
 import Card from "../../component/Card";
 import { delay } from "../../util/util";
+import Input from "../../ui/component/Input";
 
 class Data {
     password: string
@@ -50,7 +51,7 @@ const styles = {
     carousel: {
         content: {
             color: "var(--Vbot-FontColor)",
-            height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))"
+            height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))",
         }
     },
     password: {
@@ -73,7 +74,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
     if (password !== confirm) {
         indicator = (
             <ul style={styles.password.container}>
-                <li style={styles.password.wrong}>密码不一致</li>
+                <li style={styles.password.wrong}>Password does not match</li>
             </ul>
         )
     } else {
@@ -83,13 +84,13 @@ const CardPassword = observer((props: {onNext: () => void}) => {
         const hasNumberChar = passwordInfo.contains.includes("number")
         const lengthOK = passwordInfo.length > 8
         const lowerView =  hasLowerChar ? null :
-            <li style={styles.password.wrong}>密码必须包含小写字母</li>
+            <li style={styles.password.wrong}>Password must contains lower letter</li>
         const upperView = hasUpperChar ? null:
-            <li style={styles.password.wrong}>密码必须包含大写字母</li>
+            <li style={styles.password.wrong}>Password must contains upper letter</li>
         const numberView = hasNumberChar ? null:
-            <li style={styles.password.wrong}>密码必须包含数字</li>
+            <li style={styles.password.wrong}>Password must contains upper number</li>
         const lengthView = lengthOK ? null :
-            <li style={styles.password.wrong}>密码长度必须大于8</li>
+            <li style={styles.password.wrong}>Password length must be bigger than 8</li>
         indicator = (
             <ul style={styles.password.container}>
                 {lowerView}
@@ -103,34 +104,38 @@ const CardPassword = observer((props: {onNext: () => void}) => {
 
     return (
         <Card
-            title="初始化系统 - 设置admin密码"
+            title="System initialize - set admin password"
             width={420}
             height={360}
-            nextName="下一步"
+            nextName="Next"
             canNext={canNext}
             onNext={props.onNext}
         >
-            <div style={{height:12}}/>
-            <Input.Password
-                size="large"
-                placeholder="输入密码"
-                defaultValue={data.password}
-                prefix={<LockOutlined className="vbot-icon-prefix" />}
+            <div style={{height:20}}/>
+            <Input
+                size="middle"
+                type="password"
+                placeholder="Input password"
+                value={data.password}
+                prefixIcon={<LockOutlined />}
+                edit={true}
                 onChange={(e) => {
                     data.setPassword(e.target.value)
                 }}
             />
             <div style={{height:20}}/>
-            <Input.Password
-                size="large"
-                placeholder="确认密码"
-                defaultValue={data.confirm}
-                prefix={<LockOutlined className="vbot-icon-prefix" />}
+            <Input
+                size="middle"
+                type="password"
+                placeholder="Confirm password"
+                value={data.confirm}
+                prefixIcon={<LockOutlined />}
+                edit={true}
                 onChange={(e) => {
                     data.setConfirm(e.target.value)
                 }}
             />
-            <div style={{height:16}}/>
+            <div style={{height:20}}/>
             {indicator}
         </Card>
     )
@@ -161,58 +166,39 @@ const CardWaiting = observer(() => (
 ))
 
 const Register = observer((props: any) => {
-    const carouselRef: any = useRef(null);
+    let [show, setShow] = useState(0)
+
+    const view0 = (
+        <CardPassword onNext={() => { setShow(1) }} />
+    )
+    const view1 = (
+        <CardAgree
+            onPrev={() => { setShow(0) }}
+            onNext={async () => {
+                setShow(2)
+                try {
+                    await AppUser.send(8000, "#.user:Create", "admin", data.password)
+                    AppData.get().setRootRoute("login")
+                } catch(e) {
+                    message.error((e as any).getMessage())
+                    await delay(1000)
+                    AppData.get().setRootRoute("start")
+                } finally {
+                    data.reset()
+                    setShow(0)
+                }
+            }}
+        />
+    )
+    const view2 = (
+        <CardWaiting />
+    )
+
     return (
         <div className="vbot-fill-viewport" style={{display: "flex", flexFlow: "column"}} >
         <Header/>
         <div style={{display: "flex", flex:"1 0 0", flexFlow: "row"}} className="vbot-container-center">
-        <Carousel
-                    ref={carouselRef}
-                    className={"vbot-need-ant-carousel-auto-fill vbot-auto-fill"}
-                    dots={false}
-                    effect="fade"
-                >
-                    <div>
-                        <div style={styles.carousel.content} className="vbot-container-center">
-                            <CardPassword
-                                onNext={() => {
-                                    carouselRef.current.goTo(1)
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <div style={styles.carousel.content} className="vbot-container-center">
-                            <CardAgree
-                                onPrev={() => {
-                                    carouselRef.current.goTo(0)
-                                }}
-                                onNext={async () => {
-                                    carouselRef.current.goTo(2)
-                                    try {
-                                        await AppUser.send(8000, "#.user:Create", "admin", data.password)
-                                        carouselRef.current.goTo(0)
-                                        AppData.get().setRootRoute("login")
-                                    } catch(e) {
-                                        message.error((e as any).getMessage())
-                                        await delay(1000)
-                                        carouselRef.current.goTo(0)
-                                        AppData.get().setRootRoute("start")
-                                    } finally {
-                                        data.reset()
-                                    }
-                                }}
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <div style={styles.carousel.content} className="vbot-container-center">
-                            <CardWaiting />
-                        </div>
-                    </div>
-                </Carousel>
+            {[view0, view1, view2][show]}
         </div>
         <Footer/>
     </div>

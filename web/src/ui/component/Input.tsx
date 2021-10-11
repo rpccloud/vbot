@@ -34,6 +34,7 @@ interface InputProps {
     value?: string,
     size: "small" | "middle" | "large",
     type: "password" | "text",
+    placeholder?: string,
     label?: string,
     edit?: boolean,
     validator?: (value: any) => boolean,
@@ -70,12 +71,12 @@ const Input = (props: InputProps) => {
                 position: "relative",
                 flexFlow: "row",
                 border: "1px solid " +  (edit ? ((focus || hover) ? theme.primaryColor : theme.borderColor): "transparent"),
-                boxShadow: (focus && edit) ? "0px 0px 6px " + theme.primaryColor: "",
+                boxShadow: (focus && edit) ? "0px 0px 4px " + theme.primaryColor: "",
                 overflow: "clip",
                 borderRadius: 6,
                 fontSize: sizeMap[props.size],
                 color: focus ? theme.primaryColor : theme.borderColor,
-                padding: "0px 8px 0px 8px",
+                padding: "8px 8px 8px 8px",
                 transition : "border 300ms ease-out, box-shadow 300ms ease-out, color 300ms ease-out",
             }}
             onMouseDown={(e) => {
@@ -108,6 +109,8 @@ const Input = (props: InputProps) => {
                     alignItems:"center",
                     display: props.prefixIcon ? "flex" : "none",
                     margin: "0px 8px 0px 0px",
+                    color: (props.validator && !props.validator(value)) ? theme.errorColor : "inherit",
+                    transition : "color 300ms ease-out",
                 }}
                 onMouseDown={e => {e.preventDefault()}}
             >
@@ -136,6 +139,7 @@ const Input = (props: InputProps) => {
                     fontWeight: theme.fontWeight,
                     caretColor: edit ? theme.fontColor : "transparent",
                 }}
+                placeholder={edit ? props.placeholder : ""}
                 type={type}
                 value={ (!edit && type === "password") ? fakePassword : value}
                 onMouseDown={e => {

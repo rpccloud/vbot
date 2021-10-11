@@ -4,12 +4,12 @@ import { Button } from 'antd';
 
 const styles = {
     header: {
-        height: 50,
+        height: 56,
         color: "var(--Vbot-FontColor)",
         fontSize: "var(--Vbot-FontSizeLarge)",
         borderBottom: "1px solid var(--Vbot-DividerColor)",
         display: "flex",
-        alignItems: "center",
+        paddingTop: 16,
     },
     container: {
         border: "1px solid var(--Vbot-DividerColor)",

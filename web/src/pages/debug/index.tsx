@@ -16,6 +16,9 @@ export default function Debug() {
                     value={""}
                     prefixIcon={<UserOutlined/>}
                     onSubmit={v => {}}
+                    validator={(v): boolean => {
+                        return v.length > 10
+                    }}
                 />
                 <div style={{height: 100}}></div>
                 <Input size="large" type="text" onSubmit={v => {}}/>
