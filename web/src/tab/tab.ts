@@ -120,7 +120,6 @@ export class Tab {
   private x: number;
   private width: number;
   public path: Path2D;
-  public hideSpacer: boolean;
 
   public isFocus: boolean;
   public isMouseOver: boolean;
@@ -146,7 +145,6 @@ export class Tab {
     this.x = 0;
     this.width = 0;
     this.path = new Path2D();
-    this.hideSpacer = false;
     this.isFocus = false;
     this.isMouseOver = false;
     this.isMoving = false;
@@ -270,9 +268,7 @@ export class Tab {
   }
 
   public flush(): void {
-    if (this.isMouseOver || this.isFocus) {
-      this.drawPath();
-    }
+    this.drawPath();
 
     const r = this.config.radius;
     const m = this.config.inMargin;

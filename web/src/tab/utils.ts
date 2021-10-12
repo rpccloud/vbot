@@ -165,46 +165,95 @@ export function parseShowURL(url: string): string {
   }
 }
 
+// export function makeTabPath(w: number, h: number, radius: number): Path2D {
+//   let path = new Path2D();
+//   let r = Math.min(w / 2, h / 2, radius);
+
+//   path.moveTo(0, h);
+//   path.arc(
+//     0,
+//     h - r,
+//     r,
+//     Math.PI * 0.5,
+//     0,
+//     true,
+//   );
+//   path.lineTo(r, r);
+//   path.arc(
+//     r * 2,
+//     r,
+//     r,
+//     Math.PI,
+//     Math.PI * 1.5,
+//     false,
+//   );
+//   path.lineTo(w - r * 2, 0);
+//   path.arc(
+//     w - r * 2,
+//     r,
+//     r,
+//     Math.PI * 1.5,
+//     Math.PI * 2,
+//     false,
+//   );
+//   path.lineTo(w - r, h - r);
+//   path.arc(
+//     w,
+//     h - r,
+//     r,
+//     Math.PI,
+//     Math.PI * 0.5,
+//     true,
+//   );
+
+//   return path;
+// }
+
+
+
 export function makeTabPath(w: number, h: number, radius: number): Path2D {
-  let path = new Path2D();
-  let r = Math.min(w / 2, h / 2, radius);
+    let path = new Path2D();
+    let r = Math.min(w / 2, h / 2, radius);
 
-  path.moveTo(0, h);
-  path.arc(
-    0,
-    h - r,
-    r,
-    Math.PI * 0.5,
-    0,
-    true,
-  );
-  path.lineTo(r, r);
-  path.arc(
-    r * 2,
-    r,
-    r,
-    Math.PI,
-    Math.PI * 1.5,
-    false,
-  );
-  path.lineTo(w - r * 2, 0);
-  path.arc(
-    w - r * 2,
-    r,
-    r,
-    Math.PI * 1.5,
-    Math.PI * 2,
-    false,
-  );
-  path.lineTo(w - r, h - r);
-  path.arc(
-    w,
-    h - r,
-    r,
-    Math.PI,
-    Math.PI * 0.5,
-    true,
-  );
+    path.moveTo(0, h);
+    path.lineTo(2*r, 0)
+    path.lineTo(w-2*r, 0)
+    path.lineTo(w, h)
+    // path.arc(
+    //   0,
+    //   h - r,
+    //   r,
+    //   Math.PI * 0.5,
+    //   0,
+    //   true,
+    // );
+    // path.lineTo(r, r);
+    // path.arc(
+    //   r * 2,
+    //   r,
+    //   r,
+    //   Math.PI,
+    //   Math.PI * 1.5,
+    //   false,
+    // );
+    // path.lineTo(w - r * 2, 0);
+    // path.arc(
+    //   w - r * 2,
+    //   r,
+    //   r,
+    //   Math.PI * 1.5,
+    //   Math.PI * 2,
+    //   false,
+    // );
+    // path.lineTo(w - r, h - r);
+    // path.arc(
+    //   w,
+    //   h - r,
+    //   r,
+    //   Math.PI,
+    //   Math.PI * 0.5,
+    //   true,
+    // );
 
-  return path;
-}
+    return path;
+  }

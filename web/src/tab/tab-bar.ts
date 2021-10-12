@@ -1,4 +1,3 @@
-import { RoundButton } from "./button";
 import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
 import { IPoint, AppPageKind, AppPageData } from "./defs";
 import { Tab } from "./tab";
@@ -76,9 +75,7 @@ export class TabBar {
     this.flushConfig();
 
     // create home page
-    window.requestAnimationFrame(() => {
-      this.addTab(AppPageKind.Home, "kztool://home", true);
-    });
+    this.addTab(AppPageKind.Home, "kztool://home", true);
   }
 
   public getRootElem(): HTMLDivElement {
@@ -122,6 +119,7 @@ export class TabBar {
     isLayout: boolean,
     tabAnimate: boolean,
   ): void {
+
     const totalWidth = window.innerWidth;
     const config = TabConfig.get();
     const r = config.tab.radius;
@@ -153,7 +151,6 @@ export class TabBar {
       const movedWidth = this.netMovedWidth + d;
       const movedPath = makeTabPath(movedWidth, config.tab.height, r);
       let x = left;
-      let preTab = this.home;
 
       // layout home
       this.homeMin = x;
@@ -166,9 +163,9 @@ export class TabBar {
         tab.path = this.homePath;
         tab.setDisplay(true);
         tab.setAnimate(tabAnimate && !tab.isMoving);
-        tab.hideSpacer = tab.isMouseOver || tab.isFocus;
       }
       x += netHomeWidth;
+      this.home?.flush()
 
       // layout moved
       this.movedMin = x;
@@ -188,16 +185,8 @@ export class TabBar {
           tab.setDisplay(false);
         }
         tab.setAnimate(tabAnimate && !tab.isMoving);
-        tab.hideSpacer = tab.isMouseOver || tab.isFocus;
-
-        if (tab.hideSpacer && !tab.isMoving && preTab) {
-          preTab.hideSpacer = true;
-        }
-        preTab?.flush();
-        preTab = tab;
+        tab.flush();
       }
-
-      preTab?.flush();
     }
   }
 
@@ -314,11 +303,11 @@ export class TabBar {
   }
 
   public deleteTab(pageId: number): boolean {
-    let tab: Tab | undefined;
+    let tab: Tab | undefined = this.moved.find(o => o.data.id === pageId)
 
     if (pageId === 0 && (tab = this.home)) {
       this.home = undefined;
-    } else if (tab = this.moved.find(o => o.data.id === pageId)) {
+    } else if (!!tab) {
       this.moved = this.moved.filter(o => o.data.id !== pageId);
     } else {
       return false;

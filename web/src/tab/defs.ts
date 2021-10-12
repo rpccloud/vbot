@@ -8,13 +8,6 @@ export interface ISize {
   height: number;
 }
 
-export interface IRect {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
 export enum AppPageKind {
   Home,
   Moved,
@@ -42,10 +35,6 @@ export class AppPageData {
   }
 }
 
-export interface ITabIndex {
-  kind: AppPageKind;
-  idx: number;
-}
 
 export interface IButtonConfig {
   size: ISize;
