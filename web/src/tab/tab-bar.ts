@@ -1,5 +1,5 @@
 import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
-import { IPoint, AppPageKind, AppPageData } from "./defs";
+import { IPoint } from "./defs";
 import { Tab } from "./tab";
 import { TabConfig } from "./config";
 import { getTabBarCSS } from "./css";
@@ -75,7 +75,7 @@ export class TabBar {
     this.flushConfig();
 
     // create home page
-    this.addTab(AppPageKind.Home, "kztool://home", true);
+    this.addTab(true, "home-0", true);
   }
 
   public getRootElem(): HTMLDivElement {
@@ -190,16 +190,6 @@ export class TabBar {
     }
   }
 
-  public flushPageData(data?: AppPageData): void {
-    if (data) {
-      for (let tab of [this.home, ...this.moved]) {
-        if (tab && tab.data.id === data.id) {
-          tab.flushPageData(data);
-        }
-      }
-    }
-  }
-
   ///////////////////// Mouse Event ////////////////////////////////////////////
   private onPointerDown(e: PointerEvent): void {
     e.stopPropagation();
@@ -266,30 +256,25 @@ export class TabBar {
   }
 
   public addTab(
-    kind: AppPageKind,
-    url: string,
+    isHome: boolean,
+    param: string,
     focus: boolean,
     afterId?: number,
   ): boolean {
-    const tab = new Tab(this,new AppPageData(getSeed(), kind, url));
+    const tab = new Tab(this, isHome, getSeed(), param);
     this.rootElem.appendChild(tab.getRootElem());
-    switch (kind) {
-      case AppPageKind.Home:
+    if (isHome) {
         this.home = tab;
-        break;
-      case AppPageKind.Moved:
+    } else {
         if (afterId === 0) {
-          this.moved.splice(0, 0, tab);
-        } else {
-          let movIndex = this.moved.findIndex(o => o.data.id === afterId);
-          if (movIndex < 0) {
-            movIndex = this.moved.length - 1;
+            this.moved.splice(0, 0, tab);
+          } else {
+            let movIndex = this.moved.findIndex(o => o.id === afterId);
+            if (movIndex < 0) {
+              movIndex = this.moved.length - 1;
+            }
+            this.moved.splice(movIndex + 1, 0, tab);
           }
-          this.moved.splice(movIndex + 1, 0, tab);
-        }
-        break;
-      default:
-        return false;
     }
 
     if (focus) {
@@ -303,19 +288,19 @@ export class TabBar {
   }
 
   public deleteTab(pageId: number): boolean {
-    let tab: Tab | undefined = this.moved.find(o => o.data.id === pageId)
+    let tab: Tab | undefined = this.moved.find(o => o.id === pageId)
 
     if (pageId === 0 && (tab = this.home)) {
       this.home = undefined;
     } else if (!!tab) {
-      this.moved = this.moved.filter(o => o.data.id !== pageId);
+      this.moved = this.moved.filter(o => o.id !== pageId);
     } else {
       return false;
     }
 
     tab.destory();
 
-    if (this.focusTab && this.focusTab.data.id === pageId) {
+    if (this.focusTab && this.focusTab.id === pageId) {
       let biggestFocusTime = 0;
       let lastFocus: Tab | undefined;
       for (const it of [this.home, ...this.moved]) {
@@ -374,30 +359,26 @@ export class TabBar {
   }
 
   public setTabX(tab: Tab, x: number): boolean {
-    switch (tab.data.kind) {
-      case AppPageKind.Home:
-        return false;
-      case AppPageKind.Moved:
-        if (this.moved.length > 0) {
-          x = range(
-            x,
-            this.movedMin,
-            this.movedMin + this.netMovedWidth * (this.showMoved - 1),
-          );
-          tab.setX(x);
-          const index = Math.round((x - this.movedMin) / this.netMovedWidth);
-          if (tab.index !== index) {
-            this.moved = this.moved.filter(o => o.data.id !== tab.data.id);
-            this.moved.splice(index, 0, tab);
-            this.flush(true, true, true);
+      if (tab.isHome) {
+          return false
+      } else if (this.moved.length > 0) {
+            x = range(
+              x,
+              this.movedMin,
+              this.movedMin + this.netMovedWidth * (this.showMoved - 1),
+            );
+            tab.setX(x);
+            const index = Math.round((x - this.movedMin) / this.netMovedWidth);
+            if (tab.index !== index) {
+              this.moved = this.moved.filter(o => o.id !== tab.id);
+              this.moved.splice(index, 0, tab);
+              this.flush(true, true, true);
+            }
+            return true;
+          } else {
+            return false;
           }
-          return true;
-        } else {
-          return false;
-        }
-      default:
-        return false;
-    }
+
   }
 
   public getTabByPoint(x: number, y: number): Tab | undefined {

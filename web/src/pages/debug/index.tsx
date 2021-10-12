@@ -25,7 +25,7 @@ class Debug extends React.Component {
         return (
             <div className="vbot-fill-viewport">
                 <div ref={this.ref} style={{height:300, background: "green"}} />
-                <div style={{width: 100, height: 100, background: "red"}}  onClick={() => {this.tabBar?.addTab(AppPageKind.Moved, "", true)}}></div>
+                <div style={{width: 100, height: 100, background: "red"}}  onClick={() => {this.tabBar?.addTab(false, "test-0", true)}}></div>
             </div>
         )
     }

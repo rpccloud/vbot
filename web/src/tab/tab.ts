@@ -1,6 +1,4 @@
 import {
-  AppPageData,
-  AppPageKind,
   ITabConfig,
 } from "./defs";
 import { RoundButton } from "./button";
@@ -111,11 +109,14 @@ class CloseButton extends RoundButton {
 }
 
 export class Tab {
-  private isInit: boolean;
+    public id: number;
+    public isHome: boolean;
+  private param: string;
+
   private display: boolean;
   private isAnimate: boolean;
   private zIndex: number;
-  public readonly data: AppPageData;
+
   public index: number;
   private x: number;
   private width: number;
@@ -135,12 +136,13 @@ export class Tab {
   private closeButton: CloseButton;
    //private pageBarContent: PageBarContent;
 
-  public constructor(tabBar: TabBar, data: AppPageData) {
-    this.isInit = true;
+  public constructor(tabBar: TabBar, isHome: boolean, id: number, param: string) {
+      this.id = id;
+    this.isHome = isHome;
+    this.param = param
     this.display = true;
     this.isAnimate = false;
     this.zIndex = 0;
-    this.data = data;
     this.index = -1;
     this.x = 0;
     this.width = 0;
@@ -156,7 +158,7 @@ export class Tab {
     this.bgElem.className = "tab-bg";
     this.title = new Title();
     this.closeButton = new CloseButton(() => {
-      tabBar.deleteTab(this.data.id);
+      tabBar.deleteTab(id);
     });
 
     this.rootElem.appendChild(this.bgElem);
@@ -165,14 +167,9 @@ export class Tab {
   }
 
   public destory(): boolean {
-    if (this.isInit) {
-      this.isInit = false;
-      this.closeButton.destory();
-      this.rootElem.parentNode?.removeChild(this.rootElem);
-      return true;
-    } else {
-      return false;
-    }
+    this.closeButton.destory();
+    this.rootElem.parentNode?.removeChild(this.rootElem);
+    return true;
   }
 
   public getFocusTimeMS(): number {
@@ -222,12 +219,8 @@ export class Tab {
   public getWeight(): number {
     let ret = this.index;
 
-    switch (this.data.kind) {
-      case AppPageKind.Home:
+    if (this.isHome) {
         ret += 42949672960;
-        break;
-      default:
-        break;
     }
 
     if (this.isMouseOver) {
@@ -276,7 +269,7 @@ export class Tab {
     let rightX = this.width - r - this.config.rightMargin;
 
     // flush close button
-    const showClose = (this.data.kind !== AppPageKind.Home) &&
+    const showClose = !this.isHome &&
       (this.isFocus || this.width > this.config.disappearCloseWidth);
     if (showClose) {
       rightX -= this.config.closeButton.size.width;
@@ -317,17 +310,6 @@ export class Tab {
       this.ctx = ctx;
     } else {
       this.ctx = undefined;
-    }
-  }
-
-  public flushPageData(data: AppPageData): void {
-    if (this.data.id === data.id && this.data.seq < data.seq) {
-      this.data.seq = data.seq;
-
-      if (this.data.title !== data.title) {
-        this.data.title = data.title;
-        this.title.setTitle(data.title);
-      }
     }
   }
 
