@@ -2,270 +2,10 @@ import {
   AppPageData,
   AppPageKind,
   ITabConfig,
-  AppPageState,
-  IFaviconConfig,
 } from "./defs";
 import { RoundButton } from "./button";
 import { TabConfig } from "./config";
 import { TabBar } from "./tab-bar";
-
-class Favicon {
-  private static LoadingStart(range: number): number {
-    if (range === 0) {
-      return 0;
-    } else if (range < 0.4) {
-      return range / 4;
-    } else if (range < 0.9) {
-      return (range - 0.4) * 1.8 + 0.1;
-    } else {
-      return 0.99;
-    }
-  }
-
-  private static LoadingEnd(range: number): number {
-    if (range === 0) {
-      return 0;
-    } else if (range < 0.4) {
-      return range * 9 / 4;
-    } else if (range < 0.9) {
-      return (range - 0.4) / 5 + 0.9;
-    } else {
-      return 1;
-    }
-  }
-
-  private rootElem: HTMLDivElement;
-  protected canvasElem: HTMLCanvasElement;
-  private ctx?: CanvasRenderingContext2D;
-  private isDisplay: boolean;
-
-  private baseAngle: number;
-  private tickLoading: number;
-  private tickLeaving: number;
-  private isFaviconLoaded: boolean;
-  private state: AppPageState;
-  private timerHandler?: number;
-
-  private image: HTMLImageElement;
-
-  public constructor() {
-    this.rootElem = document.createElement("div");
-    this.rootElem.className = "tab-favicon";
-    this.image = new Image();
-    this.canvasElem = document.createElement("canvas");
-    this.rootElem.appendChild(this.canvasElem);
-
-    const ctx = this.canvasElem.getContext("2d");
-    if (ctx) {
-      this.ctx = ctx;
-    }
-
-    this.image.addEventListener("load", () => {
-      this.isFaviconLoaded = true;
-      this.startTimer();
-    });
-
-    this.isDisplay = true;
-    this.baseAngle = 270;
-    this.tickLoading = 0;
-    this.tickLeaving = 0;
-    this.isFaviconLoaded = false;
-    this.state = AppPageState.Closed;
-    this.flushConfig(TabConfig.get().tab.favicon);
-  }
-
-  public getRootElem(): HTMLDivElement {
-    return this.rootElem;
-  }
-
-  public setDisplay(isDisplay: boolean): void {
-    if (this.isDisplay !== isDisplay) {
-      this.isDisplay = isDisplay;
-      this.rootElem.style.display = isDisplay ? "block" : "none";
-    }
-  }
-
-  public setLoading(): void {
-    // calculate the base angle
-    if (this.state === AppPageState.Leaving) {
-      this.baseAngle = this.baseAngle - this.tickLeaving;
-    }
-    this.tickLoading = 0;
-    this.state = AppPageState.Loading;
-    this.startTimer();
-  }
-
-  public setLoaded(): void {
-    this.baseAngle = 270;
-    this.tickLoading = 0;
-    this.tickLeaving = 0;
-    this.state = AppPageState.Loaded;
-    this.startTimer();
-  }
-
-  public setLeaving(): void {
-    // calculate the base angle
-    if (this.state === AppPageState.Loading) {
-      this.baseAngle = this.baseAngle + this.tickLoading / 3 +
-        Favicon.LoadingStart((this.tickLoading % 360) / 360) * 360;
-    }
-
-    this.tickLeaving = 0;
-    this.state = AppPageState.Leaving;
-    this.startTimer();
-  }
-
-  public setFavicon(favicon: string): void {
-    this.isFaviconLoaded = false;
-    if (favicon !== "") {
-      this.image.src = favicon;
-    }
-
-    this.startTimer();
-  }
-
-  private startTimer(): void {
-    if (this.timerHandler === undefined) {
-      this.timerHandler = setInterval(() => {
-        console.log("onTimer");
-        if (this.state === AppPageState.Loading) {
-          this.flush();
-        } else if (this.state === AppPageState.Leaving) {
-          this.flush();
-        } else {
-          this.stopTimer();
-          this.flush();
-        }
-      }, 40) as any;
-    }
-  }
-
-  private stopTimer(): void {
-    if (this.timerHandler !== undefined) {
-      clearInterval(this.timerHandler);
-      this.timerHandler = undefined;
-    }
-  }
-
-  private flushConfig(config: IFaviconConfig): void {
-    const favSize = config.size;
-    const width = favSize.width;
-    const height = favSize.height;
-
-    const dpr = window.devicePixelRatio ? window.devicePixelRatio : 1;
-    this.canvasElem.width = width * dpr;
-    this.canvasElem.height = height * dpr;
-    this.canvasElem.style.width = `${width}px`;
-    this.canvasElem.style.height = `${height}px`;
-    if (this.ctx) {
-      this.ctx.scale(dpr, dpr);
-      this.startTimer();
-    }
-  }
-
-  private flush(): void {
-    const config = TabConfig.get().tab.favicon;
-    const cx = config.size.width / 2;
-    const cy = config.size.height / 2;
-    const r = Math.max(Math.min(cx, cy) - 1, 1);
-
-    switch (this.state) {
-      case AppPageState.Loading: {
-        this.tickLoading += 3;
-        if (this.tickLoading > 1080) {
-          this.tickLoading -= 1080;
-        }
-        const startAngle = this.baseAngle + this.tickLoading / 3 +
-          Favicon.LoadingStart((this.tickLoading % 360) / 360) * 360;
-        const endAngle = this.baseAngle + this.tickLoading / 3 +
-          Favicon.LoadingEnd((this.tickLoading % 360) / 360) * 360;
-
-        const ctx = this.ctx;
-        if (ctx) {
-          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-          if (this.isFaviconLoaded) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(cx, cy, r - 2, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.clip();
-            ctx.globalAlpha = 0.4;
-            ctx.drawImage(
-              this.image,
-              2,
-              2,
-              config.size.width - 4,
-              config.size.height - 4,
-            );
-            ctx.restore();
-          }
-
-          ctx.beginPath();
-          ctx.arc(cx, cy, r, startAngle * Math.PI / 180, endAngle * Math.PI / 180);
-          ctx.strokeStyle = config.loadingColor;
-          ctx.lineWidth = 2;
-          ctx.lineCap = "round";
-          ctx.globalAlpha = 1;
-          ctx.stroke();
-        }
-        break;
-      }
-      case AppPageState.Leaving: {
-        this.tickLeaving += 4;
-        if (this.tickLeaving > 720) {
-          this.tickLeaving -= 360;
-        }
-
-        const endAngle = this.baseAngle - this.tickLeaving;
-        const startAngle = endAngle - Math.min(this.tickLeaving, 180);
-        const ctx = this.ctx;
-        if (ctx) {
-          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-          if (this.isFaviconLoaded) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(cx, cy, r - 2, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.clip();
-            ctx.globalAlpha = 0.4;
-            ctx.drawImage(
-              this.image,
-              2,
-              2,
-              config.size.width - 4,
-              config.size.height - 4,
-            );
-            ctx.restore();
-          }
-
-          ctx.beginPath();
-          ctx.arc(cx, cy, r, startAngle * Math.PI / 180, endAngle * Math.PI / 180);
-          ctx.strokeStyle = config.leavingColor;
-          ctx.lineWidth = 2;
-          ctx.lineCap = "round";
-          ctx.globalAlpha = 1;
-          ctx.stroke();
-        }
-        break;
-      }
-      case AppPageState.Loaded: {
-        const ctx = this.ctx;
-        if (ctx) {
-          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-          if (this.isFaviconLoaded) {
-            ctx.globalAlpha = 1;
-            ctx.drawImage(this.image, 1, 1, config.size.width - 2, config.size.height - 2);
-          }
-        }
-        break;
-      }
-      default:
-        break;
-    }
-  }
-}
 
 class Title {
   private x: number;
@@ -370,28 +110,6 @@ class CloseButton extends RoundButton {
   }
 }
 
-class Spacer {
-  private rootElem: HTMLDivElement;
-  private isDisplay: boolean;
-
-  public constructor() {
-    this.rootElem = document.createElement("div");
-    this.rootElem.className = "tab-spacer";
-    this.isDisplay = true;
-  }
-
-  public getRootElem(): HTMLDivElement {
-    return this.rootElem;
-  }
-
-  public setDisplay(isDisplay: boolean): void {
-    if (this.isDisplay !== isDisplay) {
-      this.isDisplay = isDisplay;
-      this.rootElem.style.display = isDisplay ? "block" : "none";
-    }
-  }
-}
-
 export class Tab {
   private isInit: boolean;
   private display: boolean;
@@ -414,10 +132,8 @@ export class Tab {
   private rootElem: HTMLDivElement;
   private bgElem: HTMLCanvasElement;
 
-  private favicon: Favicon;
   private title: Title;
   private closeButton: CloseButton;
-  private spacer: Spacer;
    //private pageBarContent: PageBarContent;
 
   public constructor(tabBar: TabBar, data: AppPageData) {
@@ -440,18 +156,14 @@ export class Tab {
     this.rootElem.className = "tab";
     this.bgElem = document.createElement("canvas");
     this.bgElem.className = "tab-bg";
-    this.favicon = new Favicon();
     this.title = new Title();
     this.closeButton = new CloseButton(() => {
       tabBar.deleteTab(this.data.id);
     });
-    this.spacer = new Spacer();
 
     this.rootElem.appendChild(this.bgElem);
-    this.rootElem.appendChild(this.favicon.getRootElem());
     this.rootElem.appendChild(this.title.getRootElem());
     this.rootElem.appendChild(this.closeButton.getRootElem());
-    this.rootElem.appendChild(this.spacer.getRootElem());
   }
 
   public destory(): boolean {
@@ -516,9 +228,6 @@ export class Tab {
       case AppPageKind.Home:
         ret += 42949672960;
         break;
-      case AppPageKind.Fixed:
-        ret += 4294967296;
-        break;
       default:
         break;
     }
@@ -567,7 +276,6 @@ export class Tab {
 
     const r = this.config.radius;
     const m = this.config.inMargin;
-    const favWidth = this.config.favicon.size.width;
     let leftX = r + this.config.leftMargin;
     let rightX = this.width - r - this.config.rightMargin;
 
@@ -583,15 +291,6 @@ export class Tab {
       this.closeButton.setDisplay(false);
     }
 
-    // flush favicon
-    const showFavicon = (!this.isFocus) || (favWidth + m < rightX - leftX);
-    if (showFavicon) {
-      this.favicon.setDisplay(true);
-      leftX += favWidth + m;
-    } else {
-      this.favicon.setDisplay(false);
-    }
-
     // flush title
     const titleWidth = rightX - leftX;
     this.title.setFocus(this.isFocus);
@@ -601,9 +300,6 @@ export class Tab {
     } else {
       this.title.setDisplay(false);
     }
-
-    // flush spacer
-    this.spacer.setDisplay(!this.hideSpacer);
 
     // flush root
     this.setZIndex(this.getWeight());
@@ -635,11 +331,6 @@ export class Tab {
       if (this.data.title !== data.title) {
         this.data.title = data.title;
         this.title.setTitle(data.title);
-      }
-
-      if (this.data.favicon !== data.favicon) {
-        this.data.favicon = data.favicon;
-        this.favicon.setFavicon(data.favicon);
       }
     }
   }

@@ -38,7 +38,6 @@ import {
     `;
   }
 
-
   export function getTabBarCSS(config: ITabBarConfig): string {
     return `
       .tabBar {
@@ -48,9 +47,6 @@ import {
       .tabBar-bg {
         width: 100%;
         height: 100%;
-      }
-      .tabBar-addButton_animate {
-        transition: background-color 0.20s ease-out, left 0.20s ease-out !important;
       }
       ${getTabCSS(config.tab, config.height - config.tab.height)}
     `;
@@ -73,7 +69,7 @@ import {
     return `
       .tab {
         position: absolute;
-        top: ${y + 0.5}px;
+        top: ${y}px;
         height: ${config.height}px;
         overflow: hidden;
       }
@@ -82,20 +78,13 @@ import {
       }
       .tab-bg {
         transition: opacity 0.20s ease-out;
-        opacity: 0;
+        opacity: 0.5 !important;
       }
       .tab-bg_mouseover {
-        opacity: 0.6 !important;
+        opacity: 0.8 !important;
       }
       .tab-bg_focus {
         opacity: 1 !important;
-      }
-      .tab-favicon {
-        position: absolute;
-        left: ${config.leftMargin + config.radius}px;
-        top: ${(config.height - config.favicon.size.height) / 2}px;
-        width: ${config.favicon.size.width}px;
-        height: ${config.favicon.size.height}px;
       }
       .tab-title {
         -webkit-background-clip: text !important;
@@ -121,18 +110,6 @@ import {
       .tab-title-content {
         float:left;
         font-size: ${config.title.fontSize}px;
-      }
-      .tab-spacer {
-        position: absolute;
-        right: ${config.radius - 1}px;
-        top: ${(config.height - config.spacer.height) / 2}px;
-        width: 1px;
-        height: ${config.spacer.height}px;
-        transition: background-color 0.20s ease-out;
-        background-color: ${config.spacer.color};
-      }
-      .tab-spacer_hide {
-        background-color: #00000000;
       }
       ${closeButtonCSS}
     `;

@@ -17,15 +17,7 @@ export interface IRect {
 
 export enum AppPageKind {
   Home,
-  Fixed,
   Moved,
-}
-
-export enum AppPageState {
-  Closed,
-  Leaving,
-  Loading,
-  Loaded,
 }
 
 export class AppPageData {
@@ -34,11 +26,9 @@ export class AppPageData {
   public url: string;
   public title: string;
   public favicon: string;
-  public state: AppPageState;
   public canGoBack: boolean;
   public canGoForward: boolean;
   public seq: number;
-
 
   public constructor(id: number, kind: AppPageKind, url: string) {
     this.id = id;
@@ -46,7 +36,6 @@ export class AppPageData {
     this.url = url;
     this.title = "";
     this.favicon = "";
-    this.state = AppPageState.Closed;
     this.canGoBack = false;
     this.canGoForward = false;
     this.seq = 0;
@@ -58,7 +47,6 @@ export interface ITabIndex {
   idx: number;
 }
 
-
 export interface IButtonConfig {
   size: ISize;
   bgColorPress: string;
@@ -67,17 +55,6 @@ export interface IButtonConfig {
   fgColor: string;
   fgColorInactive: string;
   fgSize: number;
-}
-
-export interface IFaviconConfig {
-  size: ISize;
-  loadingColor: string;
-  leavingColor: string;
-}
-
-export interface ISpacerConfig {
-  height: number;
-  color: string;
 }
 
 export interface ITitleConfig {
@@ -94,17 +71,12 @@ export interface ITabConfig {
   radius: number;
   height: number;
   homeWidth: number;
-  fixedWidth: number;
   minMovedWidth: number;
   maxMovedWidth: number;
   disappearCloseWidth: number;
   bgColor: string;
-  focusOpacity: number;
-  mouseOverOpacity: number;
-  favicon: IFaviconConfig;
   title: ITitleConfig;
   closeButton: IButtonConfig;
-  spacer: ISpacerConfig;
 }
 
 export interface ITabBarConfig {
@@ -114,48 +86,3 @@ export interface ITabBarConfig {
   bgColor: string;
   tab: ITabConfig;
 }
-
-export interface IPageBarConfig {
-  height: number;
-  bgColor: string;
-
-  leftMargin: number;
-  rightMargin: number;
-  inMargin: number;
-
-  prevButton: IButtonConfig;
-  nextButton: IButtonConfig;
-  reloadButton: IButtonConfig;
-  addressBar: IAddressBarConfig;
-  moreButton: IButtonConfig;
-
-  spacerColor: string;
-}
-
-export interface IAddressBarConfig {
-  height: number;
-  left: number;
-  right: number;
-  borderColor: string;
-  caretColor: string;
-  fontSize: number;
-  fontColor: string;
-  fontColorSelected: string;
-  fontColorBGSelected: string;
-  bgColor: string;
-  hoverBGColor: string;
-}
-
-export interface IAppConfig {
-  currentWorkspace: string;
-  appRect: IRect;
-  appScreenSize: ISize;
-  appColor: string;
-  tabBar: ITabBarConfig;
-  pageBar: IPageBarConfig;
-}
-
-export const IPCRenderChannelCreate = "$IPCRenderChannelCreate";
-export const IPCRenderChannelDelete = "$IPCRenderChannelDelete";
-export const IPCRenderChannelTransport = "$IPCRenderChannelTransport";
-

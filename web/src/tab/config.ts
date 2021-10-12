@@ -2,8 +2,6 @@ import {
   ITabBarConfig,
 } from "./defs";
 
-import { getHashParam } from "./utils";
-
 export class TabConfig {
   private static config: ITabBarConfig = TabConfig.createTabConfig();
 
@@ -24,27 +22,15 @@ export class TabConfig {
           radius: 8,
           height: 35,
           homeWidth: 100,
-          fixedWidth: 50,
           minMovedWidth: 50,
           maxMovedWidth: 250,
           disappearCloseWidth: 100,
           bgColor: "#35363A",
-          focusOpacity: 1,
-          mouseOverOpacity: 0.6,
-          favicon: {
-            size: { width: 18, height: 18 },
-            loadingColor: "#BBBBBB",
-            leavingColor: "#BBBBBB"
-          },
           title: {
             height: 18,
             fontSize: 13,
             fontColor: "#BBBBBB",
             focusFontColor: "#FFFFFF",
-          },
-          spacer: {
-            height: 18,
-            color: "#606060",
           },
           closeButton: {
             size: { width: 18, height: 18 },
