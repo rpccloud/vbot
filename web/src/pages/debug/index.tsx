@@ -1,31 +1,37 @@
-import React from "react";
+import React, { useRef } from "react";
 import Input from "../../ui/component/Input";
 import {
     UserOutlined,
 } from '@ant-design/icons';
+import { TabBar } from "../../tab/tab-bar";
+import { AppPageKind } from "../../tab/defs";
 
 
-export default function Debug() {
-    return (
-        <div>
-            <div style={{margin: 100}}>
-                <Input
-                    size="large"
-                    label="Password:"
-                    type="password"
-                    value={""}
-                    prefixIcon={<UserOutlined/>}
-                    onSubmit={v => {}}
-                    validator={(v): boolean => {
-                        return v.length > 10
-                    }}
-                />
-                <div style={{height: 100}}></div>
-                <Input size="large" type="text" onSubmit={v => {}}/>
-                <div style={{height: 100}}></div>
-                <input style={{backgroundColor: "transparent"}}/>
+class Debug extends React.Component {
+    private ref : any
+    private tabBar?: TabBar
+
+    constructor(props: any) {
+        super(props);
+        this.ref = React.createRef();
+    }
+
+    componentDidMount() {
+        this.tabBar = new TabBar()
+        this.ref.current.appendChild(this.tabBar.getRootElem())
+    }
+
+    render() {
+        return (
+            <div className="vbot-fill-viewport">
+                <div ref={this.ref} style={{height:300, background: "green"}} />
+                <div style={{width: 100, height: 100, background: "red"}}  onClick={() => {this.tabBar?.addTab(AppPageKind.Moved, "", true)}}></div>
             </div>
-        </div>
-    )
-}
+        )
+    }
+  }
+
+export default Debug
+
+
 

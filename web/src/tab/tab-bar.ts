@@ -1,69 +1,14 @@
 import { RoundButton } from "./button";
-import { ConfigRenderer } from "./config-renderer";
-import { range, makeTabPath } from "./utils";
+import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
 import { IPoint, AppPageKind, AppPageData } from "./defs";
 import { Tab } from "./tab";
-import { Browser } from "./main";
-
-class AddButton extends RoundButton {
-  private x: number;
-  private isAnimate: boolean;
-
-  public constructor(onClick: () => void) {
-    super("tabBar-addButton", onClick);
-    this.flushConfig();
-    this.x = 0;
-    this.isAnimate = false;
-  }
-
-  public setX(x: number): void {
-    if (this.x !== x) {
-      this.x = x;
-      this.rootElem.style.left = `${x}px`;
-    }
-  }
-
-  public setAnimate(isAnimate: boolean): void {
-    if (this.isAnimate !== isAnimate) {
-      this.isAnimate = isAnimate;
-      this.rootElem.className = isAnimate ?
-        "tabBar-addButton tabBar-addButton_animate" :
-        "tabBar-addButton";
-    }
-  }
-
-  protected drawForeground(ctx: CanvasRenderingContext2D): boolean {
-    const config = this.config;
-    if (config) {
-      const w = config.size.width;
-      const h = config.size.height;
-      const fgSize = config.fgSize;
-
-      ctx.beginPath();
-      ctx.moveTo((w - fgSize) / 2, h / 2);
-      ctx.lineTo((w + fgSize) / 2, h / 2);
-      ctx.moveTo(w / 2, (h - fgSize) / 2);
-      ctx.lineTo(w / 2, (h + fgSize) / 2);
-      ctx.strokeStyle = this.isActive ? config.fgColor : config.fgColorInactive;
-      ctx.lineWidth = 2;
-      ctx.lineCap = "round";
-      ctx.stroke();
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public flushConfig(): void {
-    super.flushConfig(ConfigRenderer.getConfig().tabBar.addButton);
-  }
-}
+import { TabConfig } from "./config";
+import { getTabBarCSS } from "./css";
 
 export class TabBar {
   private isInit: boolean;
   private ctx?: CanvasRenderingContext2D;
   private rootElem: HTMLDivElement;
-  private addButton: AddButton;
   private checkMouseOutHandler?: number;
 
   private movingTab?: Tab;
@@ -91,16 +36,19 @@ export class TabBar {
   private movedMax: number;
 
   public constructor() {
-    const ctx = document.createElement("canvas").getContext("2d");
+      window.onresize = () => {
+        this.flush(true, true, false);
+      }
+    const cssElem = document.createElement("style");
+    cssElem.appendChild(document.createTextNode(getTabBarCSS(TabConfig.get())));
+    document.head.appendChild(cssElem);
 
+
+    const ctx = document.createElement("canvas").getContext("2d");
     this.isInit = true;
     this.ctx = ctx ? ctx : undefined;
-    this.addButton = new AddButton(() => {
-      this.addTab(AppPageKind.Moved, "http://bing.com", true, true);
-    });
     this.rootElem = document.createElement("div");
     this.rootElem.className = "tabBar";
-    this.rootElem.appendChild(this.addButton.getRootElem());
 
     this.checkMouseOutHandler = undefined;
     this.movingTab = undefined;
@@ -141,12 +89,8 @@ export class TabBar {
 
     // create home page
     window.requestAnimationFrame(() => {
-      this.addTab(AppPageKind.Home, "kztool://home", true, true);
+      this.addTab(AppPageKind.Home, "kztool://home", true);
     });
-  }
-
-  public fixedShowHideFocusBug(): void {
-    this.focusTab?.fixedShowHideFocusBug();
   }
 
   public getRootElem(): HTMLDivElement {
@@ -156,9 +100,6 @@ export class TabBar {
   public destory(): boolean {
     if (this.isInit) {
       this.isInit = false;
-
-      // destory addButton
-      this.addButton.destory();
 
       // destory home
       if (this.home) {
@@ -185,7 +126,7 @@ export class TabBar {
   }
 
   public flushConfig(): void {
-    const config = ConfigRenderer.getConfig().tabBar;
+    const config = TabConfig.get();
     this.homePath = makeTabPath(
       config.tab.homeWidth,
       config.tab.height,
@@ -204,21 +145,20 @@ export class TabBar {
     tabAnimate: boolean,
   ): void {
     const totalWidth = window.innerWidth;
-    const config = ConfigRenderer.getConfig().tabBar;
+    const config = TabConfig.get();
     const r = config.tab.radius;
     const d = r * 2;
     const homeWidth = config.tab.homeWidth;
     const fixedWidth = config.tab.fixedWidth;
     const netHomeWidth = homeWidth - d;
     const netFixedWidth = fixedWidth - d;
-    const addButtonWidth = config.addButton.size.width;
     const left = config.left;
     const right = config.right;
     const fixedLen = this.fixed.length;
     const movedLen = this.moved.length;
 
     if (isCalculate) {
-      let netWidth = totalWidth - left - right - homeWidth - addButtonWidth;
+      let netWidth = totalWidth - left - right - homeWidth;
       const minNetMoved = config.tab.minMovedWidth - d;
       const maxNetMoved = config.tab.maxMovedWidth - d;
       const showFixed = range(Math.floor(netWidth / netFixedWidth), 0, fixedLen);
@@ -316,14 +256,6 @@ export class TabBar {
       }
 
       preTab?.flush();
-
-      // layout addButton
-      this.addButton.setAnimate(false);
-      this.addButton.setX(
-        this.showFixed === fixedLen && this.showMoved === movedLen ?
-          this.movedMax :
-          totalWidth - right - addButtonWidth
-      );
     }
   }
 
@@ -359,7 +291,6 @@ export class TabBar {
       this.mouseDownPoint = ptMouse;
     }
 
-    Browser.callWorkspaceSetWindowResizable(false);
     this.rootElem.setPointerCapture(e.pointerId);
   }
 
@@ -384,11 +315,6 @@ export class TabBar {
             e.clientX - this.mouseDownPoint.x,
           );
         }
-      } else {
-        Browser.callWorkspaceSetWindowPostion(
-          this.mouseDownPoint.x,
-          this.mouseDownPoint.y,
-        );
       }
     }
 
@@ -400,8 +326,6 @@ export class TabBar {
     e.preventDefault();
 
     this.rootElem.releasePointerCapture(e.pointerId);
-    Browser.callWorkspaceSetWindowResizable(true);
-
     this.mouseDownPoint = undefined;
     if (this.movingTab) {
       this.movingTab.isMoving = false;
@@ -414,17 +338,10 @@ export class TabBar {
     kind: AppPageKind,
     url: string,
     focus: boolean,
-    addressFocus: boolean,
     afterId?: number,
   ): boolean {
-    const pageId = Browser.callWorkspaceAddPage(kind, url, addressFocus);
-    if (pageId < 0) {
-      return false;
-    }
-
-    const tab = new Tab(new AppPageData(pageId, kind, url));
+    const tab = new Tab(this,new AppPageData(getSeed(), kind, url));
     this.rootElem.appendChild(tab.getRootElem());
-
     switch (kind) {
       case AppPageKind.Home:
         this.home = tab;
@@ -462,10 +379,6 @@ export class TabBar {
   }
 
   public deleteTab(pageId: number): boolean {
-    if (!Browser.callWorkspaceDeletePage(pageId)) {
-      return false;
-    }
-
     let tab: Tab | undefined;
 
     if (pageId === 0 && (tab = this.home)) {
@@ -498,7 +411,6 @@ export class TabBar {
       this.flush(false, true, true);
     }
 
-    this.addButton.setAnimate(true);
     return true;
   }
 
@@ -508,7 +420,6 @@ export class TabBar {
       this.focusTab = tab;
       this.focusTab?.setFocus(true);
       this.flush(false, true, true);
-      Browser.callWorkspaceFocusPage(tab ? tab.data.id : -1);
     }
   }
 
@@ -524,7 +435,7 @@ export class TabBar {
   private startCheckMouse(): void {
     if (this.checkMouseOutHandler === undefined) {
       this.checkMouseOutHandler = setInterval(() => {
-        const ptMouse = Browser.callWorkspaceGetMousePosition();
+        const ptMouse = getMousePointer()
         if (
           ptMouse.x < 0 ||
           ptMouse.x >= this.rootElem.clientWidth ||

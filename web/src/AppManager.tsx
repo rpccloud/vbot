@@ -43,7 +43,7 @@ export class AppData {
     private constructor() {
         makeAutoObservable(this)
         this.setLang(window.navigator.language)
-        this.rootRoute = "start"
+        this.rootRoute = "debug"
     }
 
     async setLang(lang: string) {

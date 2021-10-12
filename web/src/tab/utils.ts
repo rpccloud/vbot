@@ -1,3 +1,23 @@
+import { IPoint } from "./defs";
+
+let seed = 1
+
+var cursorX:number = 0
+var cursorY: number = 0
+
+document.onmousemove = function(e){
+    cursorX = e.pageX;
+    cursorY = e.pageY;
+}
+
+export function getMousePointer(): IPoint {
+    return {x: cursorX, y: cursorY}
+}
+
+export function getSeed() :number {
+    return seed++
+}
+
 function pad2(num: number): string {
   let norm: number = Math.floor(Math.abs(num));
   return (norm < 10 ? "0" : "") + norm.toString(10);

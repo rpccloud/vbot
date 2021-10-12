@@ -111,7 +111,6 @@ export interface ITabBarConfig {
   height: number;
   left: number;
   right: number;
-  addButton: IButtonConfig;
   bgColor: string;
   tab: ITabConfig;
 }
@@ -154,7 +153,6 @@ export interface IAppConfig {
   appColor: string;
   tabBar: ITabBarConfig;
   pageBar: IPageBarConfig;
-
 }
 
 export const IPCRenderChannelCreate = "$IPCRenderChannelCreate";

@@ -5,11 +5,9 @@ import {
   AppPageState,
   IFaviconConfig,
 } from "./defs";
-import { ConfigRenderer } from "./config-renderer";
 import { RoundButton } from "./button";
-import { PageBarContent } from "./page";
-import { Browser } from "./main";
-
+import { TabConfig } from "./config";
+import { TabBar } from "./tab-bar";
 
 class Favicon {
   private static LoadingStart(range: number): number {
@@ -73,8 +71,7 @@ class Favicon {
     this.tickLeaving = 0;
     this.isFaviconLoaded = false;
     this.state = AppPageState.Closed;
-
-    this.flushConfig(ConfigRenderer.getConfig().tabBar.tab.favicon);
+    this.flushConfig(TabConfig.get().tab.favicon);
   }
 
   public getRootElem(): HTMLDivElement {
@@ -167,7 +164,7 @@ class Favicon {
   }
 
   private flush(): void {
-    const config = ConfigRenderer.getConfig().tabBar.tab.favicon;
+    const config = TabConfig.get().tab.favicon;
     const cx = config.size.width / 2;
     const cy = config.size.height / 2;
     const r = Math.max(Math.min(cx, cy) - 1, 1);
@@ -369,7 +366,7 @@ class CloseButton extends RoundButton {
   }
 
   public flushConfig(): void {
-    super.flushConfig(ConfigRenderer.getConfig().tabBar.tab.closeButton);
+    super.flushConfig(TabConfig.get().tab.closeButton);
   }
 }
 
@@ -421,9 +418,9 @@ export class Tab {
   private title: Title;
   private closeButton: CloseButton;
   private spacer: Spacer;
-  private pageBarContent: PageBarContent;
+   //private pageBarContent: PageBarContent;
 
-  public constructor(data: AppPageData) {
+  public constructor(tabBar: TabBar, data: AppPageData) {
     this.isInit = true;
     this.display = true;
     this.isAnimate = false;
@@ -438,7 +435,7 @@ export class Tab {
     this.isMouseOver = false;
     this.isMoving = false;
     this.focusTimeMS = 0;
-    this.config = ConfigRenderer.getConfig().tabBar.tab;
+    this.config = TabConfig.get().tab;
     this.rootElem = document.createElement("div");
     this.rootElem.className = "tab";
     this.bgElem = document.createElement("canvas");
@@ -446,7 +443,7 @@ export class Tab {
     this.favicon = new Favicon();
     this.title = new Title();
     this.closeButton = new CloseButton(() => {
-      Browser.Get().getTabBar().deleteTab(this.data.id);
+      tabBar.deleteTab(this.data.id);
     });
     this.spacer = new Spacer();
 
@@ -455,25 +452,17 @@ export class Tab {
     this.rootElem.appendChild(this.title.getRootElem());
     this.rootElem.appendChild(this.closeButton.getRootElem());
     this.rootElem.appendChild(this.spacer.getRootElem());
-
-    this.pageBarContent = new PageBarContent(data.id, data.canGoForward, data.canGoForward);
-    this.pageBarContent.setAddress(data.url);
   }
 
   public destory(): boolean {
     if (this.isInit) {
       this.isInit = false;
       this.closeButton.destory();
-      this.pageBarContent.destory();
       this.rootElem.parentNode?.removeChild(this.rootElem);
       return true;
     } else {
       return false;
     }
-  }
-
-  public fixedShowHideFocusBug(): void {
-    this.pageBarContent.fixedShowHideFocusBug();
   }
 
   public getFocusTimeMS(): number {
@@ -488,7 +477,7 @@ export class Tab {
     if (this.isFocus !== isFocus) {
       if (isFocus) {
         this.focusTimeMS = new Date().getTime();
-        Browser.Get().getPageBar().setContent(this.pageBarContent);
+        // Browser.Get().getPageBar().setContent(this.pageBarContent);
       }
       this.isFocus = isFocus;
       this.updateBGClassName();
@@ -622,7 +611,7 @@ export class Tab {
 
   public flushConfig(): void {
     // Get the device pixel ratio, falling back to 1.
-    this.config = ConfigRenderer.getConfig().tabBar.tab;
+    this.config = TabConfig.get().tab;
     const ctx = this.bgElem.getContext("2d");
     const dpr = window.devicePixelRatio ? window.devicePixelRatio : 1;
     this.bgElem.width = this.config.maxMovedWidth * dpr;
@@ -648,44 +637,10 @@ export class Tab {
         this.title.setTitle(data.title);
       }
 
-      if (this.data.state !== data.state) {
-        switch (data.state) {
-          case AppPageState.Loading:
-            this.favicon.setLoading();
-            break;
-          case AppPageState.Leaving:
-            this.favicon.setLeaving();
-            break;
-          case AppPageState.Loaded:
-            this.favicon.setLoaded();
-            break;
-          default:
-            break;
-        }
-        this.data.state = data.state;
-        this.pageBarContent.setState(data.state);
-      }
-
-      if (this.data.url !== data.url) {
-        this.data.url = data.url;
-        this.pageBarContent.setAddress(data.url);
-      }
-
-      if (this.data.canGoBack !== data.canGoBack) {
-        this.data.canGoBack = data.canGoBack;
-        this.pageBarContent.setCanGoBack(data.canGoBack);
-      }
-
-      if (this.data.canGoForward !== data.canGoForward) {
-        this.data.canGoForward = data.canGoForward;
-        this.pageBarContent.setCanGoForward(data.canGoForward);
-      }
-
       if (this.data.favicon !== data.favicon) {
         this.data.favicon = data.favicon;
         this.favicon.setFavicon(data.favicon);
       }
-
     }
   }
 
