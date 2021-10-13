@@ -30,11 +30,6 @@ import {
       .${className}_mouseover {
         background-color: ${config.bgColorMouseOver};
       }
-      .${className}-canvas {
-        width: 100%;
-        height: 100%;
-        user-select: none;
-      }
     `;
   }
 

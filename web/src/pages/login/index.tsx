@@ -94,7 +94,7 @@ const Login = observer(() => {
                 <div style={{height:20}}/>
                 <Input
                     type="text"
-                    size="middle"
+                    size="medium"
                     edit={true}
                     value={data.user}
                     placeholder="Input Username"
@@ -104,7 +104,7 @@ const Login = observer(() => {
                 <div style={{height:20}}/>
                 <Input
                     type="password"
-                    size="middle"
+                    size="medium"
                     edit={true}
                     value={data.password}
                     placeholder="Input password"

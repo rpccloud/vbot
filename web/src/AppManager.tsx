@@ -1,9 +1,8 @@
 import React from "react";
-import Client from "rpccloud-client-js"
 
+import Client from "rpccloud-client-js"
 import { observer } from "mobx-react-lite"
 import { makeAutoObservable, runInAction } from "mobx"
-
 import { Locale } from "./locale"
 import Main from "./pages/main"
 import Login from "./pages/login"
@@ -13,7 +12,6 @@ import { ConfigProvider } from "antd"
 import StartPage from "./pages/start"
 import { RPCAny } from "rpccloud-client-js/build/types"
 
-import { setAppTheme, Themes } from "./AppTheme";
 import Theme, { ThemeConfig } from "./ui/theme/config";
 
 const routeMap: Map<string, any> = new Map([
@@ -26,8 +24,8 @@ const routeMap: Map<string, any> = new Map([
 
 export default observer(() => {
     const appData = AppData.get()
-    return appData.isValid() && appData.themeConfig ? (
-        <Theme.Provider value={appData.themeConfig}>
+    return appData.isValid() ? (
+        <Theme.Provider value={ThemeConfig.get()}>
             <ConfigProvider locale={AppData.get().locale?.antd}>
                 {routeMap.get(AppData.get().rootRoute)}
             </ConfigProvider>
@@ -36,14 +34,13 @@ export default observer(() => {
 })
 
 export class AppData {
-    themeConfig?: ThemeConfig
     locale?: Locale
     rootRoute: string
 
     private constructor() {
         makeAutoObservable(this)
         this.setLang(window.navigator.language)
-        this.rootRoute = "debug"
+        this.rootRoute = "start"
     }
 
     async setLang(lang: string) {
@@ -51,10 +48,6 @@ export class AppData {
         runInAction(() => {
             this.locale  = ret
         })
-    }
-
-    setThemeConfig(themeConfig?: ThemeConfig) {
-        this.themeConfig = themeConfig
     }
 
     setRootRoute(rootRoute: string) {
@@ -93,10 +86,6 @@ export class AppUser {
     static send(timeoutMS: number, target: string, ...args: Array<RPCAny>): Promise<RPCAny> {
         return AppUser.client.send(timeoutMS, target, ...args)
     }
-}
-
-window.onload = function() {
-    setAppTheme(Themes.light)
 }
 
 // window.onbeforeunload = function(event) {

@@ -113,7 +113,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
         >
             <div style={{height:20}}/>
             <Input
-                size="middle"
+                size="medium"
                 type="password"
                 placeholder="Input password"
                 value={data.password}
@@ -125,7 +125,7 @@ const CardPassword = observer((props: {onNext: () => void}) => {
             />
             <div style={{height:20}}/>
             <Input
-                size="middle"
+                size="medium"
                 type="password"
                 placeholder="Confirm password"
                 value={data.confirm}

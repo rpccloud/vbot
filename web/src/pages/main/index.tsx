@@ -18,15 +18,15 @@ const styles = {
     bar: {
         overflow: "hidden auto",
         flex: "1 1 0",
-        borderTop: "1px solid var(--Vbot-OutlineColor)",
-        borderRight: "1px solid var(--Vbot-OutlineColor)",
-        borderBottom: "1px solid var(--Vbot-OutlineColor)",
+        borderTop: "1px solid var(--Vbot-BorderColor)",
+        borderRight: "1px solid var(--Vbot-BorderColor)",
+        borderBottom: "1px solid var(--Vbot-BorderColor)",
     },
     content: {
         overflow: "hidden auto",
         flex: "1 1 0",
-        borderTop: "1px solid var(--Vbot-OutlineColor)",
-        borderBottom: "1px solid var(--Vbot-OutlineColor)",
+        borderTop: "1px solid var(--Vbot-BorderColor)",
+        borderBottom: "1px solid var(--Vbot-BorderColor)",
     }
 }
 

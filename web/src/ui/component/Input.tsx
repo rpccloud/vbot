@@ -32,7 +32,7 @@ export const InputContext = React.createContext<InputContextProps>({
 
 interface InputProps {
     value?: string,
-    size: "small" | "middle" | "large",
+    size: "small" | "medium" | "large",
     type: "password" | "text",
     placeholder?: string,
     label?: string,
@@ -60,7 +60,7 @@ const Input = (props: InputProps) => {
 
     const sizeMap = {
         "small": theme.fontSizeSmall,
-        "middle": theme.fontSizeMiddle,
+        "medium": theme.fontSizeMedium,
         "large": theme.fontSizeLarge,
     }
 
@@ -136,7 +136,7 @@ const Input = (props: InputProps) => {
                     width: "100%",
                     background: "transparent",
                     color: theme.fontColor,
-                    fontWeight: theme.fontWeight,
+                    fontWeight: theme.fontWeightNormal,
                     caretColor: edit ? theme.fontColor : "transparent",
                 }}
                 placeholder={edit ? props.placeholder : ""}

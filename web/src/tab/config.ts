@@ -19,7 +19,7 @@ export class TabConfig {
           leftMargin: 8,
           rightMargin: 8,
           inMargin: 6,
-          radius: 5,
+          radius: 4,
           height: 30,
           homeWidth: 100,
           minMovedWidth: 50,

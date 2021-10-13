@@ -170,8 +170,8 @@ export function makeTabPath(w: number, h: number, radius: number): Path2D {
     let r = Math.min(w / 2, h / 2, radius);
 
     path.moveTo(0, h);
-    path.lineTo(1.5*r, 0)
-    path.lineTo(w-1.5*r, 0)
+    path.lineTo(2*r, 0)
+    path.lineTo(w-2*r, 0)
     path.lineTo(w, h)
 
     return path;

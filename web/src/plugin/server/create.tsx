@@ -117,7 +117,7 @@ const ServerCreate = observer((props: ServerCreateProps) => {
             <div style={{height:20}} />
             <Input
                 type="text"
-                size="middle"
+                size="medium"
                 placeholder="SSH Host (192.168.0.1 or www.example.com)"
                 edit={true}
                 value={data.host}
@@ -128,7 +128,7 @@ const ServerCreate = observer((props: ServerCreateProps) => {
             <div style={{height:20}} />
             <Input
                 type="text"
-                size="middle"
+                size="medium"
                 placeholder="SSH Port (0 - 65535)"
                 edit={true}
                 value={data.port}
@@ -139,7 +139,7 @@ const ServerCreate = observer((props: ServerCreateProps) => {
             <div style={{height:20}} />
             <Input
                 type="text"
-                size="middle"
+                size="medium"
                 placeholder="SSH Username"
                 edit={true}
                 value={data.user}
@@ -150,7 +150,7 @@ const ServerCreate = observer((props: ServerCreateProps) => {
             <div style={{height:20}} />
             <Input
                 type="password"
-                size="middle"
+                size="medium"
                 placeholder="SSH Password"
                 edit={true}
                 value={data.password}
