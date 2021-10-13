@@ -34,6 +34,7 @@ export class TabConfig {
             focusFontColor: "#FFFFFF",
           },
           closeButton: {
+              top: 6,
             size: { width: 18, height: 18 },
             bgColorPress: "#666666C0",
             bgColorMouseOver: "#66666680",

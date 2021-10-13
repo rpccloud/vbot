@@ -9,6 +9,7 @@ export interface ISize {
 }
 
 export interface IButtonConfig {
+  top:  number;
   size: ISize;
   bgColorPress: string;
   bgColorMouseOver: string;

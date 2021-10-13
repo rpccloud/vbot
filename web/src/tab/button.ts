@@ -2,8 +2,7 @@ import { IButtonConfig } from "./defs";
 
 export abstract class RoundButton {
   private isInit: boolean;
-  protected config?: IButtonConfig;
-  private className: string;
+  protected config: IButtonConfig;
   protected isActive: boolean;
   private isDisplay: boolean;
   private isMouseOver: boolean;
@@ -19,10 +18,9 @@ export abstract class RoundButton {
 
   protected abstract drawForeground(ctx: CanvasRenderingContext2D): boolean;
 
-  public constructor(className: string, onClick?: () => void) {
+  public constructor(config: IButtonConfig, onClick?: () => void) {
     this.isInit = true;
-
-    this.className = className;
+    this.config = config;
     this.isActive = true;
     this.isDisplay = true;
     this.isMouseDown = false;
@@ -35,10 +33,11 @@ export abstract class RoundButton {
     this.bindPointerOver = this.onPointerOver.bind(this);
 
     this.rootElem = document.createElement("div");
-    this.rootElem.className = className;
+    this.rootElem.style.position = "absolute"
+    this.rootElem.style.transition = "background-color 0.20s ease-out"
+    this.rootElem.style.borderRadius = "50%"
 
     this.canvasElem = document.createElement("canvas");
-    this.canvasElem.className = `${className}-canvas`;
     this.rootElem.appendChild(this.canvasElem);
 
     this.rootElem.addEventListener("pointerdown", this.bindPointerDown);
@@ -101,13 +100,12 @@ export abstract class RoundButton {
   }
 
   private updateClassName(): void {
-    const className = this.className;
     if (this.isActive && this.isMouseOver && this.isMouseDown) {
-      this.rootElem.className = `${className} ${className}_mousedown`;
+        this.rootElem.style.background = this.config.bgColorPress
     } else if (this.isActive && this.isMouseOver) {
-      this.rootElem.className = `${className} ${className}_mouseover`;
+        this.rootElem.style.background = this.config.bgColorMouseOver
     } else {
-      this.rootElem.className = className;
+        this.rootElem.style.background = this.config.bgColorMouseOut
     }
   }
 
@@ -169,6 +167,9 @@ export abstract class RoundButton {
     this.canvasElem.height = height * dpr;
     this.canvasElem.style.width = `${width}px`;
     this.canvasElem.style.height = `${height}px`;
+    this.rootElem.style.width = `${width}px`;
+    this.rootElem.style.height = `${height}px`;
+    this.rootElem.style.top = `${config.top}px`;
     if (ctx) {
       ctx.scale(dpr, dpr);
       this.drawForeground(ctx);

@@ -1,8 +1,9 @@
 import {
+    IButtonConfig,
   ITabConfig,
+  ITitleConfig,
 } from "./defs";
 import { RoundButton } from "./button";
-import { TabConfig } from "./config";
 import { TabBar } from "./tab-bar";
 
 class Title {
@@ -13,7 +14,7 @@ class Title {
   private rootElem: HTMLDivElement;
   private spanElem: HTMLSpanElement;
 
-  public constructor() {
+  public constructor(config: ITitleConfig, text: string) {
     this.x = 0;
     this.width = 0;
     this.isFocus = false;
@@ -21,7 +22,7 @@ class Title {
     this.rootElem = document.createElement("div");
     this.rootElem.className = "browser-tab-title";
     this.spanElem = document.createElement("span");
-    this.spanElem.className = "browser-tab-title-content";
+    this.spanElem.textContent = text;
     this.rootElem.appendChild(this.spanElem);
   }
 
@@ -54,23 +55,18 @@ class Title {
     }
   }
 
-  public setTitle(title: string): void {
-    this.spanElem.textContent = title;
-    if (this.isDisplay) {
-      this.rootElem.style.display = "none";
-      setTimeout(() => {
-        this.rootElem.style.display = this.isDisplay ? "block" : "none";
-      }, 50);
-    }
+  public flushConfig(config: ITitleConfig): void {
+    this.spanElem.style.float = "left"
+    this.spanElem.style.fontSize = `${config.fontSize}px`
   }
 }
 
 class CloseButton extends RoundButton {
   private x: number;
 
-  public constructor(onClick: () => void) {
-    super("browser-tab-closeButton", onClick);
-    this.flushConfig();
+  public constructor(config: IButtonConfig, onClick: () => void) {
+    super(config, onClick);
+    this.flushConfig(config);
     this.x = 0;
   }
 
@@ -103,8 +99,8 @@ class CloseButton extends RoundButton {
     }
   }
 
-  public flushConfig(): void {
-    super.flushConfig(TabConfig.get().tab.closeButton);
+  public flushConfig(config: IButtonConfig): void {
+    super.flushConfig(config);
   }
 }
 
@@ -136,7 +132,7 @@ export class Tab {
   private closeButton: CloseButton;
    //private pageBarContent: PageBarContent;
 
-  public constructor(tabBar: TabBar, isHome: boolean, id: number, param: string) {
+  public constructor(tabBar: TabBar, config: ITabConfig, isHome: boolean, id: number, param: string) {
       this.id = id;
     this.isHome = isHome;
     this.param = param
@@ -151,13 +147,13 @@ export class Tab {
     this.isMouseOver = false;
     this.isMoving = false;
     this.focusTimeMS = 0;
-    this.config = TabConfig.get().tab;
+    this.config = config;
     this.rootElem = document.createElement("div");
     this.rootElem.className = "browser-tab";
     this.bgElem = document.createElement("canvas");
     this.bgElem.className = "browser-tab-bg";
-    this.title = new Title();
-    this.closeButton = new CloseButton(() => {
+    this.title = new Title(config.title, "Test-title-absdfsafdas-sdfasldfj-sdfasdf");
+    this.closeButton = new CloseButton(config.closeButton, () => {
       tabBar.deleteTab(id);
     });
 
@@ -296,9 +292,9 @@ export class Tab {
     this.setZIndex(this.getWeight());
   }
 
-  public flushConfig(): void {
+  public flushConfig(config: ITabConfig): void {
     // Get the device pixel ratio, falling back to 1.
-    this.config = TabConfig.get().tab;
+    this.config = config;
     const ctx = this.bgElem.getContext("2d");
     const dpr = window.devicePixelRatio ? window.devicePixelRatio : 1;
     this.bgElem.width = this.config.maxMovedWidth * dpr;
@@ -313,11 +309,14 @@ export class Tab {
     } else {
       this.ctx = undefined;
     }
+
+    this.title.flushConfig(config.title)
+    this.closeButton.flushConfig(config.closeButton)
   }
 
   private drawPath(): void {
     if (!this.ctx) {
-      this.flushConfig();
+      this.flushConfig(this.config);
     }
     const ctx = this.ctx;
     if (ctx) {

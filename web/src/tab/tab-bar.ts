@@ -1,11 +1,12 @@
 import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
-import { IPoint } from "./defs";
+import { IPoint, ITabBarConfig } from "./defs";
 import { Tab } from "./tab";
 import { TabConfig } from "./config";
 import { getTabBarCSS } from "./css";
 
 export class TabBar {
   private isInit: boolean;
+  private config: ITabBarConfig;
   private ctx?: CanvasRenderingContext2D;
   private rootElem: HTMLDivElement;
   private checkMouseOutHandler?: number;
@@ -28,7 +29,7 @@ export class TabBar {
   private movedMin: number;
   private movedMax: number;
 
-  public constructor() {
+  public constructor(config: ITabBarConfig) {
       window.onresize = () => {
         this.flush(true, true, false);
       }
@@ -36,11 +37,12 @@ export class TabBar {
     cssElem.appendChild(document.createTextNode(getTabBarCSS(TabConfig.get())));
     document.head.appendChild(cssElem);
 
+    this.config = config
     const ctx = document.createElement("canvas").getContext("2d");
     this.isInit = true;
     this.ctx = ctx ? ctx : undefined;
     this.rootElem = document.createElement("div");
-    this.rootElem.style.height = `${TabConfig.get().height}px`;
+    this.rootElem.style.height = `${config.height}px`;
 
     this.checkMouseOutHandler = undefined;
     this.movingTab = undefined;
@@ -71,7 +73,7 @@ export class TabBar {
       this.onPointerMove(e);
     });
 
-    this.flushConfig();
+    this.flushConfig(this.config);
 
     // create home page
     this.addTab(true, "home-0", true);
@@ -104,8 +106,8 @@ export class TabBar {
     }
   }
 
-  public flushConfig(): void {
-    const config = TabConfig.get();
+  public flushConfig(config: ITabBarConfig): void {
+      this.config = config
     this.homePath = makeTabPath(
       config.tab.homeWidth,
       config.tab.height,
@@ -118,9 +120,8 @@ export class TabBar {
     isLayout: boolean,
     tabAnimate: boolean,
   ): void {
-
     const totalWidth = window.innerWidth;
-    const config = TabConfig.get();
+    const config = this.config;
     const r = config.tab.radius;
     const d = r * 2;
     const homeWidth = config.tab.homeWidth;
@@ -260,7 +261,7 @@ export class TabBar {
     focus: boolean,
     afterId?: number,
   ): boolean {
-    const tab = new Tab(this, isHome, getSeed(), param);
+    const tab = new Tab(this, this.config.tab, isHome, getSeed(), param);
     this.rootElem.appendChild(tab.getRootElem());
     if (isHome) {
         this.home = tab;

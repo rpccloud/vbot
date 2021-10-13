@@ -1,37 +1,11 @@
 
 
 import {
-    IButtonConfig,
     ITabBarConfig,
     ITabConfig,
   } from "./defs";
   import { stringColorToRGBA } from "./utils";
 
-  function getAbsoluteButtonCSS(
-    config: IButtonConfig,
-    className: string,
-    x: number,
-    y: number,
-  ): string {
-    return `
-      .${className} {
-        left: ${x}px;
-        top: ${y}px;
-        width: ${config.size.width}px;
-        height: ${config.size.height}px;
-        background-color: ${config.bgColorMouseOut};
-        position: absolute;
-        transition: background-color 0.20s ease-out;
-        border-radius: 50%;
-      }
-      .${className}_mousedown {
-        background-color: ${config.bgColorPress};
-      }
-      .${className}_mouseover {
-        background-color: ${config.bgColorMouseOver};
-      }
-    `;
-  }
 
   export function getTabBarCSS(config: ITabBarConfig): string {
     return `
@@ -45,13 +19,6 @@ import {
     const colorB = stringColorToRGBA(config.title.fontColor, 0);
     const colorC = stringColorToRGBA(config.title.focusFontColor, 255);
     const colorD = stringColorToRGBA(config.title.focusFontColor, 0);
-
-    const closeButtonCSS = getAbsoluteButtonCSS(
-      config.closeButton,
-      "browser-tab-closeButton",
-      0,
-      (config.height - config.closeButton.size.height) / 2,
-    );
 
     return `
       .browser-tab {
@@ -98,7 +65,6 @@ import {
         float:left;
         font-size: ${config.title.fontSize}px;
       }
-      ${closeButtonCSS}
     `;
   }
 

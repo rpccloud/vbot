@@ -1,4 +1,5 @@
 import React from "react";
+import { TabConfig } from "../../tab/config";
 import { TabBar } from "../../tab/tab-bar";
 
 class Debug extends React.Component {
@@ -11,7 +12,7 @@ class Debug extends React.Component {
     }
 
     componentDidMount() {
-        this.tabBar = new TabBar()
+        this.tabBar = new TabBar(TabConfig.get())
         this.ref.current.appendChild(this.tabBar.getRootElem())
     }
 
