@@ -23,9 +23,10 @@ export class TabConfig {
           height: 30,
           homeWidth: 100,
           minMovedWidth: 50,
-          maxMovedWidth: 250,
-          disappearCloseWidth: 100,
+          maxMovedWidth: 200,
+          disappearCloseWidth: 80,
           bgColor: "#35363A",
+          borderColor: "red",
           title: {
             height: 18,
             fontSize: 13,

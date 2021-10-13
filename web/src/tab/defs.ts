@@ -36,6 +36,7 @@ export interface ITabConfig {
   maxMovedWidth: number;
   disappearCloseWidth: number;
   bgColor: string;
+  borderColor: string;
   title: ITitleConfig;
   closeButton: IButtonConfig;
 }

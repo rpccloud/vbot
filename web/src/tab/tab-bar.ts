@@ -40,7 +40,7 @@ export class TabBar {
     this.isInit = true;
     this.ctx = ctx ? ctx : undefined;
     this.rootElem = document.createElement("div");
-    this.rootElem.className = "browser-tabBar";
+    this.rootElem.style.height = `${TabConfig.get().height}px`;
 
     this.checkMouseOutHandler = undefined;
     this.movingTab = undefined;

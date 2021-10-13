@@ -40,10 +40,6 @@ import {
 
   export function getTabBarCSS(config: ITabBarConfig): string {
     return `
-      .browser-tabBar {
-        height: ${config.height}px;
-        background-color: ${config.bgColor};
-      }
       ${getTabCSS(config.tab, config.height - config.tab.height)}
     `;
   }

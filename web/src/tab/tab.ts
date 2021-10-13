@@ -324,6 +324,9 @@ export class Tab {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = this.config.bgColor;
       ctx.fill(this.path);
+      ctx.lineWidth = 1;
+        ctx.strokeStyle = this.config.borderColor;
+ctx.stroke(this.path);
     }
   }
 
