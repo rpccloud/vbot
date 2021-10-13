@@ -68,7 +68,7 @@ export abstract class RoundButton {
     }
   }
 
-  public destory(): boolean {
+  public destroy(): boolean {
     if (this.isInit) {
       this.isInit = false;
       this.onClick = undefined;

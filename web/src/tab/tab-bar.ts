@@ -41,7 +41,7 @@ export class TabBar {
     this.isInit = true;
     this.ctx = ctx ? ctx : undefined;
     this.rootElem = document.createElement("div");
-    this.rootElem.className = "tabBar";
+    this.rootElem.className = "browser-tabBar";
 
     this.checkMouseOutHandler = undefined;
     this.movingTab = undefined;
@@ -82,18 +82,18 @@ export class TabBar {
     return this.rootElem;
   }
 
-  public destory(): boolean {
+  public destroy(): boolean {
     if (this.isInit) {
       this.isInit = false;
 
-      // destory home
+      // destroy home
       if (this.home) {
-        this.home.destory();
+        this.home.destroy();
       }
 
-      // destory moved
+      // destroy moved
       for (let tab of this.moved) {
-        tab.destory();
+        tab.destroy();
       }
 
       // remove from parent
@@ -298,7 +298,7 @@ export class TabBar {
       return false;
     }
 
-    tab.destory();
+    tab.destroy();
 
     if (this.focusTab && this.focusTab.id === pageId) {
       let biggestFocusTime = 0;

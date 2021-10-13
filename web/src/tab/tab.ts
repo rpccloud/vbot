@@ -19,9 +19,9 @@ class Title {
     this.isFocus = false;
     this.isDisplay = true;
     this.rootElem = document.createElement("div");
-    this.rootElem.className = "tab-title";
+    this.rootElem.className = "browser-tab-title";
     this.spanElem = document.createElement("span");
-    this.spanElem.className = "tab-title-content";
+    this.spanElem.className = "browser-tab-title-content";
     this.rootElem.appendChild(this.spanElem);
   }
 
@@ -33,8 +33,8 @@ class Title {
     if (this.isFocus !== isFocus) {
       this.isFocus = isFocus;
       this.rootElem.className = isFocus ?
-        "tab-title tab-title_focus" :
-        "tab-title";
+        "browser-tab-title browser-tab-title_focus" :
+        "browser-tab-title";
     }
   }
 
@@ -69,7 +69,7 @@ class CloseButton extends RoundButton {
   private x: number;
 
   public constructor(onClick: () => void) {
-    super("tab-closeButton", onClick);
+    super("browser-tab-closeButton", onClick);
     this.flushConfig();
     this.x = 0;
   }
@@ -153,9 +153,9 @@ export class Tab {
     this.focusTimeMS = 0;
     this.config = TabConfig.get().tab;
     this.rootElem = document.createElement("div");
-    this.rootElem.className = "tab";
+    this.rootElem.className = "browser-tab";
     this.bgElem = document.createElement("canvas");
-    this.bgElem.className = "tab-bg";
+    this.bgElem.className = "browser-tab-bg";
     this.title = new Title();
     this.closeButton = new CloseButton(() => {
       tabBar.deleteTab(id);
@@ -166,8 +166,8 @@ export class Tab {
     this.rootElem.appendChild(this.closeButton.getRootElem());
   }
 
-  public destory(): boolean {
-    this.closeButton.destory();
+  public destroy(): boolean {
+    this.closeButton.destroy();
     this.rootElem.parentNode?.removeChild(this.rootElem);
     return true;
   }
@@ -249,7 +249,9 @@ export class Tab {
   public setAnimate(isAnimate: boolean): void {
     if (this.isAnimate !== isAnimate) {
       this.isAnimate = isAnimate;
-      this.rootElem.className = isAnimate ? "tab tab_animate" : "tab";
+      this.rootElem.className = isAnimate ?
+        "browser-tab browser-tab_animate" :
+        "browser-tab";
     }
   }
 
@@ -327,11 +329,11 @@ export class Tab {
 
   private updateBGClassName(): void {
     if (this.isFocus) {
-      this.bgElem.className = "tab-bg tab-bg_focus";
+      this.bgElem.className = "browser-tab-bg browser-tab-bg_focus";
     } else if (this.isMouseOver) {
-      this.bgElem.className = "tab-bg tab-bg_mouseover";
+      this.bgElem.className = "browser-tab-bg browser-tab-bg_mouseover";
     } else {
-      this.bgElem.className = "tab-bg";
+      this.bgElem.className = "browser-tab-bg";
     }
   }
 }

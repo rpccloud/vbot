@@ -40,13 +40,9 @@ import {
 
   export function getTabBarCSS(config: ITabBarConfig): string {
     return `
-      .tabBar {
+      .browser-tabBar {
         height: ${config.height}px;
         background-color: ${config.bgColor};
-      }
-      .tabBar-bg {
-        width: 100%;
-        height: 100%;
       }
       ${getTabCSS(config.tab, config.height - config.tab.height)}
     `;
@@ -61,32 +57,32 @@ import {
 
     const closeButtonCSS = getAbsoluteButtonCSS(
       config.closeButton,
-      "tab-closeButton",
+      "browser-tab-closeButton",
       0,
       (config.height - config.closeButton.size.height) / 2,
     );
 
     return `
-      .tab {
+      .browser-tab {
         position: absolute;
         top: ${y}px;
         height: ${config.height}px;
         overflow: hidden;
       }
-      .tab_animate {
+      .browser-tab_animate {
         transition: left 0.20s ease-out;
       }
-      .tab-bg {
+      .browser-tab-bg {
         transition: opacity 0.20s ease-out;
         opacity: 0.5 !important;
       }
-      .tab-bg_mouseover {
+      .browser-tab-bg_mouseover {
         opacity: 0.8 !important;
       }
-      .tab-bg_focus {
+      .browser-tab-bg_focus {
         opacity: 1 !important;
       }
-      .tab-title {
+      .browser-tab-title {
         -webkit-background-clip: text !important;
         display: table-cell;
         vertical-align: middle;
@@ -102,12 +98,12 @@ import {
           to right, ${colorA} 0%, ${colorA} 95%, ${colorB} 100%
         );
       }
-      .tab-title_focus {
+      .browser-tab-title_focus {
         background: linear-gradient(
           to right, ${colorC} 0%, ${colorC} 95%, ${colorD} 100%
         );
       }
-      .tab-title-content {
+      .browser-tab-title-content {
         float:left;
         font-size: ${config.title.fontSize}px;
       }
