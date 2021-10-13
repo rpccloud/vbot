@@ -36,7 +36,6 @@ export class TabBar {
     cssElem.appendChild(document.createTextNode(getTabBarCSS(TabConfig.get())));
     document.head.appendChild(cssElem);
 
-
     const ctx = document.createElement("canvas").getContext("2d");
     this.isInit = true;
     this.ctx = ctx ? ctx : undefined;

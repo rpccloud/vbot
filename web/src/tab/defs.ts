@@ -8,34 +8,6 @@ export interface ISize {
   height: number;
 }
 
-export enum AppPageKind {
-  Home,
-  Moved,
-}
-
-// export class AppPageData {
-//   public readonly id: number;
-//   public readonly kind: AppPageKind;
-//   public url: string;
-//   public title: string;
-//   public favicon: string;
-//   public canGoBack: boolean;
-//   public canGoForward: boolean;
-//   //public seq: number;
-
-//   public constructor(id: number, kind: AppPageKind, url: string) {
-//     this.id = id;
-//     this.kind = kind;
-//     this.url = url;
-//     this.title = "";
-//     this.favicon = "";
-//     this.canGoBack = false;
-//     this.canGoForward = false;
-//     //this.seq = 0;
-//   }
-// }
-
-
 export interface IButtonConfig {
   size: ISize;
   bgColorPress: string;

@@ -11,7 +11,7 @@ export class TabConfig {
 
   private static createTabConfig(): ITabBarConfig {
     return {
-        height: 50,
+        height: 46,
         left: 0,
         right: 0,
         bgColor: "#202124",
@@ -20,7 +20,7 @@ export class TabConfig {
           rightMargin: 8,
           inMargin: 6,
           radius: 5,
-          height: 32,
+          height: 30,
           homeWidth: 100,
           minMovedWidth: 50,
           maxMovedWidth: 250,

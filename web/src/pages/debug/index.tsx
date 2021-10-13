@@ -1,11 +1,5 @@
-import React, { useRef } from "react";
-import Input from "../../ui/component/Input";
-import {
-    UserOutlined,
-} from '@ant-design/icons';
+import React from "react";
 import { TabBar } from "../../tab/tab-bar";
-import { AppPageKind } from "../../tab/defs";
-
 
 class Debug extends React.Component {
     private ref : any
