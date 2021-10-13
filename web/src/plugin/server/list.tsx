@@ -167,6 +167,7 @@ const columns = [
                     <Button
                         type="primary"
                         shape="circle"
+                        size="small"
                         icon={<EyeOutlined />}
                         onClick={(e) => {alert(JSON.stringify(data))}}
                     />
@@ -174,9 +175,10 @@ const columns = [
 
                 <Tooltip title="Remove SSH server">
                     <Button
-                        style={{margin: 8, color:"--VBot-FontColor"}}
+                        style={{marginLeft: 8, color:"--VBot-FontColor"}}
                         type="primary"
                         shape="circle"
+                        size="small"
                         icon={<DeleteOutlined />}
                         onClick={() => {
                             data.setDeleteItem(item)
