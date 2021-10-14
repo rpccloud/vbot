@@ -1,6 +1,7 @@
 import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
 import tabConfig, { IPoint } from "./defs";
 import { Tab } from "./tab";
+import { ThemeConfig } from "../ui/theme/config";
 
 export class TabBar {
   private isInit: boolean;
@@ -101,11 +102,14 @@ export class TabBar {
   }
 
   public flushTheme(): void {
+      const theme = ThemeConfig.get()
     this.homePath = makeTabPath(
       tabConfig.tabHomeWidth,
       tabConfig.tabHeight,
       tabConfig.tabRadius,
     );
+
+    this.rootElem.style.borderBottom = `1px solid ${theme.primaryColor}`
   }
 
   public flush(
@@ -114,18 +118,16 @@ export class TabBar {
     tabAnimate: boolean,
   ): void {
     const totalWidth = window.innerWidth;
-    const r = tabConfig.tabRadius;
-    const d = r * 2;
     const homeWidth = tabConfig.tabHomeWidth;
-    const netHomeWidth = homeWidth - d;
+    const netHomeWidth = homeWidth;
     const left = tabConfig.tabBarLeft;
     const right = tabConfig.tabBarRight;
     const movedLen = this.moved.length;
 
     if (isCalculate) {
       let netWidth = totalWidth - left - right - homeWidth;
-      const minNetMoved = tabConfig.tabMinWidth - d;
-      const maxNetMoved = tabConfig.tabMaxWidth - d;
+      const minNetMoved = tabConfig.tabMinWidth;
+      const maxNetMoved = tabConfig.tabMaxWidth;
       const showMoved = range(Math.floor(netWidth / minNetMoved), 0, movedLen);
       const netMovedWidth = (showMoved > 0 && showMoved === movedLen)
         ? range(netWidth / showMoved, minNetMoved, maxNetMoved)
@@ -140,8 +142,8 @@ export class TabBar {
     }
 
     if (isLayout) {
-      const movedWidth = this.netMovedWidth + d;
-      const movedPath = makeTabPath(movedWidth, tabConfig.tabHeight, r);
+      const movedWidth = this.netMovedWidth;
+      const movedPath = makeTabPath(movedWidth, tabConfig.tabHeight, tabConfig.tabRadius);
       let x = left;
 
       // layout home
@@ -161,7 +163,7 @@ export class TabBar {
 
       // layout moved
       this.movedMin = x;
-      this.movedMax = x + this.showMoved * this.netMovedWidth + d;
+      this.movedMax = x + this.showMoved * this.netMovedWidth;
       for (let i = 0; i < this.moved.length; i++) {
         const tab = this.moved[i];
         tab.index = i;

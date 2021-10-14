@@ -10,6 +10,7 @@ export abstract class RoundButton {
   private onClick?: () => void;
   protected rootElem: HTMLDivElement;
   protected canvasElem: HTMLCanvasElement;
+  protected bgElem: HTMLDivElement;
 
   private bindPointerDown?: (e: PointerEvent) => void;
   private bindPointerUp?: (e: PointerEvent) => void;
@@ -34,10 +35,16 @@ export abstract class RoundButton {
 
     this.rootElem = document.createElement("div");
     this.rootElem.style.position = "absolute"
-    this.rootElem.style.transition = "background-color 0.20s ease-out"
     this.rootElem.style.borderRadius = "50%"
+    this.rootElem.style.overflow = "clip"
+
+    this.bgElem = document.createElement("div");
+    this.bgElem.style.position = "absolute"
+    this.bgElem.style.transition = "opacity 0.3s ease-out"
+    this.rootElem.appendChild(this.bgElem);
 
     this.canvasElem = document.createElement("canvas");
+    this.canvasElem.style.position = "absolute"
     this.rootElem.appendChild(this.canvasElem);
 
     this.rootElem.addEventListener("pointerdown", this.bindPointerDown);
@@ -53,7 +60,6 @@ export abstract class RoundButton {
   public setActive(isActive: boolean): void {
     if (this.isActive !== isActive) {
       this.isActive = isActive;
-      this.updateClassName();
       if (this.config) {
         this.flushConfig(this.config);
       }
@@ -99,22 +105,13 @@ export abstract class RoundButton {
     }
   }
 
-  private updateClassName(): void {
-    if (this.isActive && this.isMouseOver && this.isMouseDown) {
-        this.rootElem.style.background = this.config.bgColorPress
-    } else if (this.isActive && this.isMouseOver) {
-        this.rootElem.style.background = this.config.bgColorMouseOver
-    } else {
-        this.rootElem.style.background = this.config.bgColorMouseOut
-    }
-  }
 
   private onPointerOver(e: PointerEvent): void {
     e.stopPropagation();
     e.preventDefault();
 
     this.isMouseOver = true;
-    this.updateClassName();
+    this.flushConfig(this.config);
   }
 
   private onPointerOut(e: PointerEvent): void {
@@ -122,7 +119,7 @@ export abstract class RoundButton {
     e.preventDefault();
 
     this.isMouseOver = false;
-    this.updateClassName();
+    this.flushConfig(this.config);
   }
 
   private onPointerDown(e: PointerEvent): void {
@@ -134,7 +131,7 @@ export abstract class RoundButton {
       this.rootElem.setPointerCapture(e.pointerId);
     }
 
-    this.updateClassName();
+    this.flushConfig(this.config);
   }
 
   private onPointerUp(e: PointerEvent): void {
@@ -154,7 +151,7 @@ export abstract class RoundButton {
       }
     }
 
-    this.updateClassName();
+    this.flushConfig(this.config);
   }
 
   protected flushConfig(config: IButtonConfig): void {
@@ -169,9 +166,20 @@ export abstract class RoundButton {
     this.canvasElem.style.height = `${height}px`;
     this.rootElem.style.width = `${width}px`;
     this.rootElem.style.height = `${height}px`;
+    this.bgElem.style.width = `${width}px`;
+    this.bgElem.style.height = `${height}px`;
+    this.bgElem.style.background = this.config.bgColor
     if (ctx) {
       ctx.scale(dpr, dpr);
       this.drawForeground(ctx);
+    }
+
+    if (this.isActive && this.isMouseOver && this.isMouseDown) {
+        this.bgElem.style.opacity = config.focusOpacity
+    } else if (this.isActive && this.isMouseOver) {
+        this.bgElem.style.opacity = config.mouseOverOpacity
+    } else {
+        this.bgElem.style.opacity = config.mouseOutOpacity
     }
   }
 }

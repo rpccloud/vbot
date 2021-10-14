@@ -64,7 +64,7 @@ class Title {
   public flushTheme(): void {
       const theme = ThemeConfig.get()
     this.spanElem.style.fontSize = `${theme.fontSizeMedium}px`
-    const color = this.isFocus ? theme.primaryColor : theme.fontColor
+    const color = theme.fontColor
     this.rootElem.style.backgroundImage =
         `linear-gradient(to right, ${color} 0%, ${color} 93%, rgba(0, 0, 0, 0)  100%)`
   }
@@ -85,9 +85,10 @@ class CloseButton extends RoundButton {
 
     return   {
         size: {width: tabConfig.closeBtnWidth, height: tabConfig.closeBtnHeight},
-        bgColorPress: theme.primaryColor,
-        bgColorMouseOver: theme.backgroundColorDarken,
-        bgColorMouseOut: "transparent",
+        bgColor: theme.primaryColor,
+        focusOpacity: "0.5",
+        mouseOverOpacity: "0.2",
+        mouseOutOpacity: "0",
     }
   }
 
@@ -165,11 +166,12 @@ export class Tab {
     this.focusTimeMS = 0;
     this.rootElem = document.createElement("div");
     this.rootElem.style.position = "absolute";
-    this.rootElem.style.top = `${tabConfig.tabBarHeight - tabConfig.tabHeight}px`;
     this.rootElem.style.height = `${tabConfig.tabHeight}px`;
     this.rootElem.style.overflow = "hidden";
+    this.rootElem.style.top = `${tabConfig.tabBarHeight - tabConfig.tabHeight - 1}px`;
 
     this.bgElem = document.createElement("canvas");
+    this.bgElem.style.transition = "opacity 0.3s ease-out";
     this.title = new Title("Test-title-absdfsafdas-sdfasldfj-sdfasdf");
     this.closeButton = new CloseButton(() => {
       tabBar.deleteTab(id);
@@ -265,7 +267,7 @@ export class Tab {
       this.isAnimate = isAnimate;
 
       if (isAnimate) {
-        this.rootElem.style.transition = "left 0.20s ease-out";
+        this.rootElem.style.transition = "left 0.3s ease-out";
       } else {
         this.rootElem.style.transition = "";
       }
@@ -332,6 +334,14 @@ export class Tab {
 
     this.title.flushTheme()
     this.closeButton.flushTheme()
+
+    if (this.isFocus) {
+        this.bgElem.style.opacity = "1"
+    } else if (this.isMouseOver) {
+        this.bgElem.style.opacity = "0.75"
+    } else {
+        this.bgElem.style.opacity = "0.3"
+    }
   }
 
   private drawPath(): void {
@@ -341,12 +351,18 @@ export class Tab {
     }
     const ctx = this.ctx;
     if (ctx) {
+        ctx.imageSmoothingEnabled = true;
+        const dpr = window.devicePixelRatio ? window.devicePixelRatio : 1;
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      ctx.fillStyle = theme.backgroundColor;
+      ctx.fillStyle = theme.backgroundColorLighten;
       ctx.fill(this.path);
-      ctx.lineWidth = 1;
-        ctx.strokeStyle = (this.isFocus || this.isMouseOver)? theme.primaryColor : theme.fontColor;
+
+      if (this.isFocus) {
+        ctx.lineWidth = dpr;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = theme.primaryColor
         ctx.stroke(this.path);
+      }
     }
   }
 }

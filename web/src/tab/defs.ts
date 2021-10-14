@@ -10,9 +10,10 @@ export interface ISize {
 
 export interface IButtonConfig {
   size: ISize;
-  bgColorPress: string;
-  bgColorMouseOver: string;
-  bgColorMouseOut: string;
+  bgColor: string;
+  focusOpacity: string;
+  mouseOverOpacity: string;
+  mouseOutOpacity: string;
 }
 
 export interface ITitleConfig {
@@ -28,10 +29,10 @@ const tabConfig = {
     tabBarLeft: 0,
     tabBarRight: 0,
 
-    tabLeft: 8,
-    tabRight: 8,
+    tabLeft: 12,
+    tabRight: 12,
     tabInMargin: 6,
-    tabRadius: 5,
+    tabRadius: 4,
     tabHeight: 34,
     tabMinWidth: 50,
     tabMaxWidth: 200,
