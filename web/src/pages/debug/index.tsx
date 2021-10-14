@@ -1,5 +1,5 @@
 import React from "react";
-import { TabConfig } from "../../tab/config";
+
 import { TabBar } from "../../tab/tab-bar";
 
 class Debug extends React.Component {
@@ -12,14 +12,14 @@ class Debug extends React.Component {
     }
 
     componentDidMount() {
-        this.tabBar = new TabBar(TabConfig.get())
+        this.tabBar = new TabBar()
         this.ref.current.appendChild(this.tabBar.getRootElem())
     }
 
     render() {
         return (
             <div className="vbot-fill-viewport">
-                <div ref={this.ref} style={{height:300, background: "green"}} />
+                <div ref={this.ref} style={{height:300}} />
                 <div style={{width: 100, height: 100, background: "red"}}  onClick={() => {this.tabBar?.addTab(false, "test-0", true)}}></div>
             </div>
         )

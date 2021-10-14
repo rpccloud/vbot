@@ -9,14 +9,10 @@ export interface ISize {
 }
 
 export interface IButtonConfig {
-  top:  number;
   size: ISize;
   bgColorPress: string;
   bgColorMouseOver: string;
   bgColorMouseOut: string;
-  fgColor: string;
-  fgColorInactive: string;
-  fgSize: number;
 }
 
 export interface ITitleConfig {
@@ -26,29 +22,6 @@ export interface ITitleConfig {
   focusFontColor: string;
 }
 
-export interface ITabConfig {
-  leftMargin: number;
-  rightMargin: number;
-  inMargin: number;
-  radius: number;
-  height: number;
-  homeWidth: number;
-  minMovedWidth: number;
-  maxMovedWidth: number;
-  disappearCloseWidth: number;
-  bgColor: string;
-  borderColor: string;
-  title: ITitleConfig;
-  closeButton: IButtonConfig;
-}
-
-export interface ITabBarConfig {
-  height: number;
-  left: number;
-  right: number;
-  bgColor: string;
-  tab: ITabConfig;
-}
 
 const tabConfig = {
     tabBarHeight: 46,
@@ -58,12 +31,12 @@ const tabConfig = {
     tabLeft: 8,
     tabRight: 8,
     tabInMargin: 6,
-    tabRadius: 4,
-    tabHeight: 30,
+    tabRadius: 5,
+    tabHeight: 34,
     tabMinWidth: 50,
     tabMaxWidth: 200,
     tabDisappearCloseWidth: 80,
-
+    tabHomeWidth: 100,
     titleHeight: 18,
 
     closeBtnWidth: 18,

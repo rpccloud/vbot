@@ -5,8 +5,8 @@ export abstract class RoundButton {
   protected config: IButtonConfig;
   protected isActive: boolean;
   private isDisplay: boolean;
-  private isMouseOver: boolean;
-  private isMouseDown: boolean;
+  protected isMouseOver: boolean;
+  protected isMouseDown: boolean;
   private onClick?: () => void;
   protected rootElem: HTMLDivElement;
   protected canvasElem: HTMLCanvasElement;
@@ -169,7 +169,6 @@ export abstract class RoundButton {
     this.canvasElem.style.height = `${height}px`;
     this.rootElem.style.width = `${width}px`;
     this.rootElem.style.height = `${height}px`;
-    this.rootElem.style.top = `${config.top}px`;
     if (ctx) {
       ctx.scale(dpr, dpr);
       this.drawForeground(ctx);

@@ -1,10 +1,9 @@
 import tabConfig, {
     IButtonConfig,
-  ITabConfig,
-  ITitleConfig,
 } from "./defs";
 import { RoundButton } from "./button";
 import { TabBar } from "./tab-bar";
+import { ThemeConfig } from "../ui/theme/config";
 
 class Title {
   private x: number;
@@ -14,7 +13,7 @@ class Title {
   private rootElem: HTMLDivElement;
   private spanElem: HTMLSpanElement;
 
-  public constructor(config: ITitleConfig, text: string) {
+  public constructor(text: string) {
     this.x = 0;
     this.width = 0;
     this.isFocus = false;
@@ -29,8 +28,8 @@ class Title {
     this.rootElem.style.width = "300px"
     this.rootElem.style.position = "absolute"
     this.rootElem.style.lineHeight = `${tabConfig.titleHeight}px`
-    this.rootElem.className = "browser-tab-title";
     this.spanElem = document.createElement("span");
+    this.spanElem.style.float = "left"
     this.spanElem.textContent = text;
     this.rootElem.appendChild(this.spanElem);
   }
@@ -41,10 +40,8 @@ class Title {
 
   public setFocus(isFocus: boolean): void {
     if (this.isFocus !== isFocus) {
-      this.isFocus = isFocus;
-      this.rootElem.className = isFocus ?
-        "browser-tab-title browser-tab-title_focus" :
-        "browser-tab-title";
+        this.isFocus = isFocus;
+        this.flushTheme()
     }
   }
 
@@ -64,19 +61,34 @@ class Title {
     }
   }
 
-  public flushConfig(config: ITitleConfig): void {
-    this.spanElem.style.float = "left"
-    this.spanElem.style.fontSize = `${config.fontSize}px`
+  public flushTheme(): void {
+      const theme = ThemeConfig.get()
+    this.spanElem.style.fontSize = `${theme.fontSizeMedium}px`
+    const color = this.isFocus ? theme.primaryColor : theme.fontColor
+    this.rootElem.style.backgroundImage =
+        `linear-gradient(to right, ${color} 0%, ${color} 93%, rgba(0, 0, 0, 0)  100%)`
   }
 }
 
 class CloseButton extends RoundButton {
   private x: number;
 
-  public constructor(config: IButtonConfig, onClick: () => void) {
-    super(config, onClick);
-    this.flushConfig(config);
+  public constructor(onClick: () => void) {
+    super(CloseButton.getButtonConfig(), onClick);
+    this.rootElem.style.top = `${(tabConfig.tabHeight - tabConfig.closeBtnHeight)/ 2}px`;
+    this.flushTheme();
     this.x = 0;
+  }
+
+  public static getButtonConfig(): IButtonConfig {
+    const theme = ThemeConfig.get()
+
+    return   {
+        size: {width: tabConfig.closeBtnWidth, height: tabConfig.closeBtnHeight},
+        bgColorPress: theme.primaryColor,
+        bgColorMouseOver: theme.backgroundColorDarken,
+        bgColorMouseOut: "transparent",
+    }
   }
 
   public setX(x: number): void {
@@ -87,29 +99,25 @@ class CloseButton extends RoundButton {
   }
 
   protected drawForeground(ctx: CanvasRenderingContext2D): boolean {
-    const config = this.config;
-    if (config) {
-      const w = config.size.width;
-      const h = config.size.height;
-      const fgSize = config.fgSize;
+    const theme = ThemeConfig.get()
+    const w = tabConfig.closeBtnWidth;
+    const h = tabConfig.closeBtnHeight;
+    const fgSize = tabConfig.closeBtnSize;
 
-      ctx.beginPath();
-      ctx.moveTo((w - fgSize) / 2, (h - fgSize) / 2);
-      ctx.lineTo((w + fgSize) / 2, (h + fgSize) / 2);
-      ctx.moveTo((w + fgSize) / 2, (h - fgSize) / 2);
-      ctx.lineTo((w - fgSize) / 2, (h + fgSize) / 2);
-      ctx.strokeStyle = this.isActive ? config.fgColor : config.fgColorInactive;
-      ctx.lineWidth = 1;
-      ctx.lineCap = "round";
-      ctx.stroke();
-      return true;
-    } else {
-      return false;
-    }
+    ctx.beginPath();
+    ctx.moveTo((w - fgSize) / 2, (h - fgSize) / 2);
+    ctx.lineTo((w + fgSize) / 2, (h + fgSize) / 2);
+    ctx.moveTo((w + fgSize) / 2, (h - fgSize) / 2);
+    ctx.lineTo((w - fgSize) / 2, (h + fgSize) / 2);
+    ctx.strokeStyle = theme.fontColor;
+    ctx.lineWidth = 1;
+    ctx.lineCap = "round";
+    ctx.stroke();
+    return true;
   }
 
-  public flushConfig(config: IButtonConfig): void {
-    super.flushConfig(config);
+  public flushTheme(): void {
+    super.flushConfig(CloseButton.getButtonConfig());
   }
 }
 
@@ -132,7 +140,6 @@ export class Tab {
   public isMoving: boolean;
   private focusTimeMS: number;
 
-  private config: ITabConfig;
   private ctx?: CanvasRenderingContext2D;
   private rootElem: HTMLDivElement;
   private bgElem: HTMLCanvasElement;
@@ -141,7 +148,7 @@ export class Tab {
   private closeButton: CloseButton;
    //private pageBarContent: PageBarContent;
 
-  public constructor(tabBar: TabBar, config: ITabConfig, isHome: boolean, id: number, param: string) {
+  public constructor(tabBar: TabBar,isHome: boolean, id: number, param: string) {
       this.id = id;
     this.isHome = isHome;
     this.param = param
@@ -156,13 +163,15 @@ export class Tab {
     this.isMouseOver = false;
     this.isMoving = false;
     this.focusTimeMS = 0;
-    this.config = config;
     this.rootElem = document.createElement("div");
-    this.rootElem.className = "browser-tab";
+    this.rootElem.style.position = "absolute";
+    this.rootElem.style.top = `${tabConfig.tabBarHeight - tabConfig.tabHeight}px`;
+    this.rootElem.style.height = `${tabConfig.tabHeight}px`;
+    this.rootElem.style.overflow = "hidden";
+
     this.bgElem = document.createElement("canvas");
-    this.bgElem.className = "browser-tab-bg";
-    this.title = new Title(config.title, "Test-title-absdfsafdas-sdfasldfj-sdfasdf");
-    this.closeButton = new CloseButton(config.closeButton, () => {
+    this.title = new Title("Test-title-absdfsafdas-sdfasldfj-sdfasdf");
+    this.closeButton = new CloseButton(() => {
       tabBar.deleteTab(id);
     });
 
@@ -192,14 +201,14 @@ export class Tab {
         // Browser.Get().getPageBar().setContent(this.pageBarContent);
       }
       this.isFocus = isFocus;
-      this.updateBGClassName();
+      this.flushTheme();
     }
   }
 
   public setMouseOver(isMouseOver: boolean): void {
     if (this.isMouseOver !== isMouseOver) {
       this.isMouseOver = isMouseOver;
-      this.updateBGClassName();
+      this.flushTheme();
     }
   }
 
@@ -254,9 +263,12 @@ export class Tab {
   public setAnimate(isAnimate: boolean): void {
     if (this.isAnimate !== isAnimate) {
       this.isAnimate = isAnimate;
-      this.rootElem.className = isAnimate ?
-        "browser-tab browser-tab_animate" :
-        "browser-tab";
+
+      if (isAnimate) {
+        this.rootElem.style.transition = "left 0.20s ease-out";
+      } else {
+        this.rootElem.style.transition = "";
+      }
     }
   }
 
@@ -270,16 +282,16 @@ export class Tab {
   public flush(): void {
     this.drawPath();
 
-    const r = this.config.radius;
-    const m = this.config.inMargin;
-    let leftX = r + this.config.leftMargin;
-    let rightX = this.width - r - this.config.rightMargin;
+    const r = tabConfig.tabRadius;
+    const m = tabConfig.tabInMargin;
+    let leftX = r + tabConfig.tabLeft;
+    let rightX = this.width - r - tabConfig.tabRight;
 
     // flush close button
     const showClose = !this.isHome &&
-      (this.isFocus || this.width > this.config.disappearCloseWidth);
+      (this.isFocus || this.width > tabConfig.tabDisappearCloseWidth);
     if (showClose) {
-      rightX -= this.config.closeButton.size.width;
+      rightX -= tabConfig.closeBtnWidth;
       this.closeButton.setX(rightX);
       this.closeButton.setDisplay(true);
       rightX -= m;
@@ -301,15 +313,14 @@ export class Tab {
     this.setZIndex(this.getWeight());
   }
 
-  public flushConfig(config: ITabConfig): void {
+  public flushTheme(): void {
     // Get the device pixel ratio, falling back to 1.
-    this.config = config;
     const ctx = this.bgElem.getContext("2d");
     const dpr = window.devicePixelRatio ? window.devicePixelRatio : 1;
-    this.bgElem.width = this.config.maxMovedWidth * dpr;
-    this.bgElem.height = this.config.height * dpr;
-    this.bgElem.style.width = `${this.config.maxMovedWidth}px`;
-    this.bgElem.style.height = `${this.config.height}px`;
+    this.bgElem.width = tabConfig.tabMaxWidth * dpr;
+    this.bgElem.height = tabConfig.tabHeight * dpr;
+    this.bgElem.style.width = `${tabConfig.tabMaxWidth}px`;
+    this.bgElem.style.height = `${tabConfig.tabHeight}px`;
     // Scale all drawing operations by the dpr, so you
     // don't have to worry about the difference.
     if (ctx) {
@@ -319,32 +330,23 @@ export class Tab {
       this.ctx = undefined;
     }
 
-    this.title.flushConfig(config.title)
-    this.closeButton.flushConfig(config.closeButton)
+    this.title.flushTheme()
+    this.closeButton.flushTheme()
   }
 
   private drawPath(): void {
+    const theme = ThemeConfig.get()
     if (!this.ctx) {
-      this.flushConfig(this.config);
+      this.flushTheme();
     }
     const ctx = this.ctx;
     if (ctx) {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      ctx.fillStyle = this.config.bgColor;
+      ctx.fillStyle = theme.backgroundColor;
       ctx.fill(this.path);
       ctx.lineWidth = 1;
-        ctx.strokeStyle = this.config.borderColor;
+        ctx.strokeStyle = (this.isFocus || this.isMouseOver)? theme.primaryColor : theme.fontColor;
         ctx.stroke(this.path);
-    }
-  }
-
-  private updateBGClassName(): void {
-    if (this.isFocus) {
-      this.bgElem.className = "browser-tab-bg browser-tab-bg_focus";
-    } else if (this.isMouseOver) {
-      this.bgElem.className = "browser-tab-bg browser-tab-bg_mouseover";
-    } else {
-      this.bgElem.className = "browser-tab-bg";
     }
   }
 }
