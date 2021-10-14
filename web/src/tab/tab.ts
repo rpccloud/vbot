@@ -1,4 +1,4 @@
-import {
+import tabConfig, {
     IButtonConfig,
   ITabConfig,
   ITitleConfig,
@@ -20,6 +20,15 @@ class Title {
     this.isFocus = false;
     this.isDisplay = true;
     this.rootElem = document.createElement("div");
+    this.rootElem.style.webkitBackgroundClip = "text"
+    this.rootElem.style.whiteSpace = "nowrap"
+    this.rootElem.style.color = "transparent"
+    this.rootElem.style.userSelect = "none"
+    this.rootElem.style.pointerEvents = "none"
+    this.rootElem.style.top = `${(tabConfig.tabHeight - tabConfig.titleHeight)/2}px`
+    this.rootElem.style.width = "300px"
+    this.rootElem.style.position = "absolute"
+    this.rootElem.style.lineHeight = `${tabConfig.titleHeight}px`
     this.rootElem.className = "browser-tab-title";
     this.spanElem = document.createElement("span");
     this.spanElem.textContent = text;

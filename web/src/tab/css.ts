@@ -41,29 +41,14 @@ import {
         opacity: 1 !important;
       }
       .browser-tab-title {
-        -webkit-background-clip: text !important;
-        display: table-cell;
-        vertical-align: middle;
-        white-space: nowrap;
-        color: transparent;
-        user-select: none;
-        pointer-events: none;
-        top: ${(config.height - config.title.height) / 2}px;
-        width: 300px;
-        position: absolute;
-        lineHeight: ${config.title.height}px;
         background: linear-gradient(
-          to right, ${colorA} 0%, ${colorA} 95%, ${colorB} 100%
+          to right, ${colorA} 0%, ${colorA} 95%, rgba(0, 0, 0, 0) 100%
         );
       }
       .browser-tab-title_focus {
         background: linear-gradient(
-          to right, ${colorC} 0%, ${colorC} 95%, ${colorD} 100%
+          to right, ${colorC} 0%, ${colorC} 95%, rgba(0, 0, 0, 0)  100%
         );
-      }
-      .browser-tab-title-content {
-        float:left;
-        font-size: ${config.title.fontSize}px;
       }
     `;
   }

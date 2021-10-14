@@ -49,3 +49,26 @@ export interface ITabBarConfig {
   bgColor: string;
   tab: ITabConfig;
 }
+
+const tabConfig = {
+    tabBarHeight: 46,
+    tabBarLeft: 0,
+    tabBarRight: 0,
+
+    tabLeft: 8,
+    tabRight: 8,
+    tabInMargin: 6,
+    tabRadius: 4,
+    tabHeight: 30,
+    tabMinWidth: 50,
+    tabMaxWidth: 200,
+    tabDisappearCloseWidth: 80,
+
+    titleHeight: 18,
+
+    closeBtnWidth: 18,
+    closeBtnHeight: 18,
+    closeBtnSize: 7,
+}
+
+export default tabConfig
