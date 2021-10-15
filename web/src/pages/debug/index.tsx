@@ -2,6 +2,25 @@ import { AiOutlineEye } from "@react-icons/all-files/ai/AiOutlineEye";
 import React from "react";
 
 import { TabBar } from "../../tab/tab-bar";
+import { debugChannelMap, registerChannel } from "../../ui/event/event";
+
+function testDebug() {
+    debugChannelMap()
+
+    const ch =  registerChannel("testChannel")
+
+    debugChannelMap()
+
+    const listener = ch?.listen("SayHello", function() {})
+
+    debugChannelMap()
+
+    listener?.close()
+
+    debugChannelMap()
+}
+
+testDebug()
 
 class Debug extends React.Component {
     private ref : any

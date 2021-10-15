@@ -9,7 +9,7 @@ import { message } from 'antd';
 import Footer from "../common/Footer";
 import Header from "../common/Header";
 import { observer } from "mobx-react-lite";
-import Card from "../../component/Card";
+import Card from "../../ui/component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
 import { AppData, AppUser } from "../../AppManager";
 import { RPCMap } from "rpccloud-client-js/build/types";
