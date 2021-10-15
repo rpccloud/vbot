@@ -2,6 +2,7 @@ import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
 import tabConfig, { IPoint } from "./defs";
 import { Tab } from "./tab";
 import { ThemeConfig } from "../ui/theme/config";
+import { AiOutlineHome } from "@react-icons/all-files/ai/AiOutlineHome";
 
 export class TabBar {
   private isInit: boolean;
@@ -26,13 +27,9 @@ export class TabBar {
   private homeMax: number;
   private movedMin: number;
   private movedMax: number;
+  private onWindowResize: () => void;
 
   public constructor() {
-      window.onresize = () => {
-        this.flush(true, true, false);
-      }
-
-
     const ctx = document.createElement("canvas").getContext("2d");
     this.isInit = true;
     this.ctx = ctx ? ctx : undefined;
@@ -58,6 +55,10 @@ export class TabBar {
     this.movedMin = 0;
     this.movedMax = 0;
 
+    this.onWindowResize = () => {
+        this.flush(true, true, false);
+    }
+
     this.rootElem.addEventListener("pointerdown", e => {
       this.onPointerDown(e);
     });
@@ -71,7 +72,9 @@ export class TabBar {
     this.flushTheme();
 
     // create home page
-    this.addTab(true, "home-0", true);
+    this.addTab(true, "home-0", true, "Vbot", <AiOutlineHome/>,);
+
+    window.addEventListener("resize", this.onWindowResize)
   }
 
   public getRootElem(): HTMLDivElement {
@@ -81,6 +84,8 @@ export class TabBar {
   public destroy(): boolean {
     if (this.isInit) {
       this.isInit = false;
+
+      window.removeEventListener("resize", this.onWindowResize)
 
       // destroy home
       if (this.home) {
@@ -253,9 +258,11 @@ export class TabBar {
     isHome: boolean,
     param: string,
     focus: boolean,
+    title: string,
+    icon: React.ReactElement,
     afterId?: number,
   ): boolean {
-    const tab = new Tab(this, isHome, getSeed(), param);
+    const tab = new Tab(this, isHome, getSeed(), title,  icon, param);
     this.rootElem.appendChild(tab.getRootElem());
     if (isHome) {
         this.home = tab;

@@ -23,21 +23,23 @@ export interface ITitleConfig {
   focusFontColor: string;
 }
 
-
 const tabConfig = {
     tabBarHeight: 46,
     tabBarLeft: 0,
     tabBarRight: 0,
 
-    tabLeft: 12,
-    tabRight: 12,
-    tabInMargin: 6,
+    tabLeft: 6,
+    tabRight: 6,
+    tabInMargin: 3,
     tabRadius: 4,
     tabHeight: 34,
-    tabMinWidth: 50,
+    tabMinWidth: 55,
     tabMaxWidth: 200,
     tabDisappearCloseWidth: 80,
     tabHomeWidth: 100,
+
+    iconWidth: 18,
+    iconHeight: 18,
     titleHeight: 18,
 
     closeBtnWidth: 18,

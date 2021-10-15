@@ -18,7 +18,7 @@ export const config = {
             warningColor: "rgb(185, 78, 64)",
             backgroundColor: "rgb(230, 232, 235)",
             backgroundColorLighten: "rgb(255, 255, 255)",
-            backgroundColorDarken: "rgb(210, 212, 215)",
+            backgroundColorDarken: "rgb(215, 217, 220)",
             fontColor: "rgba(0, 0, 0, 0.8)",
             fontColorLighten:  "rgba(0, 0, 0, 0.6)",
             fontColorDarken:  "rgba(0, 0, 0, 1)",

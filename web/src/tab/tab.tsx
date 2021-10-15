@@ -4,34 +4,56 @@ import tabConfig, {
 import { RoundButton } from "./button";
 import { TabBar } from "./tab-bar";
 import { ThemeConfig } from "../ui/theme/config";
-
+import ReactDOM from "react-dom";
 class Title {
   private x: number;
   private width: number;
   private isFocus: boolean;
   private isDisplay: boolean;
   private rootElem: HTMLDivElement;
+  private textElem: HTMLDivElement;
   private spanElem: HTMLSpanElement;
+  private iconElem: HTMLSpanElement;
 
-  public constructor(text: string) {
+
+  public constructor(icon: React.ReactElement, text: string) {
     this.x = 0;
     this.width = 0;
     this.isFocus = false;
     this.isDisplay = true;
     this.rootElem = document.createElement("div");
-    this.rootElem.style.webkitBackgroundClip = "text"
-    this.rootElem.style.whiteSpace = "nowrap"
-    this.rootElem.style.color = "transparent"
-    this.rootElem.style.userSelect = "none"
-    this.rootElem.style.pointerEvents = "none"
-    this.rootElem.style.top = `${(tabConfig.tabHeight - tabConfig.titleHeight)/2}px`
-    this.rootElem.style.width = "300px"
-    this.rootElem.style.position = "absolute"
-    this.rootElem.style.lineHeight = `${tabConfig.titleHeight}px`
+
+    this.textElem = document.createElement("div");
+    this.textElem.style.webkitBackgroundClip = "text"
+    this.textElem.style.whiteSpace = "nowrap"
+    this.textElem.style.color = "transparent"
+    this.textElem.style.userSelect = "none"
+    this.textElem.style.pointerEvents = "none"
+    this.textElem.style.top = `${(tabConfig.tabHeight - tabConfig.titleHeight)/2}px`
+    this.textElem.style.width = "300px"
+    this.textElem.style.position = "absolute"
+    this.textElem.style.lineHeight = `${tabConfig.titleHeight}px`
     this.spanElem = document.createElement("span");
     this.spanElem.style.float = "left"
     this.spanElem.textContent = text;
-    this.rootElem.appendChild(this.spanElem);
+    this.textElem.appendChild(this.spanElem);
+    this.rootElem.appendChild(this.textElem)
+
+    this.iconElem = document.createElement("span");
+    this.iconElem.style.position = "absolute"
+    this.iconElem.style.top = `${(tabConfig.tabHeight  - tabConfig.iconHeight) / 2}px`
+    this.iconElem.style.width = `${tabConfig.iconWidth}px`
+    this.iconElem.style.height = `${tabConfig.iconHeight}px`
+    this.iconElem.style.left= `${tabConfig.tabLeft + tabConfig.tabRadius}px`
+    this.iconElem.style.textAlign = "center"
+    this.rootElem.appendChild( this.iconElem )
+
+    ReactDOM.render(
+        <>
+          <span>{icon}</span> {text}
+        </>,
+        this.iconElem,
+    );
   }
 
   public getRootElem(): HTMLDivElement {
@@ -48,7 +70,7 @@ class Title {
   public setDisplay(isDisplay: boolean): void {
     if (this.isDisplay !== isDisplay) {
       this.isDisplay = isDisplay;
-      this.rootElem.style.display = isDisplay ? "block" : "none";
+      this.textElem.style.display = isDisplay ? "block" : "none";
     }
   }
 
@@ -56,28 +78,45 @@ class Title {
     if (this.x !== x || this.width !== width) {
       this.x = x;
       this.width = width;
-      this.rootElem.style.left = `${x + width - 300}px`;
+      this.textElem.style.left = `${x + width  - 300}px`;
       this.spanElem.style.marginLeft = `${300 - width}px`;
     }
   }
 
   public flushTheme(): void {
       const theme = ThemeConfig.get()
-    this.spanElem.style.fontSize = `${theme.fontSizeMedium}px`
-    const color = theme.fontColor
-    this.rootElem.style.backgroundImage =
-        `linear-gradient(to right, ${color} 0%, ${color} 93%, rgba(0, 0, 0, 0)  100%)`
+        this.spanElem.style.fontSize = `${theme.fontSizeMedium}px`
+        this.iconElem.style.fontSize = `${theme.fontSizeMedium}px`
+        const color =  this.isFocus ? theme.primaryColor : theme.fontColor
+        this.textElem.style.backgroundImage = `linear-gradient(to right, ${color} 0%, ${color} 93%, rgba(0, 0, 0, 0)  100%)`
+        this.iconElem.style.color = color
+        if (this.isFocus) {
+            this.iconElem.style.fontWeight = `${theme.fontWeightBold}`
+            this.spanElem.style.fontWeight = `${theme.fontWeightBold}`
+        } else {
+            this.iconElem.style.fontWeight = `${theme.fontWeightNormal}`
+            this.spanElem.style.fontWeight = `${theme.fontWeightNormal}`
+        }
   }
 }
 
 class CloseButton extends RoundButton {
   private x: number;
+  private isFocus: boolean;
 
   public constructor(onClick: () => void) {
     super(CloseButton.getButtonConfig(), onClick);
     this.rootElem.style.top = `${(tabConfig.tabHeight - tabConfig.closeBtnHeight)/ 2}px`;
-    this.flushTheme();
     this.x = 0;
+    this.isFocus = false;
+    this.flushTheme();
+  }
+
+  public setFocus(isFocus: boolean): void {
+    if (this.isFocus !== isFocus) {
+        this.isFocus = isFocus;
+        this.flushTheme()
+    }
   }
 
   public static getButtonConfig(): IButtonConfig {
@@ -86,7 +125,7 @@ class CloseButton extends RoundButton {
     return   {
         size: {width: tabConfig.closeBtnWidth, height: tabConfig.closeBtnHeight},
         bgColor: theme.primaryColor,
-        focusOpacity: "0.5",
+        focusOpacity: "0.4",
         mouseOverOpacity: "0.2",
         mouseOutOpacity: "0",
     }
@@ -110,7 +149,7 @@ class CloseButton extends RoundButton {
     ctx.lineTo((w + fgSize) / 2, (h + fgSize) / 2);
     ctx.moveTo((w + fgSize) / 2, (h - fgSize) / 2);
     ctx.lineTo((w - fgSize) / 2, (h + fgSize) / 2);
-    ctx.strokeStyle = theme.fontColor;
+    ctx.strokeStyle = this.isFocus ? theme.primaryColor : theme.fontColor;
     ctx.lineWidth = 1;
     ctx.lineCap = "round";
     ctx.stroke();
@@ -147,9 +186,8 @@ export class Tab {
 
   private title: Title;
   private closeButton: CloseButton;
-   //private pageBarContent: PageBarContent;
 
-  public constructor(tabBar: TabBar,isHome: boolean, id: number, param: string) {
+  public constructor(tabBar: TabBar,isHome: boolean, id: number, title: string, icon: React.ReactElement, param: string) {
       this.id = id;
     this.isHome = isHome;
     this.param = param
@@ -172,7 +210,7 @@ export class Tab {
 
     this.bgElem = document.createElement("canvas");
     this.bgElem.style.transition = "opacity 0.3s ease-out";
-    this.title = new Title("Test-title-absdfsafdas-sdfasldfj-sdfasdf");
+    this.title = new Title(icon, title);
     this.closeButton = new CloseButton(() => {
       tabBar.deleteTab(id);
     });
@@ -286,10 +324,11 @@ export class Tab {
 
     const r = tabConfig.tabRadius;
     const m = tabConfig.tabInMargin;
-    let leftX = r + tabConfig.tabLeft;
+    let leftX = r + tabConfig.tabLeft + tabConfig.iconWidth + tabConfig.tabInMargin;
     let rightX = this.width - r - tabConfig.tabRight;
 
     // flush close button
+    this.closeButton.setFocus(this.isFocus);
     const showClose = !this.isHome &&
       (this.isFocus || this.width > tabConfig.tabDisappearCloseWidth);
     if (showClose) {
@@ -352,17 +391,16 @@ export class Tab {
     const ctx = this.ctx;
     if (ctx) {
         ctx.imageSmoothingEnabled = true;
-        const dpr = window.devicePixelRatio ? window.devicePixelRatio : 1;
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       ctx.fillStyle = theme.backgroundColorLighten;
       ctx.fill(this.path);
 
-      if (this.isFocus) {
-        ctx.lineWidth = dpr;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = theme.primaryColor
-        ctx.stroke(this.path);
-      }
+    //   if (this.isFocus) {
+    //     ctx.lineWidth = dpr;
+    //     ctx.lineCap = "round";
+    //     ctx.strokeStyle = theme.primaryColor
+    //     ctx.stroke(this.path);
+    //   }
     }
   }
 }
