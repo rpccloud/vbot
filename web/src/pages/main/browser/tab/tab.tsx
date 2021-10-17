@@ -3,7 +3,7 @@ import tabConfig, {
 } from "./defs";
 import { RoundButton } from "./button";
 import { TabBar } from "./tab-bar";
-import { ThemeConfig } from "../ui/theme/config";
+import { ThemeConfig } from "../../../../ui/theme/config";
 import ReactDOM from "react-dom";
 class Title {
   private x: number;

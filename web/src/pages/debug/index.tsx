@@ -1,7 +1,7 @@
 import { AiOutlineEye } from "@react-icons/all-files/ai/AiOutlineEye";
 import React from "react";
 
-import { TabBar } from "../../tab/tab-bar";
+import { TabBar } from "../main/browser/tab/tab-bar";
 import { debugChannelMap, registerChannel } from "../../ui/event/event";
 
 function testDebug() {

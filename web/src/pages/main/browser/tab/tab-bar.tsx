@@ -1,7 +1,7 @@
 import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
 import tabConfig, { IPoint } from "./defs";
 import { Tab } from "./tab";
-import { ThemeConfig } from "../ui/theme/config";
+import { ThemeConfig } from "../../../../ui/theme/config";
 import { AiOutlineHome } from "@react-icons/all-files/ai/AiOutlineHome";
 
 export class TabBar {
