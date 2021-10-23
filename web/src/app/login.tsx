@@ -6,15 +6,15 @@ import {
 } from '@ant-design/icons';
 
 import { message } from 'antd';
-import Footer from "../common/Footer";
-import Header from "../common/Header";
+import Footer from "./plugin/footer";
+import Header from "./plugin/header";
 import { observer } from "mobx-react-lite";
-import Card from "../../ui/component/Card";
+import Card from "../ui/component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
-import { AppData, AppUser } from "../../AppManager";
+import { AppData, AppUser } from "../AppManager";
 import { RPCMap } from "rpccloud-client-js/build/types";
-import { delay } from "../../util/util";
-import Input from "../../ui/component/Input";
+import { delay } from "../util/util";
+import Input from "../ui/component/Input";
 
 class Data {
     user: string

@@ -1,10 +1,10 @@
 import React from "react";
 import { message, Spin } from "antd";
-import { AppData, AppUser } from "../../AppManager";
+import { AppData, AppUser } from "../AppManager";
 import { observer } from "mobx-react-lite";
-import Header from "../common/Header";
-import Footer from "../common/Footer";
-import { delay } from "../../util/util";
+import Footer from "./plugin/footer";
+import { delay } from "../util/util";
+import Header from "./plugin/header";
 
 const styles = {
     text: {

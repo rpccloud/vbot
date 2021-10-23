@@ -5,15 +5,15 @@ import {
 } from '@ant-design/icons';
 
 import { message, Spin } from 'antd';
-import Footer from "../common/Footer";
-import Header from "../common/Header";
+import Footer from "./plugin/footer";
+import Header from "./plugin/header";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
-import { AppData, AppUser } from "../../AppManager";
-import Card from "../../ui/component/Card";
-import { delay } from "../../util/util";
-import Input from "../../ui/component/Input";
+import { AppData, AppUser } from "../AppManager";
+import Card from "../ui/component/Card";
+import { delay } from "../util/util";
+import Input from "../ui/component/Input";
 
 class Data {
     password: string

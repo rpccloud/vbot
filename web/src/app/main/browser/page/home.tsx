@@ -4,7 +4,7 @@ import {
     LaptopOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import Plugin from "../../../../plugin"
+import Plugin from "../../../plugin"
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 

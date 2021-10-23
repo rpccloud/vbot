@@ -11,7 +11,7 @@ import {
     DeleteOutlined,
 } from '@ant-design/icons';
 
-import { AppUser } from "../../AppManager";
+import { AppUser } from "../../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import ServerCreate from "./create";
 import ServerDelete from "./delete";
