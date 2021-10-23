@@ -5,6 +5,7 @@ import { RoundButton } from "./button";
 import { TabBar } from "./tab-bar";
 import { ThemeConfig } from "../../../../ui/theme/config";
 import ReactDOM from "react-dom";
+
 class Title {
   private x: number;
   private width: number;
@@ -14,7 +15,6 @@ class Title {
   private textElem: HTMLDivElement;
   private spanElem: HTMLSpanElement;
   private iconElem: HTMLSpanElement;
-
 
   public constructor(icon: React.ReactElement, text: string) {
     this.x = 0;
@@ -226,6 +226,10 @@ export class Tab {
     return true;
   }
 
+  public getParam(): string {
+      return this.param
+  }
+
   public getFocusTimeMS(): number {
     return this.focusTimeMS;
   }
@@ -238,7 +242,6 @@ export class Tab {
     if (this.isFocus !== isFocus) {
       if (isFocus) {
         this.focusTimeMS = new Date().getTime();
-        // Browser.Get().getPageBar().setContent(this.pageBarContent);
       }
       this.isFocus = isFocus;
       this.flushTheme();

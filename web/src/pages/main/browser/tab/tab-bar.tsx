@@ -2,7 +2,6 @@ import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
 import tabConfig, { IPoint } from "./defs";
 import { Tab } from "./tab";
 import { ThemeConfig } from "../../../../ui/theme/config";
-import { AiOutlineHome } from "@react-icons/all-files/ai/AiOutlineHome";
 
 export class TabBar {
   private isInit: boolean;
@@ -28,8 +27,9 @@ export class TabBar {
   private movedMin: number;
   private movedMax: number;
   private onWindowResize: () => void;
+  private onChange: (focus: string, list: Array<string>) => void
 
-  public constructor() {
+  public constructor(onChange: (focus: string, list: Array<string>) => void) {
     const ctx = document.createElement("canvas").getContext("2d");
     this.isInit = true;
     this.ctx = ctx ? ctx : undefined;
@@ -55,6 +55,7 @@ export class TabBar {
     this.movedMin = 0;
     this.movedMax = 0;
 
+    this.onChange = onChange
     this.onWindowResize = () => {
         this.flush(true, true, false);
     }
@@ -70,9 +71,6 @@ export class TabBar {
     });
 
     this.flushTheme();
-
-    // create home page
-    this.addTab(true, "home-0", true, "Vbot", <AiOutlineHome/>,);
 
     window.addEventListener("resize", this.onWindowResize)
   }
@@ -114,7 +112,7 @@ export class TabBar {
       tabConfig.tabRadius,
     );
 
-    this.rootElem.style.borderBottom = `1px solid ${theme.primaryColor}`
+    this.rootElem.style.borderBottom = `1px solid ${theme.borderColor}`
   }
 
   public flush(
@@ -319,6 +317,7 @@ export class TabBar {
       this.flush(false, true, true);
     }
 
+    this.onTabChange()
     return true;
   }
 
@@ -328,6 +327,7 @@ export class TabBar {
       this.focusTab = tab;
       this.focusTab?.setFocus(true);
       this.flush(false, true, true);
+      this.onTabChange()
     }
   }
 
@@ -374,6 +374,7 @@ export class TabBar {
               this.moved = this.moved.filter(o => o.id !== tab.id);
               this.moved.splice(index, 0, tab);
               this.flush(true, true, true);
+              this.onTabChange();
             }
             return true;
           } else {
@@ -381,6 +382,16 @@ export class TabBar {
           }
 
   }
+
+    private onTabChange() {
+        let params = new Array<string>()
+
+        for (let i = 0; i < this.moved.length; i++) {
+            params.push(this.moved[i].getParam())
+        }
+
+        this.onChange(this.focusTab?.getParam() || "",params)
+    }
 
   public getTabByPoint(x: number, y: number): Tab | undefined {
     let array: Array<Tab> = [];
