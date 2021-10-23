@@ -14,16 +14,11 @@ const { SubMenu } = Menu;
 const styles = {
     bar: {
         overflow: "hidden auto",
-        // flex: "1 1 0",
-        //borderLeft: "1px solid var(--Vbot-PrimaryColor)",
         borderRight: "1px solid var(--Vbot-BorderColor)",
-       // borderBottom: "1px solid var(--Vbot-PrimaryColor)",
     },
     content: {
         overflow: "hidden auto",
         flex: "1 1 0",
-       // borderTop: "1px solid var(--Vbot-BorderColor)",
-        // borderBottom: "1px solid var(--Vbot-PrimaryColor)",
     }
 }
 
@@ -39,13 +34,13 @@ class Data {
         this.selectKeys = []
         this.kind = ""
         this.id = ""
-        this.openKeyPath(["home"])
+        this.openKeyPath(["server.list"])
     }
 
     reset() {
         runInAction(() => {
             this.openKeys = [""]
-            this.selectKeys = ["home"]
+            this.selectKeys = ["server.list"]
             this.kind = ""
             this.id = ""
         })
