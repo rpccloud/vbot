@@ -4,15 +4,15 @@ import Client from "rpccloud-client-js"
 import { observer } from "mobx-react-lite"
 import { makeAutoObservable, runInAction } from "mobx"
 import { Locale } from "./locale"
-import Main from "./app/main/main"
-import Login from "./app/login"
-import Register from "./app/register"
-import Debug from "./app/debug"
+import Main from "./main/main"
+import Login from "./login"
+import Register from "./register"
+import Debug from "./debug"
 import { ConfigProvider } from "antd"
-import StartPage from "./app/start"
+import StartPage from "./start"
 import { RPCAny } from "rpccloud-client-js/build/types"
 
-import Theme, { ThemeConfig } from "./ui/theme/config";
+import Theme, { ThemeConfig } from "../ui/theme/config";
 
 const routeMap: Map<string, any> = new Map([
     ["start", (<StartPage />)],

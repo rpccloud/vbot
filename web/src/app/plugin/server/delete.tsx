@@ -3,7 +3,7 @@ import React from "react";
 import { message } from 'antd';
 import { observer } from "mobx-react-lite";
 import Card from "../../../ui/component/Card";
-import { AppUser } from "../../../AppManager";
+import { AppUser } from "../../AppManager";
 
 interface ServerDeleteProps {
     param: any,

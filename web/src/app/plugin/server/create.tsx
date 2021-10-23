@@ -11,7 +11,7 @@ import { message } from 'antd';
 import { observer } from "mobx-react-lite";
 import Card from "../../../ui/component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
-import { AppUser } from "../../../AppManager";
+import { AppUser } from "../../AppManager";
 import { isValidHost, isValidPort } from "../../../util/util";
 import Input from "../../../ui/component/Input";
 

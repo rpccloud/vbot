@@ -10,7 +10,7 @@ import Header from "./plugin/header";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
-import { AppData, AppUser } from "../AppManager";
+import { AppData, AppUser } from "./AppManager";
 import Card from "../ui/component/Card";
 import { delay } from "../util/util";
 import Input from "../ui/component/Input";

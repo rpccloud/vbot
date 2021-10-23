@@ -11,7 +11,7 @@ import Header from "./plugin/header";
 import { observer } from "mobx-react-lite";
 import Card from "../ui/component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
-import { AppData, AppUser } from "../AppManager";
+import { AppData, AppUser } from "./AppManager";
 import { RPCMap } from "rpccloud-client-js/build/types";
 import { delay } from "../util/util";
 import Input from "../ui/component/Input";
