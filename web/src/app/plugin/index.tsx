@@ -1,4 +1,5 @@
 import React from "react";
+import Home from "./home/home";
 import ServerCreate from "./server/create";
 import ServerList from "./server/list";
 import ServerShow from "./server/show";
@@ -8,14 +9,16 @@ interface PluginProps {
     param: any,
 }
 
-function getPlugin(props: PluginProps): any {
+export function getPlugin(props: PluginProps): any {
     switch (props.kind) {
+        case "home":
+            return <Home />
         case "server.create":
-            return (<ServerCreate param={props.param} />)
+            return <ServerCreate param={props.param} />
         case "server.show":
-            return (<ServerShow param={props.param} />)
+            return <ServerShow param={props.param} />
         case "server.list":
-            return (<ServerList param={props.param} />)
+            return <ServerList param={props.param} />
         default:
             return (
                 <div className="vbot-fill-auto vbot-container-center ">

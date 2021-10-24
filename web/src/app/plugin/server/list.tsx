@@ -15,6 +15,7 @@ import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import ServerCreate from "./create";
 import ServerDelete from "./delete";
+import { getChannel } from "../../../ui/event/event";
 
 class Data {
     createModal: boolean
@@ -85,6 +86,10 @@ class Data {
                 this.loading = false
             })
         }
+    }
+
+    view(id: string) {
+        getChannel("vbot-browser")?.call("AddTab", `server.show:${id}`)
     }
 }
 
@@ -169,7 +174,7 @@ const columns = [
                         shape="circle"
                         size="small"
                         icon={<EyeOutlined />}
-                        onClick={(e) => {alert(JSON.stringify(data))}}
+                        onClick={(e) => {data.view(id)}}
                     />
                 </Tooltip>
 
@@ -187,7 +192,6 @@ const columns = [
                     />
                 </Tooltip>
             </>
-
         ),
     },
 ];

@@ -226,8 +226,9 @@ export class Tab {
     return true;
   }
 
+
   public getParam(): string {
-      return this.param
+     return `${this.param}:${this.id}`
   }
 
   public getFocusTimeMS(): number {

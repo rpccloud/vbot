@@ -386,6 +386,10 @@ export class TabBar {
     private onTabChange() {
         let params = new Array<string>()
 
+        if (this.home) {
+            params.push(this.home.getParam())
+        }
+
         for (let i = 0; i < this.moved.length; i++) {
             params.push(this.moved[i].getParam())
         }

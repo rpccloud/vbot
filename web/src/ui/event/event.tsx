@@ -1,5 +1,5 @@
 
-type Handler = (...args: Array<any>) => any
+type Handler = (...args: any) => any
 const channelMap = new Map<string, Map<string, Map<number, Handler>>>()
 
 export function debugChannelMap() {
@@ -87,6 +87,25 @@ export class EventChannel {
         eventMap.set(handlerID, fn)
 
         return new EventListener(this.channelID, eventName, handlerID)
+    }
+
+    call(eventName: string, ...args: any): Array<any> {
+        let ret = new Array<any>()
+        const channel = channelMap.get(this.channelID)
+        if (!channel) {
+            return ret
+        }
+
+        let eventMap = channel.get(eventName)
+        if (!eventMap) {
+            return ret
+        }
+
+        eventMap.forEach(handler => {
+            ret.push(handler(...args))
+        })
+
+        return ret
     }
 
     close(): boolean {
