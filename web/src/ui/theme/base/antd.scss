@@ -1,3 +1,11 @@
+.ant-modal-mask {
+    z-index: 4294967296000 * 10
+}
+
+.ant-modal-wrap {
+    z-index: 4294967296000 * 11
+}
+
 .ant-menu {
     color: var(--Vbot-FontColor) !important;
     background-color: transparent !important;

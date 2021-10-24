@@ -10,20 +10,20 @@ import "./component/icon.scss"
 export const config = {
     light: {
         default: {
-            primaryColor: "rgb(24, 144, 255)",
+            primaryColor: "rgb(125, 60, 152)",
             infoColor: "rgb(44, 105, 238)",
             successColor: "rgb(27, 199, 21)",
             processingColor: "rgb(218, 189, 24)",
             errorColor: "rgb(236, 20, 20)",
             warningColor: "rgb(185, 78, 64)",
-            backgroundColor: "rgb(230, 232, 235)",
-            backgroundColorLighten: "rgb(255, 255, 255)",
-            backgroundColorDarken: "rgb(215, 217, 220)",
+            backgroundColor: "rgb(235, 237, 240)",
+            backgroundColorLighten: "rgb(250, 252, 255)",
+            backgroundColorDarken: "rgb(225, 227, 230)",
             fontColor: "rgba(0, 0, 0, 0.8)",
             fontColorLighten:  "rgba(0, 0, 0, 0.6)",
             fontColorDarken:  "rgba(0, 0, 0, 1)",
-            borderColor: "rgb(150, 150, 150)",
-            borderColorLighten: "rgb(180, 180, 180)",
+            borderColor: "rgb(180, 180, 180)",
+            borderColorLighten: "rgb(200, 200, 200)",
             borderColorDarken: "rgb(100, 100, 100)",
             shadowColor: "rgb(170, 170, 170)",
             dividerColor: "rgb(210, 210, 210)",
@@ -176,7 +176,7 @@ export class ThemeConfig {
         return ret
     }
 
-    private static instance = new ThemeConfig(config.dark.default)
+    private static instance = new ThemeConfig(config.light.default)
     public static get(): ThemeConfig {
         return ThemeConfig.instance
     }
