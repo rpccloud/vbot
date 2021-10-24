@@ -4,9 +4,11 @@ import {
     LaptopOutlined,
     UserOutlined,
 } from '@ant-design/icons';
-import Plugin from ".."
+import Plugin, { PluginProps } from ".."
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react";
+import { getChannel } from "../../../ui/event/event";
+import { AiOutlineHome } from "@react-icons/all-files/ai/AiOutlineHome";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -72,7 +74,9 @@ class Data {
 
 const data = new Data()
 
-const Home = observer(() => {
+const Home = observer((props: PluginProps) => {
+    getChannel("vbot-browser")?.call("SetTitle", props.tabID, <AiOutlineHome/>, "Vbot")
+
     const siderView = (
         <Sider width={190}>
             <Menu mode="inline" selectedKeys={data.selectKeys}  openKeys={data.openKeys}>

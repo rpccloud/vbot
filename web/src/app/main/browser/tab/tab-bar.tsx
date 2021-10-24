@@ -2,6 +2,7 @@ import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
 import tabConfig, { IPoint } from "./defs";
 import { Tab } from "./tab";
 import { ThemeConfig } from "../../../../ui/theme/config";
+import { PluginProps } from "../../../plugin";
 
 export class TabBar {
   private isInit: boolean;
@@ -27,9 +28,9 @@ export class TabBar {
   private movedMin: number;
   private movedMax: number;
   private onWindowResize: () => void;
-  private onChange: (focus: string, list: Array<string>) => void
+  private onChange: (focus: number, list: Array<PluginProps>) => void
 
-  public constructor(onChange: (focus: string, list: Array<string>) => void) {
+  public constructor(onChange: (focus: number, list: Array<PluginProps>) => void) {
     const ctx = document.createElement("canvas").getContext("2d");
     this.isInit = true;
     this.ctx = ctx ? ctx : undefined;
@@ -253,22 +254,20 @@ export class TabBar {
   }
 
   public addTab(
-    isHome: boolean,
-    param: string,
+    param: PluginProps,
     focus: boolean,
-    title: string,
-    icon: React.ReactElement,
     afterId?: number,
   ): boolean {
-    const tab = new Tab(this, isHome, getSeed(), title,  icon, param);
+    param.tabID = getSeed()
+    const tab = new Tab(this, param);
     this.rootElem.appendChild(tab.getRootElem());
-    if (isHome) {
+    if (param.kind === "home") {
         this.home = tab;
     } else {
         if (afterId === 0) {
             this.moved.splice(0, 0, tab);
           } else {
-            let movIndex = this.moved.findIndex(o => o.id === afterId);
+            let movIndex = this.moved.findIndex(o => o.getParam().tabID === param.tabID);
             if (movIndex < 0) {
               movIndex = this.moved.length - 1;
             }
@@ -287,19 +286,19 @@ export class TabBar {
   }
 
   public deleteTab(pageId: number): boolean {
-    let tab: Tab | undefined = this.moved.find(o => o.id === pageId)
+    let tab: Tab | undefined = this.moved.find(o => o.getParam().tabID === pageId)
 
     if (pageId === 0 && (tab = this.home)) {
       this.home = undefined;
     } else if (!!tab) {
-      this.moved = this.moved.filter(o => o.id !== pageId);
+      this.moved = this.moved.filter(o => o.getParam().tabID !== pageId);
     } else {
       return false;
     }
 
     tab.destroy();
 
-    if (this.focusTab && this.focusTab.id === pageId) {
+    if (this.focusTab && this.focusTab.getParam().tabID === pageId) {
       let biggestFocusTime = 0;
       let lastFocus: Tab | undefined;
       for (const it of [this.home, ...this.moved]) {
@@ -360,7 +359,7 @@ export class TabBar {
   }
 
   public setTabX(tab: Tab, x: number): boolean {
-      if (tab.isHome) {
+      if (tab.isHome()) {
           return false
       } else if (this.moved.length > 0) {
             x = range(
@@ -371,7 +370,7 @@ export class TabBar {
             tab.setX(x);
             const index = Math.round((x - this.movedMin) / this.netMovedWidth);
             if (tab.index !== index) {
-              this.moved = this.moved.filter(o => o.id !== tab.id);
+              this.moved = this.moved.filter(o => o.getParam().tabID !== tab.getParam().tabID);
               this.moved.splice(index, 0, tab);
               this.flush(true, true, true);
               this.onTabChange();
@@ -384,7 +383,7 @@ export class TabBar {
   }
 
     private onTabChange() {
-        let params = new Array<string>()
+        let params = new Array<PluginProps>()
 
         if (this.home) {
             params.push(this.home.getParam())
@@ -394,7 +393,14 @@ export class TabBar {
             params.push(this.moved[i].getParam())
         }
 
-        this.onChange(this.focusTab?.getParam() || "",params)
+        this.onChange(this.focusTab?.getParam().tabID!!, params)
+    }
+
+    public getTabByID(id: number): Tab | undefined {
+        if (this.home?.getParam().tabID === id) {
+            return this.home
+        }
+        return this.moved.find(o => o.getParam().tabID === id)
     }
 
   public getTabByPoint(x: number, y: number): Tab | undefined {

@@ -1,24 +1,28 @@
 import React from "react";
 import Home from "./home/home";
 import ServerCreate from "./server/create";
+import ServerDelete from "./server/delete";
 import ServerList from "./server/list";
 import ServerShow from "./server/show";
 
-interface PluginProps {
+export interface PluginProps {
     kind: string,
-    param: any,
+    param?: any,
+    tabID?: number,
 }
 
-export function getPlugin(props: PluginProps): any {
+const Plugin = (props: PluginProps) => {
     switch (props.kind) {
         case "home":
-            return <Home />
+            return <Home kind={props.kind} param={props.param} tabID={props.tabID} />
         case "server.create":
-            return <ServerCreate param={props.param} />
+            return <ServerCreate kind={props.kind} param={props.param} tabID={props.tabID} />
         case "server.show":
-            return <ServerShow param={props.param} />
+            return <ServerShow kind={props.kind} param={props.param} tabID={props.tabID} />
+        case "server.delete":
+            return <ServerDelete kind={props.kind} param={props.param} tabID={props.tabID} />
         case "server.list":
-            return <ServerList param={props.param} />
+            return <ServerList kind={props.kind} param={props.param} tabID={props.tabID} />
         default:
             return (
                 <div className="vbot-fill-auto vbot-container-center ">
@@ -33,14 +37,6 @@ export function getPlugin(props: PluginProps): any {
                 </div>
             )
     }
-}
-
-const Plugin = (props: PluginProps) => {
-    return (
-        <div className="vbot-fill-auto">
-            {getPlugin(props)}
-        </div>
-    )
 }
 
 export default Plugin

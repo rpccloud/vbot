@@ -14,6 +14,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { AppUser } from "../../AppManager";
 import { isValidHost, isValidPort } from "../../../util/util";
 import Input from "../../../ui/component/Input";
+import { PluginProps } from "..";
 
 class Data {
     loading: boolean
@@ -83,11 +84,7 @@ class Data {
 
 const data = new Data()
 
-interface ServerCreateProps {
-    param: any,
-}
-
-const ServerCreate = observer((props: ServerCreateProps) => {
+const ServerCreate = observer((props: PluginProps) => {
     return (
         <Card
             title="Add SSH Server"

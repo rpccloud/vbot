@@ -1,10 +1,7 @@
 import React from "react";
+import { PluginProps } from "..";
 
-interface ServerShowProps {
-    param: any,
-}
-
-const ServerShow = (props: ServerShowProps) => {
+const ServerShow = (props: PluginProps) => {
     return (
         <div>
             Plugin server.show

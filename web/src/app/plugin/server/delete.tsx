@@ -4,12 +4,9 @@ import { message } from 'antd';
 import { observer } from "mobx-react-lite";
 import Card from "../../../ui/component/Card";
 import { AppUser } from "../../AppManager";
+import { PluginProps } from "..";
 
-interface ServerDeleteProps {
-    param: any,
-}
-
-const ServerDelete = observer((props: ServerDeleteProps) => {
+const ServerDelete = observer((props: PluginProps) => {
     let item = props.param.item
     return (
         <Card

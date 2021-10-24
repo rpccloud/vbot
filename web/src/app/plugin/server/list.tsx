@@ -13,9 +13,8 @@ import {
 
 import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
-import ServerCreate from "./create";
-import ServerDelete from "./delete";
 import { getChannel } from "../../../ui/event/event";
+import Plugin, { PluginProps } from "..";
 
 class Data {
     createModal: boolean
@@ -89,7 +88,7 @@ class Data {
     }
 
     view(id: string) {
-        getChannel("vbot-browser")?.call("AddTab", `server.show:${id}`)
+        getChannel("vbot-browser")?.call("AddTab",  {kind: "server.show", param: id})
     }
 }
 
@@ -196,11 +195,7 @@ const columns = [
     },
 ];
 
-interface ServerListProps {
-    param: any,
-}
-
-const ServerList = observer((props: ServerListProps) => {
+const ServerList = observer((props: PluginProps) => {
     data.init()
 
     const emptyView = (
@@ -235,7 +230,8 @@ const ServerList = observer((props: ServerListProps) => {
                     />
                 </Tooltip>
                 <Modal visible={data.createModal} className="vbot-modal">
-                    <ServerCreate
+                    <Plugin
+                        kind="server.create"
                         param={{goBack: (ok: boolean) => {
                             data.setCreateModal(false)
 
@@ -246,7 +242,8 @@ const ServerList = observer((props: ServerListProps) => {
                     />
                 </Modal>
                 <Modal visible={data.deleteModal} className="vbot-modal">
-                    <ServerDelete
+                    <Plugin
+                        kind="server.delete"
                         param={{
                             goBack: (ok: boolean) => {
                                 data.setDeleteModal(false)

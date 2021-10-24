@@ -6,24 +6,11 @@ import { AiOutlineHome } from "@react-icons/all-files/ai/AiOutlineHome";
 import { RiComputerLine } from "@react-icons/all-files/ri/RiComputerLine";
 import { AiOutlineBorder } from "@react-icons/all-files/ai/AiOutlineBorder";
 import { EventChannel, registerChannel } from "../../../ui/event/event";
-import { getPlugin } from "../../plugin";
-
-export function getBrowserPageByID(id: string): {icon: React.ReactElement, body: React.ReactElement} {
-    const arr = id.split(":")
-    const body = getPlugin({kind:arr[0], param: arr[1]})
-    switch(arr[0]) {
-        case "home":
-            return {icon: <AiOutlineHome/>, body: body}
-        case "server.show":
-            return {icon: <RiComputerLine/>, body: body}
-        default:
-            return {icon: <AiOutlineBorder/>, body: body}
-    }
-}
+import Plugin, { PluginProps } from "../../plugin";
 
 interface BrowserState {
-    list: Array<string>
-    focus: string
+    list: Array<PluginProps>
+    focusTabID: number
 }
 
 class Browser extends React.Component<{}, BrowserState> {
@@ -33,27 +20,30 @@ class Browser extends React.Component<{}, BrowserState> {
 
     constructor(props: any) {
         super(props);
-        this.tabBar = new TabBar((focus: string, list: Array<string>) => {
+        this.tabBar = new TabBar((focusTabID: number, list: Array<PluginProps>) => {
             this.setState({
                 list: list,
-                focus: focus,
+                focusTabID: focusTabID,
             })
         })
         this.tabBarRef = React.createRef()
         this.state = {
-            list: new Array<string>(),
-            focus: "",
+            list: new Array<PluginProps>(),
+            focusTabID: -1,
         }
         this.channel = null
     }
 
     componentDidMount() {
         this.channel = registerChannel("vbot-browser")
-        this.channel?.listen("AddTab", (param: string) => {
-            this.tabBar.addTab(false, param, true, "", getBrowserPageByID(param).icon)
+        this.channel?.listen("AddTab", (param: PluginProps) => {
+            this.tabBar.addTab(param, true)
+        })
+        this.channel?.listen("SetTitle", (tabID: number, icon: React.ReactElement, text: string) => {
+            this.tabBar.getTabByID(tabID)?.setTitle(icon, text)
         })
         this.tabBarRef.current.appendChild(this.tabBar.getRootElem())
-        this.tabBar.addTab(true, "home", true, "Vbot", getBrowserPageByID("home").icon)
+        this.tabBar.addTab({kind: "home"}, true)
     }
 
     componentWillUnmount() {
@@ -68,9 +58,10 @@ class Browser extends React.Component<{}, BrowserState> {
                 <div ref={this.tabBarRef}/>
                 {
                     this.state.list.map(it => {
+
                         return (
-                            <div style={{flex: "1 0 0", overflow: "auto", display: (it === this.state.focus) ? "flex" : "none"}}>
-                                {getBrowserPageByID(it).body}
+                            <div key={it.tabID} style={{flex: "1 0 0", overflow: "auto", display: (it.tabID === this.state.focusTabID) ? "flex" : "none"}}>
+                                <Plugin kind={it.kind} param={it.param} tabID={it.tabID}  />
                             </div>
                         )
                     })

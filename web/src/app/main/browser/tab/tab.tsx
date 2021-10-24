@@ -5,6 +5,7 @@ import { RoundButton } from "./button";
 import { TabBar } from "./tab-bar";
 import { ThemeConfig } from "../../../../ui/theme/config";
 import ReactDOM from "react-dom";
+import { PluginProps } from "../../../plugin";
 
 class Title {
   private x: number;
@@ -16,7 +17,7 @@ class Title {
   private spanElem: HTMLSpanElement;
   private iconElem: HTMLSpanElement;
 
-  public constructor(icon: React.ReactElement, text: string) {
+  public constructor() {
     this.x = 0;
     this.width = 0;
     this.isFocus = false;
@@ -35,7 +36,6 @@ class Title {
     this.textElem.style.lineHeight = `${tabConfig.titleHeight}px`
     this.spanElem = document.createElement("span");
     this.spanElem.style.float = "left"
-    this.spanElem.textContent = text;
     this.textElem.appendChild(this.spanElem);
     this.rootElem.appendChild(this.textElem)
 
@@ -48,13 +48,17 @@ class Title {
     this.iconElem.style.textAlign = "center"
     this.rootElem.appendChild( this.iconElem )
 
+
+  }
+
+  public setTitle(icon: React.ReactElement, text: string) {
+    this.spanElem.textContent = text;
     ReactDOM.render(
-        <>
-          <span>{icon}</span> {text}
-        </>,
+        <span>{icon}</span>,
         this.iconElem,
     );
   }
+
 
   public getRootElem(): HTMLDivElement {
     return this.rootElem;
@@ -162,9 +166,7 @@ class CloseButton extends RoundButton {
 }
 
 export class Tab {
-    public id: number;
-    public isHome: boolean;
-  private param: string;
+  private param: PluginProps;
 
   private display: boolean;
   private isAnimate: boolean;
@@ -187,9 +189,7 @@ export class Tab {
   private title: Title;
   private closeButton: CloseButton;
 
-  public constructor(tabBar: TabBar,isHome: boolean, id: number, title: string, icon: React.ReactElement, param: string) {
-      this.id = id;
-    this.isHome = isHome;
+  public constructor(tabBar: TabBar, param: PluginProps) {
     this.param = param
     this.display = true;
     this.isAnimate = false;
@@ -210,9 +210,9 @@ export class Tab {
 
     this.bgElem = document.createElement("canvas");
     this.bgElem.style.transition = "opacity 0.3s ease-out";
-    this.title = new Title(icon, title);
+    this.title = new Title();
     this.closeButton = new CloseButton(() => {
-      tabBar.deleteTab(id);
+      tabBar.deleteTab(this.param.tabID!!);
     });
 
     this.rootElem.appendChild(this.bgElem);
@@ -226,9 +226,12 @@ export class Tab {
     return true;
   }
 
+  public setTitle(icon: React.ReactElement, text: string) {
+      this.title.setTitle(icon, text)
+  }
 
-  public getParam(): string {
-     return `${this.param}:${this.id}`
+  public getParam(): PluginProps {
+     return this.param
   }
 
   public getFocusTimeMS(): number {
@@ -274,10 +277,14 @@ export class Tab {
     }
   }
 
+  public isHome(): boolean {
+    return this.param.kind === "home"
+  }
+
   public getWeight(): number {
     let ret = this.index;
 
-    if (this.isHome) {
+    if (this.isHome()) {
         ret += 42949672960;
     }
 
@@ -333,7 +340,7 @@ export class Tab {
 
     // flush close button
     this.closeButton.setFocus(this.isFocus);
-    const showClose = !this.isHome &&
+    const showClose = !this.isHome() &&
       (this.isFocus || this.width > tabConfig.tabDisappearCloseWidth);
     if (showClose) {
       rightX -= tabConfig.closeBtnWidth;
