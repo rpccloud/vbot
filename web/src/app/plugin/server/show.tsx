@@ -1,12 +1,17 @@
 import React from "react";
 import { PluginProps } from "..";
+import { RiComputerLine } from "@react-icons/all-files/ri/RiComputerLine";
+import { getChannel } from "../../../ui/event/event";
 
 const ServerShow = (props: PluginProps) => {
-    return (
-        <div>
-            Plugin server.show
-        </div>
-    )
-}
+    getChannel("vbot-browser")?.call(
+        "SetTitle",
+        props.tabID,
+        <RiComputerLine />,
+        "23234234134345345345x"
+    );
 
-export default ServerShow
+    return <div>Plugin server.show</div>;
+};
+
+export default ServerShow;

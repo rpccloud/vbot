@@ -1,26 +1,26 @@
 export interface IPoint {
-  x: number;
-  y: number;
+    x: number;
+    y: number;
 }
 
 export interface ISize {
-  width: number;
-  height: number;
+    width: number;
+    height: number;
 }
 
 export interface IButtonConfig {
-  size: ISize;
-  bgColor: string;
-  focusOpacity: string;
-  mouseOverOpacity: string;
-  mouseOutOpacity: string;
+    size: ISize;
+    bgColor: string;
+    focusOpacity: string;
+    mouseOverOpacity: string;
+    mouseOutOpacity: string;
 }
 
 export interface ITitleConfig {
-  height: number;
-  fontSize: number;
-  fontColor: string;
-  focusFontColor: string;
+    height: number;
+    fontSize: number;
+    fontColor: string;
+    focusFontColor: string;
 }
 
 const tabConfig = {
@@ -45,6 +45,6 @@ const tabConfig = {
     closeBtnWidth: 18,
     closeBtnHeight: 18,
     closeBtnSize: 7,
-}
+};
 
-export default tabConfig
+export default tabConfig;
