@@ -1,13 +1,8 @@
 import React from "react";
 
-import {
-    UserOutlined,
-    LockOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
-import { message } from 'antd';
-import Footer from "./plugin/footer";
-import Header from "./plugin/header";
+import { message } from "antd";
 import { observer } from "mobx-react-lite";
 import Card from "../ui/component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
@@ -15,108 +10,124 @@ import { AppData, AppUser } from "./AppManager";
 import { RPCMap } from "rpccloud-client-js/build/types";
 import { delay } from "../util/util";
 import Input from "../ui/component/Input";
+import Plugin from "./plugin";
 
 class Data {
-    user: string
-    password: string
-    loading: boolean
+    user: string;
+    password: string;
+    loading: boolean;
 
     constructor() {
-        makeAutoObservable(this)
-        this.user = "admin"
-        this.password = "Test123456"
-        this.loading = false
+        makeAutoObservable(this);
+        this.user = "admin";
+        this.password = "Test123456";
+        this.loading = false;
     }
 
     setLoading(loading: boolean) {
         runInAction(() => {
-            this.loading = loading
-        })
+            this.loading = loading;
+        });
     }
 
     setUser(user: string) {
         runInAction(() => {
-            this.user = user
-        })
+            this.user = user;
+        });
     }
 
     setPassword(password: string) {
         runInAction(() => {
-            this.password = password
-        })
+            this.password = password;
+        });
     }
 
     reset() {
         runInAction(() => {
-            this.user = ""
-            this.password = ""
-        })
+            this.user = "";
+            this.password = "";
+        });
     }
 }
 
-const data = new Data()
+const data = new Data();
 
 const Login = observer(() => {
     return (
-        <div className="vbot-fill-viewport" style={{display: "flex", flexFlow: "column"}} >
-            <Header/>
-            <div style={{display: "flex", flex:"1 0 0", flexFlow: "row"}} className="vbot-container-center">
-            <Card
-                title="Login"
-                width={460}
-                nextName="Login"
-                canNext={!!data.user && !!data.password && !data.loading}
-                onNext={async () => {
-                    try {
-                        let ret = await AppUser.send(
-                            8000, "#.user:Login", data.user, data.password,
-                        )
-                        if (ret) {
-                            const userName = (ret as RPCMap).get("name")
-                            const sessionID = (ret as RPCMap).get("sessionID")
-                            AppUser.setUserName(userName as string)
-                            AppUser.setSessionID(sessionID as string)
-                            AppData.get().setRootRoute("main")
-                        } else {
-                            message.error("Username or password error")
-                            await delay(2000)
-                            AppData.get().setRootRoute("start")
-                        }
-                    } catch(e) {
-                        message.error((e as any).getMessage())
-                        await delay(2000)
-                        AppData.get().setRootRoute("start")
-                    } finally {
-                        data.reset()
-                    }
-                }}
+        <div
+            className="vbot-fill-viewport"
+            style={{ display: "flex", flexFlow: "column" }}
+        >
+            <Plugin kind="header" />
+            <div
+                style={{ display: "flex", flex: "1 0 0", flexFlow: "row" }}
+                className="vbot-container-center"
             >
-                <div style={{height:20}}/>
-                <Input
-                    type="text"
-                    size="medium"
-                    edit={true}
-                    value={data.user}
-                    placeholder="Input Username"
-                    prefixIcon={<UserOutlined/>}
-                    onChange={(e) => {  data.setUser(e.target.value) }}
-                />
-                <div style={{height:20}}/>
-                <Input
-                    type="password"
-                    size="medium"
-                    edit={true}
-                    value={data.password}
-                    placeholder="Input password"
-                    prefixIcon={<LockOutlined/>}
-                    onChange={(e) => { data.setPassword(e.target.value) }}
-                />
-                <div style={{height:20}}/>
-            </Card>
+                <Card
+                    title="Login"
+                    width={460}
+                    nextName="Login"
+                    canNext={!!data.user && !!data.password && !data.loading}
+                    onNext={async () => {
+                        try {
+                            let ret = await AppUser.send(
+                                8000,
+                                "#.user:Login",
+                                data.user,
+                                data.password
+                            );
+                            if (ret) {
+                                const userName = (ret as RPCMap).get("name");
+                                const sessionID = (ret as RPCMap).get(
+                                    "sessionID"
+                                );
+                                AppUser.setUserName(userName as string);
+                                AppUser.setSessionID(sessionID as string);
+                                AppData.get().setRootRoute("main");
+                            } else {
+                                message.error("Username or password error");
+                                await delay(2000);
+                                AppData.get().setRootRoute("start");
+                            }
+                        } catch (e) {
+                            message.error((e as any).getMessage());
+                            await delay(2000);
+                            AppData.get().setRootRoute("start");
+                        } finally {
+                            data.reset();
+                        }
+                    }}
+                >
+                    <div style={{ height: 20 }} />
+                    <Input
+                        type="text"
+                        size="medium"
+                        edit={true}
+                        value={data.user}
+                        placeholder="Input Username"
+                        prefixIcon={<UserOutlined />}
+                        onChange={(e) => {
+                            data.setUser(e.target.value);
+                        }}
+                    />
+                    <div style={{ height: 20 }} />
+                    <Input
+                        type="password"
+                        size="medium"
+                        edit={true}
+                        value={data.password}
+                        placeholder="Input password"
+                        prefixIcon={<LockOutlined />}
+                        onChange={(e) => {
+                            data.setPassword(e.target.value);
+                        }}
+                    />
+                    <div style={{ height: 20 }} />
+                </Card>
             </div>
-            <Footer/>
+            <Plugin kind="footer" />
         </div>
-    )
-})
+    );
+});
 
-export default Login
+export default Login;

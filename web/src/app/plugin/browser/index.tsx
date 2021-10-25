@@ -1,8 +1,8 @@
 import React from "react";
 
 import { TabBar } from "./tab/tab-bar";
-import { EventChannel, registerChannel } from "../../ui/event/event";
-import Plugin, { PluginProps } from "../plugin";
+import { EventChannel, registerChannel } from "../../../ui/event/event";
+import Plugin, { PluginProps } from "..";
 
 interface BrowserState {
     list: Array<PluginProps>;

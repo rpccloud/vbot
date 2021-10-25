@@ -1,6 +1,6 @@
 import React from "react";
 import Footer from "./plugin/footer";
-import Browser from "./browser";
+import Browser from "./plugin/browser";
 
 
 const Debug = () => (
