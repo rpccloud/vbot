@@ -1,9 +1,9 @@
 import tabConfig, { IButtonConfig } from "./defs";
 import { RoundButton } from "./button";
 import { TabBar } from "./tab-bar";
-import { ThemeConfig } from "../../../../ui/theme/config";
+import { ThemeConfig } from "../../../ui/theme/config";
 import ReactDOM from "react-dom";
-import { PluginProps } from "../..";
+import { PluginProps } from "..";
 
 class Title {
     private x: number;

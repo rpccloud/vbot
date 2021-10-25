@@ -1,8 +1,8 @@
 import { range, makeTabPath, getSeed, getMousePointer } from "./utils";
 import tabConfig, { IPoint } from "./defs";
 import { Tab } from "./tab";
-import { ThemeConfig } from "../../../../ui/theme/config";
-import { PluginProps } from "../..";
+import { ThemeConfig } from "../../../ui/theme/config";
+import { PluginProps } from "..";
 
 export class TabBar {
     private isInit: boolean;
