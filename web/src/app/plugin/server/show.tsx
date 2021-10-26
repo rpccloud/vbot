@@ -2,6 +2,7 @@ import React from "react";
 import { PluginProps } from "..";
 import { RiComputerLine } from "@react-icons/all-files/ri/RiComputerLine";
 import { getChannel } from "../../../ui/event/event";
+import { XTerm } from "../terminal";
 
 const ServerShow = (props: PluginProps) => {
     getChannel("vbot-browser")?.call(
@@ -11,7 +12,11 @@ const ServerShow = (props: PluginProps) => {
         "23234234134345345345x"
     );
 
-    return <div>Plugin server.show</div>;
+    return (
+        <div>
+            <XTerm value="hello xterm" />
+        </div>
+    );
 };
 
 export default ServerShow;

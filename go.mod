@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/boltdb/bolt v1.3.1
+	github.com/gorilla/websocket v1.4.2
 	github.com/rpccloud/assert v0.0.1
 	github.com/rpccloud/rpc v0.0.8
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5
