@@ -2,10 +2,9 @@ import React from "react";
 import { makeAutoObservable } from "mobx";
 import { ConfigProvider } from "antd";
 
-import 'antd/dist/antd.variable.min.css'
-import "./base/base.scss"
-import "./base/antd.scss"
-import "./component/icon.scss"
+import "antd/dist/antd.variable.min.css";
+import "./base/base.scss";
+import "./base/antd.scss";
 
 export const config = {
     light: {
@@ -20,16 +19,16 @@ export const config = {
             backgroundColorLighten: "rgb(250, 252, 255)",
             backgroundColorDarken: "rgb(225, 227, 230)",
             fontColor: "rgba(0, 0, 0, 0.8)",
-            fontColorLighten:  "rgba(0, 0, 0, 0.6)",
-            fontColorDarken:  "rgba(0, 0, 0, 1)",
+            fontColorLighten: "rgba(0, 0, 0, 0.6)",
+            fontColorDarken: "rgba(0, 0, 0, 1)",
             borderColor: "rgb(180, 180, 180)",
             borderColorLighten: "rgb(200, 200, 200)",
             borderColorDarken: "rgb(100, 100, 100)",
             shadowColor: "rgb(170, 170, 170)",
             dividerColor: "rgb(210, 210, 210)",
             disabledColor: "rgb(195, 195, 195)",
-            disabledBackground: "rgb(235, 235, 235)"
-        }
+            disabledBackground: "rgb(235, 235, 235)",
+        },
     },
     dark: {
         default: {
@@ -51,112 +50,127 @@ export const config = {
             shadowColor: "rgb(150, 150, 150)",
             dividerColor: "rgb(110, 110, 110)",
             disabledColor: "rgb(100, 100, 100)",
-            disabledBackground: "rgb(40, 40, 40)"
-        }
-    }
-}
+            disabledBackground: "rgb(40, 40, 40)",
+        },
+    },
+};
 
 export class ThemeConfig {
-    primaryColor: string
-    infoColor: string
-    successColor: string
-    processingColor: string
-    errorColor: string
-    warningColor: string
-    backgroundColor: string
-    backgroundColorLighten: string
-    backgroundColorDarken: string
-    fontColor: string
-    fontColorLighten: string
-    fontColorDarken: string
-    borderColor: string
-    borderColorLighten: string
-    borderColorDarken: string
-    shadowColor: string
-    dividerColor: string
-    disabledColor: string
-    disabledBackground: string
+    primaryColor: string;
+    infoColor: string;
+    successColor: string;
+    processingColor: string;
+    errorColor: string;
+    warningColor: string;
+    backgroundColor: string;
+    backgroundColorLighten: string;
+    backgroundColorDarken: string;
+    fontColor: string;
+    fontColorLighten: string;
+    fontColorDarken: string;
+    borderColor: string;
+    borderColorLighten: string;
+    borderColorDarken: string;
+    shadowColor: string;
+    dividerColor: string;
+    disabledColor: string;
+    disabledBackground: string;
 
-    fontSizeSmall: string
-    fontSizeMedium: string
-    fontSizeLarge: string
+    fontSizeSmall: string;
+    fontSizeMedium: string;
+    fontSizeLarge: string;
 
-    fontWeightLighter: number
-    fontWeightNormal: number
-    fontWeightBold: number
-    fontWeightBolder: number
+    fontWeightLighter: number;
+    fontWeightNormal: number;
+    fontWeightBold: number;
+    fontWeightBolder: number;
 
     constructor(o: {
-        primaryColor: string,
-        infoColor: string,
-        successColor: string,
-        processingColor: string,
-        errorColor: string,
-        warningColor: string,
-        backgroundColor: string,
-        backgroundColorLighten: string,
-        backgroundColorDarken: string,
-        fontColor: string,
-        fontColorLighten: string,
-        fontColorDarken: string,
-        borderColor: string,
-        borderColorLighten: string,
-        borderColorDarken: string,
-        shadowColor: string,
-        dividerColor: string,
-        disabledColor: string,
-        disabledBackground: string,
+        primaryColor: string;
+        infoColor: string;
+        successColor: string;
+        processingColor: string;
+        errorColor: string;
+        warningColor: string;
+        backgroundColor: string;
+        backgroundColorLighten: string;
+        backgroundColorDarken: string;
+        fontColor: string;
+        fontColorLighten: string;
+        fontColorDarken: string;
+        borderColor: string;
+        borderColorLighten: string;
+        borderColorDarken: string;
+        shadowColor: string;
+        dividerColor: string;
+        disabledColor: string;
+        disabledBackground: string;
     }) {
-        makeAutoObservable(this)
-        this.primaryColor = o.primaryColor
-        this.infoColor = o.infoColor
-        this.successColor = o.successColor
-        this.processingColor = o.processingColor
-        this.errorColor = o.errorColor
-        this.warningColor = o.warningColor
-        this.backgroundColor = o.backgroundColor
-        this.backgroundColorLighten = o.backgroundColorLighten
-        this.backgroundColorDarken = o.backgroundColorDarken
-        this.fontColor = o.fontColor
-        this.fontColorLighten = o.fontColorLighten
-        this.fontColorDarken = o.fontColorDarken
-        this.borderColor = o.borderColor
-        this.borderColorLighten = o.borderColorLighten
-        this.borderColorDarken = o.borderColorDarken
-        this.shadowColor = o.shadowColor
-        this.dividerColor = o.dividerColor
-        this.disabledColor = o.disabledColor
-        this.disabledBackground = o.disabledBackground
+        makeAutoObservable(this);
+        this.primaryColor = o.primaryColor;
+        this.infoColor = o.infoColor;
+        this.successColor = o.successColor;
+        this.processingColor = o.processingColor;
+        this.errorColor = o.errorColor;
+        this.warningColor = o.warningColor;
+        this.backgroundColor = o.backgroundColor;
+        this.backgroundColorLighten = o.backgroundColorLighten;
+        this.backgroundColorDarken = o.backgroundColorDarken;
+        this.fontColor = o.fontColor;
+        this.fontColorLighten = o.fontColorLighten;
+        this.fontColorDarken = o.fontColorDarken;
+        this.borderColor = o.borderColor;
+        this.borderColorLighten = o.borderColorLighten;
+        this.borderColorDarken = o.borderColorDarken;
+        this.shadowColor = o.shadowColor;
+        this.dividerColor = o.dividerColor;
+        this.disabledColor = o.disabledColor;
+        this.disabledBackground = o.disabledBackground;
 
-        this.fontSizeSmall = "12px"
-        this.fontSizeMedium = "16px"
-        this.fontSizeLarge = "22px"
+        this.fontSizeSmall = "12px";
+        this.fontSizeMedium = "16px";
+        this.fontSizeLarge = "22px";
 
-        this.fontWeightLighter = 200
-        this.fontWeightNormal = 400
-        this.fontWeightBold = 700
-        this.fontWeightBolder = 900
+        this.fontWeightLighter = 200;
+        this.fontWeightNormal = 400;
+        this.fontWeightBold = 700;
+        this.fontWeightBolder = 900;
 
-        const docStyle = document.documentElement.style
-        docStyle.setProperty("--Vbot-PrimaryColor", this.primaryColor)
-        docStyle.setProperty("--Vbot-InfoColor", this.infoColor)
-        docStyle.setProperty("--Vbot-SuccessColor", this.successColor)
-        docStyle.setProperty("--Vbot-ProcessingColor", this.processingColor)
-        docStyle.setProperty("--Vbot-ErrorColor", this.errorColor)
-        docStyle.setProperty("--Vbot-WarningColor", this.warningColor)
-        docStyle.setProperty("--Vbot-BackgroundColor", this.backgroundColor)
-        docStyle.setProperty("--Vbot-BackgroundColorLighten", this.backgroundColorLighten)
-        docStyle.setProperty("--Vbot-BackgroundColorDarken", this.backgroundColorDarken)
-        docStyle.setProperty("--Vbot-FontColor", this.fontColor)
-        docStyle.setProperty("--Vbot-FontColorLighten", this.fontColorLighten)
-        docStyle.setProperty("--Vbot-FontColorDarken", this.fontColorDarken)
-        docStyle.setProperty("--Vbot-ShadowColor", this.shadowColor)
-        docStyle.setProperty("--Vbot-BorderColor", this.borderColor)
-        docStyle.setProperty("--Vbot-BorderColorLighten", this.borderColorLighten)
-        docStyle.setProperty("--Vbot-BorderColorDarken", this.borderColorDarken)
-        docStyle.setProperty("--Vbot-DividerColor", this.dividerColor)
-        docStyle.setProperty("--Vbot-DisabledColor", this.disabledColor)
-        docStyle.setProperty("--Vbot-DisabledBackground", this.disabledBackground)
+        const docStyle = document.documentElement.style;
+        docStyle.setProperty("--Vbot-PrimaryColor", this.primaryColor);
+        docStyle.setProperty("--Vbot-InfoColor", this.infoColor);
+        docStyle.setProperty("--Vbot-SuccessColor", this.successColor);
+        docStyle.setProperty("--Vbot-ProcessingColor", this.processingColor);
+        docStyle.setProperty("--Vbot-ErrorColor", this.errorColor);
+        docStyle.setProperty("--Vbot-WarningColor", this.warningColor);
+        docStyle.setProperty("--Vbot-BackgroundColor", this.backgroundColor);
+        docStyle.setProperty(
+            "--Vbot-BackgroundColorLighten",
+            this.backgroundColorLighten
+        );
+        docStyle.setProperty(
+            "--Vbot-BackgroundColorDarken",
+            this.backgroundColorDarken
+        );
+        docStyle.setProperty("--Vbot-FontColor", this.fontColor);
+        docStyle.setProperty("--Vbot-FontColorLighten", this.fontColorLighten);
+        docStyle.setProperty("--Vbot-FontColorDarken", this.fontColorDarken);
+        docStyle.setProperty("--Vbot-ShadowColor", this.shadowColor);
+        docStyle.setProperty("--Vbot-BorderColor", this.borderColor);
+        docStyle.setProperty(
+            "--Vbot-BorderColorLighten",
+            this.borderColorLighten
+        );
+        docStyle.setProperty(
+            "--Vbot-BorderColorDarken",
+            this.borderColorDarken
+        );
+        docStyle.setProperty("--Vbot-DividerColor", this.dividerColor);
+        docStyle.setProperty("--Vbot-DisabledColor", this.disabledColor);
+        docStyle.setProperty(
+            "--Vbot-DisabledBackground",
+            this.disabledBackground
+        );
 
         ConfigProvider.config({
             theme: {
@@ -171,17 +185,17 @@ export class ThemeConfig {
     }
 
     public setPrimaryColor(v: string): ThemeConfig {
-        let ret = new ThemeConfig(this)
-        ret.primaryColor = v
-        return ret
+        let ret = new ThemeConfig(this);
+        ret.primaryColor = v;
+        return ret;
     }
 
-    private static instance = new ThemeConfig(config.light.default)
+    private static instance = new ThemeConfig(config.dark.default);
     public static get(): ThemeConfig {
-        return ThemeConfig.instance
+        return ThemeConfig.instance;
     }
 }
 
-const Theme = React.createContext<ThemeConfig>(ThemeConfig.get())
+const Theme = React.createContext<ThemeConfig>(ThemeConfig.get());
 
-export default Theme
+export default Theme;

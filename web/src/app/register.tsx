@@ -170,7 +170,7 @@ const CardAgree = observer(
 
 const CardWaiting = observer(() => (
     <Card title="初始化系统 - 进行中..." width={420} height={360}>
-        <div className="vbot-fill-auto vbot-container-center">
+        <div className="vbot-container-center">
             <Spin size="large" />
         </div>
     </Card>

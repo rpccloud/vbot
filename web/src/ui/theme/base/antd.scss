@@ -1,54 +1,15 @@
-.ant-modal-mask {
-    z-index: 4294967296000 * 10
-}
-
-.ant-modal-wrap {
-    z-index: 4294967296000 * 11
-}
-
 .ant-menu {
     color: var(--Vbot-FontColor) !important;
     background-color: transparent !important;
-    border-right: 0px !important;
-}
-
-.ant-menu-submenu-selected .ant-menu-submenu-arrow {
-    color: var(--Vbot-PrimaryColor) !important;
-}
-
-.ant-menu-item-selected {
-    background-color: transparent !important;
-}
-
-.ant-menu-submenu-arrow  {
-    color: var(--Vbot-FontColor) !important;
 }
 
 .ant-layout-sider {
     background-color: transparent !important;
 }
 
-.ant-input {
-    color: var(--Vbot-FontColor);
-    background-color:  transparent !important;
-}
-
-.ant-input-error > input {
-    color: var(--Vbot-ErrorColor) !important;
-    background-color:  transparent !important;
-}
-
-.ant-input-password-icon {
-    color: var(--Vbot-PrimaryColor);
-}
-
-.ant-input-affix-wrapper {
-    background-color: transparent !important;
-}
-
 .ant-btn-primary[disabled] {
     color: var(--Vbot-DisabledColor) !important;
-    border-color:  var(--Vbot-DisabledColor) !important;
+    border-color: var(--Vbot-DisabledColor) !important;
     background-color: var(--Vbot-DisabledBackground) !important;
 }
 
@@ -56,7 +17,8 @@
     color: var(--Vbot-FontColor) !important;
 }
 
-.ant-btn-ghost:focus, .ant-btn-ghost:hover {
+.ant-btn-ghost:focus,
+.ant-btn-ghost:hover {
     color: var(--Vbot-PrimaryColor) !important;
 }
 
@@ -86,7 +48,7 @@
     background-color: transparent !important;
 }
 
-.ant-table-thead>tr>th {
+.ant-table-thead > tr > th {
     border-top-style: solid;
     border-top-width: 1px;
     border-top-color: var(--Vbot-DividerColor);
@@ -98,7 +60,9 @@
     border-bottom-color: var(--Vbot-DividerColor) !important;
 }
 
-.ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan]):before {
+.ant-table-thead
+    > tr
+    > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan]):before {
     background-color: var(--Vbot-DividerColor) !important;
 }
 
@@ -128,7 +92,7 @@
 
 .ant-pagination-disabled > button {
     color: var(--Vbot-DisabledColor) !important;
-    border-color:  var(--Vbot-DisabledColor) !important;
+    border-color: var(--Vbot-DisabledColor) !important;
     background-color: var(--Vbot-DisabledBackground) !important;
 }
 
@@ -146,7 +110,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 .ant-select-dropdown {
     border: 1px solid var(--Vbot-PrimaryColor);
-    background-color:  var(--Vbot-BackgroundColor)  !important;
+    background-color: var(--Vbot-BackgroundColor) !important;
 }
 
 .ant-select-selector {
@@ -160,7 +124,7 @@
 
 .ant-select-item-option-content {
     color: var(--Vbot-FontColorLighten);
-    background-color:  transparent !important;
+    background-color: transparent !important;
 }
 
 .ant-select-item-option-active > .ant-select-item-option-content {
@@ -206,7 +170,6 @@
     color: var(--Vbot-BackgroundColor);
     background-color: var(--Vbot-FontColor);
 }
-
 
 .ant-divider-inner-text {
     color: var(--Vbot-FontColor);

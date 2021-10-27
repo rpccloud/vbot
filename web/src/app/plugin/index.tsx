@@ -64,7 +64,7 @@ const Plugin = (props: PluginProps) => {
             );
         default:
             return (
-                <div className="vbot-fill-auto vbot-container-center ">
+                <div className="vbot-container-center ">
                     <div
                         style={{
                             color: "var(--Vbot-ErrorColor)",
