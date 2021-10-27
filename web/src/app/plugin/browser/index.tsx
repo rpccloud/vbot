@@ -62,12 +62,12 @@ class Browser extends React.Component<{}, BrowserState> {
                         <div
                             key={it.tabID}
                             style={{
-                                flex: "1 0 0",
-                                overflow: "auto",
-                                display:
+                                flex:
                                     it.tabID === this.state.focusTabID
-                                        ? "flex"
-                                        : "none",
+                                        ? "1 0 0"
+                                        : "0 0 0",
+                                overflow: "auto",
+                                display: "flex",
                             }}
                         >
                             <Plugin

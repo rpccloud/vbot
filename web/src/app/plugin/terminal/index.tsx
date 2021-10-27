@@ -1,14 +1,9 @@
 import * as React from "react";
-import { ITerminalAddon, Terminal } from "xterm";
+import { Terminal } from "xterm";
+import { FitAddon } from "xterm-addon-fit";
 import "xterm/css/xterm.css";
-// const className = require("classnames");
-// // const debounce = require('lodash.debounce');
-// // import styles from 'xterm/xterm.css';
-
-// // require ('xterm/xterm.css');
 
 export interface IXtermProps extends React.DOMAttributes<{}> {
-    addons?: ITerminalAddon[];
     path?: string;
     value?: string;
     className?: string;
@@ -23,10 +18,15 @@ export class XTerm extends React.Component<IXtermProps, IXtermState> {
     xterm?: Terminal;
     containerRef: React.RefObject<HTMLDivElement>;
     websocket?: WebSocket;
-    // var websocket = new WebSocket("ws://192.168.1.61:8080/ssh");
+    fitAddon: FitAddon;
+    resizeObserver: ResizeObserver;
 
     constructor(props: IXtermProps) {
         super(props);
+        this.resizeObserver = new ResizeObserver(() => {
+            this.autoFit();
+        });
+        this.fitAddon = new FitAddon();
         this.containerRef = React.createRef();
         this.state = {
             isFocused: false,
@@ -38,8 +38,16 @@ export class XTerm extends React.Component<IXtermProps, IXtermState> {
             this.xterm = new Terminal({
                 cursorBlink: true,
             });
+
+            this.xterm.onData((data) => {
+                this.websocket?.send(new TextEncoder().encode("\x00" + data));
+            });
+
             this.websocket = new WebSocket("ws://127.0.0.1:8080/ssh");
             this.websocket.binaryType = "arraybuffer";
+            this.websocket.onopen = () => {
+                this.resizeObserver.observe(this.containerRef.current!!);
+            };
             this.websocket.onmessage = (evt) => {
                 if (evt.data instanceof ArrayBuffer) {
                     this.xterm?.write(new TextDecoder().decode(evt.data));
@@ -47,37 +55,25 @@ export class XTerm extends React.Component<IXtermProps, IXtermState> {
                     alert(evt.data);
                 }
             };
-
             this.websocket.onclose = (evt) => {
                 this.xterm?.write("\r\nSession terminated");
             };
-
             this.websocket.onerror = function (evt) {
                 if (typeof console.log == "function") {
                     console.log(evt);
                 }
             };
-            if (this.props.addons) {
-                this.props.addons.forEach((it) => {
-                    this.xterm?.loadAddon(it);
-                });
-            }
+
             this.xterm.open(this.containerRef.current);
-            this.xterm.onData((data) => {
-                this.websocket?.send(new TextEncoder().encode("\x00" + data));
-            });
-            if (this.props.value) {
-                this.xterm.write(this.props.value);
-            }
+            this.xterm.loadAddon(this.fitAddon);
         }
     }
 
     componentWillUnmount() {
-        // is there a lighter-weight way to remove the cm instance?
-        if (this.xterm) {
-            this.xterm.dispose();
-            this.xterm = undefined;
-        }
+        this.resizeObserver.disconnect();
+        this.websocket?.close();
+        this.xterm?.dispose();
+        this.xterm = undefined;
     }
 
     focus() {
@@ -86,68 +82,26 @@ export class XTerm extends React.Component<IXtermProps, IXtermState> {
         }
     }
 
-    // focusChanged(focused) {
-    //     this.setState({
-    //         isFocused: focused,
-    //     });
-    //     this.props.onFocusChange && this.props.onFocusChange(focused);
-    // }
-    // onInput = (data) => {
-    //     this.props.onInput && this.props.onInput(data);
-    // };
-
-    resize(cols: number, rows: number) {
-        this.xterm?.resize(Math.round(cols), Math.round(rows));
-    }
-
-    refresh() {
-        this.xterm?.refresh(0, this.xterm.rows - 1);
+    autoFit() {
+        this.fitAddon.fit();
+        this.websocket?.send(
+            new TextEncoder().encode(
+                "\x01" +
+                    JSON.stringify({
+                        cols: this.xterm?.cols,
+                        rows: this.xterm?.rows,
+                    })
+            )
+        );
     }
 
     render() {
-        return <div ref={this.containerRef} className="ReactXTerm" />;
+        return (
+            <div
+                ref={this.containerRef}
+                className="ReactXTerm"
+                style={{ ...this.props.style, overflow: "hidden" }}
+            />
+        );
     }
 }
-
-// var term;
-// var terminalContainer = document.getElementById("terminal");
-// var websocket = new WebSocket("ws://192.168.1.61:8080/ssh");
-
-// function ab2str(buf) {
-//     return new TextDecoder().decode(buf);
-// }
-
-// term = new Terminal({
-//     cursorBlink: true,
-// });
-
-// websocket.binaryType = "arraybuffer";
-// websocket.onopen = function(evt){
-//     term.on('data', function(data) {
-//         websocket.send(new TextEncoder().encode("\x00" + data));
-//     });
-
-//     term.on('resize', function(evt) {
-//         websocket.send(new TextEncoder().encode("\x01" + JSON.stringify({cols: evt.cols, rows: evt.rows})))
-//     });
-
-//     term.open(terminalContainer, true);
-//     term.resize(120,30);
-//     websocket.onmessage = function(evt) {
-//         if (evt.data instanceof ArrayBuffer) {
-//             term.write(ab2str(evt.data));
-//         } else {
-//             alert(evt.data)
-//         }
-//     }
-
-//     websocket.onclose = function(evt) {
-//         term.write("\r\nSession terminated");
-//     }
-
-//     websocket.onerror = function(evt) {
-//         if (typeof console.log == "function") {
-//             console.log(evt)
-//         }
-//     }
-// }

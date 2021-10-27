@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout, Menu } from "antd";
 import { LaptopOutlined, UserOutlined } from "@ant-design/icons";
 import Plugin, { PluginProps } from "..";
@@ -72,12 +72,14 @@ class Data {
 const data = new Data();
 
 const Home = observer((props: PluginProps) => {
-    getChannel("vbot-browser")?.call(
-        "SetTitle",
-        props.tabID,
-        <AiOutlineHome />,
-        "Vbot"
-    );
+    useEffect(() => {
+        getChannel("vbot-browser")?.call(
+            "SetTitle",
+            props.tabID,
+            <AiOutlineHome />,
+            "Vbot"
+        );
+    }, [props.tabID]);
 
     const siderView = (
         <Sider width={190}>
