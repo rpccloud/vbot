@@ -3,6 +3,16 @@
     background-color: transparent !important;
 }
 
+.ant-menu {
+    color: var(--Vbot-FontColor) !important;
+    background-color: transparent !important;
+    border-right: 0px !important;
+}
+
+.ant-menu-item-selected {
+    background-color: transparent !important;
+}
+
 .ant-layout-sider {
     background-color: transparent !important;
 }

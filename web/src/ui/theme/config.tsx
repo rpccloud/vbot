@@ -190,7 +190,7 @@ export class ThemeConfig {
         return ret;
     }
 
-    private static instance = new ThemeConfig(config.dark.default);
+    private static instance = new ThemeConfig(config.light.default);
     public static get(): ThemeConfig {
         return ThemeConfig.instance;
     }
