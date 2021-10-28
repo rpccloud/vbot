@@ -5,14 +5,17 @@ import { HtmlChecker } from "../util/util";
 interface ButtonProps {
     icon?: React.ReactElement;
     value: string;
+    disabled: boolean;
     round: boolean;
     focus: boolean;
     border: boolean;
+    expand: boolean;
     bold: boolean;
-    size: "small" | "medium" | "large";
-    width?: number;
+    fontSize: string;
+    radius: number;
     padding: string;
     color: string;
+    style?: any;
     background: string;
     hoverColor?: string;
     hoverBackground?: string;
@@ -20,6 +23,8 @@ interface ButtonProps {
     clickBackground?: string;
     focusColor?: string;
     focusBackground?: string;
+    disabledColor?: string;
+    disabledBackground?: string;
     onClick?: () => void;
 }
 
@@ -28,12 +33,6 @@ const Button = (props: ButtonProps) => {
     const theme = useContext(ThemeConfig);
     let [click, setClick] = useState(false);
     let [hover, setHover] = useState(false);
-    const sizeMap = {
-        small: theme.fontSizeSmall,
-        medium: theme.fontSizeMedium,
-        large: theme.fontSizeLarge,
-    };
-
     let htmlChecker = new HtmlChecker(buttonElem);
 
     let color = props.color;
@@ -54,23 +53,42 @@ const Button = (props: ButtonProps) => {
         props.focusBackground && (background = props.focusBackground);
     }
 
+    if (props.disabled) {
+        props.disabledColor && (color = props.disabledColor);
+        props.disabledBackground && (background = props.disabledBackground);
+    }
+
+    let style = {};
+    if (props.round) {
+        style = {
+            ...props.style,
+            width: 2 * props.radius,
+            height: 2 * props.radius,
+            alignItems: "center",
+            justifyContent: "center",
+        };
+    }
+
     return (
         <div
             ref={buttonElem}
             style={{
-                display: "inline-flex",
-                width: props.width || "auto",
-                padding: props.padding,
-                border: props.border ? "1px solid " + color : "",
+                ...style,
+                display: props.expand ? "flex" : "inline-flex",
+                padding: props.round ? "" : props.padding,
+                borderWidth: props.border ? 1 : 0,
+                borderStyle: "solid",
+                borderColor: color,
                 borderRadius: props.round ? 100 : 0,
-                fontSize: sizeMap[props.size],
+                fontSize: props.fontSize,
                 flexFlow: "row",
                 background: background,
                 color: color,
                 fontWeight: props.bold
                     ? theme.fontWeightBold
                     : theme.fontWeightNormal,
-                transition: "background 300ms ease-out, color 300ms ease-out",
+                transition:
+                    "background 200ms ease-out, color 300ms ease-out, border 200ms ease-out",
             }}
             onMouseMove={(e) => {
                 if (htmlChecker.hasHover()) {
@@ -84,7 +102,7 @@ const Button = (props: ButtonProps) => {
                 setClick(true);
             }}
             onMouseUp={(e) => {
-                if (click) {
+                if (click && !props.disabled) {
                     props.onClick && props.onClick();
                 }
                 setClick(false);
@@ -98,7 +116,7 @@ const Button = (props: ButtonProps) => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginRight: `6px`,
+                    marginRight: props.value && props.icon ? 6 : 0,
                 }}
             >
                 {props.icon}
@@ -110,10 +128,13 @@ const Button = (props: ButtonProps) => {
 
 Button.defaultProps = {
     value: "",
+    disabled: false,
     round: false,
     border: true,
     bold: false,
-    size: "medium",
+    expand: false,
+    fontSize: 16,
+    radius: 16,
     padding: "8px 8px 8px 8px",
     color: "rgb(0,0,0,0.8)",
     background: "rgb(0,0,0,0)",

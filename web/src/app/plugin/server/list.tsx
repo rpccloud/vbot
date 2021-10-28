@@ -1,6 +1,6 @@
-import React, { Key } from "react";
+import React, { useContext } from "react";
 import { makeAutoObservable, runInAction } from "mobx";
-import { Button, ConfigProvider, message, Modal, Table, Tooltip } from "antd";
+import { ConfigProvider, message, Modal, Table, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
 
 import {
@@ -14,12 +14,14 @@ import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import { getChannel } from "../../../ui/event/event";
 import Plugin, { PluginProps } from "..";
+import Button from "../../../ui/component/Button";
+
+import ThemeConfig from "../../../ui/theme/config";
 
 class Data {
     createModal: boolean;
     deleteModal: boolean;
     loading: boolean;
-    selectedRowKeys: Key[];
     servers: object[];
     isInit: boolean;
     deleteItem?: object;
@@ -28,7 +30,6 @@ class Data {
         makeAutoObservable(this);
         this.createModal = false;
         this.deleteModal = false;
-        this.selectedRowKeys = [];
         this.loading = false;
         this.servers = [];
         this.isInit = false;
@@ -49,12 +50,6 @@ class Data {
     setDeleteItem(deleteItem: object | undefined) {
         runInAction(() => {
             this.deleteItem = deleteItem;
-        });
-    }
-
-    setSelectedRowKeys(selectedRowKeys: Key[]) {
-        runInAction(() => {
-            this.selectedRowKeys = selectedRowKeys;
         });
     }
 
@@ -99,22 +94,72 @@ class Data {
 
 const data = new Data();
 
+const NameView = (props: { text: string; data: any }) => {
+    const theme = useContext(ThemeConfig);
+    return (
+        <Tooltip title="View detail">
+            <Button
+                round={false}
+                border={false}
+                color={theme.primaryColor}
+                padding="6px 0px 6px 0px"
+                fontSize="14px"
+                value={props.text}
+                onClick={() => {
+                    alert(JSON.stringify(props.data));
+                }}
+            />
+        </Tooltip>
+    );
+};
+
+const ActionView = (props: { id: string; item: object }) => {
+    const theme = useContext(ThemeConfig);
+    return (
+        <>
+            <Tooltip title="View detail">
+                <Button
+                    round={true}
+                    icon={<EyeOutlined />}
+                    fontSize="14px"
+                    padding="0px"
+                    radius={12}
+                    color={theme.primaryColor}
+                    hoverColor={theme.backgroundColor}
+                    hoverBackground={theme.primaryColor}
+                    onClick={() => {
+                        data.view(props.id);
+                    }}
+                />
+            </Tooltip>
+
+            <Tooltip title="Remove SSH server">
+                <Button
+                    style={{ marginLeft: 8, color: "--VBot-FontColor" }}
+                    round={true}
+                    fontSize="14px"
+                    padding="0px"
+                    radius={12}
+                    icon={<DeleteOutlined />}
+                    color={theme.primaryColor}
+                    hoverColor={theme.backgroundColor}
+                    hoverBackground={theme.primaryColor}
+                    onClick={() => {
+                        data.setDeleteItem(props.item);
+                        data.setDeleteModal(true);
+                    }}
+                />
+            </Tooltip>
+        </>
+    );
+};
+
 const columns = [
     {
         title: "Name",
         dataIndex: "name",
         render: (text: string, data: any) => (
-            <Tooltip title="View detail">
-                <Button
-                    style={{ padding: 0 }}
-                    type="link"
-                    onClick={(e) => {
-                        alert(JSON.stringify(data));
-                    }}
-                >
-                    {text}
-                </Button>
-            </Tooltip>
+            <NameView text={text} data={data} />
         ),
         sorter: (a: any, b: any) => {
             if (a.name > b.name) {
@@ -173,33 +218,7 @@ const columns = [
         title: "Action",
         dataIndex: "id",
         render: (id: string, item: object) => (
-            <>
-                <Tooltip title="View detail">
-                    <Button
-                        type="primary"
-                        shape="circle"
-                        size="small"
-                        icon={<EyeOutlined />}
-                        onClick={(e) => {
-                            data.view(id);
-                        }}
-                    />
-                </Tooltip>
-
-                <Tooltip title="Remove SSH server">
-                    <Button
-                        style={{ marginLeft: 8, color: "--VBot-FontColor" }}
-                        type="primary"
-                        shape="circle"
-                        size="small"
-                        icon={<DeleteOutlined />}
-                        onClick={() => {
-                            data.setDeleteItem(item);
-                            data.setDeleteModal(true);
-                        }}
-                    />
-                </Tooltip>
-            </>
+            <ActionView id={id} item={item} />
         ),
     },
 ];
@@ -207,14 +226,18 @@ const columns = [
 const ServerList = observer((props: PluginProps) => {
     data.init();
 
+    const theme = useContext(ThemeConfig);
+
     const emptyView = (
         <div>
             <div style={{ margin: 10, fontSize: "var(--Vbot-FontSizeMiddle)" }}>
                 No Data
             </div>
-            <Button type="primary" shape="round" icon={<ReloadOutlined />}>
-                Reload
-            </Button>
+            <Button
+                fontSize={theme.fontSizeMedium}
+                icon={<ReloadOutlined />}
+                value="Reload"
+            />
         </div>
     );
 
@@ -223,12 +246,14 @@ const ServerList = observer((props: PluginProps) => {
             <div style={{ marginBottom: 20 }}>
                 <Tooltip title="Add SSH server">
                     <Button
-                        type="primary"
-                        shape="circle"
+                        round={true}
                         icon={<PlusOutlined />}
-                        disabled={
-                            !data.loading && data.selectedRowKeys.length > 0
-                        }
+                        color={theme.primaryColor}
+                        hoverColor={theme.backgroundColor}
+                        hoverBackground={theme.primaryColor}
+                        disabled={data.loading}
+                        disabledColor={theme.disabledColor}
+                        disabledBackground={theme.disabledBackground}
                         onClick={() => {
                             data.setCreateModal(true);
                         }}
@@ -236,13 +261,15 @@ const ServerList = observer((props: PluginProps) => {
                 </Tooltip>
                 <Tooltip title="Reload">
                     <Button
-                        type="primary"
-                        shape="circle"
+                        round={true}
                         icon={<ReloadOutlined />}
                         style={{ marginLeft: 10 }}
-                        disabled={
-                            !data.loading && data.selectedRowKeys.length > 0
-                        }
+                        color={theme.primaryColor}
+                        hoverColor={theme.backgroundColor}
+                        hoverBackground={theme.primaryColor}
+                        disabled={data.loading}
+                        disabledColor={theme.disabledColor}
+                        disabledBackground={theme.disabledBackground}
                         onClick={() => {
                             data.load();
                         }}

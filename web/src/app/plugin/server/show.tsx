@@ -14,7 +14,7 @@ const ServerShow = (props: PluginProps) => {
         );
     }, [props.tabID]);
 
-    return <XTerm value="hello xterm" style={{ flex: "1 0 0" }} />;
+    return <XTerm style={{ flex: "1 0 0" }} />;
 };
 
 export default ServerShow;
