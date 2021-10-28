@@ -8,6 +8,7 @@ interface ButtonProps {
     round: boolean;
     focus: boolean;
     border: boolean;
+    bold: boolean;
     size: "small" | "medium" | "large";
     width?: number;
     padding: string;
@@ -66,6 +67,9 @@ const Button = (props: ButtonProps) => {
                 flexFlow: "row",
                 background: background,
                 color: color,
+                fontWeight: props.bold
+                    ? theme.fontWeightBold
+                    : theme.fontWeightNormal,
                 transition: "background 300ms ease-out, color 300ms ease-out",
             }}
             onMouseMove={(e) => {
@@ -83,6 +87,9 @@ const Button = (props: ButtonProps) => {
                 if (click) {
                     props.onClick && props.onClick();
                 }
+                setClick(false);
+            }}
+            onMouseLeave={(e) => {
                 setClick(false);
             }}
         >
@@ -105,6 +112,7 @@ Button.defaultProps = {
     value: "",
     round: false,
     border: true,
+    bold: false,
     size: "medium",
     padding: "8px 8px 8px 8px",
     color: "rgb(0,0,0,0.8)",

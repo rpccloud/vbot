@@ -11,11 +11,12 @@ const Debug = () => (
                 width={200}
                 round={false}
                 border={false}
+                bold={true}
                 padding="6px 16px 6px 16px"
                 icon={<AiOutlineLock />}
                 color="rgb(30, 30, 30)"
-                hoverColor="blue"
-                clickColor="green"
+                hoverColor="rgba(255, 0, 0, 0.5)"
+                clickColor="rgba(255, 0, 0, 1)"
             />
         </div>
     </div>
