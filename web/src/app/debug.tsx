@@ -15,9 +15,6 @@ const Debug = () => (
                 bold={true}
                 padding="16px 10px 16px 10px"
                 icon={<AiOutlineLock />}
-                color="rgb(30, 30, 30)"
-                hoverColor="rgba(255, 0, 0, 0.5)"
-                clickColor="rgba(255, 0, 0, 1)"
             />
         </div>
     </div>

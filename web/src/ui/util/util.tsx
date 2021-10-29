@@ -1,78 +1,77 @@
-
 export class HtmlChecker {
-    ref: any
-    fnLostFocus?: () => void
-    fnLostHover?: () => void
+    ref: any;
+    fnLostFocus?: () => void;
+    fnLostHover?: () => void;
     timer?: number;
 
     constructor(ref: any) {
-        this.ref = ref
+        this.ref = ref;
     }
 
     onLostFocus(fn: () => void) {
         if (!this.fnLostFocus) {
-            this.fnLostFocus = fn
+            this.fnLostFocus = fn;
         }
 
-        this.onCheck()
+        this.onCheck();
     }
 
     onLostHover(fn: () => void) {
         if (!this.fnLostHover) {
-            this.fnLostHover = fn
+            this.fnLostHover = fn;
         }
 
-        this.onCheck()
+        this.onCheck();
     }
 
     private onCheck() {
         if (!this.timer) {
             if (!!this.fnLostFocus || !!this.fnLostHover) {
                 this.timer = window.setInterval(() => {
-                    this.onTimer()
-                }, 60)
+                    this.onTimer();
+                }, 60);
             }
         }
     }
 
     hasFocus(): boolean {
-        const elem = this.ref.current
+        const elem = this.ref.current;
         if (elem) {
-            return elem.matches(":focus")
+            return elem.matches(":focus");
         } else {
-            return false
+            return false;
         }
     }
 
     hasHover(): boolean {
-        const elem = this.ref.current
+        const elem = this.ref.current;
         if (elem) {
-            return elem.matches(":hover")
+            return elem.matches(":hover");
         } else {
-            return false
+            return false;
         }
     }
 
     private onTimer() {
-        const elem = this.ref.current
+        const elem = this.ref.current;
         if (elem) {
             if (!!this.fnLostFocus) {
                 if (!elem.matches(":focus")) {
-                    this.fnLostFocus()
-                    this.fnLostFocus = undefined
+                    this.fnLostFocus();
+                    this.fnLostFocus = undefined;
                 }
             }
 
             if (!!this.fnLostHover) {
                 if (!elem.matches(":hover")) {
-                    this.fnLostHover()
-                    this.fnLostHover = undefined
+                    this.fnLostHover();
+                    this.fnLostHover = undefined;
                 }
             }
 
             if (!this.fnLostFocus && !this.fnLostHover) {
-                window.clearInterval(this.timer)
-                this.timer = undefined
+                window.clearInterval(this.timer);
+                this.timer = undefined;
             }
         }
     }

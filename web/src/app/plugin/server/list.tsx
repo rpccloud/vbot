@@ -14,9 +14,8 @@ import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import { getChannel } from "../../../ui/event/event";
 import Plugin, { PluginProps } from "..";
-import Button from "../../../ui/component/Button";
-
-import ThemeConfig from "../../../ui/theme/config";
+import Button, { ButtonContext } from "../../../ui/component/Button";
+import { ThemeContext } from "../../../ui/theme/config";
 
 class Data {
     createModal: boolean;
@@ -95,26 +94,25 @@ class Data {
 const data = new Data();
 
 const NameView = (props: { text: string; data: any }) => {
-    const theme = useContext(ThemeConfig);
     return (
         <Tooltip title="View detail">
-            <Button
-                round={false}
-                border={false}
-                color={theme.primaryColor}
-                padding="6px 0px 6px 0px"
-                fontSize="14px"
-                value={props.text}
-                onClick={() => {
-                    alert(JSON.stringify(props.data));
-                }}
-            />
+            <ButtonContext.Provider value={{}}>
+                <Button
+                    round={false}
+                    border={false}
+                    padding="6px 0px 6px 0px"
+                    fontSize="14px"
+                    value={props.text}
+                    onClick={() => {
+                        alert(JSON.stringify(props.data));
+                    }}
+                />
+            </ButtonContext.Provider>
         </Tooltip>
     );
 };
 
 const ActionView = (props: { id: string; item: object }) => {
-    const theme = useContext(ThemeConfig);
     return (
         <>
             <Tooltip title="View detail">
@@ -124,9 +122,6 @@ const ActionView = (props: { id: string; item: object }) => {
                     fontSize="14px"
                     padding="0px"
                     radius={12}
-                    color={theme.primaryColor}
-                    hoverColor={theme.backgroundColor}
-                    hoverBackground={theme.primaryColor}
                     onClick={() => {
                         data.view(props.id);
                     }}
@@ -141,9 +136,6 @@ const ActionView = (props: { id: string; item: object }) => {
                     padding="0px"
                     radius={12}
                     icon={<DeleteOutlined />}
-                    color={theme.primaryColor}
-                    hoverColor={theme.backgroundColor}
-                    hoverBackground={theme.primaryColor}
                     onClick={() => {
                         data.setDeleteItem(props.item);
                         data.setDeleteModal(true);
@@ -224,95 +216,90 @@ const columns = [
 ];
 
 const ServerList = observer((props: PluginProps) => {
+    const theme = useContext(ThemeContext);
     data.init();
-
-    const theme = useContext(ThemeConfig);
 
     const emptyView = (
         <div>
             <div style={{ margin: 10, fontSize: "var(--Vbot-FontSizeMiddle)" }}>
                 No Data
             </div>
-            <Button
-                fontSize={theme.fontSizeMedium}
-                icon={<ReloadOutlined />}
-                value="Reload"
-            />
+            <Button fontSize="14px" icon={<ReloadOutlined />} value="Reload" />
         </div>
     );
 
     return (
-        <div style={{ padding: 26 }}>
-            <div style={{ marginBottom: 20 }}>
-                <Tooltip title="Add SSH server">
-                    <Button
-                        round={true}
-                        icon={<PlusOutlined />}
-                        color={theme.primaryColor}
-                        hoverColor={theme.backgroundColor}
-                        hoverBackground={theme.primaryColor}
-                        disabled={data.loading}
-                        disabledColor={theme.disabledColor}
-                        disabledBackground={theme.disabledBackground}
-                        onClick={() => {
-                            data.setCreateModal(true);
-                        }}
-                    />
-                </Tooltip>
-                <Tooltip title="Reload">
-                    <Button
-                        round={true}
-                        icon={<ReloadOutlined />}
-                        style={{ marginLeft: 10 }}
-                        color={theme.primaryColor}
-                        hoverColor={theme.backgroundColor}
-                        hoverBackground={theme.primaryColor}
-                        disabled={data.loading}
-                        disabledColor={theme.disabledColor}
-                        disabledBackground={theme.disabledBackground}
-                        onClick={() => {
-                            data.load();
-                        }}
-                    />
-                </Tooltip>
-                <Modal visible={data.createModal} className="vbot-modal">
-                    <Plugin
-                        kind="server.create"
-                        param={{
-                            goBack: (ok: boolean) => {
-                                data.setCreateModal(false);
+        <ButtonContext.Provider
+            value={{
+                hoverColor: {
+                    font: theme.backgroundColor,
+                    border: theme.primaryColor,
+                    background: theme.primaryColor,
+                },
+            }}
+        >
+            <div style={{ padding: 26 }}>
+                <div style={{ marginBottom: 20 }}>
+                    <Tooltip title="Add SSH server">
+                        <Button
+                            round={true}
+                            icon={<PlusOutlined />}
+                            disabled={data.loading}
+                            onClick={() => {
+                                data.setCreateModal(true);
+                            }}
+                        />
+                    </Tooltip>
+                    <Tooltip title="Reload">
+                        <Button
+                            round={true}
+                            icon={<ReloadOutlined />}
+                            style={{ marginLeft: 10 }}
+                            disabled={data.loading}
+                            onClick={() => {
+                                data.load();
+                            }}
+                        />
+                    </Tooltip>
+                    <Modal visible={data.createModal} className="vbot-modal">
+                        <Plugin
+                            kind="server.create"
+                            param={{
+                                goBack: (ok: boolean) => {
+                                    data.setCreateModal(false);
 
-                                if (ok) {
-                                    data.load();
-                                }
-                            },
-                        }}
-                    />
-                </Modal>
-                <Modal visible={data.deleteModal} className="vbot-modal">
-                    <Plugin
-                        kind="server.delete"
-                        param={{
-                            goBack: (ok: boolean) => {
-                                data.setDeleteModal(false);
+                                    if (ok) {
+                                        data.load();
+                                    }
+                                },
+                            }}
+                        />
+                    </Modal>
+                    <Modal visible={data.deleteModal} className="vbot-modal">
+                        <Plugin
+                            kind="server.delete"
+                            param={{
+                                goBack: (ok: boolean) => {
+                                    data.setDeleteModal(false);
 
-                                if (ok) {
-                                    data.load();
-                                }
-                            },
-                            item: data.deleteItem,
-                        }}
+                                    if (ok) {
+                                        data.load();
+                                    }
+                                },
+                                item: data.deleteItem,
+                            }}
+                        />
+                    </Modal>
+                </div>
+                <ConfigProvider renderEmpty={() => emptyView}>
+                    <Table
+                        columns={columns}
+                        dataSource={data.servers}
+                        rowKey={(o) => (o as any).id}
                     />
-                </Modal>
+                </ConfigProvider>
             </div>
-            <ConfigProvider renderEmpty={() => emptyView}>
-                <Table
-                    columns={columns}
-                    dataSource={data.servers}
-                    rowKey={(o) => (o as any).id}
-                />
-            </ConfigProvider>
-        </div>
+        </ButtonContext.Provider>
     );
 });
 

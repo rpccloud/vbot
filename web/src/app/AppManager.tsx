@@ -12,7 +12,7 @@ import { ConfigProvider } from "antd";
 import StartPage from "./start";
 import { RPCAny } from "rpccloud-client-js/build/types";
 
-import Theme, { ThemeConfig } from "../ui/theme/config";
+import { ThemeContext, ThemeConfig } from "../ui/theme/config";
 
 const routeMap: Map<string, any> = new Map([
     ["start", <StartPage />],
@@ -25,11 +25,11 @@ const routeMap: Map<string, any> = new Map([
 export default observer(() => {
     const appData = AppData.get();
     return appData.isValid() ? (
-        <Theme.Provider value={ThemeConfig.get()}>
+        <ThemeContext.Provider value={ThemeConfig.get()}>
             <ConfigProvider locale={AppData.get().locale?.antd}>
                 {routeMap.get(AppData.get().rootRoute)}
             </ConfigProvider>
-        </Theme.Provider>
+        </ThemeContext.Provider>
     ) : null;
 });
 

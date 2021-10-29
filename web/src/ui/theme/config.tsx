@@ -190,12 +190,10 @@ export class ThemeConfig {
         return ret;
     }
 
-    private static instance = new ThemeConfig(config.light.default);
+    private static instance = new ThemeConfig(config.dark.default);
     public static get(): ThemeConfig {
         return ThemeConfig.instance;
     }
 }
 
-const Theme = React.createContext<ThemeConfig>(ThemeConfig.get());
-
-export default Theme;
+export const ThemeContext = React.createContext<ThemeConfig>(ThemeConfig.get());

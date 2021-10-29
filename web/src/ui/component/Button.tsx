@@ -1,6 +1,22 @@
 import React, { useContext, useRef, useState } from "react";
-import ThemeConfig from "../theme/config";
+import { ThemeContext } from "../theme/config";
 import { HtmlChecker } from "../util/util";
+
+interface ButtonColor {
+    font?: string;
+    border?: string;
+    background?: string;
+}
+
+interface ButtonContextProps {
+    primaryColor?: ButtonColor;
+    hoverColor?: ButtonColor;
+    clickColor?: ButtonColor;
+    focusColor?: ButtonColor;
+    disabledColor?: ButtonColor;
+}
+
+export const ButtonContext = React.createContext<ButtonContextProps>({});
 
 interface ButtonProps {
     icon?: React.ReactElement;
@@ -14,48 +30,40 @@ interface ButtonProps {
     fontSize: string;
     radius: number;
     padding: string;
-    color: string;
     style?: any;
-    background: string;
-    hoverColor?: string;
-    hoverBackground?: string;
-    clickColor?: string;
-    clickBackground?: string;
-    focusColor?: string;
-    focusBackground?: string;
-    disabledColor?: string;
-    disabledBackground?: string;
     onClick?: () => void;
 }
 
 const Button = (props: ButtonProps) => {
     const buttonElem = useRef<HTMLDivElement>(null);
-    const theme = useContext(ThemeConfig);
+    const theme = useContext(ThemeContext);
+    const config = useContext(ButtonContext);
     let [click, setClick] = useState(false);
     let [hover, setHover] = useState(false);
     let htmlChecker = new HtmlChecker(buttonElem);
 
-    let color = props.color;
-    let background = props.background;
+    let defaultColor: ButtonColor = {
+        font: theme.primaryColor,
+        border: theme.primaryColor,
+        background: "transparent",
+    };
+
+    let color: ButtonColor = { ...defaultColor, ...config.primaryColor };
 
     if (hover) {
-        props.hoverColor && (color = props.hoverColor);
-        props.hoverBackground && (background = props.hoverBackground);
+        color = { ...color, ...config.hoverColor };
     }
 
     if (click) {
-        props.clickColor && (color = props.clickColor);
-        props.hoverBackground && (background = props.hoverBackground);
+        color = { ...color, ...config.hoverColor };
     }
 
     if (props.focus) {
-        props.focusColor && (color = props.focusColor);
-        props.focusBackground && (background = props.focusBackground);
+        color = { ...color, ...config.hoverColor };
     }
 
     if (props.disabled) {
-        props.disabledColor && (color = props.disabledColor);
-        props.disabledBackground && (background = props.disabledBackground);
+        color = { ...defaultColor, ...config.hoverColor };
     }
 
     let style = {};
@@ -78,17 +86,16 @@ const Button = (props: ButtonProps) => {
                 padding: props.round ? "" : props.padding,
                 borderWidth: props.border ? 1 : 0,
                 borderStyle: "solid",
-                borderColor: color,
+                borderColor: color.border,
                 borderRadius: props.round ? 100 : 0,
                 fontSize: props.fontSize,
                 flexFlow: "row",
-                background: background,
-                color: color,
+                background: color.background,
+                color: color.font,
                 fontWeight: props.bold
                     ? theme.fontWeightBold
                     : theme.fontWeightNormal,
-                transition:
-                    "background 200ms ease-out, color 300ms ease-out, border 200ms ease-out",
+                transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out`,
             }}
             onMouseMove={(e) => {
                 if (htmlChecker.hasHover()) {
@@ -136,8 +143,6 @@ Button.defaultProps = {
     fontSize: 16,
     radius: 16,
     padding: "8px 8px 8px 8px",
-    color: "rgb(0,0,0,0.8)",
-    background: "rgb(0,0,0,0)",
     focus: false,
 };
 
