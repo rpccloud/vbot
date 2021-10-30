@@ -1,7 +1,11 @@
 import tabConfig, { IButtonConfig } from "./defs";
 import { RoundButton } from "./button";
 import { TabBar } from "./tab-bar";
-import { ThemeConfig } from "../../../ui/theme/config";
+import {
+    getFontSize,
+    getFontWeight,
+    ThemeConfig,
+} from "../../../ui/theme/config";
 import ReactDOM from "react-dom";
 import { PluginProps } from "..";
 
@@ -87,17 +91,19 @@ class Title {
 
     public flushTheme(): void {
         const theme = ThemeConfig.get();
-        this.spanElem.style.fontSize = `${theme.fontSizeMedium}px`;
-        this.iconElem.style.fontSize = `${theme.fontSizeMedium}px`;
-        const color = this.isFocus ? theme.primaryColor : theme.fontColor;
+        this.spanElem.style.fontSize = `${getFontSize("medium")}px`;
+        this.iconElem.style.fontSize = `${getFontSize("medium")}px`;
+        const color = this.isFocus
+            ? theme.primaryColor.hsla
+            : theme.foregroundColor.hsla;
         this.textElem.style.backgroundImage = `linear-gradient(to right, ${color} 0%, ${color} 93%, rgba(0, 0, 0, 0)  100%)`;
         this.iconElem.style.color = color;
         if (this.isFocus) {
-            this.iconElem.style.fontWeight = `${theme.fontWeightBold}`;
-            this.spanElem.style.fontWeight = `${theme.fontWeightBold}`;
+            this.iconElem.style.fontWeight = `${getFontWeight("bold")}`;
+            this.spanElem.style.fontWeight = `${getFontWeight("bold")}`;
         } else {
-            this.iconElem.style.fontWeight = `${theme.fontWeightNormal}`;
-            this.spanElem.style.fontWeight = `${theme.fontWeightNormal}`;
+            this.iconElem.style.fontWeight = `${getFontWeight("normal")}`;
+            this.spanElem.style.fontWeight = `${getFontWeight("normal")}`;
         }
     }
 }
@@ -131,7 +137,7 @@ class CloseButton extends RoundButton {
                 width: tabConfig.closeBtnWidth,
                 height: tabConfig.closeBtnHeight,
             },
-            bgColor: theme.primaryColor,
+            bgColor: theme.primaryColor.hsla,
             focusOpacity: "0.4",
             mouseOverOpacity: "0.2",
             mouseOutOpacity: "0",
@@ -156,7 +162,9 @@ class CloseButton extends RoundButton {
         ctx.lineTo((w + fgSize) / 2, (h + fgSize) / 2);
         ctx.moveTo((w + fgSize) / 2, (h - fgSize) / 2);
         ctx.lineTo((w - fgSize) / 2, (h + fgSize) / 2);
-        ctx.strokeStyle = this.isFocus ? theme.primaryColor : theme.fontColor;
+        ctx.strokeStyle = this.isFocus
+            ? theme.primaryColor.hsla
+            : theme.foregroundColor.hsla;
         ctx.lineWidth = 1;
         ctx.lineCap = "round";
         ctx.stroke();
@@ -409,7 +417,7 @@ export class Tab {
         if (ctx) {
             ctx.imageSmoothingEnabled = true;
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.fillStyle = theme.backgroundColorLighten;
+            ctx.fillStyle = theme.backgroundColor.lighten(1).hsla;
             ctx.fill(this.path);
 
             //   if (this.isFocus) {

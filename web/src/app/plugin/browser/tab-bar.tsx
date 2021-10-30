@@ -115,7 +115,7 @@ export class TabBar {
             tabConfig.tabRadius
         );
 
-        this.rootElem.style.borderBottom = `1px solid ${theme.borderColor}`;
+        this.rootElem.style.borderBottom = `1px solid ${theme.foregroundColor.hsla}`;
     }
 
     public flush(

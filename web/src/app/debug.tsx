@@ -12,8 +12,6 @@ const Debug = () => (
                 value="HI"
                 round={true}
                 border={true}
-                bold={true}
-                padding="16px 10px 16px 10px"
                 icon={<AiOutlineLock />}
             />
         </div>

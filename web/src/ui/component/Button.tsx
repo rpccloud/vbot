@@ -1,101 +1,152 @@
-import React, { useContext, useRef, useState } from "react";
-import { ThemeContext } from "../theme/config";
+import React, { CSSProperties, useContext, useRef, useState } from "react";
+import {
+    getFontSize,
+    getFontWeight,
+    IColorUnit,
+    ThemeConfig,
+    ThemeContext,
+} from "../theme/config";
 import { HtmlChecker } from "../util/util";
 
-interface ButtonColor {
-    font?: string;
-    border?: string;
-    background?: string;
+let themeCache: { key: string; config: IButtonContextProps } = {
+    key: "",
+    config: {},
+};
+
+function getConfig(theme: ThemeConfig): IButtonContextProps {
+    const themeKey = theme.hashKey();
+
+    if (themeCache.key === themeKey) {
+        return themeCache.config;
+    }
+
+    let config = {
+        normal: {
+            font: theme.primaryColor.alpha(0.6).hsla,
+            border: theme.primaryColor.alpha(0.6).hsla,
+        },
+        hover: {
+            font: theme.primaryColor.hsla,
+            border: theme.primaryColor.hsla,
+        },
+        active: {
+            font: theme.primaryColor.hsla,
+            border: theme.primaryColor.hsla,
+            shadow: theme.primaryColor.hsla,
+        },
+        focus: {
+            font: theme.primaryColor.hsla,
+            border: theme.primaryColor.hsla,
+        },
+        selected: {
+            font: theme.primaryColor.hsla,
+            border: theme.primaryColor.hsla,
+        },
+        disabled: {
+            font: theme.disabledColor.hsla,
+            border: theme.disabledColor.hsla,
+        },
+        warning: {
+            font: theme.warningColor.hsla,
+            border: theme.warningColor.hsla,
+        },
+    };
+
+    themeCache.key = themeKey;
+    themeCache.config = config;
+
+    return config;
 }
 
-interface ButtonContextProps {
-    primaryColor?: ButtonColor;
-    hoverColor?: ButtonColor;
-    clickColor?: ButtonColor;
-    focusColor?: ButtonColor;
-    disabledColor?: ButtonColor;
+interface IButtonContextProps {
+    normal?: IColorUnit;
+    hover?: IColorUnit;
+    active?: IColorUnit;
+    focus?: IColorUnit;
+    selected?: IColorUnit;
+    disabled?: IColorUnit;
 }
 
-export const ButtonContext = React.createContext<ButtonContextProps>({});
+export const ButtonContext = React.createContext<IButtonContextProps>({});
 
 interface ButtonProps {
+    size: "tiny" | "small" | "medium" | "large" | "xlarge";
+    fontWeight: "lighter" | "normal" | "bold" | "bolder";
     icon?: React.ReactElement;
     value: string;
     disabled: boolean;
     round: boolean;
-    focus: boolean;
+    selected: boolean;
     border: boolean;
     expand: boolean;
-    bold: boolean;
-    fontSize: string;
-    radius: number;
-    padding: string;
-    style?: any;
+    style?: CSSProperties;
     onClick?: () => void;
 }
 
 const Button = (props: ButtonProps) => {
     const buttonElem = useRef<HTMLDivElement>(null);
-    const theme = useContext(ThemeContext);
-    const config = useContext(ButtonContext);
-    let [click, setClick] = useState(false);
+    const themeConfig = getConfig(useContext(ThemeContext));
+    const contextConfig = useContext(ButtonContext);
+    let [active, setActive] = useState(false);
     let [hover, setHover] = useState(false);
     let htmlChecker = new HtmlChecker(buttonElem);
 
-    let defaultColor: ButtonColor = {
-        font: theme.primaryColor,
-        border: theme.primaryColor,
-        background: "transparent",
-    };
+    let size = getFontSize(props.size);
+    let color = { ...themeConfig.normal, ...contextConfig.normal };
 
-    let color: ButtonColor = { ...defaultColor, ...config.primaryColor };
+    if (props.selected) {
+        color = { ...themeConfig.selected, ...contextConfig.selected };
+    }
 
     if (hover) {
-        color = { ...color, ...config.hoverColor };
+        color = { ...themeConfig.hover, ...contextConfig.hover };
     }
 
-    if (click) {
-        color = { ...color, ...config.hoverColor };
-    }
-
-    if (props.focus) {
-        color = { ...color, ...config.hoverColor };
+    if (active) {
+        color = { ...themeConfig.active, ...contextConfig.active };
     }
 
     if (props.disabled) {
-        color = { ...defaultColor, ...config.hoverColor };
+        color = { ...themeConfig.disabled, ...contextConfig.disabled };
     }
 
     let style = {};
     if (props.round) {
         style = {
-            ...props.style,
-            width: 2 * props.radius,
-            height: 2 * props.radius,
+            width: `${2 * size}px`,
+            height: `${2 * size}px`,
             alignItems: "center",
             justifyContent: "center",
+            borderRadius: size,
+            ...props.style,
+        };
+    } else {
+        style = {
+            padding: `${size / 2}px ${size}px ${size / 2}px ${size}px`,
+            ...props.style,
         };
     }
+
+    console.log(color);
 
     return (
         <div
             ref={buttonElem}
             style={{
-                ...style,
                 display: props.expand ? "flex" : "inline-flex",
-                padding: props.round ? "" : props.padding,
                 borderWidth: props.border ? 1 : 0,
                 borderStyle: "solid",
                 borderColor: color.border,
-                borderRadius: props.round ? 100 : 0,
-                fontSize: props.fontSize,
+                fontSize: size,
                 flexFlow: "row",
                 background: color.background,
                 color: color.font,
-                fontWeight: props.bold
-                    ? theme.fontWeightBold
-                    : theme.fontWeightNormal,
-                transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out`,
+                fontWeight: getFontWeight(props.fontWeight),
+                transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
+                boxShadow: color.shadow
+                    ? `0px 0px ${size / 4}px ${color.shadow}`
+                    : "",
+                ...style,
             }}
             onMouseMove={(e) => {
                 if (htmlChecker.hasHover()) {
@@ -106,16 +157,16 @@ const Button = (props: ButtonProps) => {
                 }
             }}
             onMouseDown={(e) => {
-                setClick(true);
+                setActive(true);
             }}
             onMouseUp={(e) => {
-                if (click && !props.disabled) {
+                if (active && !props.disabled) {
                     props.onClick && props.onClick();
                 }
-                setClick(false);
+                setActive(false);
             }}
             onMouseLeave={(e) => {
-                setClick(false);
+                setActive(false);
             }}
         >
             <div
@@ -123,7 +174,7 @@ const Button = (props: ButtonProps) => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    marginRight: props.value && props.icon ? 6 : 0,
+                    marginRight: props.value && props.icon ? size / 2 : 0,
                 }}
             >
                 {props.icon}
@@ -134,16 +185,14 @@ const Button = (props: ButtonProps) => {
 };
 
 Button.defaultProps = {
+    size: "medium",
+    fontWeight: "normal",
     value: "",
     disabled: false,
     round: false,
+    selected: false,
     border: true,
-    bold: false,
     expand: false,
-    fontSize: 16,
-    radius: 16,
-    padding: "8px 8px 8px 8px",
-    focus: false,
 };
 
 export default Button;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { makeAutoObservable, runInAction } from "mobx";
 import { ConfigProvider, message, Modal, Table, Tooltip } from "antd";
 import { observer } from "mobx-react-lite";
@@ -15,7 +15,6 @@ import { toObject } from "rpccloud-client-js/build/types";
 import { getChannel } from "../../../ui/event/event";
 import Plugin, { PluginProps } from "..";
 import Button, { ButtonContext } from "../../../ui/component/Button";
-import { ThemeContext } from "../../../ui/theme/config";
 
 class Data {
     createModal: boolean;
@@ -100,8 +99,10 @@ const NameView = (props: { text: string; data: any }) => {
                 <Button
                     round={false}
                     border={false}
-                    padding="6px 0px 6px 0px"
-                    fontSize="14px"
+                    style={{
+                        padding: "6px 0px 6px 0px",
+                    }}
+                    size="small"
                     value={props.text}
                     onClick={() => {
                         alert(JSON.stringify(props.data));
@@ -119,9 +120,10 @@ const ActionView = (props: { id: string; item: object }) => {
                 <Button
                     round={true}
                     icon={<EyeOutlined />}
-                    fontSize="14px"
-                    padding="0px"
-                    radius={12}
+                    size="small"
+                    style={{
+                        padding: "0px",
+                    }}
                     onClick={() => {
                         data.view(props.id);
                     }}
@@ -130,11 +132,13 @@ const ActionView = (props: { id: string; item: object }) => {
 
             <Tooltip title="Remove SSH server">
                 <Button
-                    style={{ marginLeft: 8, color: "--VBot-FontColor" }}
+                    style={{
+                        marginLeft: 8,
+                        color: "--VBot-FontColor",
+                        padding: "0px",
+                    }}
                     round={true}
-                    fontSize="14px"
-                    padding="0px"
-                    radius={12}
+                    size="small"
                     icon={<DeleteOutlined />}
                     onClick={() => {
                         data.setDeleteItem(props.item);
@@ -216,7 +220,6 @@ const columns = [
 ];
 
 const ServerList = observer((props: PluginProps) => {
-    const theme = useContext(ThemeContext);
     data.init();
 
     const emptyView = (
@@ -224,18 +227,14 @@ const ServerList = observer((props: PluginProps) => {
             <div style={{ margin: 10, fontSize: "var(--Vbot-FontSizeMiddle)" }}>
                 No Data
             </div>
-            <Button fontSize="14px" icon={<ReloadOutlined />} value="Reload" />
+            <Button size="small" icon={<ReloadOutlined />} value="Reload" />
         </div>
     );
 
     return (
         <ButtonContext.Provider
             value={{
-                hoverColor: {
-                    font: theme.backgroundColor,
-                    border: theme.primaryColor,
-                    background: theme.primaryColor,
-                },
+                hover: {},
             }}
         >
             <div style={{ padding: 26 }}>
