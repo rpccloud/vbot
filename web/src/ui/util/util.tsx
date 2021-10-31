@@ -10,6 +10,22 @@ export function range(v: number, min: number, max: number): number {
     return v;
 }
 
+function hasState(elem: Element, state: string): boolean {
+    if (elem) {
+        if (elem.matches(state)) {
+            return true;
+        }
+
+        for (let child of elem.children) {
+            if (hasState(child, state)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 export class HtmlChecker {
     ref: any;
     fnLostFocus?: () => void;
@@ -47,30 +63,15 @@ export class HtmlChecker {
     }
 
     hasActive(): boolean {
-        const elem = this.ref.current;
-        if (elem) {
-            return elem.matches(":active");
-        } else {
-            return false;
-        }
-    }
-
-    hasFocus(): boolean {
-        const elem = this.ref.current;
-        if (elem) {
-            return elem.matches(":focus");
-        } else {
-            return false;
-        }
+        return hasState(this.ref.current, ":active");
     }
 
     hasHover(): boolean {
-        const elem = this.ref.current;
-        if (elem) {
-            return elem.matches(":hover");
-        } else {
-            return false;
-        }
+        return hasState(this.ref.current, ":hover");
+    }
+
+    hasFocus(): boolean {
+        return hasState(this.ref.current, ":focus");
     }
 
     private onTimer() {

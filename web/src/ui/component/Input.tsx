@@ -95,11 +95,12 @@ interface InputProps {
     prefixIcon?: React.ReactNode;
     style?: CSSProperties;
     onChange?: (e: { target: { value: any } }) => void;
-    onSubmit?: (value: any) => void;
+    onEdit?: (value: any) => void;
 }
 
 const Input = (props: InputProps) => {
-    const inputEl = useRef<HTMLInputElement>(null);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
     const theme = useContext(ThemeContext);
     const inputConfig = useContext(InputContext);
     const themeConfig = getConfig(theme);
@@ -109,7 +110,7 @@ const Input = (props: InputProps) => {
     let [edit, setEdit] = useState(props.initEdit);
     let [value, setValue] = useState(props.value);
 
-    let htmlChecker = new HtmlChecker(inputEl);
+    let htmlChecker = new HtmlChecker(rootRef);
     let fakePassword = "000000";
 
     let size = getFontSize(props.size);
@@ -139,8 +140,134 @@ const Input = (props: InputProps) => {
     const editIconInactive =
         inputConfig.editIconInactive || themeConfig.editIconInactive;
 
+    const spacer = (
+        <div
+            style={{
+                display: "block",
+                width: edit ? size / 2 : 0,
+                transition: "width 250ms ease-out",
+            }}
+        />
+    );
+
+    const underlineView =
+        !edit && props.underline ? (
+            <div
+                style={{
+                    position: "absolute",
+                    width: "100%",
+                    bottom: 0,
+                    height: 1,
+                    background: color.border,
+                    transition: "background 250ms ease-out",
+                }}
+            />
+        ) : null;
+
+    const prefixIconView = props.prefixIcon ? (
+        <div
+            style={{
+                height: size,
+                color:
+                    props.validator && !props.validator(value)
+                        ? warningColor?.hsla
+                        : "inherit",
+                paddingRight: size / 3,
+                transition: "color 300ms ease-out",
+            }}
+        >
+            {props.prefixIcon}
+        </div>
+    ) : null;
+
+    const labelView = props.label ? (
+        <div
+            style={{
+                height: size,
+                paddingRight: size / 3,
+            }}
+        >
+            {props.label}
+        </div>
+    ) : null;
+
+    const inputView = (
+        <input
+            ref={inputRef}
+            style={{
+                display: "block",
+                outline: "none",
+                border: "0px",
+                padding: "0px",
+                width: "100%",
+                lineHeight: `${size}px`,
+                height: size,
+                background: "transparent",
+                color: color.font,
+                fontWeight: getFontWeight(props.fontWeight),
+                caretColor: edit ? color.font : "transparent",
+            }}
+            placeholder={edit ? props.placeholder : ""}
+            type={type}
+            value={!edit && type === "password" ? fakePassword : value}
+            onMouseDown={(e) => {
+                if (!edit) {
+                    e.preventDefault();
+                }
+            }}
+            onChange={(e) => {
+                if (edit) {
+                    setValue(e.target.value);
+                    props.onChange && props.onChange(e);
+                } else {
+                    e.preventDefault();
+                }
+            }}
+        />
+    );
+
+    const passwordButtonView =
+        props.type === "password" ? (
+            <div
+                style={{
+                    height: size,
+                    paddingLeft: size / 3,
+                }}
+                onMouseDown={(e) => {
+                    setType(type === "password" ? "text" : "password");
+                }}
+            >
+                {type === "password"
+                    ? passwordIconInactive
+                    : passwordIconActive}
+            </div>
+        ) : null;
+
+    const editButtonView = props.onEdit ? (
+        <div
+            style={{
+                height: size,
+                paddingLeft: size / 3,
+            }}
+            onMouseDown={(e) => {
+                if (edit) {
+                    e.stopPropagation();
+                    setEdit(false);
+                    inputRef.current?.blur();
+                    props.onEdit && props.onEdit(value);
+                } else {
+                    setEdit(true);
+                    inputRef.current?.focus();
+                }
+            }}
+        >
+            {edit ? editIconActive : editIconInactive}
+        </div>
+    ) : null;
+
     return (
         <div
+            ref={rootRef}
             style={{
                 display: "flex",
                 position: "relative",
@@ -156,11 +283,6 @@ const Input = (props: InputProps) => {
                 padding: `${size / 2}px 0px ${size / 2}px 0px`,
                 transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
             }}
-            onMouseDown={(e) => {
-                if ((e.eventPhase === 2 || e.eventPhase === 3) && edit) {
-                    inputEl.current && inputEl.current.focus();
-                }
-            }}
             onMouseMove={(e) => {
                 if (htmlChecker.hasHover()) {
                     setHover(true);
@@ -169,140 +291,26 @@ const Input = (props: InputProps) => {
                     });
                 }
             }}
+            onMouseDown={(e) => {
+                if ((e.eventPhase === 2 || e.eventPhase === 3) && edit) {
+                    inputRef.current?.focus();
+                }
+            }}
+            onFocus={(e) => {
+                setFocus(true);
+                htmlChecker.onLostFocus(() => {
+                    setFocus(false);
+                });
+            }}
         >
-            <div
-                style={{
-                    display: !edit && props.underline ? "block" : "none",
-                    position: "absolute",
-                    width: "100%",
-                    bottom: 0,
-                    height: 1,
-                    background: color.border,
-                    transition: "background 250ms ease-out",
-                }}
-                onMouseDown={(e) => {
-                    e.preventDefault();
-                }}
-            />
-
-            <div
-                style={{ display: edit ? "block" : "none", width: size / 2 }}
-            />
-
-            <div
-                style={{
-                    display: props.prefixIcon ? "block" : "none",
-                    marginRight: size / 3,
-                    height: size,
-                    color:
-                        props.validator && !props.validator(value)
-                            ? warningColor?.hsla
-                            : "inherit",
-                    transition: "color 300ms ease-out",
-                }}
-                onMouseDown={(e) => {
-                    e.preventDefault();
-                }}
-            >
-                {props.prefixIcon}
-            </div>
-
-            <div
-                style={{
-                    display: props.label ? "block" : "none",
-                    marginRight: size / 3,
-                    height: size,
-                }}
-                onMouseDown={(e) => {
-                    e.preventDefault();
-                }}
-            >
-                {props.label}
-            </div>
-
-            <input
-                ref={inputEl}
-                style={{
-                    display: "block",
-                    outline: "none",
-                    border: "0px",
-                    padding: "0px",
-                    width: "100%",
-                    lineHeight: `${size}px`,
-                    height: size,
-                    background: "transparent",
-                    color: color.font,
-                    fontWeight: getFontWeight(props.fontWeight),
-                    caretColor: edit ? color.font : "transparent",
-                }}
-                placeholder={edit ? props.placeholder : ""}
-                type={type}
-                value={!edit && type === "password" ? fakePassword : value}
-                onMouseDown={(e) => {
-                    if (!edit) {
-                        e.preventDefault();
-                    }
-                }}
-                onFocus={(e) => {
-                    setFocus(true);
-                    htmlChecker.onLostFocus(() => {
-                        setFocus(false);
-                    });
-                }}
-                onChange={(e) => {
-                    if (edit) {
-                        setValue(e.target.value);
-                        props.onChange && props.onChange(e);
-                    } else {
-                        e.preventDefault();
-                    }
-                }}
-            />
-
-            <div
-                style={{
-                    alignItems: "center",
-                    height: size,
-                    display:
-                        (edit && props.type) === "password" ? "block" : "none",
-                    marginLeft: size / 3,
-                }}
-                onMouseDown={(e) => {
-                    e.preventDefault();
-                    setType(type === "password" ? "text" : "password");
-                }}
-            >
-                {type === "password"
-                    ? passwordIconInactive
-                    : passwordIconActive}
-            </div>
-
-            <div
-                style={{
-                    alignItems: "center",
-                    height: size,
-                    display: props.onSubmit ? "block" : "none",
-                    marginLeft: size / 3,
-                }}
-                onMouseDown={(e) => {
-                    e.preventDefault();
-                    if (edit) {
-                        e.stopPropagation();
-                        setEdit(false);
-                        inputEl.current && inputEl.current.blur();
-                        props.onSubmit && props.onSubmit(value);
-                    } else {
-                        setEdit(true);
-                        inputEl.current && inputEl.current.focus();
-                    }
-                }}
-            >
-                {edit ? editIconActive : editIconInactive}
-            </div>
-
-            <div
-                style={{ display: edit ? "inline" : "none", width: size / 2 }}
-            />
+            {spacer}
+            {prefixIconView}
+            {labelView}
+            {inputView}
+            {passwordButtonView}
+            {editButtonView}
+            {spacer}
+            {underlineView}
         </div>
     );
 };

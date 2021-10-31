@@ -23,26 +23,30 @@ const Debug = () => (
                 border={true}
                 icon={<AiOutlineLock />}
             />
-
+            <span style={{ height: 50 }} />
             <Input
                 value="1234"
                 label="Name:"
                 initEdit={false}
-                onSubmit={() => {}}
+                onEdit={() => {}}
             />
+
+            <span style={{ height: 50 }} />
             <Input
                 value="1234"
-                label="Name:"
                 initEdit={false}
                 underline={true}
                 prefixIcon={<AiOutlineLock />}
-                onSubmit={() => {}}
+                label="Name:"
+                onEdit={() => {}}
             />
+            <span style={{ height: 50 }} />
             <Input
                 value="1234"
                 label="Name:"
+                type="password"
                 initEdit={false}
-                onSubmit={() => {}}
+                onEdit={() => {}}
             />
         </div>
     </div>
