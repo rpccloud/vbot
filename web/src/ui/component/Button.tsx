@@ -79,14 +79,16 @@ export const ButtonContext = React.createContext<IButtonContextProps>({});
 interface ButtonProps {
     size: "tiny" | "small" | "medium" | "large" | "xlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
-    icon?: React.ReactElement;
+    icon?: React.ReactNode;
     value: string;
     disabled: boolean;
     round: boolean;
     selected: boolean;
+    focusable: boolean;
     border: boolean;
     style?: CSSProperties;
-    onClick?: () => void;
+    onClick: () => void;
+    clickType: "mouseup" | "mousedown";
 }
 
 const Button = (props: ButtonProps) => {
@@ -119,8 +121,9 @@ const Button = (props: ButtonProps) => {
     let style = {};
     if (props.round) {
         style = {
-            width: `${2 * size}px`,
-            height: `${2 * size}px`,
+            width: 2 * size,
+            height: 2 * size,
+            padding: 0,
             alignItems: "center",
             justifyContent: "center",
             borderRadius: size,
@@ -135,6 +138,7 @@ const Button = (props: ButtonProps) => {
 
     return (
         <button
+            tabIndex={props.focusable ? 0 : -1}
             ref={buttonElem}
             style={{
                 display: "inline-flex",
@@ -148,9 +152,10 @@ const Button = (props: ButtonProps) => {
                 color: color.font,
                 fontWeight: getFontWeight(props.fontWeight),
                 transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
-                boxShadow: color.shadow
-                    ? `0px 0px ${size / 4}px ${color.shadow}`
-                    : "",
+                boxShadow:
+                    color.shadow && props.border
+                        ? `0px 0px ${size / 4}px ${color.shadow}`
+                        : "",
                 ...style,
             }}
             onMouseMove={(e) => {
@@ -163,9 +168,16 @@ const Button = (props: ButtonProps) => {
             }}
             onMouseDown={(e) => {
                 setActive(true);
+                if (!props.disabled && props.clickType === "mousedown") {
+                    props.onClick && props.onClick();
+                }
             }}
             onMouseUp={(e) => {
-                if (active && !props.disabled) {
+                if (
+                    active &&
+                    !props.disabled &&
+                    props.clickType === "mouseup"
+                ) {
                     props.onClick && props.onClick();
                 }
                 setActive(false);
@@ -189,6 +201,9 @@ Button.defaultProps = {
     round: false,
     selected: false,
     border: true,
+    focusable: true,
+    onClick: () => void {},
+    clickType: "mouseup",
 };
 
 export default Button;

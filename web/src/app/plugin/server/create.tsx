@@ -130,8 +130,8 @@ const ServerCreate = observer((props: PluginProps) => {
                 initEdit={true}
                 value={data.host}
                 prefixIcon={<GlobalOutlined />}
-                onChange={(e) => {
-                    data.setHost(e.target.value);
+                onChange={(value) => {
+                    data.setHost(value);
                 }}
                 validator={() => data.isValidHost}
             />
@@ -143,8 +143,8 @@ const ServerCreate = observer((props: PluginProps) => {
                 initEdit={true}
                 value={data.port}
                 prefixIcon={<AimOutlined />}
-                onChange={(e) => {
-                    data.setPort(e.target.value);
+                onChange={(value) => {
+                    data.setPort(value);
                 }}
                 validator={() => data.isValidPort}
             />
@@ -156,8 +156,8 @@ const ServerCreate = observer((props: PluginProps) => {
                 initEdit={true}
                 value={data.user}
                 prefixIcon={<UserOutlined />}
-                onChange={(e) => {
-                    data.setUser(e.target.value);
+                onChange={(value) => {
+                    data.setUser(value);
                 }}
                 validator={(v) => v !== ""}
             />
@@ -169,8 +169,8 @@ const ServerCreate = observer((props: PluginProps) => {
                 initEdit={true}
                 value={data.password}
                 prefixIcon={<LockOutlined />}
-                onChange={(e) => {
-                    data.setPassword(e.target.value);
+                onChange={(value) => {
+                    data.setPassword(value);
                 }}
                 validator={(v) => v !== ""}
             />

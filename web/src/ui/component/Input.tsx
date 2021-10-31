@@ -11,8 +11,11 @@ import { HtmlChecker } from "../util/util";
 
 import { AiOutlineEye } from "@react-icons/all-files/ai/AiOutlineEye";
 import { AiOutlineEyeInvisible } from "@react-icons/all-files/ai/AiOutlineEyeInvisible";
-import { AiOutlineUnlock } from "@react-icons/all-files/ai/AiOutlineUnlock";
+import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
+import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
+
+import Button from "./Button";
 
 let themeCache: { key: string; config: IInputContextProps } = {
     key: "",
@@ -27,7 +30,8 @@ function getConfig(theme: ThemeConfig): IInputContextProps {
     }
 
     let config = {
-        editIconActive: <AiOutlineUnlock />,
+        revertIcon: <AiOutlineClose />,
+        editIconActive: <AiOutlineCheck />,
         editIconInactive: <AiOutlineLock />,
         passwordIconActive: <AiOutlineEye />,
         passwordIconInactive: <AiOutlineEyeInvisible />,
@@ -73,6 +77,7 @@ interface IInputContextProps {
     successColor?: Color;
     warningColor?: Color;
 
+    revertIcon?: React.ReactNode;
     editIconActive?: React.ReactNode;
     editIconInactive?: React.ReactNode;
     passwordIconActive?: React.ReactNode;
@@ -82,7 +87,7 @@ interface IInputContextProps {
 export const InputContext = React.createContext<IInputContextProps>({});
 
 interface InputProps {
-    initEdit: boolean;
+    embed: boolean;
     disabled: boolean;
     underline: boolean;
     type: "password" | "text";
@@ -94,8 +99,8 @@ interface InputProps {
     validator?: (value: any) => boolean;
     prefixIcon?: React.ReactNode;
     style?: CSSProperties;
-    onChange?: (e: { target: { value: any } }) => void;
-    onEdit?: (value: any) => void;
+    onChange: (value: string) => void;
+    onSubmit: (oldValue: string, newValue: string) => void;
 }
 
 const Input = (props: InputProps) => {
@@ -107,12 +112,9 @@ const Input = (props: InputProps) => {
     let [focus, setFocus] = useState(false);
     let [hover, setHover] = useState(false);
     let [type, setType] = useState(props.type);
-    let [edit, setEdit] = useState(props.initEdit);
     let [value, setValue] = useState(props.value);
 
     let htmlChecker = new HtmlChecker(rootRef);
-    let fakePassword = "000000";
-
     let size = getFontSize(props.size);
     let color = { ...themeConfig.normal, ...inputConfig.normal };
 
@@ -139,19 +141,20 @@ const Input = (props: InputProps) => {
         inputConfig.editIconActive || themeConfig.editIconActive;
     const editIconInactive =
         inputConfig.editIconInactive || themeConfig.editIconInactive;
+    const revertIcon = inputConfig.revertIcon || themeConfig.revertIcon;
 
     const spacer = (
         <div
             style={{
                 display: "block",
-                width: edit ? size / 2 : 0,
+                width: !props.embed || focus ? size / 2 : 0,
                 transition: "width 250ms ease-out",
             }}
         />
     );
 
     const underlineView =
-        !edit && props.underline ? (
+        props.embed && !focus ? (
             <div
                 style={{
                     position: "absolute",
@@ -172,7 +175,7 @@ const Input = (props: InputProps) => {
                     props.validator && !props.validator(value)
                         ? warningColor?.hsla
                         : "inherit",
-                paddingRight: size / 3,
+                marginRight: size / 3,
                 transition: "color 300ms ease-out",
             }}
         >
@@ -184,7 +187,7 @@ const Input = (props: InputProps) => {
         <div
             style={{
                 height: size,
-                paddingRight: size / 3,
+                marginRight: size / 3,
             }}
         >
             {props.label}
@@ -205,95 +208,18 @@ const Input = (props: InputProps) => {
                 background: "transparent",
                 color: color.font,
                 fontWeight: getFontWeight(props.fontWeight),
-                caretColor: edit ? color.font : "transparent",
+                caretColor: focus ? color.font : "transparent",
             }}
-            placeholder={edit ? props.placeholder : ""}
+            placeholder={props.placeholder}
             type={type}
-            value={!edit && type === "password" ? fakePassword : value}
-            onMouseDown={(e) => {
-                if (!edit) {
-                    e.preventDefault();
-                }
-            }}
+            value={value}
             onChange={(e) => {
-                if (edit) {
-                    setValue(e.target.value);
-                    props.onChange && props.onChange(e);
-                } else {
+                setValue(e.target.value);
+                props.onChange(e.target.value);
+            }}
+            onMouseDown={(e) => {
+                if (props.embed && !focus) {
                     e.preventDefault();
-                }
-            }}
-        />
-    );
-
-    const passwordButtonView =
-        props.type === "password" ? (
-            <div
-                style={{
-                    height: size,
-                    paddingLeft: size / 3,
-                }}
-                onMouseDown={(e) => {
-                    setType(type === "password" ? "text" : "password");
-                }}
-            >
-                {type === "password"
-                    ? passwordIconInactive
-                    : passwordIconActive}
-            </div>
-        ) : null;
-
-    const editButtonView = props.onEdit ? (
-        <div
-            style={{
-                height: size,
-                paddingLeft: size / 3,
-            }}
-            onMouseDown={(e) => {
-                if (edit) {
-                    e.stopPropagation();
-                    setEdit(false);
-                    inputRef.current?.blur();
-                    props.onEdit && props.onEdit(value);
-                } else {
-                    setEdit(true);
-                    inputRef.current?.focus();
-                }
-            }}
-        >
-            {edit ? editIconActive : editIconInactive}
-        </div>
-    ) : null;
-
-    return (
-        <div
-            ref={rootRef}
-            style={{
-                display: "flex",
-                position: "relative",
-                flexFlow: "row",
-                lineHeight: `${size}px`,
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderColor: edit ? color.border : "transparent",
-                boxShadow: `0px 0px ${size / 4}px ${color.shadow}`,
-                overflow: "clip",
-                fontSize: size,
-                color: color.font,
-                padding: `${size / 2}px 0px ${size / 2}px 0px`,
-                transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
-            }}
-            onMouseMove={(e) => {
-                if (htmlChecker.hasHover()) {
-                    setHover(true);
-                    htmlChecker.onLostHover(() => {
-                        setHover(false);
-                    });
-                }
-            }}
-            onMouseDown={(e) => {
-                if ((e.eventPhase === 2 || e.eventPhase === 3) && edit) {
-                    inputRef.current?.focus();
                 }
             }}
             onFocus={(e) => {
@@ -302,12 +228,138 @@ const Input = (props: InputProps) => {
                     setFocus(false);
                 });
             }}
+        />
+    );
+
+    const passwordButtonView =
+        props.type === "password" ? (
+            <Button
+                round={true}
+                border={false}
+                focusable={false}
+                size={props.size}
+                icon={
+                    type === "password"
+                        ? passwordIconInactive
+                        : passwordIconActive
+                }
+                style={{
+                    width: size,
+                    height: size,
+                    marginLeft: size / 3,
+                }}
+                onClick={() => {
+                    setType(type === "password" ? "text" : "password");
+                }}
+            />
+        ) : null;
+
+    const revertButtonView =
+        props.embed && focus ? (
+            <Button
+                round={true}
+                border={false}
+                focusable={false}
+                size={props.size}
+                icon={revertIcon}
+                style={{
+                    width: size,
+                    height: size,
+                    marginLeft: size / 3,
+                }}
+                onClick={() => {
+                    setFocus(false);
+                    inputRef.current?.blur();
+                    // if (edit) {
+                    //     setEdit(false);
+                    //     inputRef.current?.blur();
+                    //     props.onEdit && props.onEdit(value);
+                    // } else {
+                    //     setEdit(true);
+                    //     inputRef.current?.focus();
+                    // }
+                }}
+            />
+        ) : null;
+
+    const submitButtonView =
+        props.embed && focus ? (
+            <Button
+                round={true}
+                border={false}
+                focusable={false}
+                size={props.size}
+                icon={editIconActive}
+                style={{
+                    width: size,
+                    height: size,
+                    marginLeft: size / 3,
+                }}
+                clickType="mouseup"
+                onClick={() => {
+                    setFocus(false);
+                    inputRef.current?.blur();
+                }}
+            />
+        ) : null;
+
+    const editButtonView =
+        props.embed && !focus ? (
+            <Button
+                round={true}
+                border={false}
+                focusable={false}
+                size={props.size}
+                icon={editIconInactive}
+                style={{
+                    width: size,
+                    height: size,
+                    marginLeft: size / 3,
+                }}
+                onClick={() => {
+                    setFocus(true);
+                    inputRef.current?.focus();
+                }}
+            />
+        ) : null;
+
+    return (
+        <div
+            ref={rootRef}
+            tabIndex={0}
+            style={{
+                display: "flex",
+                position: "relative",
+                flexFlow: "row",
+                lineHeight: `${size}px`,
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderColor:
+                    props.embed && !focus ? "transparent" : color.border,
+                boxShadow: `0px 0px ${size / 5}px ${color.shadow}`,
+                overflow: "clip",
+                fontSize: size,
+                color: color.font,
+                padding: `${size / 2}px 0px ${size / 2}px 0px`,
+                transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
+            }}
+            onMouseMove={(e) => {
+                setHover(true);
+                htmlChecker.onLostHover(() => {
+                    setHover(false);
+                });
+            }}
+            onFocus={() => {
+                inputRef.current?.focus();
+            }}
         >
             {spacer}
             {prefixIconView}
             {labelView}
             {inputView}
             {passwordButtonView}
+            {revertButtonView}
+            {submitButtonView}
             {editButtonView}
             {spacer}
             {underlineView}
@@ -316,6 +368,7 @@ const Input = (props: InputProps) => {
 };
 
 Input.defaultProps = {
+    embed: false,
     disabled: false,
     underline: false,
     type: "text",
@@ -325,6 +378,8 @@ Input.defaultProps = {
     placeholder: "",
     label: "",
     initEdit: true,
+    onChange: (value: string) => void {},
+    onSubmit: (oldValue: string, newValue: string) => void {},
 };
 
 export default Input;

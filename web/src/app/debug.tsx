@@ -19,34 +19,29 @@ const Debug = () => (
                 value="Cancel"
                 size="large"
                 style={{ borderRadius: 20 }}
+                focusable={false}
                 round={false}
                 border={true}
                 icon={<AiOutlineLock />}
             />
-            <span style={{ height: 50 }} />
-            <Input
-                value="1234"
-                label="Name:"
-                initEdit={false}
-                onEdit={() => {}}
-            />
+            <div style={{ height: 50 }} />
+            <Input value="1234" label="Name:" initEdit={false} />
 
-            <span style={{ height: 50 }} />
+            <div style={{ height: 50 }} />
             <Input
                 value="1234"
                 initEdit={false}
+                embed={true}
                 underline={true}
                 prefixIcon={<AiOutlineLock />}
                 label="Name:"
-                onEdit={() => {}}
             />
-            <span style={{ height: 50 }} />
+            <div style={{ height: 50 }} />
             <Input
                 value="1234"
                 label="Name:"
                 type="password"
                 initEdit={false}
-                onEdit={() => {}}
             />
         </div>
     </div>

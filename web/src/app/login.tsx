@@ -106,8 +106,8 @@ const Login = observer(() => {
                         value={data.user}
                         placeholder="Input Username"
                         prefixIcon={<UserOutlined />}
-                        onChange={(e) => {
-                            data.setUser(e.target.value);
+                        onChange={(value) => {
+                            data.setUser(value);
                         }}
                     />
                     <div style={{ height: 20 }} />
@@ -118,8 +118,8 @@ const Login = observer(() => {
                         value={data.password}
                         placeholder="Input password"
                         prefixIcon={<LockOutlined />}
-                        onChange={(e) => {
-                            data.setPassword(e.target.value);
+                        onChange={(value) => {
+                            data.setPassword(value);
                         }}
                     />
                     <div style={{ height: 20 }} />

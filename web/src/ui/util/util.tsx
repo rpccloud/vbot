@@ -78,21 +78,21 @@ export class HtmlChecker {
         const elem = this.ref.current;
         if (elem) {
             if (!!this.fnLostFocus) {
-                if (!elem.matches(":focus")) {
+                if (!this.hasFocus()) {
                     this.fnLostFocus();
                     this.fnLostFocus = undefined;
                 }
             }
 
             if (!!this.fnLostHover) {
-                if (!elem.matches(":hover")) {
+                if (!this.hasHover()) {
                     this.fnLostHover();
                     this.fnLostHover = undefined;
                 }
             }
 
             if (!!this.fnLostActive) {
-                if (!elem.matches(":active")) {
+                if (!this.hasActive()) {
                     this.fnLostActive();
                     this.fnLostActive = undefined;
                 }
