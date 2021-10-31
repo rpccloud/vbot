@@ -102,7 +102,7 @@ const Login = observer(() => {
                     <Input
                         type="text"
                         size="medium"
-                        edit={true}
+                        initEdit={true}
                         value={data.user}
                         placeholder="Input Username"
                         prefixIcon={<UserOutlined />}
@@ -114,7 +114,7 @@ const Login = observer(() => {
                     <Input
                         type="password"
                         size="medium"
-                        edit={true}
+                        initEdit={true}
                         value={data.password}
                         placeholder="Input password"
                         prefixIcon={<LockOutlined />}

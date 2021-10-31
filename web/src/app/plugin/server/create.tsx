@@ -127,7 +127,7 @@ const ServerCreate = observer((props: PluginProps) => {
                 type="text"
                 size="medium"
                 placeholder="SSH Host (192.168.0.1 or www.example.com)"
-                edit={true}
+                initEdit={true}
                 value={data.host}
                 prefixIcon={<GlobalOutlined />}
                 onChange={(e) => {
@@ -140,7 +140,7 @@ const ServerCreate = observer((props: PluginProps) => {
                 type="text"
                 size="medium"
                 placeholder="SSH Port (0 - 65535)"
-                edit={true}
+                initEdit={true}
                 value={data.port}
                 prefixIcon={<AimOutlined />}
                 onChange={(e) => {
@@ -153,7 +153,7 @@ const ServerCreate = observer((props: PluginProps) => {
                 type="text"
                 size="medium"
                 placeholder="SSH Username"
-                edit={true}
+                initEdit={true}
                 value={data.user}
                 prefixIcon={<UserOutlined />}
                 onChange={(e) => {
@@ -166,7 +166,7 @@ const ServerCreate = observer((props: PluginProps) => {
                 type="password"
                 size="medium"
                 placeholder="SSH Password"
-                edit={true}
+                initEdit={true}
                 value={data.password}
                 prefixIcon={<LockOutlined />}
                 onChange={(e) => {

@@ -22,33 +22,40 @@ function getConfig(theme: ThemeConfig): IButtonContextProps {
 
     let config = {
         normal: {
-            font: theme.primaryColor.alpha(0.6).hsla,
-            border: theme.primaryColor.alpha(0.6).hsla,
+            font: theme.primaryColor.alpha(0.65).hsla,
+            border: theme.primaryColor.alpha(0.65).hsla,
+            background: "transparent",
+            shadow: "transparent",
         },
         hover: {
             font: theme.primaryColor.hsla,
             border: theme.primaryColor.hsla,
+            background: "transparent",
+            shadow: "transparent",
         },
         active: {
             font: theme.primaryColor.hsla,
             border: theme.primaryColor.hsla,
             shadow: theme.primaryColor.hsla,
+            background: "transparent",
         },
         focus: {
             font: theme.primaryColor.hsla,
             border: theme.primaryColor.hsla,
+            background: "transparent",
+            shadow: "transparent",
         },
         selected: {
             font: theme.primaryColor.hsla,
             border: theme.primaryColor.hsla,
+            background: "transparent",
+            shadow: "transparent",
         },
         disabled: {
             font: theme.disabledColor.hsla,
             border: theme.disabledColor.hsla,
-        },
-        warning: {
-            font: theme.warningColor.hsla,
-            border: theme.warningColor.hsla,
+            background: "transparent",
+            shadow: "transparent",
         },
     };
 
@@ -78,13 +85,12 @@ interface ButtonProps {
     round: boolean;
     selected: boolean;
     border: boolean;
-    expand: boolean;
     style?: CSSProperties;
     onClick?: () => void;
 }
 
 const Button = (props: ButtonProps) => {
-    const buttonElem = useRef<HTMLDivElement>(null);
+    const buttonElem = useRef<HTMLButtonElement>(null);
     const themeConfig = getConfig(useContext(ThemeContext));
     const contextConfig = useContext(ButtonContext);
     let [active, setActive] = useState(false);
@@ -122,24 +128,23 @@ const Button = (props: ButtonProps) => {
         };
     } else {
         style = {
-            padding: `${size / 2}px ${size}px ${size / 2}px ${size}px`,
+            padding: `${size / 2}px ${size / 2}px ${size / 2}px ${size / 2}px`,
             ...props.style,
         };
     }
 
-    console.log(color);
-
     return (
-        <div
+        <button
             ref={buttonElem}
             style={{
-                display: props.expand ? "flex" : "inline-flex",
+                display: "inline-flex",
                 borderWidth: props.border ? 1 : 0,
                 borderStyle: "solid",
                 borderColor: color.border,
                 fontSize: size,
                 flexFlow: "row",
-                background: color.background,
+                backgroundColor: color.background,
+                lineHeight: `${size}px`,
                 color: color.font,
                 fontWeight: getFontWeight(props.fontWeight),
                 transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
@@ -169,18 +174,10 @@ const Button = (props: ButtonProps) => {
                 setActive(false);
             }}
         >
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: props.value && props.icon ? size / 2 : 0,
-                }}
-            >
-                {props.icon}
-            </div>
-            <span>{props.value}</span>
-        </div>
+            {props.icon}
+            <span style={{ width: props.value && props.icon ? size / 3 : 0 }} />
+            {props.value}
+        </button>
     );
 };
 
@@ -192,7 +189,6 @@ Button.defaultProps = {
     round: false,
     selected: false,
     border: true,
-    expand: false,
 };
 
 export default Button;
