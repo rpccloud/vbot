@@ -343,6 +343,11 @@ const Input = (props: InputProps) => {
                 padding: `${size / 2}px 0px ${size / 2}px 0px`,
                 transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
             }}
+            onMouseDown={(e) => {
+                if (props.embed && !focus) {
+                    e.preventDefault();
+                }
+            }}
             onMouseMove={(e) => {
                 setHover(true);
                 htmlChecker.onLostHover(() => {
