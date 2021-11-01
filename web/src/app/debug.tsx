@@ -1,47 +1,136 @@
 import React from "react";
-import Button from "../ui/component/Button";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import Input from "../ui/component/Input";
 
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
-        <div style={{ position: "absolute", top: 100, left: 100, width: 400 }}>
-            <Button
-                value="Cancel"
-                size="medium"
-                style={{ borderRadius: 20 }}
-                round={false}
-                border={true}
-                icon={<AiOutlineLock />}
-            />
-
-            <Button
-                value="Cancel"
-                size="large"
-                style={{ borderRadius: 20 }}
-                focusable={false}
-                round={false}
-                border={true}
-                icon={<AiOutlineLock />}
-            />
-            <div style={{ height: 50 }} />
-            <Input value="1234" label="Name:" initEdit={false} />
-
-            <div style={{ height: 50 }} />
+        <div style={{ position: "absolute", top: 100, left: 0, width: 280 }}>
             <Input
-                value="1234"
-                initEdit={false}
-                embed={true}
-                underline={true}
+                defaultValue="1234"
+                mode="bare"
+                editable={true}
+                submittable={true}
                 prefixIcon={<AiOutlineLock />}
                 label="Name:"
+                placeholder="placeholder"
+            />
+
+            <div style={{ height: 50 }} />
+            <Input
+                defaultValue="1234"
+                mode="underline"
+                editable={true}
+                submittable={true}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+            />
+
+            <div style={{ height: 50 }} />
+            <Input
+                defaultValue="1234"
+                mode="border"
+                editable={true}
+                submittable={true}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+            />
+        </div>
+
+        <div style={{ position: "absolute", top: 100, left: 300, width: 280 }}>
+            <Input
+                defaultValue="1234"
+                mode="bare"
+                editable={false}
+                submittable={true}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
             />
             <div style={{ height: 50 }} />
             <Input
-                value="1234"
+                defaultValue="1234"
+                mode="underline"
+                editable={false}
+                submittable={true}
+                prefixIcon={<AiOutlineLock />}
                 label="Name:"
-                type="password"
-                initEdit={false}
+                placeholder="placeholder"
+            />
+            <div style={{ height: 50 }} />
+            <Input
+                defaultValue="1234"
+                mode="border"
+                editable={false}
+                submittable={true}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+            />
+        </div>
+
+        <div style={{ position: "absolute", top: 100, left: 600, width: 280 }}>
+            <Input
+                defaultValue="1234"
+                mode="bare"
+                editable={true}
+                submittable={false}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+            />
+            <div style={{ height: 50 }} />
+            <Input
+                defaultValue="1234"
+                mode="underline"
+                editable={true}
+                submittable={false}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+            />
+            <div style={{ height: 50 }} />
+            <Input
+                defaultValue="1234"
+                mode="border"
+                editable={true}
+                submittable={false}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+            />
+        </div>
+
+        <div style={{ position: "absolute", top: 100, left: 900, width: 280 }}>
+            <Input
+                defaultValue="1234"
+                mode="bare"
+                editable={false}
+                submittable={false}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+            />
+            <div style={{ height: 50 }} />
+            <Input
+                defaultValue="1234"
+                mode="underline"
+                editable={false}
+                submittable={false}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+            />
+            <div style={{ height: 50 }} />
+            <Input
+                defaultValue="1234"
+                mode="border"
+                editable={false}
+                submittable={false}
+                prefixIcon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
             />
         </div>
     </div>

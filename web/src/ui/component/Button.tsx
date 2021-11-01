@@ -22,8 +22,8 @@ function getConfig(theme: ThemeConfig): IButtonContextProps {
 
     let config = {
         normal: {
-            font: theme.primaryColor.alpha(0.65).hsla,
-            border: theme.primaryColor.alpha(0.65).hsla,
+            font: theme.primaryColor.alpha(0.7).hsla,
+            border: theme.primaryColor.alpha(0.7).hsla,
             background: "transparent",
             shadow: "transparent",
         },
@@ -88,7 +88,6 @@ interface ButtonProps {
     border: boolean;
     style?: CSSProperties;
     onClick: () => void;
-    clickType: "mouseup" | "mousedown";
 }
 
 const Button = (props: ButtonProps) => {
@@ -159,28 +158,21 @@ const Button = (props: ButtonProps) => {
                 ...style,
             }}
             onMouseMove={(e) => {
-                if (htmlChecker.hasHover()) {
-                    setHover(true);
-                    htmlChecker.onLostHover(() => {
-                        setHover(false);
-                    });
-                }
+                setHover(true);
+                htmlChecker.onLostHover(() => {
+                    setHover(false);
+                });
             }}
             onMouseDown={(e) => {
                 setActive(true);
-                if (!props.disabled && props.clickType === "mousedown") {
-                    props.onClick && props.onClick();
-                }
             }}
             onMouseUp={(e) => {
-                if (
-                    active &&
-                    !props.disabled &&
-                    props.clickType === "mouseup"
-                ) {
-                    props.onClick && props.onClick();
-                }
                 setActive(false);
+            }}
+            onClick={() => {
+                if (!props.disabled) {
+                    props.onClick();
+                }
             }}
             onMouseLeave={(e) => {
                 setActive(false);
@@ -203,7 +195,6 @@ Button.defaultProps = {
     border: true,
     focusable: true,
     onClick: () => void {},
-    clickType: "mouseup",
 };
 
 export default Button;

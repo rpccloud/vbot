@@ -62,6 +62,7 @@ export interface IColorUnit {
     border?: string;
     shadow?: string;
     background?: string;
+    auxiliary?: string;
 }
 
 export const config = {

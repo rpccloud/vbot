@@ -125,9 +125,8 @@ const CardPassword = observer((props: { onNext: () => void }) => {
                 size="medium"
                 type="password"
                 placeholder="Input password"
-                value={data.password}
+                defaultValue={data.password}
                 prefixIcon={<LockOutlined />}
-                initEdit={true}
                 onChange={(value) => {
                     data.setPassword(value);
                 }}
@@ -137,9 +136,8 @@ const CardPassword = observer((props: { onNext: () => void }) => {
                 size="medium"
                 type="password"
                 placeholder="Confirm password"
-                value={data.confirm}
+                defaultValue={data.confirm}
                 prefixIcon={<LockOutlined />}
-                initEdit={true}
                 onChange={(value) => {
                     data.setConfirm(value);
                 }}

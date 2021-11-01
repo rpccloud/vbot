@@ -102,8 +102,7 @@ const Login = observer(() => {
                     <Input
                         type="text"
                         size="medium"
-                        initEdit={true}
-                        value={data.user}
+                        defaultValue={data.user}
                         placeholder="Input Username"
                         prefixIcon={<UserOutlined />}
                         onChange={(value) => {
@@ -114,8 +113,7 @@ const Login = observer(() => {
                     <Input
                         type="password"
                         size="medium"
-                        initEdit={true}
-                        value={data.password}
+                        defaultValue={data.password}
                         placeholder="Input password"
                         prefixIcon={<LockOutlined />}
                         onChange={(value) => {
