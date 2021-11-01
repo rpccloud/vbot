@@ -26,6 +26,56 @@ function hasState(elem: Element, state: string): boolean {
     return false;
 }
 
+function getTimeMS(): number {
+    return new Date().getTime();
+}
+
+export class TimerValue {
+    private duration: number;
+    private defaultValue: any;
+    private value: any;
+    private timer?: number;
+    private startMS?: number;
+    private onValueChange: (value: any) => void;
+    constructor(
+        duration: number,
+        defaultValue: any,
+        onValueChange: (value: any) => void
+    ) {
+        this.defaultValue = defaultValue;
+        this.value = defaultValue;
+        this.duration = duration;
+        this.onValueChange = onValueChange;
+    }
+
+    public setValue(value: any) {
+        if (value !== this.value) {
+            this.value = value;
+            this.onValueChange(this.value);
+        }
+
+        if (value !== this.defaultValue) {
+            this.check();
+        }
+    }
+
+    private check() {
+        this.startMS = getTimeMS();
+        if (!this.timer) {
+            this.timer = window.setInterval(() => {
+                if (
+                    !this.startMS ||
+                    getTimeMS() - this.startMS > this.duration
+                ) {
+                    window.clearInterval(this.timer);
+                    this.timer = undefined;
+                    this.setValue(this.defaultValue);
+                }
+            }, 50);
+        }
+    }
+}
+
 export class HtmlChecker {
     ref: any;
     fnLostFocus?: () => void;

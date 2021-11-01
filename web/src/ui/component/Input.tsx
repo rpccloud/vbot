@@ -7,7 +7,7 @@ import {
     ThemeConfig,
     ThemeContext,
 } from "../theme/config";
-import { HtmlChecker } from "../util/util";
+import { HtmlChecker, TimerValue } from "../util/util";
 
 import { AiOutlineEye } from "@react-icons/all-files/ai/AiOutlineEye";
 import { AiOutlineEyeInvisible } from "@react-icons/all-files/ai/AiOutlineEyeInvisible";
@@ -98,7 +98,7 @@ interface InputProps {
     validator: (value: any) => boolean;
     style?: CSSProperties;
     onChange: (value: string) => void;
-    onSubmit: (oldValue: string, newValue: string) => void;
+    onSubmit?: (oldValue: string, newValue: string) => Promise<boolean>;
 }
 
 const Input = (props: InputProps) => {
@@ -111,9 +111,16 @@ const Input = (props: InputProps) => {
     let [hover, setHover] = useState(false);
     let [type, setType] = useState(props.type);
     let [value, setValue] = useState(props.defaultValue);
+    let [stageValue, setStageValue] = useState(props.defaultValue);
+    let [loading, setLoading] = useState(false);
+    let [inputBG, setInputBG] = useState("transparent");
 
+    let inputBGTimerValue = new TimerValue(1000, "transparent", (bg) => {
+        setInputBG(bg);
+    });
     let htmlChecker = new HtmlChecker(rootRef);
-    let size = getFontSize(props.size);
+    let fontSize = getFontSize(props.size);
+    let size = fontSize + 2;
     let color = { ...themeConfig.normal, ...inputConfig.normal };
 
     if (hover) {
@@ -124,7 +131,7 @@ const Input = (props: InputProps) => {
         color = { ...themeConfig.focus, ...inputConfig.focus };
     }
 
-    // const successColor = inputConfig.successColor || themeConfig.successColor;
+    const successColor = inputConfig.successColor || themeConfig.successColor;
     const warningColor = inputConfig.warningColor || themeConfig.warningColor;
     const placeholderColor =
         inputConfig.placeholderColor || themeConfig.placeholderColor;
@@ -191,10 +198,11 @@ const Input = (props: InputProps) => {
                 lineHeight: `${size}px`,
                 height: size,
                 cursor: focus ? "text" : "default",
-                background: "transparent",
+                background: inputBG,
                 color: value ? color.font : placeholderColor?.hsla,
                 fontWeight: getFontWeight(props.fontWeight),
                 caretColor: focus ? color.font : "transparent",
+                transition: "background 350ms ease-out",
             }}
             placeholder={props.placeholder}
             type={type}
@@ -205,9 +213,25 @@ const Input = (props: InputProps) => {
             }}
             onFocus={(e) => {
                 if (!focus) {
+                    if (inputRef.current) {
+                        inputRef.current.setRangeText(
+                            "",
+                            value.length,
+                            value.length,
+                            "end"
+                        );
+
+                        // inputRef.current.setSelectionRange(
+                        //     value.length,
+                        //     value.length,
+                        //     "end"
+                        // );
+                    }
                     setFocus(true);
+                    setStageValue(value);
                     htmlChecker.onLostFocus(() => {
                         setFocus(false);
+                        setStageValue(value);
                     });
                 }
             }}
@@ -271,6 +295,30 @@ const Input = (props: InputProps) => {
                 }}
                 onClick={() => {
                     inputRef.current?.blur();
+
+                    if (props.onSubmit && !loading && stageValue !== value) {
+                        let success = false;
+                        setLoading(true);
+                        props
+                            .onSubmit(stageValue, value)
+                            .then((v) => {
+                                success = v;
+                            })
+                            .catch(() => {
+                                success = false;
+                            })
+                            .finally(() => {
+                                if (!success) {
+                                    setValue(stageValue);
+                                }
+                                inputBGTimerValue.setValue(
+                                    success
+                                        ? successColor?.hsla
+                                        : warningColor?.hsla
+                                );
+                                setLoading(false);
+                            });
+                    }
                 }}
             />
         ) : null;
@@ -319,7 +367,7 @@ const Input = (props: InputProps) => {
                 flexFlow: "row",
                 lineHeight: `${size}px`,
                 overflow: "clip",
-                fontSize: size,
+                fontSize: fontSize,
                 color: color.font,
                 padding:
                     props.mode === "border"
@@ -367,7 +415,6 @@ Input.defaultProps = {
     placeholder: "",
     validator: () => true,
     onChange: () => void {},
-    onSubmit: () => void {},
 };
 
 export default Input;

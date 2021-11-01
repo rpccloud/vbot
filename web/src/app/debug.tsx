@@ -13,6 +13,9 @@ const Debug = () => (
                 prefixIcon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
+                onSubmit={async () => {
+                    return false;
+                }}
             />
 
             <div style={{ height: 50 }} />
@@ -24,6 +27,9 @@ const Debug = () => (
                 prefixIcon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
+                onSubmit={async () => {
+                    return true;
+                }}
             />
 
             <div style={{ height: 50 }} />
@@ -35,6 +41,9 @@ const Debug = () => (
                 prefixIcon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
+                onSubmit={async () => {
+                    return false;
+                }}
             />
         </div>
 
