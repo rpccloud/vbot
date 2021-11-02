@@ -127,6 +127,22 @@ export function getFontWeight(value: "lighter" | "normal" | "bold" | "bolder") {
     return cfgFontWeight[value];
 }
 
+export interface IColorUnit {
+    font?: string;
+    border?: string;
+    shadow?: string;
+    background?: string;
+    auxiliary?: string;
+}
+
+export class ColorPair {
+    foreground?: Color;
+    background?: Color;
+    shadow?: string;
+    border?: Color;
+    auxiliary?: string;
+}
+
 export class ThemeConfig {
     primaryColor: Color;
     auxiliaryColor: Color;

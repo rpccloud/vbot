@@ -1,9 +1,11 @@
 import React from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import Input from "../ui/component/Input";
+import Button from "../ui/ext/Button";
 
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
+        <Button value="Click" />
         <div style={{ position: "absolute", top: 100, left: 0, width: 280 }}>
             <Input
                 defaultValue="1234"
