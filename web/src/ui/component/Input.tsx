@@ -110,15 +110,18 @@ const Input = (props: InputProps) => {
     let [focus, setFocus] = useState(false);
     let [hover, setHover] = useState(false);
     let [type, setType] = useState(props.type);
-    let [value, setValue] = useState(props.defaultValue);
+    let [currentValue, setCurrentValue] = useState(props.defaultValue);
     let [stageValue, setStageValue] = useState(props.defaultValue);
     let [loading, setLoading] = useState(false);
     let [inputBG, setInputBG] = useState("transparent");
+    let [inputBGTimerValue] = useState(
+        new TimerValue(1000, "transparent", (bg) => {
+            setInputBG(bg);
+        })
+    );
+    let [htmlChecker] = useState(new HtmlChecker(rootRef));
 
-    let inputBGTimerValue = new TimerValue(1000, "transparent", (bg) => {
-        setInputBG(bg);
-    });
-    let htmlChecker = new HtmlChecker(rootRef);
+    // let inputBGTimerValue =
     let fontSize = getFontSize(props.size);
     let size = fontSize + 2;
     let color = { ...themeConfig.normal, ...inputConfig.normal };
@@ -162,8 +165,14 @@ const Input = (props: InputProps) => {
     const prefixIconView = props.prefixIcon ? (
         <div
             style={{
+                display: "flex",
                 height: size,
-                color: !props.validator(value) ? warningColor?.hsla : "inherit",
+                width: size,
+                alignItems: "center",
+                justifyContent: "center",
+                color: !props.validator(currentValue)
+                    ? warningColor?.hsla
+                    : "inherit",
                 marginRight: size / 3,
                 transition: "inherit",
             }}
@@ -176,12 +185,14 @@ const Input = (props: InputProps) => {
         <div
             style={{
                 height: size,
-                color: !props.validator(value) ? warningColor?.hsla : "inherit",
+                color: !props.validator(currentValue)
+                    ? warningColor?.hsla
+                    : "inherit",
                 marginRight: size / 3,
                 transition: "inherit",
             }}
         >
-            {props.label}
+            {props.label} {currentValue}
         </div>
     ) : null;
 
@@ -199,39 +210,38 @@ const Input = (props: InputProps) => {
                 height: size,
                 cursor: focus ? "text" : "default",
                 background: inputBG,
-                color: value ? color.font : placeholderColor?.hsla,
+                color: currentValue ? color.font : placeholderColor?.hsla,
                 fontWeight: getFontWeight(props.fontWeight),
                 caretColor: focus ? color.font : "transparent",
                 transition: "background 350ms ease-out",
             }}
             placeholder={props.placeholder}
             type={type}
-            value={value}
+            value={currentValue}
             onChange={(e) => {
-                setValue(e.target.value);
-                props.onChange(e.target.value);
+                if (e.target.value !== currentValue) {
+                    setCurrentValue(e.target.value);
+                    props.onChange(e.target.value);
+                }
             }}
             onFocus={(e) => {
                 if (!focus) {
-                    if (inputRef.current) {
-                        inputRef.current.setRangeText(
-                            "",
-                            value.length,
-                            value.length,
-                            "end"
-                        );
-
-                        // inputRef.current.setSelectionRange(
-                        //     value.length,
-                        //     value.length,
-                        //     "end"
-                        // );
-                    }
                     setFocus(true);
-                    setStageValue(value);
+                    setStageValue(currentValue);
+                    if (inputRef.current) {
+                        inputRef.current.setSelectionRange(
+                            currentValue.length,
+                            currentValue.length
+                        );
+                    }
                     htmlChecker.onLostFocus(() => {
                         setFocus(false);
-                        setStageValue(value);
+                        console.log(`log current ${currentValue}`);
+                        if (currentValue !== stageValue) {
+                            console.log("NO2");
+                            setCurrentValue(stageValue);
+                            inputBGTimerValue.setValue(warningColor?.hsla);
+                        }
                     });
                 }
             }}
@@ -296,11 +306,15 @@ const Input = (props: InputProps) => {
                 onClick={() => {
                     inputRef.current?.blur();
 
-                    if (props.onSubmit && !loading && stageValue !== value) {
+                    if (
+                        props.onSubmit &&
+                        !loading &&
+                        stageValue !== currentValue
+                    ) {
                         let success = false;
                         setLoading(true);
                         props
-                            .onSubmit(stageValue, value)
+                            .onSubmit(stageValue, currentValue)
                             .then((v) => {
                                 success = v;
                             })
@@ -308,8 +322,10 @@ const Input = (props: InputProps) => {
                                 success = false;
                             })
                             .finally(() => {
-                                if (!success) {
-                                    setValue(stageValue);
+                                if (success) {
+                                    setStageValue(currentValue);
+                                } else {
+                                    setCurrentValue(stageValue);
                                 }
                                 inputBGTimerValue.setValue(
                                     success
