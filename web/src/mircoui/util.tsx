@@ -83,7 +83,7 @@ export class TimerValue {
                     this.setValue(this.defaultValue);
                     this.depose();
                 }
-            }, 60);
+            }, 80);
         }
     }
 
@@ -117,7 +117,7 @@ export class HtmlChecker {
     }
 
     onLostActive(fn: () => void) {
-        this.fnLostHover = fn;
+        this.fnLostActive = fn;
         this.onCheck();
     }
 
@@ -144,7 +144,7 @@ export class HtmlChecker {
                 ) {
                     this.depose();
                 }
-            }, 60);
+            }, 80);
         }
     }
 

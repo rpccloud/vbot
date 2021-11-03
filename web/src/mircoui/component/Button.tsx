@@ -3,6 +3,7 @@ import { getFontWeight } from "../../ui/theme/config";
 import {
     ColorSet,
     getFontSize,
+    ITheme,
     Theme,
     ThemeCache,
     ThemeContext,
@@ -22,8 +23,8 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
     record = {
         fill: {
             normal: {
-                font: theme.primary.auxiliary.darken(2).alpha(0.8).hsla,
-                background: theme.primary.main.darken(2).alpha(0.8).hsla,
+                font: theme.primary.auxiliary.darken(3).alpha(0.8).hsla,
+                background: theme.primary.main.darken(3).alpha(0.8).hsla,
                 border: "transparent",
                 shadow: "transparent",
                 auxiliary: "transparent",
@@ -36,17 +37,17 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
                 auxiliary: "transparent",
             },
             active: {
-                font: theme.primary.auxiliary.lighten(4).hsla,
-                background: theme.primary.main.lighten(4).hsla,
+                font: theme.primary.auxiliary.lighten(5).hsla,
+                background: theme.primary.main.lighten(5).hsla,
                 border: "transparent",
-                shadow: theme.primary.main.hsla,
+                shadow: theme.primary.main.lighten(5).hsla,
                 auxiliary: "transparent",
             },
             focus: {
                 font: theme.primary.auxiliary.hsla,
                 background: theme.primary.main.hsla,
-                border: "transparent",
-                shadow: theme.primary.main.hsla,
+                border: theme.primary.main.lighten(5).hsla,
+                shadow: "transparent",
                 auxiliary: "transparent",
             },
             selected: {
@@ -80,17 +81,17 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
                 auxiliary: "transparent",
             },
             active: {
-                font: theme.primary.main.lighten(4).hsla,
+                font: theme.primary.main.lighten(5).hsla,
                 background: "transparent",
-                border: theme.primary.main.lighten(4).hsla,
-                shadow: theme.primary.main.hsla,
+                border: theme.primary.main.lighten(5).hsla,
+                shadow: theme.primary.main.lighten(5).hsla,
                 auxiliary: "transparent",
             },
             focus: {
                 font: theme.primary.main.hsla,
                 background: "transparent",
-                border: theme.primary.main.hsla,
-                shadow: theme.primary.main.hsla,
+                border: theme.primary.main.lighten(5).hsla,
+                shadow: "transparent",
                 auxiliary: "transparent",
             },
             selected: {
@@ -128,6 +129,7 @@ interface ButtonProps {
     size: "tiny" | "small" | "medium" | "large" | "xlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     ghost: boolean;
+    theme?: ITheme;
     config: ButtonConfig;
     icon?: React.ReactNode;
     value: string;
@@ -136,8 +138,9 @@ interface ButtonProps {
     selected: boolean;
     focusable: boolean;
     border: boolean;
+    innerMargin?: number;
     style?: CSSProperties;
-    onClick: () => void;
+    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 interface ButtonState {
@@ -179,7 +182,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     render() {
         let size = getFontSize(this.props.size);
         let config: ButtonConfig = {
-            ...getConfig(this.context, this.props.ghost),
+            ...getConfig(
+                this.context.extend(this.props.theme),
+                this.props.ghost
+            ),
             ...this.props.config,
         };
 
@@ -191,6 +197,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
         if (this.state.hover) {
             color = config.hover;
+        }
+
+        if (this.state.focus) {
+            color = config.focus;
         }
 
         if (this.state.active) {
@@ -205,24 +215,26 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             ? {
                   width: 2 * size + 2,
                   height: 2 * size + 2,
-                  padding: 0,
+                  padding: `${size / 2}px 0px ${size / 2}px 0px`,
                   borderRadius: size,
                   ...this.props.style,
               }
             : {
                   padding: `${size / 2}px`,
-
                   ...this.props.style,
               };
 
         let canFocus = this.props.focusable && !this.props.disabled;
+        let innerMargin = this.props.innerMargin
+            ? this.props.innerMargin
+            : size / 3;
 
         return (
             <button
-                tabIndex={canFocus ? 0 : -1}
                 ref={this.rootRef}
+                tabIndex={-1}
                 style={{
-                    borderWidth: this.props.border ? 1 : 0,
+                    borderWidth: 1,
                     borderStyle: "solid",
                     borderColor: this.props.border
                         ? color?.border
@@ -231,14 +243,13 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     fontSize: size,
                     fontWeight: getFontWeight(this.props.fontWeight),
                     backgroundColor: color?.background,
-                    // lineHeight: `${size}px`,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     boxShadow: this.props?.border
                         ? `0px 0px ${size / 4}px ${color?.shadow}`
                         : "",
                     ...style,
                 }}
-                onMouseMove={(e) => {
+                onMouseMove={() => {
                     if (!this.state.hover) {
                         this.setState({ hover: true });
                         this.htmlChecker.onLostHover(() => {
@@ -246,24 +257,41 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         });
                     }
                 }}
-                onMouseDownCapture={() => {
-                    this.setState({ active: true });
+                onMouseDown={() => {
+                    if (!this.state.active) {
+                        this.setState({ active: true });
+                        this.htmlChecker.onLostActive(() => {
+                            this.setState({ active: false });
+                        });
+                    }
                 }}
-                onMouseUpCapture={() => {
-                    this.setState({ active: false });
+                onFocus={() => {
+                    if (!this.state.focus) {
+                        this.setState({ focus: true });
+                        this.htmlChecker.onLostFocus(() => {
+                            this.setState({ focus: false });
+                        });
+                    }
                 }}
-                onClick={() => {
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                     if (!this.props.disabled) {
-                        this.props.onClick();
+                        this.props.onClick(e);
                     }
                 }}
             >
+                <div
+                    tabIndex={canFocus ? 0 : -1}
+                    style={{ width: 0, height: 0, opacity: 0 }}
+                />
+
                 <div
                     style={{
                         display: "flex",
                         flexFlow: "row",
                         lineHeight: `${size}px`,
-                        justifyContent: this.props.round ? "center" : "left",
+                        justifyContent: this.props.style?.justifyContent
+                            ? this.props.style?.justifyContent
+                            : "center",
                     }}
                 >
                     {this.props.icon}
@@ -271,7 +299,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         style={{
                             width:
                                 this.props.icon && this.props.value
-                                    ? size / 3
+                                    ? innerMargin
                                     : 0,
                         }}
                     />

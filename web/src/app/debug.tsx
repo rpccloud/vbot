@@ -7,10 +7,22 @@ const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
         <div>
             <Button value="Click" disabled={true} />
-            <Button value="Click" icon={<AiOutlineLock />} />
             <Button icon={<AiOutlineLock />} />
+            <Button
+                value="Click"
+                icon={<AiOutlineLock />}
+                innerMargin={6}
+                style={{ width: 200, justifyContent: "left" }}
+            />
+
             <Button icon={<AiOutlineLock />} round={true} />
-            <Button value="H" round={true} />
+            <Button
+                value="H"
+                round={true}
+                onClick={(e) => {
+                    alert(e);
+                }}
+            />
         </div>
         <div>
             <Button value="Click" ghost={true} disabled={true} />

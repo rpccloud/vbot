@@ -126,6 +126,14 @@ export interface ColorSet {
     auxiliary?: string;
 }
 
+export class ITheme {
+    default?: ColorPair;
+    primary?: ColorPair;
+    success?: ColorPair;
+    warning?: ColorPair;
+    disabled?: ColorPair;
+}
+
 export class Theme {
     default: ColorPair;
     primary: ColorPair;
@@ -162,13 +170,7 @@ export class Theme {
         ].join("-");
     }
 
-    assign(o: {
-        default?: ColorPair;
-        primary?: ColorPair;
-        success?: ColorPair;
-        warning?: ColorPair;
-        disabled?: ColorPair;
-    }): Theme {
+    extend(o: ITheme): Theme {
         return new Theme({
             default: this.default,
             primary: this.primary,
