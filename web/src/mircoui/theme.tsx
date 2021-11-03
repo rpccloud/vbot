@@ -1,5 +1,50 @@
 import React from "react";
-import { range } from "./util";
+import { getTimeMS, range } from "./util";
+
+let gTimeNowMS = getTimeMS();
+let gCacheList = Array<ThemeCache>();
+
+window.setInterval(() => {
+    // update gTimeNowMS
+    gTimeNowMS = getTimeMS();
+
+    // invoke onTimer
+    gCacheList.forEach((it) => {
+        it.onTimer();
+    });
+}, 1000);
+
+export class ThemeCache {
+    private configMap = new Map<string, { timeMS: number; config: any }>();
+
+    constructor() {
+        gCacheList.push(this);
+    }
+
+    onTimer(): void {
+        this.configMap.forEach((item, key) => {
+            if (gTimeNowMS - item.timeMS > 10000) {
+                this.configMap.delete(key);
+            }
+        });
+    }
+
+    getConfig(key: string): any {
+        let item = this.configMap.get(key);
+
+        if (item) {
+            item.timeMS = gTimeNowMS;
+            this.configMap.set(key, item);
+            return item.config;
+        } else {
+            return null;
+        }
+    }
+
+    setConfig(key: string, config: any) {
+        this.configMap.set(key, { timeMS: gTimeNowMS, config: config });
+    }
+}
 
 const cfgFontSize = {
     tiny: 11,
@@ -49,7 +94,7 @@ export class Color {
         return new Color(
             this.h,
             this.s,
-            range(this.l + delta * 0.05, 0, 1),
+            range(this.l + delta * 0.02, 0, 1),
             this.a
         );
     }
@@ -58,7 +103,7 @@ export class Color {
         return new Color(
             this.h,
             this.s,
-            range(this.l - delta * 0.05, 0, 1),
+            range(this.l - delta * 0.02, 0, 1),
             this.a
         );
     }
@@ -74,10 +119,10 @@ export interface ColorPair {
 }
 
 export interface ColorSet {
-    foreground?: Color;
-    background?: Color;
+    font?: string;
+    background?: string;
+    border?: string;
     shadow?: string;
-    border?: Color;
     auxiliary?: string;
 }
 
@@ -139,19 +184,19 @@ export const ThemeContext = React.createContext<Theme>(
     new Theme({
         default: {
             main: new Color(0, 0, 0.1, 1),
-            auxiliary: new Color(0, 0, 0.8, 1),
+            auxiliary: new Color(0, 0, 0.9, 1),
         },
         primary: {
             main: new Color(32, 1, 0.5, 1),
-            auxiliary: new Color(0, 0, 0.8, 1),
+            auxiliary: new Color(0, 0, 0.9, 1),
         },
         success: {
             main: new Color(114, 1, 0.5, 1),
-            auxiliary: new Color(0, 0, 0.8, 1),
+            auxiliary: new Color(0, 0, 0.9, 1),
         },
         warning: {
             main: new Color(0, 1, 0.5, 1),
-            auxiliary: new Color(0, 0, 0.8, 1),
+            auxiliary: new Color(0, 0, 0.9, 1),
         },
         disabled: {
             main: new Color(0, 0, 0.3, 1),

@@ -1,11 +1,23 @@
 import React from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import Input from "../ui/component/Input";
-import Button from "../ui/ext/Button";
+import { Button } from "../mircoui/component/Button";
 
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
-        <Button value="Click" />
+        <div>
+            <Button value="Click" disabled={true} />
+            <Button value="Click" icon={<AiOutlineLock />} />
+            <Button icon={<AiOutlineLock />} />
+            <Button icon={<AiOutlineLock />} round={true} />
+            <Button value="H" round={true} />
+        </div>
+        <div>
+            <Button value="Click" ghost={true} disabled={true} />
+            <Button value="Click" ghost={true} icon={<AiOutlineLock />} />
+            <Button value="H" ghost={true} round={true} />
+        </div>
+
         <div style={{ position: "absolute", top: 100, left: 0, width: 280 }}>
             <Input
                 defaultValue="1234"
