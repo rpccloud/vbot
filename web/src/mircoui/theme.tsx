@@ -126,6 +126,25 @@ export interface ColorSet {
     auxiliary?: string;
 }
 
+export function extendColorSet(
+    left?: ColorSet,
+    right?: ColorSet
+): ColorSet | undefined {
+    if (!right) {
+        return left;
+    } else if (!left) {
+        return right;
+    } else {
+        return {
+            font: right.font || left.font,
+            background: right.background || left.background,
+            border: right.border || left.border,
+            shadow: right.shadow || left.shadow,
+            auxiliary: right.auxiliary || left.auxiliary,
+        };
+    }
+}
+
 export class ITheme {
     default?: ColorPair;
     primary?: ColorPair;

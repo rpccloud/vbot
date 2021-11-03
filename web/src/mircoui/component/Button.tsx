@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { getFontWeight } from "../../ui/theme/config";
 import {
     ColorSet,
+    extendColorSet,
     getFontSize,
     ITheme,
     Theme,
@@ -181,34 +182,31 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     render() {
         let size = getFontSize(this.props.size);
-        let config: ButtonConfig = {
-            ...getConfig(
-                this.context.extend(this.props.theme),
-                this.props.ghost
-            ),
-            ...this.props.config,
-        };
+        let config: ButtonConfig = getConfig(
+            this.context.extend(this.props.theme),
+            this.props.ghost
+        );
 
-        let color = config.normal;
+        let color = extendColorSet(config.normal, this.props.config.normal);
 
         if (this.props.selected) {
-            color = config.selected;
+            color = extendColorSet(config.selected, this.props.config.selected);
         }
 
         if (this.state.hover) {
-            color = config.hover;
+            color = extendColorSet(config.hover, this.props.config.hover);
         }
 
         if (this.state.focus) {
-            color = config.focus;
+            color = extendColorSet(config.focus, this.props.config.focus);
         }
 
         if (this.state.active) {
-            color = config.active;
+            color = extendColorSet(config.active, this.props.config.active);
         }
 
         if (this.props.disabled) {
-            color = config.disabled;
+            color = extendColorSet(config.disabled, this.props.config.disabled);
         }
 
         let style = this.props.round
@@ -265,7 +263,11 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         });
                     }
                 }}
-                onFocus={() => {
+                onFocus={(e) => {
+                    if (!canFocus) {
+                        e.preventDefault();
+                        return;
+                    }
                     if (!this.state.focus) {
                         this.setState({ focus: true });
                         this.htmlChecker.onLostFocus(() => {

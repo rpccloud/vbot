@@ -2,32 +2,22 @@ import React from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import Input from "../ui/component/Input";
 import { Button } from "../mircoui/component/Button";
+import { Color } from "../ui/theme/config";
 
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
         <div>
-            <Button value="Click" disabled={true} />
-            <Button icon={<AiOutlineLock />} />
             <Button
                 value="Click"
                 icon={<AiOutlineLock />}
                 innerMargin={6}
                 style={{ width: 200, justifyContent: "left" }}
-            />
-
-            <Button icon={<AiOutlineLock />} round={true} />
-            <Button
-                value="H"
-                round={true}
-                onClick={(e) => {
-                    alert(e);
+                config={{
+                    hover: {
+                        font: "red",
+                    },
                 }}
             />
-        </div>
-        <div>
-            <Button value="Click" ghost={true} disabled={true} />
-            <Button value="Click" ghost={true} icon={<AiOutlineLock />} />
-            <Button value="H" ghost={true} round={true} />
         </div>
 
         <div style={{ position: "absolute", top: 100, left: 0, width: 280 }}>
