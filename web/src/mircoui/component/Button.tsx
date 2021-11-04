@@ -12,6 +12,15 @@ import {
 } from "../";
 import { HtmlChecker } from "../";
 
+interface ButtonConfig {
+    normal?: ColorSet;
+    hover?: ColorSet;
+    focus?: ColorSet;
+    active?: ColorSet;
+    selected?: ColorSet;
+    disabled?: ColorSet;
+}
+
 let themeCache = new ThemeCache();
 
 function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
@@ -118,15 +127,6 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
     return ghost ? record.ghost : record.fill;
 }
 
-interface ButtonConfig {
-    normal?: ColorSet;
-    hover?: ColorSet;
-    focus?: ColorSet;
-    active?: ColorSet;
-    selected?: ColorSet;
-    disabled?: ColorSet;
-}
-
 interface ButtonProps {
     size: "tiny" | "small" | "medium" | "large" | "xlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
@@ -151,7 +151,7 @@ interface ButtonState {
     focus: boolean;
 }
 
-class ButtonInner extends React.Component<ButtonProps, ButtonState> {
+class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     static defaultProps = {
         size: "medium",
         fontWeight: "normal",
@@ -167,8 +167,8 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
     };
 
     static contextType = ThemeContext;
-    private rootRef: React.RefObject<HTMLDivElement>;
-    private htmlChecker: HtmlChecker;
+    private rootRef = React.createRef<HTMLDivElement>();
+    private htmlChecker?: HtmlChecker;
 
     constructor(props: ButtonProps) {
         super(props);
@@ -177,8 +177,17 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
             active: false,
             focus: false,
         };
-        this.rootRef = React.createRef<HTMLDivElement>();
-        this.htmlChecker = new HtmlChecker(this.rootRef);
+    }
+
+    componentDidMount() {
+        if (!this.htmlChecker) {
+            this.htmlChecker = new HtmlChecker(this.rootRef);
+        }
+    }
+
+    componentWillUnmount() {
+        this.htmlChecker?.depose();
+        this.htmlChecker = undefined;
     }
 
     render() {
@@ -214,12 +223,13 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
             ? {
                   width: 2 * size + 2,
                   height: 2 * size + 2,
-                  padding: `${size / 2}px 0px ${size / 2}px 0px`,
+                  padding: 0,
                   borderRadius: size,
                   ...this.props.style,
               }
             : {
-                  padding: `${size / 2}px`,
+                  padding: `0px ${size / 2}px 0px ${size / 2}px`,
+                  height: 2 * size + 2,
                   ...this.props.style,
               };
 
@@ -232,7 +242,7 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
             <div
                 ref={this.rootRef}
                 style={{
-                    display: "inline-block",
+                    display: "inline-flex",
                     borderWidth: 1,
                     borderStyle: "solid",
                     borderColor: this.props.border
@@ -246,10 +256,12 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
                     boxShadow: this.props?.border
                         ? `0px 0px ${size / 4}px ${color.shadow}`
                         : "",
+                    justifyContent: "center",
+                    alignItems: "center",
                     ...style,
                 }}
                 onMouseMove={() => {
-                    if (!this.state.hover) {
+                    if (!this.state.hover && this.htmlChecker) {
                         this.setState({ hover: true });
                         this.htmlChecker.onLostHover(() => {
                             this.setState({ hover: false });
@@ -257,7 +269,7 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
                     }
                 }}
                 onMouseDown={() => {
-                    if (!this.state.active) {
+                    if (!this.state.active && this.htmlChecker) {
                         this.setState({ active: true });
                         this.htmlChecker.onLostActive(() => {
                             this.setState({ active: false });
@@ -265,7 +277,7 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
                     }
                 }}
                 onFocus={(e) => {
-                    if (!this.state.focus && canFocus) {
+                    if (!this.state.focus && canFocus && this.htmlChecker) {
                         this.setState({ focus: true });
                         this.htmlChecker.onLostFocus(() => {
                             this.setState({ focus: false });
@@ -283,27 +295,16 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
                     style={{ width: 0, height: 0, opacity: 0 }}
                 />
 
-                <div
+                {this.props.icon}
+                <span
                     style={{
-                        display: "flex",
-                        flexFlow: "row",
-                        lineHeight: `${size}px`,
-                        justifyContent: this.props.style?.justifyContent
-                            ? this.props.style?.justifyContent
-                            : "center",
+                        width:
+                            this.props.icon && this.props.value
+                                ? innerMargin
+                                : 0,
                     }}
-                >
-                    {this.props.icon}
-                    <span
-                        style={{
-                            width:
-                                this.props.icon && this.props.value
-                                    ? innerMargin
-                                    : 0,
-                        }}
-                    />
-                    {this.props.value}
-                </div>
+                />
+                {this.props.value}
             </div>
         );
     }
@@ -312,11 +313,11 @@ class ButtonInner extends React.Component<ButtonProps, ButtonState> {
 export const Button = (props: ButtonProps) => {
     const focusContext = useContext(FocusContext);
     return (
-        <ButtonInner
+        <ButtonCore
             {...props}
             focusable={focusContext.focusable && props.focusable}
         />
     );
 };
 
-Button.defaultProps = ButtonInner.defaultProps;
+Button.defaultProps = ButtonCore.defaultProps;

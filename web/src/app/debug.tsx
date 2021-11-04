@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
-import Input from "../ui/component/Input";
 import { Button } from "../mircoui/component/Button";
+import { Input } from "../mircoui/component/Input";
 import { FocusContext } from "../mircoui";
 
 const Debug = () => (
@@ -20,6 +20,7 @@ const Debug = () => (
                 <Button icon={<AiOutlineLock />} round={true} />
                 <Button
                     value="H"
+                    style={{ width: 18, height: 18 }}
                     round={true}
                     onClick={(e) => {}}
                     focusable={false}
@@ -27,9 +28,14 @@ const Debug = () => (
             </div>
         </FocusContext.Provider>
 
-        <div>
+        <div style={{ display: "flex" }}>
             <Button value="Click" ghost={true} disabled={true} />
-            <Button value="Click" ghost={true} icon={<AiOutlineLock />} />
+            <Button
+                value="Click"
+                style={{ flex: 1 }}
+                ghost={true}
+                icon={<AiOutlineLock />}
+            />
             <Button value="H" ghost={true} round={true} focusable={false} />
         </div>
 
@@ -37,9 +43,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="bare"
-                editable={true}
+                focusable={true}
                 submittable={true}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
                 onSubmit={async () => {
@@ -51,9 +57,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="underline"
-                editable={true}
+                focusable={true}
                 submittable={true}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
                 onSubmit={async () => {
@@ -65,9 +71,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="border"
-                editable={true}
+                focusable={true}
                 submittable={true}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
                 onSubmit={async () => {
@@ -80,9 +86,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="bare"
-                editable={false}
+                focusable={false}
                 submittable={true}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />
@@ -90,9 +96,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="underline"
-                editable={false}
+                focusable={false}
                 submittable={true}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />
@@ -100,9 +106,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="border"
-                editable={false}
+                focusable={false}
                 submittable={true}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />
@@ -112,9 +118,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="bare"
-                editable={true}
+                focusable={true}
                 submittable={false}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />
@@ -122,9 +128,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="underline"
-                editable={true}
+                focusable={true}
                 submittable={false}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />
@@ -132,9 +138,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="border"
-                editable={true}
+                focusable={true}
                 submittable={false}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />
@@ -144,9 +150,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="bare"
-                editable={false}
+                focusable={false}
                 submittable={false}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />
@@ -154,9 +160,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="underline"
-                editable={false}
+                focusable={false}
                 submittable={false}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />
@@ -164,9 +170,9 @@ const Debug = () => (
             <Input
                 defaultValue="1234"
                 mode="border"
-                editable={false}
+                focusable={false}
                 submittable={false}
-                prefixIcon={<AiOutlineLock />}
+                icon={<AiOutlineLock />}
                 label="Name:"
                 placeholder="placeholder"
             />

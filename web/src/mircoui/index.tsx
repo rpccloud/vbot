@@ -137,7 +137,7 @@ export class TimerValue {
         }
     }
 
-    private depose() {
+    public depose() {
         if (this.timer) {
             window.clearInterval(this.timer);
             this.timer = undefined;
@@ -198,7 +198,7 @@ export class HtmlChecker {
         }
     }
 
-    private depose() {
+    public depose() {
         this.onTimer();
         this.fnLostHover = undefined;
         this.fnLostActive = undefined;
