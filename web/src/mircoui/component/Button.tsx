@@ -8,8 +8,8 @@ import {
     Theme,
     ThemeCache,
     ThemeContext,
-} from "../theme";
-import { HtmlChecker } from "../util";
+} from "../";
+import { HtmlChecker } from "../";
 
 let themeCache = new ThemeCache();
 
@@ -24,53 +24,53 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
     record = {
         fill: {
             normal: {
-                font: theme.primary.auxiliary.darken(3).alpha(0.8).hsla,
-                background: theme.primary.main.darken(3).alpha(0.8).hsla,
+                font: theme.secondary.main.hsla,
+                background: theme.secondary.auxiliary.hsla,
                 border: "transparent",
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
             hover: {
-                font: theme.primary.auxiliary.hsla,
-                background: theme.primary.main.hsla,
+                font: theme.primary.main.hsla,
+                background: theme.primary.auxiliary.hsla,
                 border: "transparent",
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
             active: {
-                font: theme.primary.auxiliary.lighten(5).hsla,
-                background: theme.primary.main.lighten(5).hsla,
+                font: theme.primary.main.lighten(4).hsla,
+                background: theme.primary.auxiliary.lighten(4).hsla,
                 border: "transparent",
-                shadow: theme.primary.main.lighten(5).hsla,
+                shadow: theme.primary.auxiliary.lighten(4).hsla,
                 auxiliary: "transparent",
             },
             focus: {
-                font: theme.primary.auxiliary.hsla,
-                background: theme.primary.main.hsla,
-                border: theme.primary.main.lighten(5).hsla,
+                font: theme.primary.main.hsla,
+                background: theme.primary.auxiliary.hsla,
+                border: theme.primary.auxiliary.lighten(4).hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
             selected: {
                 font: theme.primary.main.hsla,
-                background: theme.primary.main.hsla,
+                background: theme.primary.auxiliary.hsla,
                 border: "transparent",
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
             disabled: {
-                font: theme.disabled.auxiliary.hsla,
-                background: theme.disabled.main.hsla,
-                border: theme.disabled.auxiliary.hsla,
+                font: theme.disabled.main.hsla,
+                background: theme.disabled.auxiliary.hsla,
+                border: theme.disabled.main.hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
         },
         ghost: {
             normal: {
-                font: theme.primary.main.darken(2).alpha(0.8).hsla,
+                font: theme.default.main.hsla,
                 background: "transparent",
-                border: theme.primary.main.darken(2).alpha(0.8).hsla,
+                border: theme.default.main.hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
@@ -82,16 +82,16 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
                 auxiliary: "transparent",
             },
             active: {
-                font: theme.primary.main.lighten(5).hsla,
+                font: theme.primary.main.lighten(4).hsla,
                 background: "transparent",
-                border: theme.primary.main.lighten(5).hsla,
-                shadow: theme.primary.main.lighten(5).hsla,
+                border: theme.primary.main.lighten(4).hsla,
+                shadow: theme.primary.main.lighten(4).hsla,
                 auxiliary: "transparent",
             },
             focus: {
                 font: theme.primary.main.hsla,
                 background: "transparent",
-                border: theme.primary.main.lighten(5).hsla,
+                border: theme.primary.main.lighten(4).hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
@@ -264,11 +264,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     }
                 }}
                 onFocus={(e) => {
-                    if (!canFocus) {
-                        e.preventDefault();
-                        return;
-                    }
-                    if (!this.state.focus) {
+                    if (!this.state.focus && canFocus) {
                         this.setState({ focus: true });
                         this.htmlChecker.onLostFocus(() => {
                             this.setState({ focus: false });

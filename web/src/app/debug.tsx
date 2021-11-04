@@ -6,20 +6,27 @@ import { Button } from "../mircoui/component/Button";
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
         <div>
+            <Button value="Click" disabled={true} />
+            <Button icon={<AiOutlineLock />} />
             <Button
                 value="Click"
                 icon={<AiOutlineLock />}
                 innerMargin={6}
                 style={{ width: 200, justifyContent: "left" }}
-                config={{
-                    hover: {
-                        font: "red",
-                    },
-                }}
-                onClick={() => {
-                    alert("Click");
-                }}
             />
+
+            <Button icon={<AiOutlineLock />} round={true} />
+            <Button
+                value="H"
+                round={true}
+                onClick={(e) => {}}
+                focusable={false}
+            />
+        </div>
+        <div>
+            <Button value="Click" ghost={true} disabled={true} />
+            <Button value="Click" ghost={true} icon={<AiOutlineLock />} />
+            <Button value="H" ghost={true} round={true} focusable={false} />
         </div>
 
         <div style={{ position: "absolute", top: 100, left: 0, width: 280 }}>
