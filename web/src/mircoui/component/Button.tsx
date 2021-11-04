@@ -38,16 +38,16 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
                 auxiliary: "transparent",
             },
             active: {
-                font: theme.primary.main.lighten(4).hsla,
-                background: theme.primary.auxiliary.lighten(4).hsla,
+                font: theme.primary.main.lighten(5).hsla,
+                background: theme.primary.auxiliary.lighten(5).hsla,
                 border: "transparent",
-                shadow: theme.primary.auxiliary.lighten(4).hsla,
+                shadow: theme.primary.auxiliary.lighten(5).hsla,
                 auxiliary: "transparent",
             },
             focus: {
-                font: theme.primary.main.hsla,
-                background: theme.primary.auxiliary.hsla,
-                border: theme.primary.auxiliary.lighten(4).hsla,
+                font: theme.secondary.main.hsla,
+                background: theme.secondary.auxiliary.hsla,
+                border: theme.primary.auxiliary.lighten(5).hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
@@ -68,37 +68,37 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
         },
         ghost: {
             normal: {
-                font: theme.default.main.hsla,
+                font: theme.secondary.auxiliary.hsla,
                 background: "transparent",
-                border: theme.default.main.hsla,
+                border: theme.secondary.auxiliary.hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
             hover: {
-                font: theme.primary.main.hsla,
+                font: theme.primary.auxiliary.hsla,
                 background: "transparent",
-                border: theme.primary.main.hsla,
+                border: theme.primary.auxiliary.hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
             active: {
-                font: theme.primary.main.lighten(4).hsla,
+                font: theme.primary.auxiliary.lighten(5).hsla,
                 background: "transparent",
-                border: theme.primary.main.lighten(4).hsla,
-                shadow: theme.primary.main.lighten(4).hsla,
+                border: theme.primary.auxiliary.lighten(5).hsla,
+                shadow: theme.primary.auxiliary.lighten(5).hsla,
                 auxiliary: "transparent",
             },
             focus: {
-                font: theme.primary.main.hsla,
+                font: theme.secondary.auxiliary.hsla,
                 background: "transparent",
-                border: theme.primary.main.lighten(4).hsla,
+                border: theme.primary.auxiliary.lighten(5).hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
             selected: {
-                font: theme.primary.main.hsla,
+                font: theme.primary.auxiliary.hsla,
                 background: "transparent",
-                border: theme.primary.main.hsla,
+                border: theme.primary.auxiliary.hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
@@ -141,7 +141,7 @@ interface ButtonProps {
     border: boolean;
     innerMargin?: number;
     style?: CSSProperties;
-    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 interface ButtonState {
@@ -166,7 +166,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     static contextType = ThemeContext;
-    private rootRef: React.RefObject<HTMLButtonElement>;
+    private rootRef: React.RefObject<HTMLDivElement>;
     private htmlChecker: HtmlChecker;
 
     constructor(props: ButtonProps) {
@@ -176,7 +176,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             active: false,
             focus: false,
         };
-        this.rootRef = React.createRef<HTMLButtonElement>();
+        this.rootRef = React.createRef<HTMLDivElement>();
         this.htmlChecker = new HtmlChecker(this.rootRef);
     }
 
@@ -189,16 +189,16 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
         let color = extendColorSet(config.normal, this.props.config.normal);
 
+        if (this.state.focus) {
+            color = extendColorSet(config.focus, this.props.config.focus);
+        }
+
         if (this.props.selected) {
             color = extendColorSet(config.selected, this.props.config.selected);
         }
 
         if (this.state.hover) {
             color = extendColorSet(config.hover, this.props.config.hover);
-        }
-
-        if (this.state.focus) {
-            color = extendColorSet(config.focus, this.props.config.focus);
         }
 
         if (this.state.active) {
@@ -228,10 +228,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             : size / 3;
 
         return (
-            <button
+            <div
                 ref={this.rootRef}
-                tabIndex={-1}
                 style={{
+                    display: "inline-block",
                     borderWidth: 1,
                     borderStyle: "solid",
                     borderColor: this.props.border
@@ -271,7 +271,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         });
                     }
                 }}
-                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                onClick={(e: React.MouseEvent<HTMLDivElement>) => {
                     if (!this.props.disabled) {
                         this.props.onClick(e);
                     }
@@ -303,7 +303,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     />
                     {this.props.value}
                 </div>
-            </button>
+            </div>
         );
     }
 }
