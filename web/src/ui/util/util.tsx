@@ -98,7 +98,7 @@ export class HtmlChecker {
     }
 
     onLostActive(fn: () => void) {
-        this.fnLostHover = fn;
+        this.fnLostActive = fn;
         this.onCheck();
     }
 

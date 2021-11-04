@@ -2,7 +2,6 @@ import React from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import Input from "../ui/component/Input";
 import { Button } from "../mircoui/component/Button";
-import { Color } from "../ui/theme/config";
 
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
@@ -16,6 +15,9 @@ const Debug = () => (
                     hover: {
                         font: "red",
                     },
+                }}
+                onClick={() => {
+                    alert("Click");
                 }}
             />
         </div>
