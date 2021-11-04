@@ -2,27 +2,31 @@ import React from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import Input from "../ui/component/Input";
 import { Button } from "../mircoui/component/Button";
+import { FocusContext } from "../mircoui";
 
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
-        <div>
-            <Button value="Click" disabled={true} />
-            <Button icon={<AiOutlineLock />} />
-            <Button
-                value="Click"
-                icon={<AiOutlineLock />}
-                innerMargin={6}
-                style={{ width: 200, justifyContent: "left" }}
-            />
+        <FocusContext.Provider value={{ focusable: false }}>
+            <div>
+                <Button value="Click" disabled={true} />
+                <Button icon={<AiOutlineLock />} />
+                <Button
+                    value="Click"
+                    icon={<AiOutlineLock />}
+                    innerMargin={6}
+                    style={{ width: 200, justifyContent: "left" }}
+                />
 
-            <Button icon={<AiOutlineLock />} round={true} />
-            <Button
-                value="H"
-                round={true}
-                onClick={(e) => {}}
-                focusable={false}
-            />
-        </div>
+                <Button icon={<AiOutlineLock />} round={true} />
+                <Button
+                    value="H"
+                    round={true}
+                    onClick={(e) => {}}
+                    focusable={false}
+                />
+            </div>
+        </FocusContext.Provider>
+
         <div>
             <Button value="Click" ghost={true} disabled={true} />
             <Button value="Click" ghost={true} icon={<AiOutlineLock />} />

@@ -484,3 +484,11 @@ export const ThemeContext = React.createContext<Theme>(
         },
     })
 );
+
+interface Focus {
+    focusable: boolean;
+}
+
+export const FocusContext = React.createContext<Focus>({
+    focusable: true,
+});

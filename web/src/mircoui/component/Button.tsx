@@ -1,8 +1,9 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useContext } from "react";
 import { getFontWeight } from "../../ui/theme/config";
 import {
     ColorSet,
     extendColorSet,
+    FocusContext,
     getFontSize,
     ITheme,
     Theme,
@@ -150,7 +151,7 @@ interface ButtonState {
     focus: boolean;
 }
 
-export class Button extends React.Component<ButtonProps, ButtonState> {
+class ButtonInner extends React.Component<ButtonProps, ButtonState> {
     static defaultProps = {
         size: "medium",
         fontWeight: "normal",
@@ -307,3 +308,15 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         );
     }
 }
+
+export const Button = (props: ButtonProps) => {
+    const focusContext = useContext(FocusContext);
+    return (
+        <ButtonInner
+            {...props}
+            focusable={focusContext.focusable && props.focusable}
+        />
+    );
+};
+
+Button.defaultProps = ButtonInner.defaultProps;
