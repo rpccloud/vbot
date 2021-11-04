@@ -126,12 +126,9 @@ export interface ColorSet {
     auxiliary?: string;
 }
 
-export function extendColorSet(
-    left?: ColorSet,
-    right?: ColorSet
-): ColorSet | undefined {
+export function extendColorSet(left?: ColorSet, right?: ColorSet): ColorSet {
     if (!right) {
-        return left;
+        return left || {};
     } else if (!left) {
         return right;
     } else {

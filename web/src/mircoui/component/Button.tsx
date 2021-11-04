@@ -235,15 +235,15 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     borderWidth: 1,
                     borderStyle: "solid",
                     borderColor: this.props.border
-                        ? color?.border
+                        ? color.border
                         : "transparent",
-                    color: color?.font,
+                    color: color.font,
                     fontSize: size,
                     fontWeight: getFontWeight(this.props.fontWeight),
-                    backgroundColor: color?.background,
+                    backgroundColor: color.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     boxShadow: this.props?.border
-                        ? `0px 0px ${size / 4}px ${color?.shadow}`
+                        ? `0px 0px ${size / 4}px ${color.shadow}`
                         : "",
                     ...style,
                 }}
