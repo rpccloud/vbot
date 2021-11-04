@@ -221,15 +221,15 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
         let style = this.props.round
             ? {
-                  width: 2 * size + 2,
-                  height: 2 * size + 2,
+                  width: 2 * size,
+                  height: 2 * size,
                   padding: 0,
                   borderRadius: size,
                   ...this.props.style,
               }
             : {
                   padding: `0px ${size / 2}px 0px ${size / 2}px`,
-                  height: 2 * size + 2,
+                  height: 2 * size,
                   ...this.props.style,
               };
 

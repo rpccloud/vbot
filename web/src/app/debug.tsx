@@ -39,6 +39,23 @@ const Debug = () => (
             <Button value="H" ghost={true} round={true} focusable={false} />
         </div>
 
+        <div style={{ display: "flex" }}>
+            <Button value="Click" ghost={true} disabled={true} />
+            <Input
+                style={{ width: 400 }}
+                defaultValue="1234"
+                mode="border"
+                focusable={true}
+                submittable={true}
+                icon={<AiOutlineLock />}
+                label="Name:"
+                placeholder="placeholder"
+                onSubmit={async () => {
+                    return false;
+                }}
+            />
+        </div>
+
         <div style={{ position: "absolute", top: 100, left: 0, width: 280 }}>
             <Input
                 defaultValue="1234"

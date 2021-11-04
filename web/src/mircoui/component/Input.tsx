@@ -189,9 +189,8 @@ class InputCore extends React.Component<InputProps, InputState> {
     }
 
     render() {
-        const fontSize = getFontSize(this.props.size);
+        const size = getFontSize(this.props.size);
         const fontWeight = getFontWeight(this.props.fontWeight);
-        const size = fontSize + 2;
         const cfg: InputConfig = getConfig(
             this.context.extend(this.props.theme)
         );
@@ -273,7 +272,6 @@ class InputCore extends React.Component<InputProps, InputState> {
         const labelView = this.props.label ? (
             <div
                 style={{
-                    height: size,
                     color: !this.props.validator(this.state.value)
                         ? validateErrorColor
                         : color.auxiliary,
@@ -290,13 +288,10 @@ class InputCore extends React.Component<InputProps, InputState> {
                 ref={this.inputRef}
                 tabIndex={-1}
                 style={{
-                    display: "inline-flex",
                     outline: "none",
-                    border: "0px",
-                    padding: "0px",
-                    width: "100%",
-                    lineHeight: `${size}px`,
-                    height: size,
+                    border: 0,
+                    padding: 0,
+                    flex: 1,
                     cursor: this.state.focus ? "text" : "default",
                     caretColor: this.state.focus ? color.font : "transparent",
                     background: "transparent",
@@ -327,7 +322,9 @@ class InputCore extends React.Component<InputProps, InputState> {
                                 !this.state.submitting &&
                                 this.state.value !== this.state.stageValue
                             ) {
-                                this.setState({ value: this.state.stageValue });
+                                this.setState({
+                                    value: this.state.stageValue,
+                                });
                                 this.reportStatusTimerValue?.setValue(
                                     "warning"
                                 );
@@ -352,8 +349,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                             : passwordShowIcon
                     }
                     style={{
-                        width: size,
-                        height: size,
+                        width: size * 1.2,
+                        height: size * 1.2,
                         marginLeft: innerMargin,
                     }}
                     onClick={() => {
@@ -376,8 +373,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     size={this.props.size}
                     icon={revertIcon}
                     style={{
-                        width: size,
-                        height: size,
+                        width: size * 1.2,
+                        height: size * 1.2,
                         marginLeft: innerMargin,
                     }}
                     onClick={() => {
@@ -398,9 +395,9 @@ class InputCore extends React.Component<InputProps, InputState> {
                     size={this.props.size}
                     icon={submitIcon}
                     style={{
-                        width: size,
-                        height: size,
-                        marginLeft: size / 3,
+                        width: size * 1.2,
+                        height: size * 1.2,
+                        marginLeft: innerMargin,
                     }}
                     onClick={() => {
                         this.inputRef.current?.blur();
@@ -449,9 +446,9 @@ class InputCore extends React.Component<InputProps, InputState> {
                     size={this.props.size}
                     icon={editIcon}
                     style={{
-                        width: size,
-                        height: size,
-                        marginLeft: size / 3,
+                        width: size * 1.2,
+                        height: size * 1.2,
+                        marginLeft: innerMargin,
                     }}
                     onClick={() => {
                         this.inputRef.current?.focus();
@@ -479,12 +476,12 @@ class InputCore extends React.Component<InputProps, InputState> {
                 ref={this.rootRef}
                 tabIndex={canFocus ? 0 : -1}
                 style={{
-                    display: "flex",
+                    display: "inline-flex",
                     position: "relative",
                     flexFlow: "row",
-                    lineHeight: `${size}px`,
                     overflow: "clip",
-                    fontSize: fontSize,
+                    fontSize: size,
+                    height: 2 * size,
                     fontWeight: fontWeight,
                     color: color.font,
                     backgroundColor: color.background,
@@ -493,13 +490,9 @@ class InputCore extends React.Component<InputProps, InputState> {
                             ? `${size / 2}px`
                             : `${size / 2}px 0px ${size / 2}px 0px`,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
+                    alignItems: "center",
                     ...style,
                 }}
-                // onMouseDown={(e) => {
-                //     // if ((props.submittable && !focus) || !canFocus) {
-                //     //     e.preventDefault();
-                //     // }
-                // }}
                 onMouseMove={(e) => {
                     if (!this.state.hover && this.htmlChecker) {
                         this.setState({ hover: true });
@@ -512,23 +505,24 @@ class InputCore extends React.Component<InputProps, InputState> {
                     this.inputRef.current?.focus();
                 }}
             >
-                <div
+                {iconView}
+                {labelView}
+                {inputView}
+                {passwordButtonView}
+                {revertButtonView}
+                {submitButtonView}
+                {editButtonView}
+                {underlineView}
+                {/* <div
                     style={{
                         display: "flex",
                         flexFlow: "row",
                         height: `${size}px`,
-                        alignItems: "center",
+
                     }}
                 >
-                    {iconView}
-                    {labelView}
-                    {inputView}
-                    {passwordButtonView}
-                    {revertButtonView}
-                    {submitButtonView}
-                    {editButtonView}
-                    {underlineView}
-                </div>
+
+                </div> */}
             </div>
         );
     }
