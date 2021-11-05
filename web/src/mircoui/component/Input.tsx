@@ -482,7 +482,7 @@ class InputCore extends React.Component<InputProps, InputState> {
             };
         } else {
             style = {
-                border: "1px solid transparent",
+                border: 0,
                 ...style,
             };
         }

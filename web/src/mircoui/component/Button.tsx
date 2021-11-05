@@ -239,9 +239,9 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                 ref={this.rootRef}
                 style={{
                     display: "block",
-                    borderWidth: this.props.border ? 1 : 0,
-                    borderStyle: "solid",
-                    borderColor: color.border,
+                    border: `${this.props.border ? 1 : 0}px solid ${
+                        color.border
+                    }`,
                     color: color.font,
                     fontSize: size,
                     padding: 0,
