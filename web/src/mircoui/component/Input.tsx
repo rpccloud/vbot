@@ -128,6 +128,35 @@ interface InputState {
     reportStatus: "success" | "warning" | "none";
 }
 
+const InputButton = (props: {
+    size: "tiny" | "small" | "medium" | "large" | "xlarge";
+    icon: React.ReactNode;
+    marginLeft: number;
+    onClick: () => void;
+}) => {
+    const fontSize = getFontSize(props.size);
+    return (
+        <>
+            <Button
+                round={true}
+                ghost={true}
+                border={false}
+                focusable={false}
+                size={props.size}
+                icon={props.icon}
+                style={{
+                    width: fontSize,
+                    height: fontSize,
+                    marginLeft: props.marginLeft,
+                }}
+                onClick={() => {
+                    props.onClick();
+                }}
+            />
+        </>
+    );
+};
+
 class InputCore extends React.Component<InputProps, InputState> {
     static defaultProps = {
         mode: "border",
@@ -203,18 +232,18 @@ class InputCore extends React.Component<InputProps, InputState> {
         const innerMargin =
             this.props.innerMargin !== undefined
                 ? this.props.innerMargin
-                : size / 3;
+                : Math.floor(size / 3);
         const innerLeft =
             this.props.innerLeft !== undefined
                 ? this.props.innerLeft
                 : this.props.mode === "border"
-                ? size / 2
+                ? Math.floor(size / 2)
                 : 0;
         const innerRight =
             this.props.innerRight !== undefined
                 ? this.props.innerLeft
                 : this.props.mode === "border"
-                ? size / 2
+                ? Math.floor(size / 2)
                 : 0;
 
         const submitIcon = propCfg.submitIcon || cfg.submitIcon;
@@ -316,18 +345,18 @@ class InputCore extends React.Component<InputProps, InputState> {
                             this.state.value.length,
                             this.state.value.length
                         );
-                        // const resizeSensor = new ResizeSensor(
-                        //     this.inputRef,
-                        //     () => {
-                        //         const elem = this.inputRef.current;
-                        //         if (elem) {
-                        //             elem.scrollLeft = elem.scrollWidth;
-                        //         }
-                        //     }
-                        // );
+                        const resizeSensor = new ResizeSensor(
+                            this.inputRef,
+                            () => {
+                                const elem = this.inputRef.current;
+                                if (elem) {
+                                    elem.scrollLeft = elem.scrollWidth;
+                                }
+                            }
+                        );
 
                         this.htmlChecker.onLostFocus(() => {
-                            // resizeSensor.close();
+                            resizeSensor.close();
                             this.setState({ focus: false });
                             if (
                                 !this.state.submitting &&
@@ -349,22 +378,14 @@ class InputCore extends React.Component<InputProps, InputState> {
 
         const passwordButtonView =
             this.props.type === "password" ? (
-                <Button
-                    round={true}
-                    ghost={true}
-                    border={false}
-                    focusable={false}
+                <InputButton
                     size={this.props.size}
+                    marginLeft={innerMargin}
                     icon={
                         this.state.showPassword
                             ? passwordHiddenIcon
                             : passwordShowIcon
                     }
-                    style={{
-                        width: size,
-                        height: size,
-                        marginLeft: innerMargin,
-                    }}
                     onClick={() => {
                         this.setState({
                             showPassword: !this.state.showPassword,
@@ -377,18 +398,10 @@ class InputCore extends React.Component<InputProps, InputState> {
             this.props.submittable &&
             !this.state.submitting &&
             this.state.focus ? (
-                <Button
-                    round={true}
-                    ghost={true}
-                    border={false}
-                    focusable={false}
+                <InputButton
                     size={this.props.size}
+                    marginLeft={innerMargin}
                     icon={revertIcon}
-                    style={{
-                        width: size,
-                        height: size,
-                        marginLeft: innerMargin,
-                    }}
                     onClick={() => {
                         if (this.state.stageValue !== this.state.value) {
                             this.setState({ value: this.state.stageValue });
@@ -402,18 +415,10 @@ class InputCore extends React.Component<InputProps, InputState> {
             this.props.submittable &&
             !this.state.submitting &&
             this.state.focus ? (
-                <Button
-                    round={true}
-                    ghost={true}
-                    border={false}
-                    focusable={false}
+                <InputButton
                     size={this.props.size}
+                    marginLeft={innerMargin}
                     icon={submitIcon}
-                    style={{
-                        width: size,
-                        height: size,
-                        marginLeft: innerMargin,
-                    }}
                     onClick={() => {
                         this.inputRef.current?.blur();
                         const currValue = this.state.value;
@@ -454,18 +459,10 @@ class InputCore extends React.Component<InputProps, InputState> {
 
         const editButtonView =
             this.props.submittable && canFocus && !this.state.focus ? (
-                <Button
-                    round={true}
-                    ghost={true}
-                    border={false}
-                    focusable={false}
+                <InputButton
                     size={this.props.size}
+                    marginLeft={innerMargin}
                     icon={editIcon}
-                    style={{
-                        width: size,
-                        height: size,
-                        marginLeft: innerMargin,
-                    }}
                     onClick={() => {
                         this.inputRef.current?.focus();
                     }}
