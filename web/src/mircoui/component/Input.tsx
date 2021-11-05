@@ -326,7 +326,6 @@ class InputCore extends React.Component<InputProps, InputState> {
                 }}
                 onFocus={(e) => {
                     if (canFocus && this.htmlChecker) {
-
                         this.setState({ focus: true });
                         this.htmlChecker.onLostFocus(() => {
                             this.setState({ focus: false });
@@ -529,6 +528,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                         flexFlow: "row",
                         width: "100%",
                         height: "100%",
+                        transition: "inherit",
                     }}
                 >
                     <div
