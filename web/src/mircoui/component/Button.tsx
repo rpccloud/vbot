@@ -227,7 +227,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
         let canFocus =
             this.props.focusable && !this.props.disabled && !this.state.focus;
-        let innerMargin = this.props.innerMargin || size / 3;
+        let innerMargin = this.props.innerMargin || Math.floor(size / 3);
 
         let padding =
             this.props?.style?.padding !== undefined
