@@ -7,7 +7,7 @@ import { FocusContext } from "../mircoui";
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
         <FocusContext.Provider value={{ focusable: false }}>
-            <div>
+            <div style={{ display: "flex", flexFlow: "row" }}>
                 <Button value="Click" disabled={true} />
                 <Button icon={<AiOutlineLock />} />
                 <Button
@@ -28,23 +28,13 @@ const Debug = () => (
             </div>
         </FocusContext.Provider>
 
-        <div style={{ display: "flex" }}>
-            <Button value="Click" ghost={true} disabled={true} />
-            <Button
-                value="Click"
-                style={{ flex: 1 }}
-                ghost={true}
-                icon={<AiOutlineLock />}
-            />
-            <Button value="H" ghost={true} round={true} focusable={false} />
-        </div>
-
-        <div style={{ display: "flex" }}>
-            <Button value="Click" ghost={true} disabled={true} />
+        <div style={{ width: "100wh" }}>
+            {/* <div style={{ height: 30, margin: 30, background: "red" }}></div> */}
+            {/* <Button value="Click" ghost={true} disabled={true} /> */}
             <Input
-                style={{ width: 400 }}
                 defaultValue="1234"
                 mode="border"
+                style={{ margin: 20, display: "block" }}
                 focusable={true}
                 submittable={true}
                 icon={<AiOutlineLock />}
@@ -54,6 +44,7 @@ const Debug = () => (
                     return false;
                 }}
             />
+            {/* <Button value="H" ghost={true} round={true} focusable={false} /> */}
         </div>
 
         <div style={{ position: "absolute", top: 100, left: 0, width: 280 }}>
@@ -85,18 +76,21 @@ const Debug = () => (
             />
 
             <div style={{ height: 50 }} />
-            <Input
-                defaultValue="1234"
-                mode="border"
-                focusable={true}
-                submittable={true}
-                icon={<AiOutlineLock />}
-                label="Name:"
-                placeholder="placeholder"
-                onSubmit={async () => {
-                    return false;
-                }}
-            />
+
+            <div style={{ height: 300 }}>
+                <Input
+                    defaultValue="1234"
+                    mode="border"
+                    focusable={true}
+                    submittable={true}
+                    icon={<AiOutlineLock />}
+                    label="Name:"
+                    placeholder="placeholder"
+                    onSubmit={async () => {
+                        return false;
+                    }}
+                />
+            </div>
         </div>
 
         <div style={{ position: "absolute", top: 100, left: 300, width: 280 }}>

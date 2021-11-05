@@ -168,7 +168,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
     static contextType = ThemeContext;
     private rootRef = React.createRef<HTMLDivElement>();
-    private htmlChecker?: HtmlChecker;
+    private htmlChecker = new HtmlChecker(this.rootRef);
 
     constructor(props: ButtonProps) {
         super(props);
@@ -179,15 +179,8 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
         };
     }
 
-    componentDidMount() {
-        if (!this.htmlChecker) {
-            this.htmlChecker = new HtmlChecker(this.rootRef);
-        }
-    }
-
     componentWillUnmount() {
-        this.htmlChecker?.depose();
-        this.htmlChecker = undefined;
+        this.htmlChecker.depose();
     }
 
     render() {
@@ -223,45 +216,45 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
             ? {
                   width: 2 * size,
                   height: 2 * size,
-                  padding: 0,
                   borderRadius: size,
                   ...this.props.style,
               }
             : {
-                  padding: `0px ${size / 2}px 0px ${size / 2}px`,
+                  width: "auto",
                   height: 2 * size,
                   ...this.props.style,
               };
 
-        let canFocus = this.props.focusable && !this.props.disabled;
-        let innerMargin = this.props.innerMargin
-            ? this.props.innerMargin
-            : size / 3;
+        let canFocus =
+            this.props.focusable && !this.props.disabled && !this.state.focus;
+        let innerMargin = this.props.innerMargin || size / 3;
+
+        let padding =
+            this.props?.style?.padding !== undefined
+                ? this.props?.style?.padding
+                : `0px ${size / 2}px 0px ${size / 2}px`;
 
         return (
             <div
                 ref={this.rootRef}
                 style={{
-                    display: "inline-flex",
-                    borderWidth: 1,
+                    display: "block",
+                    borderWidth: this.props.border ? 1 : 0,
                     borderStyle: "solid",
-                    borderColor: this.props.border
-                        ? color.border
-                        : "transparent",
+                    borderColor: color.border,
                     color: color.font,
                     fontSize: size,
+                    padding: 0,
                     fontWeight: getFontWeight(this.props.fontWeight),
                     backgroundColor: color.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     boxShadow: this.props?.border
                         ? `0px 0px ${size / 4}px ${color.shadow}`
                         : "",
-                    justifyContent: "center",
-                    alignItems: "center",
                     ...style,
                 }}
                 onMouseMove={() => {
-                    if (!this.state.hover && this.htmlChecker) {
+                    if (!this.state.hover) {
                         this.setState({ hover: true });
                         this.htmlChecker.onLostHover(() => {
                             this.setState({ hover: false });
@@ -269,7 +262,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     }
                 }}
                 onMouseDown={() => {
-                    if (!this.state.active && this.htmlChecker) {
+                    if (!this.state.active) {
                         this.setState({ active: true });
                         this.htmlChecker.onLostActive(() => {
                             this.setState({ active: false });
@@ -277,7 +270,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     }
                 }}
                 onFocus={(e) => {
-                    if (!this.state.focus && canFocus && this.htmlChecker) {
+                    if (canFocus) {
                         this.setState({ focus: true });
                         this.htmlChecker.onLostFocus(() => {
                             this.setState({ focus: false });
@@ -292,19 +285,28 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
             >
                 <div
                     tabIndex={canFocus ? 0 : -1}
-                    style={{ width: 0, height: 0, opacity: 0 }}
-                />
-
-                {this.props.icon}
-                <span
                     style={{
-                        width:
-                            this.props.icon && this.props.value
-                                ? innerMargin
-                                : 0,
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        justifyContent:
+                            this.props.style?.justifyContent || "center",
+                        alignItems: this.props.style?.alignItems || "center",
+                        padding: this.props.round ? 0 : padding,
                     }}
-                />
-                {this.props.value}
+                >
+                    {this.props.icon}
+                    <span
+                        style={{
+                            width:
+                                this.props.icon && this.props.value
+                                    ? innerMargin
+                                    : 0,
+                            height: 0,
+                        }}
+                    />
+                    {this.props.value}
+                </div>
             </div>
         );
     }

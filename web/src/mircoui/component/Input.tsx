@@ -109,6 +109,8 @@ interface InputProps {
     focusable: boolean;
     submittable: boolean;
     validator: (value: any) => boolean;
+    innerLeft?: number;
+    innerRight?: number;
     innerMargin?: number;
     style?: CSSProperties;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -213,9 +215,18 @@ class InputCore extends React.Component<InputProps, InputState> {
             color = extendColorSet(cfg.success, propCfg.success);
         }
 
-        const innerMargin = this.props.innerMargin
-            ? this.props.innerMargin
-            : size / 3;
+        const innerMargin =
+            this.props.innerMargin !== undefined
+                ? this.props.innerMargin
+                : size / 3;
+        const innerLeft =
+            this.props.innerLeft !== undefined
+                ? this.props.innerLeft
+                : size / 2;
+        const innerRight =
+            this.props.innerRight !== undefined
+                ? this.props.innerLeft
+                : size / 2;
 
         const submitIcon = propCfg.submitIcon || cfg.submitIcon;
         const editIcon = propCfg.editIcon || cfg.editIcon;
@@ -289,6 +300,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 tabIndex={-1}
                 style={{
                     outline: "none",
+                    minWidth: size,
                     border: 0,
                     padding: 0,
                     flex: 1,
@@ -349,8 +361,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                             : passwordShowIcon
                     }
                     style={{
-                        width: size * 1.2,
-                        height: size * 1.2,
+                        width: size,
+                        height: size,
                         marginLeft: innerMargin,
                     }}
                     onClick={() => {
@@ -373,11 +385,14 @@ class InputCore extends React.Component<InputProps, InputState> {
                     size={this.props.size}
                     icon={revertIcon}
                     style={{
-                        width: size * 1.2,
-                        height: size * 1.2,
+                        width: size,
+                        height: size,
                         marginLeft: innerMargin,
                     }}
                     onClick={() => {
+                        if (this.state.stageValue !== this.state.value) {
+                            this.setState({ value: this.state.stageValue });
+                        }
                         this.inputRef.current?.blur();
                     }}
                 />
@@ -395,8 +410,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     size={this.props.size}
                     icon={submitIcon}
                     style={{
-                        width: size * 1.2,
-                        height: size * 1.2,
+                        width: size,
+                        height: size,
                         marginLeft: innerMargin,
                     }}
                     onClick={() => {
@@ -446,8 +461,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     size={this.props.size}
                     icon={editIcon}
                     style={{
-                        width: size * 1.2,
-                        height: size * 1.2,
+                        width: size,
+                        height: size,
                         marginLeft: innerMargin,
                     }}
                     onClick={() => {
@@ -476,21 +491,15 @@ class InputCore extends React.Component<InputProps, InputState> {
                 ref={this.rootRef}
                 tabIndex={canFocus ? 0 : -1}
                 style={{
-                    display: "inline-flex",
+                    display: "block",
                     position: "relative",
-                    flexFlow: "row",
                     overflow: "clip",
                     fontSize: size,
                     height: 2 * size,
                     fontWeight: fontWeight,
                     color: color.font,
                     backgroundColor: color.background,
-                    padding:
-                        this.props.mode === "border"
-                            ? `${size / 2}px`
-                            : `${size / 2}px 0px ${size / 2}px 0px`,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
-                    alignItems: "center",
                     ...style,
                 }}
                 onMouseMove={(e) => {
@@ -505,24 +514,37 @@ class InputCore extends React.Component<InputProps, InputState> {
                     this.inputRef.current?.focus();
                 }}
             >
-                {iconView}
-                {labelView}
-                {inputView}
-                {passwordButtonView}
-                {revertButtonView}
-                {submitButtonView}
-                {editButtonView}
-                {underlineView}
-                {/* <div
+                <div
                     style={{
                         display: "flex",
+                        position: "relative",
+                        alignItems: "center",
                         flexFlow: "row",
-                        height: `${size}px`,
-
+                        width: "100%",
+                        height: "100%",
                     }}
                 >
-
-                </div> */}
+                    <div
+                        style={{
+                            height: size,
+                            width: innerLeft,
+                        }}
+                    />
+                    {iconView}
+                    {labelView}
+                    {inputView}
+                    {passwordButtonView}
+                    {revertButtonView}
+                    {submitButtonView}
+                    {editButtonView}
+                    <div
+                        style={{
+                            height: size,
+                            width: innerRight,
+                        }}
+                    />
+                    {underlineView}
+                </div>
             </div>
         );
     }
