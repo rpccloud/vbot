@@ -222,11 +222,15 @@ class InputCore extends React.Component<InputProps, InputState> {
         const innerLeft =
             this.props.innerLeft !== undefined
                 ? this.props.innerLeft
-                : size / 2;
+                : this.props.mode === "border"
+                ? size / 2
+                : 0;
         const innerRight =
             this.props.innerRight !== undefined
                 ? this.props.innerLeft
-                : size / 2;
+                : this.props.mode === "border"
+                ? size / 2
+                : 0;
 
         const submitIcon = propCfg.submitIcon || cfg.submitIcon;
         const editIcon = propCfg.editIcon || cfg.editIcon;
@@ -322,16 +326,13 @@ class InputCore extends React.Component<InputProps, InputState> {
                 }}
                 onFocus={(e) => {
                     if (canFocus && this.htmlChecker) {
-                        this.inputRef?.current?.setSelectionRange(
-                            this.state.value.length,
-                            this.state.value.length
-                        );
 
                         this.setState({ focus: true });
                         this.htmlChecker.onLostFocus(() => {
                             this.setState({ focus: false });
                             if (
                                 !this.state.submitting &&
+                                this.props.submittable &&
                                 this.state.value !== this.state.stageValue
                             ) {
                                 this.setState({
@@ -419,6 +420,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                         const currValue = this.state.value;
                         if (
                             !this.state.submitting &&
+                            this.props.submittable &&
                             this.state.stageValue !== currValue
                         ) {
                             this.setState({ submitting: true });
@@ -501,6 +503,11 @@ class InputCore extends React.Component<InputProps, InputState> {
                     backgroundColor: color.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     ...style,
+                }}
+                onMouseDown={(e) => {
+                    if (canFocus && this.props.submittable) {
+                        e.preventDefault();
+                    }
                 }}
                 onMouseMove={(e) => {
                     if (!this.state.hover && this.htmlChecker) {
