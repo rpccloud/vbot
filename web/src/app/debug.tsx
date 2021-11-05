@@ -7,6 +7,7 @@ import { FocusContext } from "../mircoui";
 const Debug = () => (
     <div className="vbot-fill-viewport" style={{ background: "#333" }}>
         <FocusContext.Provider value={{ focusable: false }}>
+            <input style={{ padding: 10 }} />
             <div style={{ display: "flex", flexFlow: "row" }}>
                 <Button value="Click" disabled={true} />
                 <Button icon={<AiOutlineLock />} />

@@ -199,15 +199,14 @@ export class HtmlChecker {
     }
 
     public depose() {
-        this.onTimer();
-        this.fnLostHover = undefined;
-        this.fnLostActive = undefined;
-        this.fnLostFocus = undefined;
-
         if (this.timer) {
             window.clearInterval(this.timer);
             this.timer = undefined;
         }
+
+        this.lostHover();
+        this.lostActive();
+        this.lostFocus();
     }
 
     private lostHover() {

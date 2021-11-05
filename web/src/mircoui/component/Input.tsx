@@ -16,6 +16,7 @@ import {
     getFontWeight,
     HtmlChecker,
     ITheme,
+    ResizeSensor,
     Theme,
     ThemeCache,
     ThemeContext,
@@ -151,8 +152,10 @@ class InputCore extends React.Component<InputProps, InputState> {
     static contextType = ThemeContext;
     private rootRef = React.createRef<HTMLDivElement>();
     private inputRef = React.createRef<HTMLInputElement>();
-    private htmlChecker?: HtmlChecker;
-    private reportStatusTimerValue?: TimerValue;
+    private htmlChecker = new HtmlChecker(this.rootRef);
+    private reportStatusTimerValue = new TimerValue(1000, "none", (status) => {
+        this.setState({ reportStatus: status });
+    });
 
     constructor(props: InputProps) {
         super(props);
@@ -167,27 +170,9 @@ class InputCore extends React.Component<InputProps, InputState> {
         };
     }
 
-    componentDidMount() {
-        if (!this.htmlChecker) {
-            this.htmlChecker = new HtmlChecker(this.rootRef);
-        }
-
-        if (!this.reportStatusTimerValue) {
-            this.reportStatusTimerValue = new TimerValue(
-                1000,
-                "none",
-                (status) => {
-                    this.setState({ reportStatus: status });
-                }
-            );
-        }
-    }
-
     componentWillUnmount() {
-        this.htmlChecker?.depose();
-        this.htmlChecker = undefined;
-        this.reportStatusTimerValue?.depose();
-        this.reportStatusTimerValue = undefined;
+        this.htmlChecker.depose();
+        this.reportStatusTimerValue.depose();
     }
 
     render() {
@@ -247,8 +232,7 @@ class InputCore extends React.Component<InputProps, InputState> {
         const isShowPassword =
             this.props.type === "password" && this.state.showPassword;
 
-        let canFocus =
-            this.props.focusable && !this.state.focus && !this.state.submitting;
+        let canFocus = this.props.focusable && !this.state.submitting;
 
         const underlineView =
             this.props.mode === "underline" ? (
@@ -325,9 +309,25 @@ class InputCore extends React.Component<InputProps, InputState> {
                     }
                 }}
                 onFocus={(e) => {
-                    if (canFocus && this.htmlChecker) {
+                    if (canFocus && !this.state.focus) {
                         this.setState({ focus: true });
+
+                        this.inputRef.current?.setSelectionRange(
+                            this.state.value.length,
+                            this.state.value.length
+                        );
+                        // const resizeSensor = new ResizeSensor(
+                        //     this.inputRef,
+                        //     () => {
+                        //         const elem = this.inputRef.current;
+                        //         if (elem) {
+                        //             elem.scrollLeft = elem.scrollWidth;
+                        //         }
+                        //     }
+                        // );
+
                         this.htmlChecker.onLostFocus(() => {
+                            // resizeSensor.close();
                             this.setState({ focus: false });
                             if (
                                 !this.state.submitting &&
@@ -453,7 +453,7 @@ class InputCore extends React.Component<InputProps, InputState> {
             ) : null;
 
         const editButtonView =
-            this.props.submittable && canFocus ? (
+            this.props.submittable && canFocus && !this.state.focus ? (
                 <Button
                     round={true}
                     ghost={true}
@@ -504,7 +504,11 @@ class InputCore extends React.Component<InputProps, InputState> {
                     ...style,
                 }}
                 onMouseDown={(e) => {
-                    if (canFocus && this.props.submittable) {
+                    if (
+                        canFocus &&
+                        !this.state.focus &&
+                        this.props.submittable
+                    ) {
                         e.preventDefault();
                     }
                 }}
