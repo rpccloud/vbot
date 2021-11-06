@@ -124,50 +124,35 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                     }
                 }}
             >
-                <div
-                    style={{ width: 0, height: 0 }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                    }}
-                >
-                    <ZIndexContext.Provider value={{ zIndex: popupZIndex }}>
-                        <div
-                            style={{
-                                position: "fixed",
-                                top: popup
-                                    ? 0
-                                    : screenRect.y + screenRect.height / 2,
-                                left: popup
-                                    ? 0
-                                    : screenRect.x + screenRect.width / 2,
-                                width: popup ? "100vw" : 10,
-                                height: popup ? "100vh" : 10,
-                                opacity: popup ? 1 : 0,
-                                background: "rgba(255,255,255,0.5)",
-                                zIndex: popupZIndex,
-                                alignItems: "center",
-                                justifyContent: "center",
-                                transition: makeTransition(
-                                    [
-                                        "opacity",
-                                        "width",
-                                        "height",
-                                        "top",
-                                        "left",
-                                    ],
-                                    250,
-                                    "ease-in"
-                                ),
-                            }}
-                        >
-                            {popup
-                                ? this.props.renderPopup(screenRect, () => {
-                                      this.setForcePopup(false);
-                                  })
-                                : null}
-                        </div>
-                    </ZIndexContext.Provider>
-                </div>
+                <ZIndexContext.Provider value={{ zIndex: popupZIndex }}>
+                    <div
+                        style={{
+                            position: "fixed",
+                            top: popup
+                                ? 0
+                                : screenRect.y + screenRect.height / 2,
+                            left: popup
+                                ? 0
+                                : screenRect.x + screenRect.width / 2,
+                            opacity: popup ? 1 : 0,
+                            zIndex: popupZIndex,
+                            transition: makeTransition(
+                                ["opacity", "width", "height", "top", "left"],
+                                250,
+                                "ease-in"
+                            ),
+                        }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        {popup
+                            ? this.props.renderPopup(screenRect, () => {
+                                  this.setForcePopup(false);
+                              })
+                            : null}
+                    </div>
+                </ZIndexContext.Provider>
 
                 {this.props.children}
             </div>
