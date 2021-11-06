@@ -14,6 +14,7 @@ interface PopupProps {
     renderPopup: (rect: ScreenRect, closePopup: () => void) => ReactNode;
     children?: ReactNode;
     zIndex?: number;
+    zStep: number;
     style?: CSSProperties;
 }
 
@@ -26,6 +27,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     static contextType = ZIndexContext;
     static defaultProps = {
         action: ["click"],
+        zStep: 1024,
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
@@ -93,7 +95,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
         const popupZIndex =
             this.context.zIndex < 99999999
                 ? 99999999
-                : this.context.zIndex + 1024;
+                : this.context.zIndex + this.props.zStep;
         return (
             <div
                 ref={this.rootRef}
