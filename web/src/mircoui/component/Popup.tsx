@@ -1,6 +1,14 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { HtmlChecker, makeTransition, ResizeSensor, ScreenRect } from "../";
 
+interface ZIndex {
+    zIndex: number;
+}
+
+const ZIndexContext = React.createContext<ZIndex>({
+    zIndex: 0,
+});
+
 interface PopupProps {
     action: Array<"hover" | "click" | "focus">;
     renderPopup: (rect: ScreenRect, closePopup: () => void) => ReactNode;
@@ -15,6 +23,7 @@ interface PopupState {
 }
 
 export class Popup extends React.Component<PopupProps, PopupState> {
+    static contextType = ZIndexContext;
     static defaultProps = {
         action: ["click"],
     };
@@ -81,6 +90,10 @@ export class Popup extends React.Component<PopupProps, PopupState> {
             width: 0,
             height: 0,
         };
+        const popupZIndex =
+            this.context.zIndex < 99999999
+                ? 99999999
+                : this.context.zIndex + 1024;
         return (
             <div
                 ref={this.rootRef}
@@ -116,35 +129,43 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                         e.stopPropagation();
                     }}
                 >
-                    <div
-                        style={{
-                            position: "fixed",
-                            top: popup
-                                ? 0
-                                : screenRect.y + screenRect.height / 2,
-                            left: popup
-                                ? 0
-                                : screenRect.x + screenRect.width / 2,
-                            width: popup ? "100vw" : 10,
-                            height: popup ? "100vh" : 10,
-                            opacity: popup ? 1 : 0,
-                            background: "rgba(255,255,255,0.5)",
-                            zIndex: 1,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            transition: makeTransition(
-                                ["opacity", "width", "height", "top", "left"],
-                                250,
-                                "ease-in"
-                            ),
-                        }}
-                    >
-                        {popup
-                            ? this.props.renderPopup(screenRect, () => {
-                                  this.setForcePopup(false);
-                              })
-                            : null}
-                    </div>
+                    <ZIndexContext.Provider value={{ zIndex: popupZIndex }}>
+                        <div
+                            style={{
+                                position: "fixed",
+                                top: popup
+                                    ? 0
+                                    : screenRect.y + screenRect.height / 2,
+                                left: popup
+                                    ? 0
+                                    : screenRect.x + screenRect.width / 2,
+                                width: popup ? "100vw" : 10,
+                                height: popup ? "100vh" : 10,
+                                opacity: popup ? 1 : 0,
+                                background: "rgba(255,255,255,0.5)",
+                                zIndex: popupZIndex,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transition: makeTransition(
+                                    [
+                                        "opacity",
+                                        "width",
+                                        "height",
+                                        "top",
+                                        "left",
+                                    ],
+                                    250,
+                                    "ease-in"
+                                ),
+                            }}
+                        >
+                            {popup
+                                ? this.props.renderPopup(screenRect, () => {
+                                      this.setForcePopup(false);
+                                  })
+                                : null}
+                        </div>
+                    </ZIndexContext.Provider>
                 </div>
 
                 {this.props.children}

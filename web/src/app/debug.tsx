@@ -39,26 +39,42 @@ const Debug = () => (
             <Popup
                 renderPopup={(rect, closePopup) => {
                     return (
-                        <div
-                            style={{
-                                width: 100,
-                                height: 100,
-                                background: "red",
-                            }}
-                            onClick={() => {
-                                closePopup();
-                            }}
-                        ></div>
+                        <div>
+                            <Popup
+                                renderPopup={(rect, closePopup) => {
+                                    return (
+                                        <div
+                                            style={{
+                                                width: 100,
+                                                height: 100,
+                                                background: "red",
+                                            }}
+                                            onClick={() => {
+                                                closePopup();
+                                            }}
+                                        ></div>
+                                    );
+                                }}
+                            >
+                                <Button icon={<AiOutlineLock />} />
+                            </Popup>
+                            <div
+                                style={{
+                                    width: 200,
+                                    height: 200,
+                                    background: "red",
+                                }}
+                                onClick={() => {
+                                    closePopup();
+                                }}
+                            ></div>
+                        </div>
                     );
                 }}
             >
                 <Button icon={<AiOutlineLock />} />
             </Popup>
         </Container>
-
-        {/* <Container width={600}>
-            <Test />
-        </Container> */}
 
         <div style={{ display: "flex", flexFlow: "row" }}>
             <Container width={300}>
