@@ -3,6 +3,7 @@ import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { Button } from "../mircoui/component/Button";
 import { Input } from "../mircoui/component/Input";
 import { FocusContext } from "../mircoui";
+import { Popup } from "../mircoui/component/Popup";
 
 const Container = (props: {
     children: ReactNode;
@@ -16,7 +17,7 @@ const Container = (props: {
             margin: 16,
             padding: 16,
             borderRadius: 16,
-            background: "#222",
+            background: "#333",
             ...props.style,
         }}
     >
@@ -27,7 +28,7 @@ const Container = (props: {
 const Debug = () => (
     <div
         style={{
-            background: "#000",
+            background: "#444",
             position: "fixed",
             width: "100vw",
             height: "100vh",
@@ -35,20 +36,29 @@ const Debug = () => (
         }}
     >
         <Container width={600}>
-            <Input
-                defaultValue="1234"
-                mode="border"
-                style={{ margin: 20, display: "block" }}
-                focusable={true}
-                submittable={true}
-                icon={<AiOutlineLock />}
-                label="Name:"
-                placeholder="placeholder"
-                onSubmit={async () => {
-                    return false;
+            <Popup
+                renderPopup={(rect, closePopup) => {
+                    return (
+                        <div
+                            style={{
+                                width: 100,
+                                height: 100,
+                                background: "red",
+                            }}
+                            onClick={() => {
+                                closePopup();
+                            }}
+                        ></div>
+                    );
                 }}
-            />
+            >
+                <Button icon={<AiOutlineLock />} />
+            </Popup>
         </Container>
+
+        {/* <Container width={600}>
+            <Test />
+        </Container> */}
 
         <div style={{ display: "flex", flexFlow: "row" }}>
             <Container width={300}>

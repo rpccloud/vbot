@@ -5,7 +5,8 @@ function getSeed(): number {
     return seed++;
 }
 
-let gResizeSensorMap = new Map<number, ResizeSensor>();
+let gResizeSensorFastMap = new Map<number, ResizeSensor>();
+let gResizeSensorSlowMap = new Map<number, ResizeSensor>();
 let gThemeCacheList = Array<ThemeCache>();
 let gThemeCacheNowMS = getTimeMS();
 let gTimerCount = 0;
@@ -20,7 +21,13 @@ window.setInterval(() => {
         });
     }
 
-    gResizeSensorMap.forEach((it) => {
+    if (gTimerCount % 10 === 0) {
+        gResizeSensorSlowMap.forEach((it) => {
+            it.onTimer();
+        });
+    }
+
+    gResizeSensorFastMap.forEach((it) => {
         it.onTimer();
     });
 }, 25);
@@ -251,41 +258,76 @@ export class HtmlChecker {
     }
 }
 
+export interface ScreenRect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+function isScreenRectEqual(left?: ScreenRect, right?: ScreenRect): boolean {
+    if (left === undefined && right === undefined) {
+        return true;
+    }
+
+    return (
+        left?.x === right?.x &&
+        left?.y === right?.y &&
+        left?.width === right?.width &&
+        left?.height === right?.height
+    );
+}
+
+export function makeTransition(
+    attrs: Array<string>,
+    timeMS: number,
+    timingFunc: string
+): string {
+    const vArray = attrs.map((v) => {
+        return `${v} ${timeMS}ms ${timingFunc}`;
+    });
+
+    return vArray.join(",");
+}
+
 export class ResizeSensor {
     private id: number = getSeed();
     private ref: React.RefObject<HTMLElement>;
-    private onResize: (width?: number, height?: number) => void;
-    private width?: number;
-    private height?: number;
+    private onResize: (rect?: ScreenRect) => void;
+    private rect?: ScreenRect;
 
     constructor(
         ref: React.RefObject<HTMLElement>,
-        onResize: (width?: number, height?: number) => void
+        onResize: (rect?: ScreenRect) => void
     ) {
         this.ref = ref;
         this.onResize = onResize;
-        gResizeSensorMap.set(this.id, this);
+        this.listenSlow();
+    }
+
+    listenFast() {
+        gResizeSensorSlowMap.delete(this.id);
+        gResizeSensorFastMap.set(this.id, this);
+    }
+
+    listenSlow() {
+        gResizeSensorFastMap.delete(this.id);
+        gResizeSensorSlowMap.set(this.id, this);
     }
 
     onTimer() {
-        let width: number | undefined = undefined;
-        let height: number | undefined = undefined;
+        let rect = this.ref.current
+            ? this.ref.current.getBoundingClientRect()
+            : undefined;
 
-        if (this.ref.current) {
-            var rect = this.ref.current.getBoundingClientRect();
-            width = rect.width;
-            height = rect.height;
-        }
-
-        if (width !== this.width || height !== this.height) {
-            this.width = width;
-            this.height = height;
-            this.onResize(this.width, this.height);
+        if (!isScreenRectEqual(rect, this.rect)) {
+            this.onResize(rect);
         }
     }
 
     close() {
-        gResizeSensorMap.delete(this.id);
+        gResizeSensorSlowMap.delete(this.id);
+        gResizeSensorFastMap.delete(this.id);
     }
 }
 

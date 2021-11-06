@@ -1,10 +1,9 @@
 import React from "react";
-import { ResizeSensor } from "..";
+import { ResizeSensor, ScreenRect } from "..";
 
 interface TestProps {}
 interface TestState {
-    width?: number;
-    height?: number;
+    rect?: ScreenRect;
 }
 
 export class Test extends React.Component<TestProps, TestState> {
@@ -19,11 +18,8 @@ export class Test extends React.Component<TestProps, TestState> {
     componentDidMount() {
         this.resizeSensor = new ResizeSensor(
             this.rootRef,
-            (width?: number, height?: number) => {
-                this.setState({
-                    width: width,
-                    height: height,
-                });
+            (rect?: ScreenRect) => {
+                this.setState({ rect: rect });
             }
         );
     }
@@ -45,16 +41,12 @@ export class Test extends React.Component<TestProps, TestState> {
                 <div
                     style={{
                         position: "absolute",
-                        top: this.state.height
-                            ? this.state.height / 2 - 100
-                            : 0,
-                        left: this.state.width ? this.state.width / 2 - 100 : 0,
-                        width: 200,
-                        height: 200,
+                        width: 400,
+                        height: 400,
                         background: "white",
                     }}
                 >
-                    {JSON.stringify(this.state)}
+                    {JSON.stringify(this.state.rect)}
                 </div>
             </div>
         );
