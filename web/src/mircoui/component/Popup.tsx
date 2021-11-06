@@ -37,7 +37,6 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     private hover = false;
     private forcePopup = false;
     private resizeSensor = new ResizeSensor(this.rootRef, (rect) => {
-        console.log(rect);
         this.setState({ screenRect: rect });
     });
 

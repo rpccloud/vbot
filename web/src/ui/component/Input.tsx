@@ -236,9 +236,7 @@ const Input = (props: InputProps) => {
                     }
                     htmlChecker.onLostFocus(() => {
                         setFocus(false);
-                        console.log(`log current ${currentValue}`);
                         if (currentValue !== stageValue) {
-                            console.log("NO2");
                             setCurrentValue(stageValue);
                             inputBGTimerValue.setValue(warningColor?.hsla);
                         }
