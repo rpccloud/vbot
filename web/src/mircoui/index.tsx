@@ -534,3 +534,8 @@ interface Focus {
 export const FocusContext = React.createContext<Focus>({
     focusable: true,
 });
+
+export interface Point {
+    x: number;
+    y: number;
+}

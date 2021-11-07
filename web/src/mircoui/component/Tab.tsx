@@ -6,6 +6,7 @@ import {
     HtmlChecker,
     ITheme,
     makeTransition,
+    Point,
     Theme,
     ThemeCache,
     ThemeContext,
@@ -63,11 +64,12 @@ interface TabProps {
     icon?: ReactNode;
     title?: string;
     width: number;
+    selected: boolean;
 }
 
 interface TabState {
     hover: boolean;
-    selected: boolean;
+    focus: boolean;
 }
 
 function makeTabPath(w: number, h: number, radius: number): string {
@@ -82,21 +84,37 @@ export class Tab extends React.Component<TabProps, TabState> {
         fontWeight: "normal",
         config: {},
         width: 100,
+        selected: false,
     };
 
+    private rootRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
     private htmlChecker = new HtmlChecker(this.bgRef);
+    private mouseDownPt?: Point;
+    private movingBeforeLeft?: number;
+    private currLeft: number = 0;
 
     constructor(props: TabProps) {
         super(props);
         this.state = {
             hover: false,
-            selected: false,
+            focus: false,
         };
+    }
+
+    isMoving(): boolean {
+        return this.movingBeforeLeft !== undefined;
     }
 
     componentWillUnmount() {
         this.htmlChecker.depose();
+    }
+
+    setLeft(x: number) {
+        if (x !== this.currLeft && this.rootRef.current) {
+            this.currLeft = x;
+            this.rootRef.current.style.left = `${x}px`;
+        }
     }
 
     render() {
@@ -110,22 +128,23 @@ export class Tab extends React.Component<TabProps, TabState> {
             color = extendColorSet(config.hover, this.props.config.hover);
         }
 
-        if (this.state.selected) {
+        if (this.props.selected) {
             color = extendColorSet(config.selected, this.props.config.selected);
         }
 
         let fontSize = getFontSize(this.props.size);
         let width = this.props.width;
         let height = Math.round(fontSize * 2.3);
-        let path = makeTabPath(width, height, height / 4);
+        let path = makeTabPath(width, height, height / 5);
 
         return (
             <div
+                ref={this.rootRef}
                 style={{
                     position: "absolute",
                     width: this.props.width,
                     height: height,
-                    overflow: "hidden",
+                    // overflow: "hidden",
                     top: 0,
                 }}
             >
@@ -150,16 +169,46 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 });
                             }
                         }}
-                        onMouseDown={(e) => {
-                            if (!this.state.selected) {
-                                this.setState({ selected: true });
-                                this.htmlChecker.onLostActive(() => {
-                                    this.setState({ selected: false });
-                                });
+                        onPointerDown={(
+                            e: React.PointerEvent<SVGPathElement>
+                        ) => {
+                            this.mouseDownPt = { x: e.clientX, y: e.clientY };
+                            this.bgRef.current?.setPointerCapture(e.pointerId);
+                        }}
+                        onPointerUp={(
+                            e: React.PointerEvent<SVGPathElement>
+                        ) => {
+                            this.mouseDownPt = undefined;
+                            this.movingBeforeLeft = undefined;
+                            this.bgRef.current?.releasePointerCapture(
+                                e.pointerId
+                            );
+                        }}
+                        onPointerMove={(
+                            e: React.PointerEvent<SVGPathElement>
+                        ) => {
+                            if (!this.isMoving() && this.mouseDownPt) {
+                                this.movingBeforeLeft =
+                                    Math.abs(e.clientX - this.mouseDownPt.x) > 8
+                                        ? this.currLeft
+                                        : undefined;
+                            }
+
+                            if (this.isMoving() && this.mouseDownPt) {
+                                this.setLeft(
+                                    this.movingBeforeLeft! +
+                                        e.clientX -
+                                        this.mouseDownPt.x
+                                );
                             }
                         }}
                     />
                 </svg>
+
+                <span style={{ color: "red" }}>
+                    {" "}
+                    {this.state.focus ? "focus" : "unfocus"}
+                </span>
             </div>
         );
     }
