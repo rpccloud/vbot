@@ -346,10 +346,13 @@ class InputCore extends React.Component<InputProps, InputState> {
                         const resizeSensor = new ResizeSensor(
                             this.inputRef,
                             () => {
-                                const elem = this.inputRef.current;
-                                if (elem) {
-                                    elem.scrollLeft = elem.scrollWidth;
+                                if (this.props.submittable) {
+                                    const elem = this.inputRef.current;
+                                    if (elem) {
+                                        elem.scrollLeft = elem.scrollWidth;
+                                    }
                                 }
+                                resizeSensor.close();
                             }
                         );
 

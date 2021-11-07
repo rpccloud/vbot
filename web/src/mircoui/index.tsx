@@ -321,6 +321,7 @@ export class ResizeSensor {
             : undefined;
 
         if (!isScreenRectEqual(rect, this.rect)) {
+            this.rect = rect;
             this.onResize(rect);
         }
     }

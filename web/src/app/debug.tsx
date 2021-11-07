@@ -211,7 +211,7 @@ const Debug = () => (
                 />
                 <div style={{ height: 20 }} />
                 <Input
-                    defaultValue="1234"
+                    defaultValue="12341323413412aasdfasdfasdf"
                     mode="border"
                     focusable={true}
                     submittable={false}
