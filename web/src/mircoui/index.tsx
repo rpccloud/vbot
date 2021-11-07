@@ -153,13 +153,13 @@ export class TimerValue {
 }
 
 export class HtmlChecker {
-    private ref: React.RefObject<HTMLElement>;
+    private ref: React.RefObject<HTMLElement | SVGElement>;
     private fnLostHover?: () => void;
     private fnLostActive?: () => void;
     private fnLostFocus?: () => void;
     timer?: number;
 
-    constructor(ref: React.RefObject<HTMLElement>) {
+    constructor(ref: React.RefObject<HTMLElement | SVGElement>) {
         this.ref = ref;
     }
 

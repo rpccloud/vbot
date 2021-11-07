@@ -3,7 +3,9 @@ import {
     ColorSet,
     extendColorSet,
     getFontSize,
+    HtmlChecker,
     ITheme,
+    makeTransition,
     Theme,
     ThemeCache,
     ThemeContext,
@@ -12,7 +14,7 @@ import {
 interface TabConfig {
     normal?: ColorSet;
     hover?: ColorSet;
-    focus?: ColorSet;
+    selected?: ColorSet;
 }
 
 function getConfig(theme: Theme): TabConfig {
@@ -24,20 +26,20 @@ function getConfig(theme: Theme): TabConfig {
 
     record = {
         normal: {
-            font: theme.secondary.main.hsla,
-            background: theme.secondary.auxiliary.hsla,
-            border: "transparent",
+            font: theme.primary.main.hsla,
+            background: "transparent",
+            border: theme.primary.main.hsla,
             shadow: "transparent",
             auxiliary: "transparent",
         },
         hover: {
             font: theme.primary.main.hsla,
-            background: theme.primary.auxiliary.hsla,
-            border: "transparent",
+            background: "transparent",
+            border: theme.primary.auxiliary.hsla,
             shadow: "transparent",
             auxiliary: "transparent",
         },
-        focus: {
+        selected: {
             font: theme.primary.main.lighten(5).hsla,
             background: theme.primary.auxiliary.lighten(5).hsla,
             border: "transparent",
@@ -65,17 +67,12 @@ interface TabProps {
 
 interface TabState {
     hover: boolean;
-    focus: boolean;
+    selected: boolean;
 }
 
-function makeTabPath(w: number, h: number, radius: number): Path2D {
-    let path = new Path2D();
+function makeTabPath(w: number, h: number, radius: number): string {
     let r = Math.min(w / 2, h / 2, radius);
-    path.moveTo(0, h);
-    path.lineTo(2 * r, 0);
-    path.lineTo(w - 2 * r, 0);
-    path.lineTo(w, h);
-    return path;
+    return `M0 ${h} L${2 * r} 1 L${w - 2 * r} 1 L${w} ${h}`;
 }
 
 export class Tab extends React.Component<TabProps, TabState> {
@@ -87,74 +84,19 @@ export class Tab extends React.Component<TabProps, TabState> {
         width: 100,
     };
 
-    private rootRef = React.createRef<HTMLDivElement>();
-    private canvasRef = React.createRef<HTMLCanvasElement>();
-    private ctx?: CanvasRenderingContext2D;
-    private canvasWidth: number = 0;
-    private canvasHeight: number = 0;
-    private color?: ColorSet;
+    private bgRef = React.createRef<SVGPathElement>();
+    private htmlChecker = new HtmlChecker(this.bgRef);
 
     constructor(props: TabProps) {
         super(props);
         this.state = {
             hover: false,
-            focus: false,
+            selected: false,
         };
     }
 
-    componentDidMount() {
-        this.drawBGPath();
-    }
-
-    private setCanvasSize(width: number, height: number) {
-        if (width !== this.canvasWidth || height !== this.canvasHeight) {
-            this.canvasWidth = width;
-            this.canvasHeight = height;
-            this.drawBGPath();
-        }
-    }
-
-    private drawBGPath(): void {
-        const canvas = this.canvasRef.current;
-
-        if (!canvas) {
-            return;
-        }
-
-        if (!this.ctx) {
-            this.ctx = canvas.getContext("2d") || undefined;
-        }
-        const ctx = this.ctx;
-        if (!ctx) {
-            return;
-        }
-
-        const dpr = window.devicePixelRatio || 1;
-
-        canvas.width = this.canvasWidth * dpr;
-        canvas.height = this.canvasHeight * dpr;
-        canvas.style.width = `${this.canvasWidth}px`;
-        canvas.style.height = `${this.canvasHeight}px`;
-        ctx.scale(dpr, dpr);
-
-        const path = makeTabPath(
-            this.canvasWidth,
-            this.canvasHeight,
-            Math.round(this.canvasHeight / 4)
-        );
-
-        ctx.imageSmoothingEnabled = true;
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        if (this.color?.background) {
-            ctx.fillStyle = this.color?.background;
-            ctx.fill(path);
-        }
-        if (this.color?.border) {
-            ctx.lineWidth = dpr;
-            ctx.lineCap = "round";
-            ctx.strokeStyle = this.color?.border;
-            ctx.stroke(path);
-        }
+    componentWillUnmount() {
+        this.htmlChecker.depose();
     }
 
     render() {
@@ -164,25 +106,60 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         let color = extendColorSet(config.normal, this.props.config.normal);
 
-        this.color = color;
+        if (this.state.hover) {
+            color = extendColorSet(config.hover, this.props.config.hover);
+        }
+
+        if (this.state.selected) {
+            color = extendColorSet(config.selected, this.props.config.selected);
+        }
 
         let fontSize = getFontSize(this.props.size);
+        let width = this.props.width;
         let height = Math.round(fontSize * 2.3);
-        this.setCanvasSize(this.props.width, height);
+        let path = makeTabPath(width, height, height / 4);
+
         return (
             <div
-                ref={this.rootRef}
                 style={{
                     position: "absolute",
                     width: this.props.width,
                     height: height,
                     overflow: "hidden",
+                    top: 0,
                 }}
             >
-                <canvas
-                    ref={this.canvasRef}
-                    style={{ transition: "opacity 0.3s ease-out" }}
-                ></canvas>
+                <svg height={height} width={width}>
+                    <path
+                        ref={this.bgRef}
+                        d={path}
+                        style={{
+                            fill: color.background,
+                            stroke: color.border,
+                            transition: makeTransition(
+                                ["fill", "stroke"],
+                                250,
+                                "ease-in"
+                            ),
+                        }}
+                        onMouseMove={() => {
+                            if (!this.state.hover) {
+                                this.setState({ hover: true });
+                                this.htmlChecker.onLostHover(() => {
+                                    this.setState({ hover: false });
+                                });
+                            }
+                        }}
+                        onMouseDown={(e) => {
+                            if (!this.state.selected) {
+                                this.setState({ selected: true });
+                                this.htmlChecker.onLostActive(() => {
+                                    this.setState({ selected: false });
+                                });
+                            }
+                        }}
+                    />
+                </svg>
             </div>
         );
     }
