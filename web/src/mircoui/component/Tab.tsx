@@ -1,103 +1,186 @@
 import React, { ReactNode } from "react";
-import { ColorSet, ResizeSensor, ScreenRect } from "..";
-import { getFontSize } from "../../ui/theme/config";
+import {
+    ColorSet,
+    extendColorSet,
+    getFontSize,
+    ITheme,
+    Theme,
+    ThemeCache,
+    ThemeContext,
+} from "..";
+
+interface TabConfig {
+    normal?: ColorSet;
+    hover?: ColorSet;
+    focus?: ColorSet;
+}
+
+function getConfig(theme: Theme): TabConfig {
+    const themeKey = theme.hashKey();
+    let record: TabConfig = themeCache.getConfig(themeKey);
+    if (record) {
+        return record;
+    }
+
+    record = {
+        normal: {
+            font: theme.secondary.main.hsla,
+            background: theme.secondary.auxiliary.hsla,
+            border: "transparent",
+            shadow: "transparent",
+            auxiliary: "transparent",
+        },
+        hover: {
+            font: theme.primary.main.hsla,
+            background: theme.primary.auxiliary.hsla,
+            border: "transparent",
+            shadow: "transparent",
+            auxiliary: "transparent",
+        },
+        focus: {
+            font: theme.primary.main.lighten(5).hsla,
+            background: theme.primary.auxiliary.lighten(5).hsla,
+            border: "transparent",
+            shadow: theme.primary.auxiliary.lighten(5).hsla,
+            auxiliary: "transparent",
+        },
+    };
+
+    themeCache.setConfig(themeKey, record);
+
+    return record;
+}
+
+let themeCache = new ThemeCache();
 
 interface TabProps {
     size: "tiny" | "small" | "medium" | "large" | "xlarge";
+    fontWeight: "lighter" | "normal" | "bold" | "bolder";
+    theme?: ITheme;
+    config: TabConfig;
     icon?: ReactNode;
     title?: string;
+    width: number;
 }
 
 interface TabState {
     hover: boolean;
-    selected: boolean;
-    width: number;
-    maxWidth: number;
+    focus: boolean;
 }
 
-class Tab extends React.Component<TabProps, TabState> {
+function makeTabPath(w: number, h: number, radius: number): Path2D {
+    let path = new Path2D();
+    let r = Math.min(w / 2, h / 2, radius);
+    path.moveTo(0, h);
+    path.lineTo(2 * r, 0);
+    path.lineTo(w - 2 * r, 0);
+    path.lineTo(w, h);
+    return path;
+}
+
+export class Tab extends React.Component<TabProps, TabState> {
+    static contextType = ThemeContext;
+    static defaultProps = {
+        size: "medium",
+        fontWeight: "normal",
+        config: {},
+        width: 100,
+    };
+
     private rootRef = React.createRef<HTMLDivElement>();
     private canvasRef = React.createRef<HTMLCanvasElement>();
     private ctx?: CanvasRenderingContext2D;
+    private canvasWidth: number = 0;
+    private canvasHeight: number = 0;
+    private color?: ColorSet;
 
     constructor(props: TabProps) {
         super(props);
         this.state = {
             hover: false,
-            selected: false,
-            width: 0,
-            maxWidth: 200,
+            focus: false,
         };
     }
 
-    setWidth(width: number) {
-        if (width !== this.state.width) {
-            if (width <= this.state.maxWidth) {
-                this.setState({ width: width });
-            } else {
-                this.setState({ maxWidth: width, width: width });
-            }
+    componentDidMount() {
+        this.drawBGPath();
+    }
+
+    private setCanvasSize(width: number, height: number) {
+        if (width !== this.canvasWidth || height !== this.canvasHeight) {
+            this.canvasWidth = width;
+            this.canvasHeight = height;
+            this.drawBGPath();
         }
     }
 
-    private getCtx(): CanvasRenderingContext2D | undefined {
-        if (this.ctx) {
-            return this.ctx;
+    private drawBGPath(): void {
+        const canvas = this.canvasRef.current;
+
+        if (!canvas) {
+            return;
         }
 
-        const ctx = this.canvasRef.current?.getContext("2d");
-
-        if (ctx) {
-            this.ctx = ctx;
-            return ctx;
-        } else {
-            return undefined;
+        if (!this.ctx) {
+            this.ctx = canvas.getContext("2d") || undefined;
         }
-    }
+        const ctx = this.ctx;
+        if (!ctx) {
+            return;
+        }
 
-    private drawBGPath(color: ColorSet): void {
         const dpr = window.devicePixelRatio || 1;
-        const ctx = this.getCtx();
-        if (ctx) {
-            ctx.scale(dpr, dpr);
-            ctx.imageSmoothingEnabled = true;
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            if (color.background) {
-                ctx.fillStyle = color.background;
-            }
-            // theme.backgroundColor.lighten(1).hsla;
-            // ctx.fill(this.path);
-        }
 
-        if (ctx) {
-            //   if (this.isFocus) {
-            //     ctx.lineWidth = dpr;
-            //     ctx.lineCap = "round";
-            //     ctx.strokeStyle = theme.primaryColor
-            //     ctx.stroke(this.path);
-            //   }
+        canvas.width = this.canvasWidth * dpr;
+        canvas.height = this.canvasHeight * dpr;
+        canvas.style.width = `${this.canvasWidth}px`;
+        canvas.style.height = `${this.canvasHeight}px`;
+        ctx.scale(dpr, dpr);
+
+        const path = makeTabPath(
+            this.canvasWidth,
+            this.canvasHeight,
+            Math.round(this.canvasHeight / 4)
+        );
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        if (this.color?.background) {
+            ctx.fillStyle = this.color?.background;
+            ctx.fill(path);
+        }
+        if (this.color?.border) {
+            ctx.lineWidth = dpr;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = this.color?.border;
+            ctx.stroke(path);
         }
     }
 
     render() {
-        let size = getFontSize(this.props.size);
-        let height = size * 2;
-        const dpr = window.devicePixelRatio || 1;
+        let config: TabConfig = getConfig(
+            this.context.extend(this.props.theme)
+        );
 
+        let color = extendColorSet(config.normal, this.props.config.normal);
+
+        this.color = color;
+
+        let fontSize = getFontSize(this.props.size);
+        let height = Math.round(fontSize * 2.3);
+        this.setCanvasSize(this.props.width, height);
         return (
             <div
                 ref={this.rootRef}
                 style={{
                     position: "absolute",
+                    width: this.props.width,
                     height: height,
                     overflow: "hidden",
-                    top: 0,
                 }}
             >
                 <canvas
                     ref={this.canvasRef}
-                    width={this.state.maxWidth * dpr}
-                    height={height * dpr}
                     style={{ transition: "opacity 0.3s ease-out" }}
                 ></canvas>
             </div>

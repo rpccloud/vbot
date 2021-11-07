@@ -158,6 +158,7 @@ const InputButton = (props: {
 };
 
 class InputCore extends React.Component<InputProps, InputState> {
+    static contextType = ThemeContext;
     static defaultProps = {
         mode: "border",
         size: "medium",
@@ -178,7 +179,6 @@ class InputCore extends React.Component<InputProps, InputState> {
         },
     };
 
-    static contextType = ThemeContext;
     private rootRef = React.createRef<HTMLDivElement>();
     private inputRef = React.createRef<HTMLInputElement>();
     private htmlChecker = new HtmlChecker(this.rootRef);

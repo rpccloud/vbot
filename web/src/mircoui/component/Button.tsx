@@ -154,6 +154,7 @@ interface ButtonState {
 }
 
 class ButtonCore extends React.Component<ButtonProps, ButtonState> {
+    static contextType = ThemeContext;
     static defaultProps = {
         size: "medium",
         fontWeight: "normal",
@@ -168,7 +169,6 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
         onClick: () => void {},
     };
 
-    static contextType = ThemeContext;
     private rootRef = React.createRef<HTMLDivElement>();
     private htmlChecker = new HtmlChecker(this.rootRef);
 
