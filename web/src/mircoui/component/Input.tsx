@@ -205,8 +205,6 @@ class InputCore extends React.Component<InputProps, InputState> {
     }
 
     render() {
-        const size = getFontSize(this.props.size);
-        const fontWeight = getFontWeight(this.props.fontWeight);
         const cfg: InputConfig = getConfig(
             this.context.extend(this.props.theme)
         );
@@ -229,22 +227,22 @@ class InputCore extends React.Component<InputProps, InputState> {
             color = extendColorSet(cfg.success, propCfg.success);
         }
 
-        const innerMargin =
+        const fontSize = getFontSize(this.props.size);
+        let height = Math.round(fontSize * 2.3);
+        let qrHeight = Math.round(height / 4);
+        let innerMargin =
             this.props.innerMargin !== undefined
                 ? this.props.innerMargin
-                : Math.floor(size / 3);
-        const innerLeft =
+                : qrHeight;
+        let innerLeft =
             this.props.innerLeft !== undefined
                 ? this.props.innerLeft
-                : this.props.mode === "border"
-                ? Math.floor(size / 2)
-                : 0;
-        const innerRight =
+                : qrHeight;
+        let innerRight =
             this.props.innerRight !== undefined
-                ? this.props.innerLeft
-                : this.props.mode === "border"
-                ? Math.floor(size / 2)
-                : 0;
+                ? this.props.innerRight
+                : qrHeight;
+        const fontWeight = getFontWeight(this.props.fontWeight);
 
         const submitIcon = propCfg.submitIcon || cfg.submitIcon;
         const editIcon = propCfg.editIcon || cfg.editIcon;
@@ -272,7 +270,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                         bottom: 0,
                         height: 1,
                         background: color.border,
-                        boxShadow: `0px 0px ${size / 4}px ${color.shadow}`,
+                        boxShadow: `0px 0px ${qrHeight}px ${color.shadow}`,
                         transition: "inherit",
                     }}
                 />
@@ -282,8 +280,8 @@ class InputCore extends React.Component<InputProps, InputState> {
             <div
                 style={{
                     display: "flex",
-                    height: size,
-                    width: size,
+                    height: fontSize,
+                    width: fontSize,
                     alignItems: "center",
                     justifyContent: "center",
                     color: !this.props.validator(this.state.value)
@@ -317,7 +315,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 tabIndex={-1}
                 style={{
                     outline: "none",
-                    minWidth: size,
+                    minWidth: fontSize,
                     border: 0,
                     padding: 0,
                     flex: 1,
@@ -474,7 +472,7 @@ class InputCore extends React.Component<InputProps, InputState> {
         if (this.props.mode === "border") {
             style = {
                 border: `1px solid ${color.border}`,
-                boxShadow: `0px 0px ${size / 4}px ${color.shadow}`,
+                boxShadow: `0px 0px ${qrHeight}px ${color.shadow}`,
                 ...style,
             };
         } else {
@@ -492,8 +490,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     display: "block",
                     position: "relative",
                     overflow: "clip",
-                    fontSize: size,
-                    height: 2 * size,
+                    fontSize: fontSize,
+                    height: height,
                     fontWeight: fontWeight,
                     color: color.font,
                     backgroundColor: color.background,
@@ -534,7 +532,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 >
                     <div
                         style={{
-                            height: size,
+                            height: fontSize,
                             width: innerLeft,
                         }}
                     />
@@ -547,7 +545,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                     {editButtonView}
                     <div
                         style={{
-                            height: size,
+                            height: fontSize,
                             width: innerRight,
                         }}
                     />

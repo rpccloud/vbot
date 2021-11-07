@@ -33,11 +33,11 @@ window.setInterval(() => {
 }, 25);
 
 const cfgFontSize = {
-    tiny: 11,
-    small: 14,
-    medium: 16,
-    large: 20,
-    xlarge: 32,
+    tiny: 6,
+    small: 11,
+    medium: 14,
+    large: 16,
+    xlarge: 20,
 };
 
 const cfgFontWeight = {

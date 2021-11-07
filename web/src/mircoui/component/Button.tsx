@@ -141,6 +141,8 @@ interface ButtonProps {
     focusable: boolean;
     border: boolean;
     innerMargin?: number;
+    innerLeft?: number;
+    innerRight?: number;
     style?: CSSProperties;
     onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
@@ -184,7 +186,6 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     }
 
     render() {
-        let size = getFontSize(this.props.size);
         let config: ButtonConfig = getConfig(
             this.context.extend(this.props.theme),
             this.props.ghost
@@ -212,27 +213,42 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
             color = extendColorSet(config.disabled, this.props.config.disabled);
         }
 
+        let fontSize = getFontSize(this.props.size);
+        let height = Math.round(fontSize * 2.3);
+        let qrHeight = Math.round(height / 4);
+        let innerMargin =
+            this.props.innerMargin !== undefined
+                ? this.props.innerMargin
+                : qrHeight;
+        let innerLeft =
+            this.props.innerLeft !== undefined
+                ? this.props.innerLeft
+                : qrHeight;
+        let innerRight =
+            this.props.innerRight !== undefined
+                ? this.props.innerRight
+                : qrHeight;
+
         let style = this.props.round
             ? {
-                  width: 2 * size,
-                  height: 2 * size,
-                  borderRadius: size,
+                  width: height,
+                  height: height,
+                  borderRadius: height / 2,
                   ...this.props.style,
               }
             : {
                   width: "auto",
-                  height: 2 * size,
+                  height: height,
                   ...this.props.style,
               };
 
         let canFocus =
             this.props.focusable && !this.props.disabled && !this.state.focus;
-        let innerMargin = this.props.innerMargin || Math.floor(size / 3);
 
         let padding =
             this.props?.style?.padding !== undefined
                 ? this.props?.style?.padding
-                : `0px ${size / 2}px 0px ${size / 2}px`;
+                : `0px ${innerRight}px 0px ${innerLeft}px`;
 
         return (
             <div
@@ -243,13 +259,13 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                         color.border
                     }`,
                     color: color.font,
-                    fontSize: size,
+                    fontSize: fontSize,
                     padding: 0,
                     fontWeight: getFontWeight(this.props.fontWeight),
                     backgroundColor: color.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     boxShadow: this.props?.border
-                        ? `0px 0px ${size / 4}px ${color.shadow}`
+                        ? `0px 0px ${qrHeight / 2}px ${color.shadow}`
                         : "",
                     ...style,
                 }}
