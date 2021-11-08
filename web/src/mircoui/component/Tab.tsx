@@ -11,6 +11,7 @@ import {
     ThemeCache,
     ThemeContext,
 } from "..";
+import { TabBar } from "./TabBar";
 
 interface TabConfig {
     normal?: ColorSet;
@@ -57,14 +58,16 @@ function getConfig(theme: Theme): TabConfig {
 let themeCache = new ThemeCache();
 
 interface TabProps {
+    readonly id: number;
+    readonly tabBar: TabBar;
     size: "tiny" | "small" | "medium" | "large" | "xlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: ITheme;
     config: TabConfig;
     icon?: ReactNode;
     title?: string;
-    width: number;
     selected: boolean;
+    width: number;
 }
 
 interface TabState {
@@ -80,22 +83,20 @@ function makeTabPath(w: number, h: number, radius: number): string {
 export class Tab extends React.Component<TabProps, TabState> {
     static contextType = ThemeContext;
     static defaultProps = {
-        size: "medium",
-        fontWeight: "normal",
         config: {},
-        width: 100,
-        selected: false,
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
-    private htmlChecker = new HtmlChecker(this.bgRef);
     private mouseDownPt?: Point;
     private movingBeforeLeft?: number;
     private currLeft: number = 0;
 
+    private htmlChecker = new HtmlChecker(this.bgRef);
+
     constructor(props: TabProps) {
         super(props);
+
         this.state = {
             hover: false,
             focus: false,
@@ -141,14 +142,21 @@ export class Tab extends React.Component<TabProps, TabState> {
             <div
                 ref={this.rootRef}
                 style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     position: "absolute",
-                    width: this.props.width,
+                    width: width,
                     height: height,
                     // overflow: "hidden",
-                    top: 0,
+                    bottom: 0,
                 }}
             >
-                <svg height={height} width={width}>
+                <svg
+                    height={height}
+                    width={width}
+                    style={{ position: "absolute" }}
+                >
                     <path
                         ref={this.bgRef}
                         d={path}
@@ -205,10 +213,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     />
                 </svg>
 
-                <span style={{ color: "red" }}>
-                    {" "}
-                    {this.state.focus ? "focus" : "unfocus"}
-                </span>
+                <div style={{ background: "red" }}></div>
             </div>
         );
     }

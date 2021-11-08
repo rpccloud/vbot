@@ -4,7 +4,6 @@ import { Button } from "../mircoui/component/Button";
 import { Input } from "../mircoui/component/Input";
 import { FocusContext } from "../mircoui";
 import { Popup } from "../mircoui/component/Popup";
-import { Tab } from "../mircoui/component/Tab";
 import { TabBar } from "../mircoui/component/TabBar";
 
 const Container = (props: {
@@ -38,21 +37,16 @@ const Debug = () => (
         }}
     >
         <div>
-            <TabBar size="large"></TabBar>
+            <TabBar
+                size="large"
+                initialFixedTabs={[
+                    {
+                        width: 180,
+                        title: "Test",
+                    },
+                ]}
+            ></TabBar>
         </div>
-
-        <Container width={600}>
-            <div
-                style={{
-                    position: "relative",
-                    width: 500,
-                    height: 300,
-                    background: "green",
-                }}
-            >
-                <Tab />
-            </div>
-        </Container>
 
         <Container width={600}>
             <Popup

@@ -33,7 +33,7 @@ window.setInterval(() => {
 }, 25);
 
 const cfgFontSize = {
-    tiny: 6,
+    tiny: 8,
     small: 11,
     medium: 14,
     large: 16,
