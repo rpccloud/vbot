@@ -134,7 +134,7 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         let fontSize = getFontSize(this.props.size);
         let width = this.props.width;
-        let height = Math.round(fontSize * 2.3);
+        let height = fontSize * 2;
         let path = makeTabPath(width, height, height / 5);
 
         return (

@@ -5,6 +5,7 @@ import { Input } from "../mircoui/component/Input";
 import { FocusContext } from "../mircoui";
 import { Popup } from "../mircoui/component/Popup";
 import { Tab } from "../mircoui/component/Tab";
+import { TabBar } from "../mircoui/component/TabBar";
 
 const Container = (props: {
     children: ReactNode;
@@ -36,6 +37,10 @@ const Debug = () => (
             padding: 16,
         }}
     >
+        <div>
+            <TabBar size="large"></TabBar>
+        </div>
+
         <Container width={600}>
             <div
                 style={{
