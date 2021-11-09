@@ -168,21 +168,20 @@ export class Tab extends React.Component<TabProps, TabState> {
         let fontSize = getFontSize(this.props.size);
         let width = this.props.width;
         let height = fontSize * 2;
-        let path = makeTabPath(width, height, height / 5);
+        let path = makeTabPath(width, height, height / 6);
         let left =
             this.state.left === undefined ? this.props.left : this.state.left;
+        let inMargin = Math.round(height / 3);
+        let top = Math.round(height / 4);
+        let bottom = top;
 
         return (
             <div
                 style={{
-                    // display: "flex",
-                    // alignItems: "center",
-                    // justifyContent: "center",
                     position: "absolute",
                     left: left,
                     width: width,
                     height: height,
-                    // overflow: "hidden",
                     bottom: 0,
                 }}
             >
@@ -231,11 +230,14 @@ export class Tab extends React.Component<TabProps, TabState> {
                         }
                     }}
                     style={{
+                        display: "inline-flex",
+                        alignItems: "center",
                         position: "absolute",
-                        color: "red",
-                        top: 10,
-                        width: 16,
-                        height: 50,
+                        background: "red",
+                        top: top,
+                        bottom: bottom,
+                        left: inMargin,
+                        right: inMargin,
                     }}
                 >
                     {this.props.minLeft}
