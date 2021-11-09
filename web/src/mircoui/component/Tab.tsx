@@ -68,8 +68,6 @@ interface TabProps {
     icon?: ReactNode;
     title?: string;
     selected: boolean;
-    left: number;
-    width: number;
     minLeft: number;
     maxRight: number;
 }
@@ -78,7 +76,9 @@ interface TabState {
     bgHover: boolean;
     contentHover: boolean;
     focus: boolean;
-    left?: number;
+    width: number;
+    left: number;
+    movingLeft?: number;
 }
 
 function makeTabPath(w: number, h: number, radius: number): string {
@@ -97,7 +97,6 @@ export class Tab extends React.Component<TabProps, TabState> {
     private bgRef = React.createRef<SVGPathElement>();
     private mouseDownPt?: Point;
     private movingBeforeLeft?: number;
-
     private bgChecker = new HtmlChecker(this.bgRef);
     private contentChecker = new HtmlChecker(this.contentRef);
 
@@ -108,7 +107,11 @@ export class Tab extends React.Component<TabProps, TabState> {
             bgHover: false,
             contentHover: false,
             focus: false,
+            width: 0,
+            left: 0,
         };
+
+        this.props.tabBar.onTabAdd(this);
     }
 
     isMoving(): boolean {
@@ -122,38 +125,69 @@ export class Tab extends React.Component<TabProps, TabState> {
 
     onPointerDown = (e: React.PointerEvent) => {
         if (this.rootRef.current) {
-            this.rootRef.current.parentElement?.appendChild(
-                this.rootRef.current
-            );
+            this.rootRef.current.style.zIndex = "1";
+            if (this.bgRef.current) {
+                this.bgRef.current.style.transition = makeTransition(
+                    ["fill", "stroke"],
+                    250,
+                    "ease-in"
+                );
+            }
         }
 
         this.mouseDownPt = { x: e.clientX, y: e.clientY };
-        (e.target as any).setPointerCapture(e.pointerId);
-        this.props.tabBar.onSelectTab(this.props.id);
+        this.bgRef.current!.setPointerCapture(e.pointerId);
+        this.props.tabBar.onTabSelect(this.props.id);
     };
 
     onPointerUp = (e: React.PointerEvent) => {
+        this.bgRef.current!.releasePointerCapture(e.pointerId);
+        if (this.rootRef.current) {
+            this.rootRef.current.style.zIndex = "0";
+        }
+
         this.mouseDownPt = undefined;
         this.movingBeforeLeft = undefined;
-        this.setState({ left: undefined });
-        (e.target as any).releasePointerCapture(e.pointerId);
+        //  this.setState({movingLeft: undefined})
+
+        this.setState({ movingLeft: undefined });
     };
+
+    setLeft(left: number) {
+        if (left !== this.state.left) {
+            this.setState({ left: left });
+        }
+    }
+
+    setWidth(width: number) {
+        if (width !== this.state.width) {
+            this.setState({ width: width });
+        }
+    }
 
     onPointerMove = (e: React.PointerEvent) => {
         if (!this.isMoving() && this.mouseDownPt) {
             this.movingBeforeLeft =
                 Math.abs(e.clientX - this.mouseDownPt.x) > 8
-                    ? this.props.left
+                    ? this.state.left
                     : undefined;
         }
 
-        if (this.isMoving() && this.mouseDownPt) {
+        if (
+            this.isMoving() &&
+            this.mouseDownPt &&
+            this.movingBeforeLeft !== undefined
+        ) {
+            const movingLeft = range(
+                this.movingBeforeLeft! + e.clientX - this.mouseDownPt.x,
+                this.props.minLeft,
+                this.props.maxRight - this.state.width
+            );
+
+            this.props.tabBar.onTabMove(this.props.id, movingLeft);
+
             this.setState({
-                left: range(
-                    this.movingBeforeLeft! + e.clientX - this.mouseDownPt.x,
-                    this.props.minLeft,
-                    this.props.maxRight - this.props.width
-                ),
+                movingLeft: movingLeft,
             });
         }
     };
@@ -174,14 +208,13 @@ export class Tab extends React.Component<TabProps, TabState> {
         }
 
         let fontSize = getFontSize(this.props.size);
-        let width = this.props.width;
+        let width = this.state.width;
         let height = fontSize * 2;
         let path = makeTabPath(width, height, height / 6);
-        let left =
-            this.state.left === undefined ? this.props.left : this.state.left;
-        let inMargin = Math.round(height / 3);
-        let top = Math.round(height / 4);
-        let bottom = top;
+        let left = this.state.movingLeft || this.state.left;
+        // let inMargin = Math.round(height / 3);
+        //let top = Math.round(height / 4);
+        // let bottom = top;
 
         return (
             <div
@@ -219,12 +252,12 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 });
                             }
                         }}
-                        onPointerDown={this.onPointerDown}
-                        onPointerUp={this.onPointerUp}
-                        onPointerMove={this.onPointerMove}
+                        onPointerDownCapture={this.onPointerDown}
+                        onPointerUpCapture={this.onPointerUp}
+                        onPointerMoveCapture={this.onPointerMove}
                     />
                 </svg>
-
+                {/*
                 <div
                     ref={this.contentRef}
                     onPointerDown={this.onPointerDown}
@@ -250,7 +283,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     }}
                 >
                     {this.props.minLeft}
-                </div>
+                </div> */}
             </div>
         );
     }

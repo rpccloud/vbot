@@ -52,6 +52,8 @@ interface TabRecord {
     minLeft: number;
     maxRight: number;
     kind: TabKind;
+    index: number;
+    tab?: Tab;
 }
 
 interface TabBarState {
@@ -75,7 +77,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     private resizeSensor = new ResizeSensor(this.rootRef, (rect) => {
         if (rect) {
             this.totalWidth = rect.width;
-            this.flush();
+            this.flush(false);
         }
     });
 
@@ -102,6 +104,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       minLeft: 0,
                       maxRight: 0,
                       kind: TabKind.Fixed,
+                      index: 0,
                   };
               })
             : [];
@@ -117,6 +120,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       minLeft: 0,
                       maxRight: 0,
                       kind: TabKind.Float,
+                      index: 0,
                   };
               })
             : [];
@@ -132,12 +136,13 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       minLeft: 0,
                       maxRight: 0,
                       kind: TabKind.Dynamic,
+                      index: 0,
                   };
               })
             : [];
     }
 
-    private flush() {
+    private flush(render: boolean) {
         const resizeTabs = this.floatTabs.length + this.dynamicTabs.length;
 
         const tabWidth = range(
@@ -153,6 +158,9 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             item.left = x;
             item.minLeft = x;
             item.maxRight = x + item.width;
+            item.index = i;
+            item.tab?.setLeft(x);
+            item.tab?.setWidth(item.width);
             x += item.width;
         }
 
@@ -164,6 +172,9 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             item.width = tabWidth;
             item.minLeft = minFloatLeft;
             item.maxRight = maxFloatRight;
+            item.index = i;
+            item.tab?.setLeft(x);
+            item.tab?.setWidth(item.width);
             x += item.width;
         }
 
@@ -175,11 +186,17 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             item.width = tabWidth;
             item.minLeft = minDynamicLeft;
             item.maxRight = maxDynamicRight;
+            item.index = i;
+            item.tab?.setLeft(x);
+            item.tab?.setWidth(item.width);
+            x += item.width;
         }
 
-        this.setState((state) => ({
-            flushCount: state.flushCount + 1,
-        }));
+        if (render) {
+            this.setState((state) => ({
+                flushCount: state.flushCount + 1,
+            }));
+        }
     }
 
     private findRecordByID(id: number): TabRecord | undefined {
@@ -195,7 +212,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     }
 
     componentDidMount() {
-        this.flush();
+        this.flush(true);
     }
 
     componentWillUnmount() {
@@ -203,11 +220,38 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         this.resizeSensor.close();
     }
 
-    onSelectTab(id: number) {
+    onTabAdd(tab: Tab) {
+        const item = this.findRecordByID(tab.props.id);
+        if (item) {
+            item.tab = tab;
+        }
+    }
+
+    onTabSelect(id: number) {
         this.setState({ selectedTab: this.findRecordByID(id) });
     }
 
-    onMoveTab(id: number, left: number) {}
+    onTabMove(id: number, left: number) {
+        const item = this.findRecordByID(id);
+        if (item) {
+            const idx = Math.floor(
+                (left - item.minLeft + item.width / 2) / item.width
+            );
+            if (idx !== item.index) {
+                if (item.kind === TabKind.Float) {
+                    this.floatTabs.splice(item.index, 1);
+                    this.floatTabs.splice(idx, 0, item);
+                    this.flush(false);
+                } else if (item.kind === TabKind.Dynamic) {
+                    this.dynamicTabs.splice(item.index, 1);
+                    this.dynamicTabs.splice(idx, 0, item);
+                    this.flush(false);
+                } else {
+                    // do nothing
+                }
+            }
+        }
+    }
 
     render() {
         let fontSize = getFontSize(this.props.size);
@@ -230,8 +274,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 theme={this.props.theme}
                                 icon={it.icon}
                                 title={it.title}
-                                left={it.left}
-                                width={it.width}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 selected={it.id === this.state.selectedTab?.id}
@@ -250,8 +292,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 theme={this.props.theme}
                                 icon={it.icon}
                                 title={it.title}
-                                left={it.left}
-                                width={it.width}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 selected={it.id === this.state.selectedTab?.id}
@@ -270,8 +310,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 theme={this.props.theme}
                                 icon={it.icon}
                                 title={it.title}
-                                left={it.left}
-                                width={it.width}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 selected={it.id === this.state.selectedTab?.id}
