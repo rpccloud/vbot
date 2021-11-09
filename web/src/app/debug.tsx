@@ -41,16 +41,16 @@ const Debug = () => (
                 size="large"
                 innerLeft={100}
                 innerRight={100}
-                // initialFixedTabs={[
-                //     {
-                //         width: 180,
-                //         title: "Test",
-                //     },
-                //     {
-                //         width: 180,
-                //         title: "Test",
-                //     },
-                // ]}
+                initialFixedTabs={[
+                    {
+                        width: 180,
+                        title: "Test",
+                    },
+                    {
+                        width: 180,
+                        title: "Test",
+                    },
+                ]}
                 initialFloatTabs={[
                     { title: "Test" },
                     { title: "Test" },

@@ -7,6 +7,7 @@ import {
     ITheme,
     makeTransition,
     Point,
+    range,
     Theme,
     ThemeCache,
     ThemeContext,
@@ -74,7 +75,8 @@ interface TabProps {
 }
 
 interface TabState {
-    hover: boolean;
+    bgHover: boolean;
+    contentHover: boolean;
     focus: boolean;
     left?: number;
 }
@@ -90,18 +92,20 @@ export class Tab extends React.Component<TabProps, TabState> {
         config: {},
     };
 
-    private rootRef = React.createRef<HTMLDivElement>();
+    private contentRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
     private mouseDownPt?: Point;
     private movingBeforeLeft?: number;
 
-    private htmlChecker = new HtmlChecker(this.bgRef);
+    private bgChecker = new HtmlChecker(this.bgRef);
+    private contentChecker = new HtmlChecker(this.contentRef);
 
     constructor(props: TabProps) {
         super(props);
 
         this.state = {
-            hover: false,
+            bgHover: false,
+            contentHover: false,
             focus: false,
         };
     }
@@ -111,8 +115,40 @@ export class Tab extends React.Component<TabProps, TabState> {
     }
 
     componentWillUnmount() {
-        this.htmlChecker.depose();
+        this.bgChecker.depose();
+        this.contentChecker.depose();
     }
+
+    onPointerDown = (e: React.PointerEvent) => {
+        this.mouseDownPt = { x: e.clientX, y: e.clientY };
+        (e.target as any).setPointerCapture(e.pointerId);
+    };
+
+    onPointerUp = (e: React.PointerEvent) => {
+        this.mouseDownPt = undefined;
+        this.movingBeforeLeft = undefined;
+        this.setState({ left: undefined });
+        (e.target as any).releasePointerCapture(e.pointerId);
+    };
+
+    onPointerMove = (e: React.PointerEvent) => {
+        if (!this.isMoving() && this.mouseDownPt) {
+            this.movingBeforeLeft =
+                Math.abs(e.clientX - this.mouseDownPt.x) > 8
+                    ? this.props.left
+                    : undefined;
+        }
+
+        if (this.isMoving() && this.mouseDownPt) {
+            this.setState({
+                left: range(
+                    this.movingBeforeLeft! + e.clientX - this.mouseDownPt.x,
+                    this.props.minLeft,
+                    this.props.maxRight - this.props.width
+                ),
+            });
+        }
+    };
 
     render() {
         let config: TabConfig = getConfig(
@@ -121,7 +157,7 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         let color = extendColorSet(config.normal, this.props.config.normal);
 
-        if (this.state.hover) {
+        if (this.state.bgHover || this.state.contentHover) {
             color = extendColorSet(config.hover, this.props.config.hover);
         }
 
@@ -138,11 +174,10 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         return (
             <div
-                ref={this.rootRef}
                 style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    // display: "flex",
+                    // alignItems: "center",
+                    // justifyContent: "center",
                     position: "absolute",
                     left: left,
                     width: width,
@@ -169,52 +204,42 @@ export class Tab extends React.Component<TabProps, TabState> {
                             ),
                         }}
                         onMouseMove={() => {
-                            if (!this.state.hover) {
-                                this.setState({ hover: true });
-                                this.htmlChecker.onLostHover(() => {
-                                    this.setState({ hover: false });
+                            if (!this.state.bgHover) {
+                                this.setState({ bgHover: true });
+                                this.bgChecker.onLostHover(() => {
+                                    this.setState({ bgHover: false });
                                 });
                             }
                         }}
-                        onPointerDown={(
-                            e: React.PointerEvent<SVGPathElement>
-                        ) => {
-                            this.mouseDownPt = { x: e.clientX, y: e.clientY };
-                            this.bgRef.current?.setPointerCapture(e.pointerId);
-                        }}
-                        onPointerUp={(
-                            e: React.PointerEvent<SVGPathElement>
-                        ) => {
-                            this.mouseDownPt = undefined;
-                            this.movingBeforeLeft = undefined;
-                            this.setState({ left: undefined });
-                            this.bgRef.current?.releasePointerCapture(
-                                e.pointerId
-                            );
-                        }}
-                        onPointerMove={(
-                            e: React.PointerEvent<SVGPathElement>
-                        ) => {
-                            if (!this.isMoving() && this.mouseDownPt) {
-                                this.movingBeforeLeft =
-                                    Math.abs(e.clientX - this.mouseDownPt.x) > 8
-                                        ? this.props.left
-                                        : undefined;
-                            }
-
-                            if (this.isMoving() && this.mouseDownPt) {
-                                this.setState({
-                                    left:
-                                        this.movingBeforeLeft! +
-                                        e.clientX -
-                                        this.mouseDownPt.x,
-                                });
-                            }
-                        }}
+                        onPointerDown={this.onPointerDown}
+                        onPointerUp={this.onPointerUp}
+                        onPointerMove={this.onPointerMove}
                     />
                 </svg>
 
-                <div style={{ background: "red" }}></div>
+                <div
+                    ref={this.contentRef}
+                    onPointerDown={this.onPointerDown}
+                    onPointerUp={this.onPointerUp}
+                    onPointerMove={this.onPointerMove}
+                    onMouseMove={() => {
+                        if (!this.state.contentHover) {
+                            this.setState({ contentHover: true });
+                            this.contentChecker.onLostHover(() => {
+                                this.setState({ contentHover: false });
+                            });
+                        }
+                    }}
+                    style={{
+                        position: "absolute",
+                        color: "red",
+                        top: 10,
+                        width: 16,
+                        height: 50,
+                    }}
+                >
+                    {this.props.minLeft}
+                </div>
             </div>
         );
     }
