@@ -33,6 +33,13 @@ interface TabBarProps {
     innerRight: number;
     initialFixedTabs?: FixedTabItem[];
     initialFloatTabs?: FloatTabItem[];
+    initialDynamicTabs?: FloatTabItem[];
+}
+
+enum TabKind {
+    Fixed,
+    Float,
+    Dynamic,
 }
 
 interface TabRecord {
@@ -44,12 +51,12 @@ interface TabRecord {
     width: number;
     minLeft: number;
     maxRight: number;
+    kind: TabKind;
 }
 
 interface TabBarState {
     flushCount: number;
-    selectedID?: number;
-    lockedID?: number;
+    selectedTab?: TabRecord;
 }
 
 export class TabBar extends React.Component<TabBarProps, TabBarState> {
@@ -94,6 +101,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       left: 0,
                       minLeft: 0,
                       maxRight: 0,
+                      kind: TabKind.Fixed,
                   };
               })
             : [];
@@ -108,10 +116,25 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       left: 0,
                       minLeft: 0,
                       maxRight: 0,
+                      kind: TabKind.Float,
                   };
               })
             : [];
-        this.dynamicTabs = [];
+        this.dynamicTabs = props.initialDynamicTabs
+            ? props.initialDynamicTabs.map((it) => {
+                  return {
+                      id: getSeed(),
+                      title: it.title,
+                      icon: it.icon,
+                      param: it.param,
+                      width: 0,
+                      left: 0,
+                      minLeft: 0,
+                      maxRight: 0,
+                      kind: TabKind.Dynamic,
+                  };
+              })
+            : [];
     }
 
     private flush() {
@@ -159,6 +182,18 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         }));
     }
 
+    private findRecordByID(id: number): TabRecord | undefined {
+        let v = this.fixedTabs.find((it) => it.id === id);
+        if (v) {
+            return v;
+        }
+        v = this.floatTabs.find((it) => it.id === id);
+        if (v) {
+            return v;
+        }
+        return this.dynamicTabs.find((it) => it.id === id);
+    }
+
     componentDidMount() {
         this.flush();
     }
@@ -168,15 +203,11 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         this.resizeSensor.close();
     }
 
-    onLockTab(id: number) {
-        this.setState({ lockedID: id });
+    onSelectTab(id: number) {
+        this.setState({ selectedTab: this.findRecordByID(id) });
     }
 
-    onUnlockTab(id: number) {
-        if (this.state.lockedID === id) {
-            this.setState({ lockedID: undefined });
-        }
-    }
+    onMoveTab(id: number, left: number) {}
 
     render() {
         let fontSize = getFontSize(this.props.size);
@@ -203,7 +234,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 width={it.width}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
-                                selected={it.id === this.state.selectedID}
+                                selected={it.id === this.state.selectedTab?.id}
                             ></Tab>
                         );
                     })}
@@ -223,7 +254,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 width={it.width}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
-                                selected={it.id === this.state.selectedID}
+                                selected={it.id === this.state.selectedTab?.id}
                             ></Tab>
                         );
                     })}
@@ -243,7 +274,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 width={it.width}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
-                                selected={it.id === this.state.selectedID}
+                                selected={it.id === this.state.selectedTab?.id}
                             ></Tab>
                         );
                     })}

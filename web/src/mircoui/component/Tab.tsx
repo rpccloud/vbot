@@ -92,6 +92,7 @@ export class Tab extends React.Component<TabProps, TabState> {
         config: {},
     };
 
+    private rootRef = React.createRef<HTMLDivElement>();
     private contentRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
     private mouseDownPt?: Point;
@@ -120,8 +121,15 @@ export class Tab extends React.Component<TabProps, TabState> {
     }
 
     onPointerDown = (e: React.PointerEvent) => {
+        if (this.rootRef.current) {
+            this.rootRef.current.parentElement?.appendChild(
+                this.rootRef.current
+            );
+        }
+
         this.mouseDownPt = { x: e.clientX, y: e.clientY };
         (e.target as any).setPointerCapture(e.pointerId);
+        this.props.tabBar.onSelectTab(this.props.id);
     };
 
     onPointerUp = (e: React.PointerEvent) => {
@@ -177,6 +185,7 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         return (
             <div
+                ref={this.rootRef}
                 style={{
                     position: "absolute",
                     left: left,
