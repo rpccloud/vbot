@@ -67,12 +67,16 @@ interface TabProps {
     icon?: ReactNode;
     title?: string;
     selected: boolean;
+    left: number;
     width: number;
+    minLeft: number;
+    maxRight: number;
 }
 
 interface TabState {
     hover: boolean;
     focus: boolean;
+    left?: number;
 }
 
 function makeTabPath(w: number, h: number, radius: number): string {
@@ -90,7 +94,6 @@ export class Tab extends React.Component<TabProps, TabState> {
     private bgRef = React.createRef<SVGPathElement>();
     private mouseDownPt?: Point;
     private movingBeforeLeft?: number;
-    private currLeft: number = 0;
 
     private htmlChecker = new HtmlChecker(this.bgRef);
 
@@ -109,13 +112,6 @@ export class Tab extends React.Component<TabProps, TabState> {
 
     componentWillUnmount() {
         this.htmlChecker.depose();
-    }
-
-    setLeft(x: number) {
-        if (x !== this.currLeft && this.rootRef.current) {
-            this.currLeft = x;
-            this.rootRef.current.style.left = `${x}px`;
-        }
     }
 
     render() {
@@ -137,6 +133,8 @@ export class Tab extends React.Component<TabProps, TabState> {
         let width = this.props.width;
         let height = fontSize * 2;
         let path = makeTabPath(width, height, height / 5);
+        let left =
+            this.state.left === undefined ? this.props.left : this.state.left;
 
         return (
             <div
@@ -146,6 +144,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     alignItems: "center",
                     justifyContent: "center",
                     position: "absolute",
+                    left: left,
                     width: width,
                     height: height,
                     // overflow: "hidden",
@@ -188,6 +187,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                         ) => {
                             this.mouseDownPt = undefined;
                             this.movingBeforeLeft = undefined;
+                            this.setState({ left: undefined });
                             this.bgRef.current?.releasePointerCapture(
                                 e.pointerId
                             );
@@ -198,16 +198,17 @@ export class Tab extends React.Component<TabProps, TabState> {
                             if (!this.isMoving() && this.mouseDownPt) {
                                 this.movingBeforeLeft =
                                     Math.abs(e.clientX - this.mouseDownPt.x) > 8
-                                        ? this.currLeft
+                                        ? this.props.left
                                         : undefined;
                             }
 
                             if (this.isMoving() && this.mouseDownPt) {
-                                this.setLeft(
-                                    this.movingBeforeLeft! +
+                                this.setState({
+                                    left:
+                                        this.movingBeforeLeft! +
                                         e.clientX -
-                                        this.mouseDownPt.x
-                                );
+                                        this.mouseDownPt.x,
+                                });
                             }
                         }}
                     />

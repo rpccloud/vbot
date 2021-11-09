@@ -39,11 +39,40 @@ const Debug = () => (
         <div>
             <TabBar
                 size="large"
-                initialFixedTabs={[
-                    {
-                        width: 180,
-                        title: "Test",
-                    },
+                innerLeft={100}
+                innerRight={100}
+                // initialFixedTabs={[
+                //     {
+                //         width: 180,
+                //         title: "Test",
+                //     },
+                //     {
+                //         width: 180,
+                //         title: "Test",
+                //     },
+                // ]}
+                initialFloatTabs={[
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
+                    { title: "Test" },
                 ]}
             ></TabBar>
         </div>

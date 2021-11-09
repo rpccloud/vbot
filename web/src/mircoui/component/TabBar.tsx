@@ -29,25 +29,27 @@ interface TabBarProps {
     theme?: ITheme;
     minTabWidth: number;
     maxTabWidth: number;
-    innerLeft?: number;
-    innerRight?: number;
+    innerLeft: number;
+    innerRight: number;
     initialFixedTabs?: FixedTabItem[];
     initialFloatTabs?: FloatTabItem[];
 }
 
 interface TabRecord {
     readonly id: number;
-    width: number;
     title?: string;
     icon?: React.ReactNode;
     param: any;
+    left: number;
+    width: number;
+    minLeft: number;
+    maxRight: number;
 }
 
 interface TabBarState {
-    fixedTabs: TabRecord[];
-    floatTabs: TabRecord[];
-    dynamicTabs: TabRecord[];
+    flushCount: number;
     selectedID?: number;
+    lockedID?: number;
 }
 
 export class TabBar extends React.Component<TabBarProps, TabBarState> {
@@ -57,6 +59,8 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         fontWeight: "normal",
         minTabWidth: 50,
         maxTabWidth: 240,
+        innerLeft: 0,
+        innerRight: 0,
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
@@ -64,87 +68,186 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     private resizeSensor = new ResizeSensor(this.rootRef, (rect) => {
         if (rect) {
             this.totalWidth = rect.width;
+            this.flush();
         }
     });
 
     private totalWidth: number = 0;
     private fixedWidth: number = 0;
+    private fixedTabs: TabRecord[];
+    private floatTabs: TabRecord[];
+    private dynamicTabs: TabRecord[];
 
     constructor(props: TabBarProps) {
         super(props);
-        this.state = {
-            fixedTabs: props.initialFixedTabs
-                ? props.initialFixedTabs.map((it) => {
-                      this.fixedWidth += it.width;
-                      return {
-                          id: getSeed(),
-                          width: it.width,
-                          title: it.title,
-                          icon: it.icon,
-                          param: it.param,
-                      };
-                  })
-                : [],
-            floatTabs: props.initialFloatTabs
-                ? props.initialFloatTabs.map((it) => {
-                      return {
-                          id: getSeed(),
-                          width: 0,
-                          title: it.title,
-                          icon: it.icon,
-                          param: it.param,
-                      };
-                  })
-                : [],
-            dynamicTabs: [],
-        };
+        this.resizeSensor.listenFast();
+        this.state = { flushCount: 0 };
+        this.fixedTabs = props.initialFixedTabs
+            ? props.initialFixedTabs.map((it) => {
+                  this.fixedWidth += it.width;
+                  return {
+                      id: getSeed(),
+                      title: it.title,
+                      icon: it.icon,
+                      param: it.param,
+                      width: it.width,
+                      left: 0,
+                      minLeft: 0,
+                      maxRight: 0,
+                  };
+              })
+            : [];
+        this.floatTabs = props.initialFloatTabs
+            ? props.initialFloatTabs.map((it) => {
+                  return {
+                      id: getSeed(),
+                      title: it.title,
+                      icon: it.icon,
+                      param: it.param,
+                      width: 0,
+                      left: 0,
+                      minLeft: 0,
+                      maxRight: 0,
+                  };
+              })
+            : [];
+        this.dynamicTabs = [];
     }
 
     private flush() {
-        const left = this.props.innerLeft || 0;
-        const right = this.props.innerRight || 0;
-        const resizeTabs =
-            this.state.floatTabs.length + this.state.dynamicTabs.length;
+        const resizeTabs = this.floatTabs.length + this.dynamicTabs.length;
 
         const tabWidth = range(
-            (this.totalWidth - left - right - this.fixedWidth) / resizeTabs,
+            Math.round((this.totalWidth - this.fixedWidth) / resizeTabs),
             this.props.minTabWidth,
             this.props.maxTabWidth
         );
+
+        let x = 0;
+
+        for (let i = 0; i < this.fixedTabs.length; i++) {
+            const item = this.fixedTabs[i];
+            item.left = x;
+            item.minLeft = x;
+            item.maxRight = x + item.width;
+            x += item.width;
+        }
+
+        let minFloatLeft = x;
+        let maxFloatRight = x + this.floatTabs.length * tabWidth;
+        for (let i = 0; i < this.floatTabs.length; i++) {
+            const item = this.floatTabs[i];
+            item.left = x;
+            item.width = tabWidth;
+            item.minLeft = minFloatLeft;
+            item.maxRight = maxFloatRight;
+            x += item.width;
+        }
+
+        let minDynamicLeft = x;
+        let maxDynamicRight = x + this.dynamicTabs.length * tabWidth;
+        for (let i = 0; i < this.dynamicTabs.length; i++) {
+            const item = this.dynamicTabs[i];
+            item.left = x;
+            item.width = tabWidth;
+            item.minLeft = minDynamicLeft;
+            item.maxRight = maxDynamicRight;
+        }
+
+        this.setState((state) => ({
+            flushCount: state.flushCount + 1,
+        }));
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        this.flush();
+    }
 
     componentWillUnmount() {
         this.htmlChecker.depose();
         this.resizeSensor.close();
     }
 
-    onLayoutTabResize(id: number, width: number) {}
+    onLockTab(id: number) {
+        this.setState({ lockedID: id });
+    }
+
+    onUnlockTab(id: number) {
+        if (this.state.lockedID === id) {
+            this.setState({ lockedID: undefined });
+        }
+    }
 
     render() {
         let fontSize = getFontSize(this.props.size);
         let height = Math.round(fontSize * 2.3);
+        let outerPadding = `0px ${this.props.innerRight}px 0px ${this.props.innerLeft}px`;
         return (
-            <div
-                ref={this.rootRef}
-                style={{ height: height, position: "relative" }}
-            >
-                {this.state.fixedTabs.map((it) => {
-                    return (
-                        <Tab
-                            id={it.id}
-                            tabBar={this}
-                            size={this.props.size}
-                            fontWeight={this.props.fontWeight}
-                            theme={this.props.theme}
-                            icon={it.icon}
-                            title={it.title}
-                            width={it.width}
-                            selected={it.id === this.state.selectedID}
-                        ></Tab>
-                    );
-                })}
+            <div style={{ padding: outerPadding }}>
+                <div
+                    ref={this.rootRef}
+                    style={{ height: height, position: "relative" }}
+                >
+                    {this.fixedTabs.map((it) => {
+                        return (
+                            <Tab
+                                key={it.id}
+                                id={it.id}
+                                tabBar={this}
+                                size={this.props.size}
+                                fontWeight={this.props.fontWeight}
+                                theme={this.props.theme}
+                                icon={it.icon}
+                                title={it.title}
+                                left={it.left}
+                                width={it.width}
+                                minLeft={it.minLeft}
+                                maxRight={it.maxRight}
+                                selected={it.id === this.state.selectedID}
+                            ></Tab>
+                        );
+                    })}
+
+                    {this.floatTabs.map((it) => {
+                        return (
+                            <Tab
+                                key={it.id}
+                                id={it.id}
+                                tabBar={this}
+                                size={this.props.size}
+                                fontWeight={this.props.fontWeight}
+                                theme={this.props.theme}
+                                icon={it.icon}
+                                title={it.title}
+                                left={it.left}
+                                width={it.width}
+                                minLeft={it.minLeft}
+                                maxRight={it.maxRight}
+                                selected={it.id === this.state.selectedID}
+                            ></Tab>
+                        );
+                    })}
+
+                    {this.dynamicTabs.map((it) => {
+                        return (
+                            <Tab
+                                key={it.id}
+                                id={it.id}
+                                tabBar={this}
+                                size={this.props.size}
+                                fontWeight={this.props.fontWeight}
+                                theme={this.props.theme}
+                                icon={it.icon}
+                                title={it.title}
+                                left={it.left}
+                                width={it.width}
+                                minLeft={it.minLeft}
+                                maxRight={it.maxRight}
+                                selected={it.id === this.state.selectedID}
+                            ></Tab>
+                        );
+                    })}
+                </div>
             </div>
         );
     }
