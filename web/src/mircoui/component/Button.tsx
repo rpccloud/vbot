@@ -10,7 +10,7 @@ import {
     ThemeCache,
     ThemeContext,
 } from "../";
-import { HtmlChecker } from "../";
+import { ActionSensor } from "../sensor/action";
 
 interface ButtonConfig {
     normal?: ColorSet;
@@ -170,7 +170,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
-    private htmlChecker = new HtmlChecker(this.rootRef);
+    private actionSensor = new ActionSensor([this.rootRef]);
 
     constructor(props: ButtonProps) {
         super(props);
@@ -182,7 +182,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     }
 
     componentWillUnmount() {
-        this.htmlChecker.depose();
+        this.actionSensor.close();
     }
 
     render() {
@@ -270,27 +270,35 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     ...style,
                 }}
                 onMouseMove={() => {
-                    if (!this.state.hover) {
-                        this.setState({ hover: true });
-                        this.htmlChecker.onLostHover(() => {
+                    this.actionSensor.checkHover(
+                        () => {
+                            this.setState({ hover: true });
+                        },
+                        () => {
                             this.setState({ hover: false });
-                        });
-                    }
+                        }
+                    );
                 }}
                 onMouseDown={() => {
-                    if (!this.state.active) {
-                        this.setState({ active: true });
-                        this.htmlChecker.onLostActive(() => {
+                    this.actionSensor.checkActive(
+                        () => {
+                            this.setState({ active: true });
+                        },
+                        () => {
                             this.setState({ active: false });
-                        });
-                    }
+                        }
+                    );
                 }}
                 onFocus={(e) => {
                     if (canFocus) {
-                        this.setState({ focus: true });
-                        this.htmlChecker.onLostFocus(() => {
-                            this.setState({ focus: false });
-                        });
+                        this.actionSensor.checkFocus(
+                            () => {
+                                this.setState({ focus: true });
+                            },
+                            () => {
+                                this.setState({ focus: false });
+                            }
+                        );
                     }
                 }}
                 onClick={(e: React.MouseEvent<HTMLDivElement>) => {

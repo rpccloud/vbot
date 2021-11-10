@@ -3,7 +3,6 @@ import {
     ColorSet,
     extendColorSet,
     getFontSize,
-    HtmlChecker,
     ITheme,
     makeTransition,
     range,
@@ -11,6 +10,7 @@ import {
     ThemeCache,
     ThemeContext,
 } from "..";
+import { ActionSensor } from "../sensor/action";
 import { TabBar } from "./TabBar";
 
 interface TabConfig {
@@ -72,8 +72,7 @@ interface TabProps {
 }
 
 interface TabState {
-    bgHover: boolean;
-    contentHover: boolean;
+    hover: boolean;
     focus: boolean;
     width: number;
     left: number;
@@ -95,15 +94,13 @@ export class Tab extends React.Component<TabProps, TabState> {
     private contentRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
     private dragInfo?: { x: number; y: number; left: number };
-    private bgChecker = new HtmlChecker(this.bgRef);
-    private contentChecker = new HtmlChecker(this.contentRef);
+    private actionSensor = new ActionSensor([this.bgRef, this.contentRef]);
 
     constructor(props: TabProps) {
         super(props);
 
         this.state = {
-            bgHover: false,
-            contentHover: false,
+            hover: false,
             focus: false,
             width: 0,
             left: 0,
@@ -113,8 +110,7 @@ export class Tab extends React.Component<TabProps, TabState> {
     }
 
     componentWillUnmount() {
-        this.bgChecker.depose();
-        this.contentChecker.depose();
+        this.actionSensor.close();
     }
 
     onDragStart = (e: React.DragEvent) => {
@@ -230,7 +226,7 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         let color = extendColorSet(config.normal, this.props.config.normal);
 
-        if (this.state.bgHover || this.state.contentHover) {
+        if (this.state.hover) {
             color = extendColorSet(config.hover, this.props.config.hover);
         }
 
@@ -282,12 +278,14 @@ export class Tab extends React.Component<TabProps, TabState> {
                             ),
                         }}
                         onMouseMove={() => {
-                            if (!this.state.bgHover) {
-                                this.setState({ bgHover: true });
-                                this.bgChecker.onLostHover(() => {
-                                    this.setState({ bgHover: false });
-                                });
-                            }
+                            this.actionSensor.checkHover(
+                                () => {
+                                    this.setState({ hover: true });
+                                },
+                                () => {
+                                    this.setState({ hover: false });
+                                }
+                            );
                         }}
                         onMouseDown={() => {}}
                     />
@@ -299,12 +297,14 @@ export class Tab extends React.Component<TabProps, TabState> {
                     onDrag={this.onDrag}
                     onDragEnd={this.onDrayEnd}
                     onMouseMove={() => {
-                        if (!this.state.contentHover) {
-                            this.setState({ contentHover: true });
-                            this.contentChecker.onLostHover(() => {
-                                this.setState({ contentHover: false });
-                            });
-                        }
+                        this.actionSensor.checkHover(
+                            () => {
+                                this.setState({ hover: true });
+                            },
+                            () => {
+                                this.setState({ hover: false });
+                            }
+                        );
                     }}
                     style={{
                         display: "inline-flex",

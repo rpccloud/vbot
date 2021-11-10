@@ -36,7 +36,7 @@ export class ActionSensor {
     }
 
     public checkHover(onHover: () => void, onLostHover: () => void) {
-        if (this.hasAction("hover") && this.fnLostHover === undefined) {
+        if (this.fnLostHover === undefined && this.hasAction("hover")) {
             onHover();
             this.fnLostHover = onLostHover;
             this.check();
@@ -44,7 +44,7 @@ export class ActionSensor {
     }
 
     public checkFocus(onFocus: () => void, onLostFocus: () => void) {
-        if (this.hasAction("focus") && this.fnLostFocus === undefined) {
+        if (this.fnLostFocus === undefined && this.hasAction("focus")) {
             onFocus();
             this.fnLostFocus = onLostFocus;
             this.check();
@@ -52,7 +52,7 @@ export class ActionSensor {
     }
 
     public checkActive(onActive: () => void, onLostActive: () => void) {
-        if (this.hasAction("active") && this.fnLostActive === undefined) {
+        if (this.fnLostActive === undefined && this.hasAction("active")) {
             onActive();
             this.fnLostActive = onLostActive;
             this.check();

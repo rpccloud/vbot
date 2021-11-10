@@ -14,14 +14,14 @@ import {
     FocusContext,
     getFontSize,
     getFontWeight,
-    HtmlChecker,
     ITheme,
-    ResizeSensor,
     Theme,
     ThemeCache,
     ThemeContext,
-    TimerValue,
 } from "..";
+import { ActionSensor } from "../sensor/action";
+import { TempValueSensor } from "../sensor/temp_value";
+import { ResizeSensor } from "../sensor/resize";
 
 interface InputConfig {
     revertIcon?: React.ReactNode;
@@ -181,8 +181,8 @@ class InputCore extends React.Component<InputProps, InputState> {
 
     private rootRef = React.createRef<HTMLDivElement>();
     private inputRef = React.createRef<HTMLInputElement>();
-    private htmlChecker = new HtmlChecker(this.rootRef);
-    private reportStatusTimerValue = new TimerValue(1000, "none", (status) => {
+    private actionSensor = new ActionSensor([this.rootRef]);
+    private tempValueSensor = new TempValueSensor(1000, "none", (status) => {
         this.setState({ reportStatus: status });
     });
 
@@ -200,8 +200,8 @@ class InputCore extends React.Component<InputProps, InputState> {
     }
 
     componentWillUnmount() {
-        this.htmlChecker.depose();
-        this.reportStatusTimerValue.depose();
+        this.actionSensor.close();
+        this.tempValueSensor.close();
     }
 
     render() {
@@ -337,8 +337,6 @@ class InputCore extends React.Component<InputProps, InputState> {
                 }}
                 onFocus={(e) => {
                     if (canFocus && !this.state.focus) {
-                        this.setState({ focus: true });
-
                         this.inputRef.current?.setSelectionRange(
                             this.state.value.length,
                             this.state.value.length
@@ -356,22 +354,25 @@ class InputCore extends React.Component<InputProps, InputState> {
                             }
                         );
 
-                        this.htmlChecker.onLostFocus(() => {
-                            resizeSensor.close();
-                            this.setState({ focus: false });
-                            if (
-                                !this.state.submitting &&
-                                this.props.submittable &&
-                                this.state.value !== this.state.stageValue
-                            ) {
-                                this.setState({
-                                    value: this.state.stageValue,
-                                });
-                                this.reportStatusTimerValue?.setValue(
-                                    "warning"
-                                );
+                        this.actionSensor.checkFocus(
+                            () => {
+                                this.setState({ focus: true });
+                            },
+                            () => {
+                                resizeSensor.close();
+                                this.setState({ focus: false });
+                                if (
+                                    !this.state.submitting &&
+                                    this.props.submittable &&
+                                    this.state.value !== this.state.stageValue
+                                ) {
+                                    this.setState({
+                                        value: this.state.stageValue,
+                                    });
+                                    this.tempValueSensor.setValue("warning");
+                                }
                             }
-                        });
+                        );
                     }
                 }}
             />
@@ -448,7 +449,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                                             value: this.state.stageValue,
                                         });
                                     }
-                                    this.reportStatusTimerValue?.setValue(
+                                    this.tempValueSensor.setValue(
                                         success ? "success" : "warning"
                                     );
                                     this.setState({ submitting: false });
@@ -511,12 +512,14 @@ class InputCore extends React.Component<InputProps, InputState> {
                     }
                 }}
                 onMouseMove={(e) => {
-                    if (!this.state.hover && this.htmlChecker) {
-                        this.setState({ hover: true });
-                        this.htmlChecker.onLostHover(() => {
+                    this.actionSensor.checkHover(
+                        () => {
+                            this.setState({ hover: true });
+                        },
+                        () => {
                             this.setState({ hover: false });
-                        });
-                    }
+                        }
+                    );
                 }}
                 onFocus={() => {
                     this.inputRef.current?.focus();

@@ -1,13 +1,8 @@
 import React from "react";
-import {
-    getFontSize,
-    HtmlChecker,
-    ITheme,
-    range,
-    ResizeSensor,
-    ThemeContext,
-} from "..";
+import { getFontSize, ITheme, range, ThemeContext } from "..";
 import { getSeed } from "../../app/plugin/browser/utils";
+import { ActionSensor } from "../sensor/action";
+import { ResizeSensor } from "../sensor/resize";
 import { Tab } from "./Tab";
 
 interface FixedTabItem {
@@ -73,7 +68,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
-    private htmlChecker = new HtmlChecker(this.rootRef);
+    private actionSensor = new ActionSensor([this.rootRef]);
     private resizeSensor = new ResizeSensor(this.rootRef, (rect) => {
         if (rect) {
             this.totalWidth = rect.width;
@@ -216,7 +211,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     }
 
     componentWillUnmount() {
-        this.htmlChecker.depose();
+        this.actionSensor.close();
         this.resizeSensor.close();
     }
 

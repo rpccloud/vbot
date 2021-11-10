@@ -1,9 +1,10 @@
 import React from "react";
-import { ResizeSensor, ScreenRect } from "..";
+import { Rect } from "..";
+import { ResizeSensor } from "../sensor/resize";
 
 interface TestProps {}
 interface TestState {
-    rect?: ScreenRect;
+    rect?: Rect;
 }
 
 export class Test extends React.Component<TestProps, TestState> {
@@ -16,12 +17,9 @@ export class Test extends React.Component<TestProps, TestState> {
     }
 
     componentDidMount() {
-        this.resizeSensor = new ResizeSensor(
-            this.rootRef,
-            (rect?: ScreenRect) => {
-                this.setState({ rect: rect });
-            }
-        );
+        this.resizeSensor = new ResizeSensor(this.rootRef, (rect?: Rect) => {
+            this.setState({ rect: rect });
+        });
     }
 
     componentWillUnmount() {

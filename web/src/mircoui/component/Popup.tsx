@@ -1,5 +1,7 @@
 import React, { CSSProperties, ReactNode } from "react";
-import { HtmlChecker, makeTransition, ResizeSensor, ScreenRect } from "../";
+import { makeTransition, Rect } from "../";
+import { ActionSensor } from "../sensor/action";
+import { ResizeSensor } from "../sensor/resize";
 
 interface ZIndex {
     zIndex: number;
@@ -11,7 +13,7 @@ const ZIndexContext = React.createContext<ZIndex>({
 
 interface PopupProps {
     action: Array<"hover" | "click" | "focus">;
-    renderPopup: (rect: ScreenRect, closePopup: () => void) => ReactNode;
+    renderPopup: (rect: Rect, closePopup: () => void) => ReactNode;
     children?: ReactNode;
     zIndex?: number;
     zStep: number;
@@ -20,7 +22,7 @@ interface PopupProps {
 
 interface PopupState {
     popup: boolean;
-    screenRect?: ScreenRect;
+    screenRect?: Rect;
 }
 
 export class Popup extends React.Component<PopupProps, PopupState> {
@@ -31,7 +33,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
-    private htmlChecker = new HtmlChecker(this.rootRef);
+    private actionSensor = new ActionSensor([this.rootRef]);
 
     private focus = false;
     private hover = false;
@@ -48,7 +50,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     }
 
     componentWillUnmount() {
-        this.htmlChecker.depose();
+        this.actionSensor.close();
         this.resizeSensor.close();
     }
 
@@ -108,19 +110,27 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                     }
                 }}
                 onMouseMove={() => {
-                    if (!this.hover && this.props.action.includes("hover")) {
-                        this.setHover(true);
-                        this.htmlChecker.onLostHover(() => {
-                            this.setHover(false);
-                        });
+                    if (this.props.action.includes("hover")) {
+                        this.actionSensor.checkHover(
+                            () => {
+                                this.setHover(true);
+                            },
+                            () => {
+                                this.setHover(false);
+                            }
+                        );
                     }
                 }}
                 onFocus={(e) => {
-                    if (!this.focus && this.props.action.includes("focus")) {
-                        this.setFocus(true);
-                        this.htmlChecker.onLostFocus(() => {
-                            this.setFocus(false);
-                        });
+                    if (this.props.action.includes("focus")) {
+                        this.actionSensor.checkFocus(
+                            () => {
+                                this.setFocus(true);
+                            },
+                            () => {
+                                this.setFocus(false);
+                            }
+                        );
                     }
                 }}
             >

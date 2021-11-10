@@ -1,6 +1,6 @@
-import { gTimerManager, ScreenRect } from "..";
+import { gTimerManager, Rect } from "..";
 
-function isScreenRectEqual(left?: ScreenRect, right?: ScreenRect): boolean {
+function isRectEqual(left?: Rect, right?: Rect): boolean {
     if (left === undefined && right === undefined) {
         return true;
     }
@@ -16,12 +16,12 @@ function isScreenRectEqual(left?: ScreenRect, right?: ScreenRect): boolean {
 export class ResizeSensor {
     private timer?: number;
     private ref: React.RefObject<HTMLElement>;
-    private onResize: (rect?: ScreenRect) => void;
-    private rect?: ScreenRect;
+    private onResize: (rect?: Rect) => void;
+    private rect?: Rect;
 
     constructor(
         ref: React.RefObject<HTMLElement>,
-        onResize: (rect?: ScreenRect) => void
+        onResize: (rect?: Rect) => void
     ) {
         this.ref = ref;
         this.onResize = onResize;
@@ -45,7 +45,7 @@ export class ResizeSensor {
             ? this.ref.current.getBoundingClientRect()
             : undefined;
 
-        if (!isScreenRectEqual(rect, this.rect)) {
+        if (!isRectEqual(rect, this.rect)) {
             this.rect = rect;
             this.onResize(rect);
         }

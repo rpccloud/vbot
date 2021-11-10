@@ -76,38 +76,6 @@ class TimerManager {
 
 export const gTimerManager = new TimerManager();
 
-let seed = 0;
-function getSeed(): number {
-    return seed++;
-}
-
-let gResizeSensorFastMap = new Map<number, ResizeSensor>();
-let gResizeSensorSlowMap = new Map<number, ResizeSensor>();
-let gThemeCacheList = Array<ThemeCache>();
-let gThemeCacheNowMS = getTimeMS();
-let gTimerCount = 0;
-
-window.setInterval(() => {
-    gTimerCount++;
-
-    if (gTimerCount % 20 === 0) {
-        gThemeCacheNowMS = getTimeMS();
-        gThemeCacheList.forEach((it) => {
-            it.onTimer();
-        });
-    }
-
-    if (gTimerCount % 10 === 0) {
-        gResizeSensorSlowMap.forEach((it) => {
-            it.onTimer();
-        });
-    }
-
-    gResizeSensorFastMap.forEach((it) => {
-        it.onTimer();
-    });
-}, 25);
-
 const cfgFontSize = {
     tiny: 8,
     small: 11,
@@ -145,213 +113,11 @@ export function range(v: number, min: number, max: number): number {
     return v;
 }
 
-export function getTimeMS(): number {
-    return new Date().getTime();
-}
-
-function elementMatches(
-    elem: Element | null,
-    state: string,
-    matchChildren: boolean
-): boolean {
-    if (!elem) {
-        return false;
-    }
-
-    if (elem.matches(state)) {
-        return true;
-    }
-
-    if (matchChildren) {
-        for (let child of elem.children) {
-            if (elementMatches(child, state, true)) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-export class TimerValue {
-    private durationMS: number;
-    private defaultValue: any;
-    private currentValue: any;
-    private onValueChange: (value: any) => void;
-
-    private timer?: number;
-    private startMS?: number;
-
-    constructor(
-        durationMS: number,
-        defaultValue: any,
-        onValueChange: (value: any) => void
-    ) {
-        this.durationMS = durationMS;
-        this.defaultValue = defaultValue;
-        this.currentValue = defaultValue;
-        this.onValueChange = onValueChange;
-    }
-
-    public setValue(value: any) {
-        if (value !== this.currentValue) {
-            this.currentValue = value;
-            this.onValueChange(this.currentValue);
-        }
-
-        if (value !== this.defaultValue) {
-            this.check();
-        }
-    }
-
-    private check() {
-        this.startMS = getTimeMS();
-
-        if (!this.timer) {
-            this.timer = window.setInterval(() => {
-                if (
-                    !this.startMS ||
-                    getTimeMS() - this.startMS > this.durationMS
-                ) {
-                    this.setValue(this.defaultValue);
-                    this.depose();
-                }
-            }, 25);
-        }
-    }
-
-    public depose() {
-        if (this.timer) {
-            window.clearInterval(this.timer);
-            this.timer = undefined;
-        }
-    }
-}
-
-export class HtmlChecker {
-    private ref: React.RefObject<HTMLElement | SVGElement>;
-    private fnLostHover?: () => void;
-    private fnLostActive?: () => void;
-    private fnLostFocus?: () => void;
-    timer?: number;
-
-    constructor(ref: React.RefObject<HTMLElement | SVGElement>) {
-        this.ref = ref;
-    }
-
-    onLostFocus(fn: () => void) {
-        this.fnLostFocus = fn;
-        this.onCheck();
-    }
-
-    onLostHover(fn: () => void) {
-        this.fnLostHover = fn;
-        this.onCheck();
-    }
-
-    onLostActive(fn: () => void) {
-        this.fnLostActive = fn;
-        this.onCheck();
-    }
-
-    public hasActive(): boolean {
-        return elementMatches(this.ref.current, ":active", true);
-    }
-
-    public hasHover(): boolean {
-        return elementMatches(this.ref.current, ":hover", true);
-    }
-
-    public hasFocus(): boolean {
-        return elementMatches(this.ref.current, ":focus", true);
-    }
-
-    private onCheck() {
-        if (!this.timer) {
-            this.timer = window.setInterval(() => {
-                this.onTimer();
-                if (
-                    !this.fnLostFocus &&
-                    !this.fnLostHover &&
-                    !this.fnLostActive
-                ) {
-                    this.depose();
-                }
-            }, 25);
-        }
-    }
-
-    public depose() {
-        if (this.timer) {
-            window.clearInterval(this.timer);
-            this.timer = undefined;
-        }
-
-        this.lostHover();
-        this.lostActive();
-        this.lostFocus();
-    }
-
-    private lostHover() {
-        if (this.fnLostHover) {
-            this.fnLostHover();
-            this.fnLostHover = undefined;
-        }
-    }
-
-    private lostActive() {
-        if (this.fnLostActive) {
-            this.fnLostActive();
-            this.fnLostActive = undefined;
-        }
-    }
-
-    private lostFocus() {
-        if (this.fnLostFocus) {
-            this.fnLostFocus();
-            this.fnLostFocus = undefined;
-        }
-    }
-
-    private onTimer() {
-        if (this.fnLostHover) {
-            if (!this.hasHover()) {
-                this.lostHover();
-            }
-        }
-
-        if (!!this.fnLostActive) {
-            if (!this.hasActive()) {
-                this.lostActive();
-            }
-        }
-
-        if (this.fnLostFocus) {
-            if (!this.hasFocus()) {
-                this.lostFocus();
-            }
-        }
-    }
-}
-
-export interface ScreenRect {
+export interface Rect {
     x: number;
     y: number;
     width: number;
     height: number;
-}
-
-function isScreenRectEqual(left?: ScreenRect, right?: ScreenRect): boolean {
-    if (left === undefined && right === undefined) {
-        return true;
-    }
-
-    return (
-        left?.x === right?.x &&
-        left?.y === right?.y &&
-        left?.width === right?.width &&
-        left?.height === right?.height
-    );
 }
 
 export function makeTransition(
@@ -366,58 +132,17 @@ export function makeTransition(
     return vArray.join(",");
 }
 
-export class ResizeSensor {
-    private id: number = getSeed();
-    private ref: React.RefObject<HTMLElement>;
-    private onResize: (rect?: ScreenRect) => void;
-    private rect?: ScreenRect;
-
-    constructor(
-        ref: React.RefObject<HTMLElement>,
-        onResize: (rect?: ScreenRect) => void
-    ) {
-        this.ref = ref;
-        this.onResize = onResize;
-        this.listenSlow();
-    }
-
-    listenFast() {
-        gResizeSensorSlowMap.delete(this.id);
-        gResizeSensorFastMap.set(this.id, this);
-    }
-
-    listenSlow() {
-        gResizeSensorFastMap.delete(this.id);
-        gResizeSensorSlowMap.set(this.id, this);
-    }
-
-    onTimer() {
-        let rect = this.ref.current
-            ? this.ref.current.getBoundingClientRect()
-            : undefined;
-
-        if (!isScreenRectEqual(rect, this.rect)) {
-            this.rect = rect;
-            this.onResize(rect);
-        }
-    }
-
-    close() {
-        gResizeSensorSlowMap.delete(this.id);
-        gResizeSensorFastMap.delete(this.id);
-    }
-}
-
 export class ThemeCache {
     private configMap = new Map<string, { timeMS: number; config: any }>();
+    private timer: number;
 
     constructor() {
-        gThemeCacheList.push(this);
+        this.timer = gTimerManager.attach(this);
     }
 
-    onTimer(): void {
+    onTimer(nowMS: number): void {
         this.configMap.forEach((item, key) => {
-            if (gThemeCacheNowMS - item.timeMS > 10000) {
+            if (nowMS - item.timeMS > 10000) {
                 this.configMap.delete(key);
             }
         });
@@ -427,7 +152,7 @@ export class ThemeCache {
         let item = this.configMap.get(key);
 
         if (item) {
-            item.timeMS = gThemeCacheNowMS;
+            item.timeMS = gTimerManager.getNowMS();
             this.configMap.set(key, item);
             return item.config;
         } else {
@@ -436,7 +161,10 @@ export class ThemeCache {
     }
 
     setConfig(key: string, config: any) {
-        this.configMap.set(key, { timeMS: gThemeCacheNowMS, config: config });
+        this.configMap.set(key, {
+            timeMS: gTimerManager.getNowMS(),
+            config: config,
+        });
     }
 }
 
@@ -610,8 +338,3 @@ interface Focus {
 export const FocusContext = React.createContext<Focus>({
     focusable: true,
 });
-
-export interface Point {
-    x: number;
-    y: number;
-}
