@@ -68,8 +68,8 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
-    private actionSensor = new ActionSonar([this.rootRef]);
-    private resizeSensor = new ResizeSonar(this.rootRef, (rect) => {
+    private actionSonar = new ActionSonar([this.rootRef]);
+    private resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
         if (rect) {
             this.totalWidth = rect.width;
             this.flush(false);
@@ -84,7 +84,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
 
     constructor(props: TabBarProps) {
         super(props);
-        this.resizeSensor.listenFast();
+        this.resizeSonar.listenFast();
         this.state = { flushCount: 0 };
         this.fixedTabs = props.initialFixedTabs
             ? props.initialFixedTabs.map((it) => {
@@ -211,8 +211,8 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     }
 
     componentWillUnmount() {
-        this.actionSensor.close();
-        this.resizeSensor.close();
+        this.actionSonar.close();
+        this.resizeSonar.close();
     }
 
     onTabAdd(tab: Tab) {
