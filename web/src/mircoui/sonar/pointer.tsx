@@ -1,9 +1,8 @@
 import { Point } from "..";
 
 interface PointerListener {
-    onStart: () => void;
     onMove: (xDelta: number, yDelta: number) => void;
-    onEnd: () => {};
+    onMoveEnd: () => {};
 }
 
 export class PointerManager {
@@ -45,7 +44,7 @@ export class PointerManager {
             (e) => {
                 this.mouseDownPoint = undefined;
                 this.sonarMap.forEach((v) => {
-                    v.onEnd();
+                    v.onMoveEnd();
                 });
                 this.sonarMap = new Map<number, PointerListener>();
             },
@@ -54,18 +53,17 @@ export class PointerManager {
     }
 
     public checkPointerMove(
-        onStart: () => void,
+        onMoveStart: () => void,
         onMove: (xDelta: number, yDelta: number) => void,
-        onEnd: () => {}
+        onMoveEnd: () => {}
     ): boolean {
         if (this.mouseDownPoint) {
             const id = this.seed++;
+            onMoveStart();
             this.sonarMap.set(id, {
-                onStart: onStart,
                 onMove: onMove,
-                onEnd: onEnd,
+                onMoveEnd: onMoveEnd,
             });
-            onStart();
             return true;
         } else {
             return false;
