@@ -1,16 +1,34 @@
 import React from "react";
 
+export interface Point {
+    x: number;
+    y: number;
+}
+
+export interface Rect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
 interface TimeListener {
     onTimer(timeMS: number): void;
 }
 
-class TimerManager {
+export class TimerManager {
+    private static instance = new TimerManager();
+
     private timer?: number;
     private timeNowMS: number;
     private slowMap = new Map<number, TimeListener>();
     private fastMap = new Map<number, TimeListener>();
     private timeCount = 0;
     private seed: number = 1;
+
+    public static get(): TimerManager {
+        return TimerManager.instance;
+    }
 
     constructor() {
         this.timeNowMS = new Date().getTime();
@@ -74,8 +92,6 @@ class TimerManager {
     }
 }
 
-export const gTimerManager = new TimerManager();
-
 const cfgFontSize = {
     tiny: 8,
     small: 11,
@@ -113,13 +129,6 @@ export function range(v: number, min: number, max: number): number {
     return v;
 }
 
-export interface Rect {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-
 export function makeTransition(
     attrs: Array<string>,
     timeMS: number,
@@ -137,7 +146,7 @@ export class ThemeCache {
     private timer: number;
 
     constructor() {
-        this.timer = gTimerManager.attach(this);
+        this.timer = TimerManager.get().attach(this);
     }
 
     onTimer(nowMS: number): void {
@@ -152,7 +161,7 @@ export class ThemeCache {
         let item = this.configMap.get(key);
 
         if (item) {
-            item.timeMS = gTimerManager.getNowMS();
+            item.timeMS = TimerManager.get().getNowMS();
             this.configMap.set(key, item);
             return item.config;
         } else {
@@ -162,7 +171,7 @@ export class ThemeCache {
 
     setConfig(key: string, config: any) {
         this.configMap.set(key, {
-            timeMS: gTimerManager.getNowMS(),
+            timeMS: TimerManager.get().getNowMS(),
             config: config,
         });
     }

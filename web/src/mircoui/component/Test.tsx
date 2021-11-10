@@ -1,6 +1,6 @@
 import React from "react";
 import { Rect } from "..";
-import { ResizeSensor } from "../sensor/resize";
+import { ResizeSonar } from "../sonar/resize";
 
 interface TestProps {}
 interface TestState {
@@ -9,7 +9,7 @@ interface TestState {
 
 export class Test extends React.Component<TestProps, TestState> {
     private rootRef = React.createRef<HTMLDivElement>();
-    private resizeSensor?: ResizeSensor;
+    private resizeSonar?: ResizeSonar;
 
     constructor(props: TestProps) {
         super(props);
@@ -17,7 +17,7 @@ export class Test extends React.Component<TestProps, TestState> {
     }
 
     componentDidMount() {
-        this.resizeSensor = new ResizeSensor(this.rootRef, (rect?: Rect) => {
+        this.resizeSonar = new ResizeSonar(this.rootRef, (rect?: Rect) => {
             this.setState({ rect: rect });
         });
     }
@@ -26,7 +26,7 @@ export class Test extends React.Component<TestProps, TestState> {
         setTimeout(() => {
             this.setState({ rect: { x: 0, y: 0, width: 0, height: 0 } });
         }, 1000);
-        this.resizeSensor?.close();
+        this.resizeSonar?.close();
     }
 
     render() {

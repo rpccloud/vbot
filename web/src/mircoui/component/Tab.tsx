@@ -10,7 +10,7 @@ import {
     ThemeCache,
     ThemeContext,
 } from "..";
-import { ActionSensor } from "../sensor/action";
+import { ActionSonar } from "../sonar/action";
 import { TabBar } from "./TabBar";
 
 interface TabConfig {
@@ -94,7 +94,7 @@ export class Tab extends React.Component<TabProps, TabState> {
     private contentRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
     private dragInfo?: { x: number; y: number; left: number };
-    private actionSensor = new ActionSensor([this.bgRef, this.contentRef]);
+    private actionSonar = new ActionSonar([this.bgRef, this.contentRef]);
 
     constructor(props: TabProps) {
         super(props);
@@ -110,7 +110,7 @@ export class Tab extends React.Component<TabProps, TabState> {
     }
 
     componentWillUnmount() {
-        this.actionSensor.close();
+        this.actionSonar.close();
     }
 
     onDragStart = (e: React.DragEvent) => {
@@ -278,7 +278,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                             ),
                         }}
                         onMouseMove={() => {
-                            this.actionSensor.checkHover(
+                            this.actionSonar.checkHover(
                                 () => {
                                     this.setState({ hover: true });
                                 },
@@ -297,7 +297,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     onDrag={this.onDrag}
                     onDragEnd={this.onDrayEnd}
                     onMouseMove={() => {
-                        this.actionSensor.checkHover(
+                        this.actionSonar.checkHover(
                             () => {
                                 this.setState({ hover: true });
                             },

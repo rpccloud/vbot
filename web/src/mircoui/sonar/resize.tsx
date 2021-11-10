@@ -1,4 +1,4 @@
-import { gTimerManager, Rect } from "..";
+import { TimerManager, Rect } from "..";
 
 function isRectEqual(left?: Rect, right?: Rect): boolean {
     if (left === undefined && right === undefined) {
@@ -13,7 +13,7 @@ function isRectEqual(left?: Rect, right?: Rect): boolean {
     );
 }
 
-export class ResizeSensor {
+export class ResizeSonar {
     private timer?: number;
     private ref: React.RefObject<HTMLElement>;
     private onResize: (rect?: Rect) => void;
@@ -25,18 +25,18 @@ export class ResizeSensor {
     ) {
         this.ref = ref;
         this.onResize = onResize;
-        this.timer = gTimerManager.attach(this);
+        this.timer = TimerManager.get().attach(this);
     }
 
     listenSlow() {
         if (this.timer) {
-            gTimerManager.slow(this.timer);
+            TimerManager.get().slow(this.timer);
         }
     }
 
     listenFast() {
         if (this.timer) {
-            gTimerManager.fast(this.timer);
+            TimerManager.get().fast(this.timer);
         }
     }
 
@@ -53,7 +53,7 @@ export class ResizeSensor {
 
     close() {
         if (this.timer) {
-            gTimerManager.detach(this.timer);
+            TimerManager.get().detach(this.timer);
             this.timer = undefined;
         }
     }

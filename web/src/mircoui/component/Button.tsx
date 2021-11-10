@@ -10,7 +10,7 @@ import {
     ThemeCache,
     ThemeContext,
 } from "../";
-import { ActionSensor } from "../sensor/action";
+import { ActionSonar } from "../sonar/action";
 
 interface ButtonConfig {
     normal?: ColorSet;
@@ -170,7 +170,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
-    private actionSensor = new ActionSensor([this.rootRef]);
+    private actionSonar = new ActionSonar([this.rootRef]);
 
     constructor(props: ButtonProps) {
         super(props);
@@ -182,7 +182,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     }
 
     componentWillUnmount() {
-        this.actionSensor.close();
+        this.actionSonar.close();
     }
 
     render() {
@@ -270,7 +270,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     ...style,
                 }}
                 onMouseMove={() => {
-                    this.actionSensor.checkHover(
+                    this.actionSonar.checkHover(
                         () => {
                             this.setState({ hover: true });
                         },
@@ -280,7 +280,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     );
                 }}
                 onMouseDown={() => {
-                    this.actionSensor.checkActive(
+                    this.actionSonar.checkActive(
                         () => {
                             this.setState({ active: true });
                         },
@@ -291,7 +291,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                 }}
                 onFocus={(e) => {
                     if (canFocus) {
-                        this.actionSensor.checkFocus(
+                        this.actionSonar.checkFocus(
                             () => {
                                 this.setState({ focus: true });
                             },

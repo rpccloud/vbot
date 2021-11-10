@@ -1,6 +1,6 @@
-import { gTimerManager } from "..";
+import { TimerManager } from "..";
 
-export class TempValueSensor {
+export class TempValueSonar {
     private delayMS: number;
     private defaultValue: any;
     private currentValue: any;
@@ -29,9 +29,9 @@ export class TempValueSensor {
             }
 
             if (this.currentValue !== this.defaultValue) {
-                this.startMS = gTimerManager.getNowMS();
+                this.startMS = TimerManager.get().getNowMS();
                 if (!this.timer) {
-                    this.timer = gTimerManager.attach(this);
+                    this.timer = TimerManager.get().attach(this);
                 }
             }
         }
@@ -42,7 +42,7 @@ export class TempValueSensor {
             this.setValue(this.defaultValue);
 
             if (this.timer) {
-                gTimerManager.detach(this.timer);
+                TimerManager.get().detach(this.timer);
                 this.timer = undefined;
             }
         }
@@ -51,7 +51,7 @@ export class TempValueSensor {
     public close() {
         this.onValueChange = undefined;
         if (this.timer) {
-            gTimerManager.detach(this.timer);
+            TimerManager.get().detach(this.timer);
             this.timer = undefined;
         }
     }

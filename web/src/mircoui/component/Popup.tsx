@@ -1,7 +1,7 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { makeTransition, Rect } from "../";
-import { ActionSensor } from "../sensor/action";
-import { ResizeSensor } from "../sensor/resize";
+import { ActionSonar } from "../sonar/action";
+import { ResizeSonar } from "../sonar/resize";
 
 interface ZIndex {
     zIndex: number;
@@ -33,12 +33,11 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
-    private actionSensor = new ActionSensor([this.rootRef]);
-
     private focus = false;
     private hover = false;
     private forcePopup = false;
-    private resizeSensor = new ResizeSensor(this.rootRef, (rect) => {
+    private actionSonar = new ActionSonar([this.rootRef]);
+    private resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
         this.setState({ screenRect: rect });
     });
 
@@ -50,8 +49,8 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     }
 
     componentWillUnmount() {
-        this.actionSensor.close();
-        this.resizeSensor.close();
+        this.actionSonar.close();
+        this.resizeSonar.close();
     }
 
     updatePopup() {
@@ -59,9 +58,9 @@ export class Popup extends React.Component<PopupProps, PopupState> {
 
         if (this.state.popup !== popup) {
             if (popup) {
-                this.resizeSensor.listenFast();
+                this.resizeSonar.listenFast();
             } else {
-                this.resizeSensor.listenSlow();
+                this.resizeSonar.listenSlow();
             }
 
             this.setState({
@@ -111,7 +110,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                 }}
                 onMouseMove={() => {
                     if (this.props.action.includes("hover")) {
-                        this.actionSensor.checkHover(
+                        this.actionSonar.checkHover(
                             () => {
                                 this.setHover(true);
                             },
@@ -123,7 +122,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                 }}
                 onFocus={(e) => {
                     if (this.props.action.includes("focus")) {
-                        this.actionSensor.checkFocus(
+                        this.actionSonar.checkFocus(
                             () => {
                                 this.setFocus(true);
                             },

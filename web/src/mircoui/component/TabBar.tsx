@@ -1,8 +1,8 @@
 import React from "react";
 import { getFontSize, ITheme, range, ThemeContext } from "..";
 import { getSeed } from "../../app/plugin/browser/utils";
-import { ActionSensor } from "../sensor/action";
-import { ResizeSensor } from "../sensor/resize";
+import { ActionSonar } from "../sonar/action";
+import { ResizeSonar } from "../sonar/resize";
 import { Tab } from "./Tab";
 
 interface FixedTabItem {
@@ -68,8 +68,8 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
-    private actionSensor = new ActionSensor([this.rootRef]);
-    private resizeSensor = new ResizeSensor(this.rootRef, (rect) => {
+    private actionSensor = new ActionSonar([this.rootRef]);
+    private resizeSensor = new ResizeSonar(this.rootRef, (rect) => {
         if (rect) {
             this.totalWidth = rect.width;
             this.flush(false);

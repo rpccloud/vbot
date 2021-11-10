@@ -1,4 +1,4 @@
-import { gTimerManager } from "..";
+import { TimerManager } from "..";
 
 function elementMatches(
     elem: Element | null,
@@ -24,7 +24,7 @@ function elementMatches(
     return false;
 }
 
-export class ActionSensor {
+export class ActionSonar {
     private refs: React.RefObject<Element>[];
     private fnLostHover?: () => void;
     private fnLostActive?: () => void;
@@ -71,8 +71,8 @@ export class ActionSensor {
 
     private check() {
         if (!this.timer && this.refs.length > 0) {
-            this.timer = gTimerManager.attach(this);
-            gTimerManager.fast(this.timer);
+            this.timer = TimerManager.get().attach(this);
+            TimerManager.get().fast(this.timer);
         }
     }
 
@@ -104,14 +104,14 @@ export class ActionSensor {
             !this.fnLostHover &&
             !this.fnLostActive
         ) {
-            gTimerManager.detach(this.timer);
+            TimerManager.get().detach(this.timer);
             this.timer = undefined;
         }
     }
 
     public close() {
         if (this.timer) {
-            gTimerManager.detach(this.timer);
+            TimerManager.get().detach(this.timer);
             this.timer = undefined;
         }
         this.refs = [];

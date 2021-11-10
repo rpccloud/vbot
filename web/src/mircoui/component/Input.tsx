@@ -19,9 +19,9 @@ import {
     ThemeCache,
     ThemeContext,
 } from "..";
-import { ActionSensor } from "../sensor/action";
-import { TempValueSensor } from "../sensor/temp_value";
-import { ResizeSensor } from "../sensor/resize";
+import { ActionSonar } from "../sonar/action";
+import { TempValueSonar } from "../sonar/temp_value";
+import { ResizeSonar } from "../sonar/resize";
 
 interface InputConfig {
     revertIcon?: React.ReactNode;
@@ -181,8 +181,8 @@ class InputCore extends React.Component<InputProps, InputState> {
 
     private rootRef = React.createRef<HTMLDivElement>();
     private inputRef = React.createRef<HTMLInputElement>();
-    private actionSensor = new ActionSensor([this.rootRef]);
-    private tempValueSensor = new TempValueSensor(1000, "none", (status) => {
+    private actionSonar = new ActionSonar([this.rootRef]);
+    private tempValueSonar = new TempValueSonar(1000, "none", (status) => {
         this.setState({ reportStatus: status });
     });
 
@@ -200,8 +200,8 @@ class InputCore extends React.Component<InputProps, InputState> {
     }
 
     componentWillUnmount() {
-        this.actionSensor.close();
-        this.tempValueSensor.close();
+        this.actionSonar.close();
+        this.tempValueSonar.close();
     }
 
     render() {
@@ -341,7 +341,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                             this.state.value.length,
                             this.state.value.length
                         );
-                        const resizeSensor = new ResizeSensor(
+                        const resizeSonar = new ResizeSonar(
                             this.inputRef,
                             () => {
                                 if (this.props.submittable) {
@@ -350,16 +350,16 @@ class InputCore extends React.Component<InputProps, InputState> {
                                         elem.scrollLeft = elem.scrollWidth;
                                     }
                                 }
-                                resizeSensor.close();
+                                resizeSonar.close();
                             }
                         );
 
-                        this.actionSensor.checkFocus(
+                        this.actionSonar.checkFocus(
                             () => {
                                 this.setState({ focus: true });
                             },
                             () => {
-                                resizeSensor.close();
+                                resizeSonar.close();
                                 this.setState({ focus: false });
                                 if (
                                     !this.state.submitting &&
@@ -369,7 +369,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                                     this.setState({
                                         value: this.state.stageValue,
                                     });
-                                    this.tempValueSensor.setValue("warning");
+                                    this.tempValueSonar.setValue("warning");
                                 }
                             }
                         );
@@ -449,7 +449,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                                             value: this.state.stageValue,
                                         });
                                     }
-                                    this.tempValueSensor.setValue(
+                                    this.tempValueSonar.setValue(
                                         success ? "success" : "warning"
                                     );
                                     this.setState({ submitting: false });
@@ -512,7 +512,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                     }
                 }}
                 onMouseMove={(e) => {
-                    this.actionSensor.checkHover(
+                    this.actionSonar.checkHover(
                         () => {
                             this.setState({ hover: true });
                         },
