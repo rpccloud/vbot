@@ -1,5 +1,75 @@
 import React from "react";
 
+interface TimeListener {
+    onTimer(timeMS: number): void;
+}
+
+class TimerManager {
+    private timer?: number;
+    private slowMap = new Map<number, TimeListener>();
+    private fastMap = new Map<number, TimeListener>();
+    private timeCount = 0;
+    private seed: number = 1;
+
+    constructor() {
+        this.timer = window.setInterval(this.onTimer.bind(this), 25);
+    }
+
+    onTimer() {
+        const nowMS = new Date().getTime();
+        this.timeCount++;
+
+        if (this.timeCount % 10 === 0) {
+            this.slowMap.forEach((it) => {
+                it.onTimer(nowMS);
+            });
+        }
+
+        this.fastMap.forEach((it) => {
+            it.onTimer(nowMS);
+        });
+    }
+
+    attach(item: TimeListener): number {
+        const seed = this.seed++;
+        this.slowMap.set(seed, item);
+        return seed;
+    }
+
+    detach(id: number): boolean {
+        const retSlow = this.slowMap.delete(id);
+        const retFast = this.fastMap.delete(id);
+        return retSlow || retFast;
+    }
+
+    slow(id: number) {
+        const item = this.fastMap.get(id);
+        if (item) {
+            this.fastMap.delete(id);
+            this.slowMap.set(id, item);
+        }
+        return this.slowMap.has(id);
+    }
+
+    fast(id: number): boolean {
+        const item = this.slowMap.get(id);
+        if (item) {
+            this.slowMap.delete(id);
+            this.fastMap.set(id, item);
+        }
+        return this.fastMap.has(id);
+    }
+
+    close() {
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = undefined;
+        }
+    }
+}
+
+export const gTimerManager = new TimerManager();
+
 let seed = 0;
 function getSeed(): number {
     return seed++;

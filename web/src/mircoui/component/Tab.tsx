@@ -6,7 +6,6 @@ import {
     HtmlChecker,
     ITheme,
     makeTransition,
-    Point,
     range,
     Theme,
     ThemeCache,
@@ -95,8 +94,7 @@ export class Tab extends React.Component<TabProps, TabState> {
     private rootRef = React.createRef<HTMLDivElement>();
     private contentRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
-    private mouseDownPt?: Point;
-    private movingBeforeLeft?: number;
+    private dragInfo?: { x: number; y: number; left: number };
     private bgChecker = new HtmlChecker(this.bgRef);
     private contentChecker = new HtmlChecker(this.contentRef);
 
@@ -114,44 +112,77 @@ export class Tab extends React.Component<TabProps, TabState> {
         this.props.tabBar.onTabAdd(this);
     }
 
-    isMoving(): boolean {
-        return this.movingBeforeLeft !== undefined;
-    }
-
     componentWillUnmount() {
         this.bgChecker.depose();
         this.contentChecker.depose();
     }
 
-    onPointerDown = (e: React.PointerEvent) => {
-        if (this.rootRef.current) {
-            this.rootRef.current.style.zIndex = "1";
-            if (this.bgRef.current) {
-                this.bgRef.current.style.transition = makeTransition(
-                    ["fill", "stroke"],
-                    250,
-                    "ease-in"
-                );
-            }
-        }
+    onDragStart = (e: React.DragEvent) => {
+        var elem = document.createElement("div");
+        elem.id = "drag-ghost";
+        elem.style.position = "absolute";
+        elem.style.top = "-1000px";
+        document.body.appendChild(elem);
+        e.dataTransfer.setDragImage(elem, 0, 0);
 
-        this.mouseDownPt = { x: e.clientX, y: e.clientY };
-        this.bgRef.current!.setPointerCapture(e.pointerId);
+        e.dataTransfer.dropEffect = "none";
+        e.dataTransfer.effectAllowed = "none";
+
+        this.dragInfo = { x: e.clientX, y: e.clientY, left: this.state.left };
         this.props.tabBar.onTabSelect(this.props.id);
     };
 
-    onPointerUp = (e: React.PointerEvent) => {
-        this.bgRef.current!.releasePointerCapture(e.pointerId);
-        if (this.rootRef.current) {
-            this.rootRef.current.style.zIndex = "0";
+    onDrag = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.dragInfo) {
+            const movingLeft = range(
+                this.dragInfo.left + e.clientX - this.dragInfo.x,
+                this.props.minLeft,
+                this.props.maxRight - this.state.width
+            );
+
+            this.props.tabBar.onTabMove(this.props.id, movingLeft);
+
+            this.setState({
+                movingLeft: movingLeft,
+            });
         }
+    };
 
-        this.mouseDownPt = undefined;
-        this.movingBeforeLeft = undefined;
-        //  this.setState({movingLeft: undefined})
-
+    onDrayEnd = (e: React.DragEvent) => {
+        this.dragInfo = undefined;
         this.setState({ movingLeft: undefined });
     };
+
+    // onPointerDown = (e: React.PointerEvent) => {
+    //     if (this.rootRef.current) {
+    //         this.rootRef.current.style.zIndex = "1";
+    //         if (this.bgRef.current) {
+    //             this.bgRef.current.style.transition = makeTransition(
+    //                 ["fill", "stroke"],
+    //                 250,
+    //                 "ease-in"
+    //             );
+    //         }
+    //     }
+
+    //     this.mouseDownPt = { x: e.clientX, y: e.clientY };
+    //     this.bgRef.current!.setPointerCapture(e.pointerId);
+    // };
+
+    // onPointerUp = (e: React.PointerEvent) => {
+    //     this.bgRef.current!.releasePointerCapture(e.pointerId);
+    //     if (this.rootRef.current) {
+    //         this.rootRef.current.style.zIndex = "0";
+    //     }
+
+    //     this.mouseDownPt = undefined;
+    //     this.movingBeforeLeft = undefined;
+    //     //  this.setState({movingLeft: undefined})
+
+    //     this.setState({ movingLeft: undefined });
+    // };
 
     setLeft(left: number) {
         if (left !== this.state.left) {
@@ -165,32 +196,32 @@ export class Tab extends React.Component<TabProps, TabState> {
         }
     }
 
-    onPointerMove = (e: React.PointerEvent) => {
-        if (!this.isMoving() && this.mouseDownPt) {
-            this.movingBeforeLeft =
-                Math.abs(e.clientX - this.mouseDownPt.x) > 8
-                    ? this.state.left
-                    : undefined;
-        }
+    // onPointerMove = (e: React.PointerEvent) => {
+    //     if (!this.isMoving() && this.mouseDownPt) {
+    //         this.movingBeforeLeft =
+    //             Math.abs(e.clientX - this.mouseDownPt.x) > 8
+    //                 ? this.state.left
+    //                 : undefined;
+    //     }
 
-        if (
-            this.isMoving() &&
-            this.mouseDownPt &&
-            this.movingBeforeLeft !== undefined
-        ) {
-            const movingLeft = range(
-                this.movingBeforeLeft! + e.clientX - this.mouseDownPt.x,
-                this.props.minLeft,
-                this.props.maxRight - this.state.width
-            );
+    //     if (
+    //         this.isMoving() &&
+    //         this.mouseDownPt &&
+    //         this.movingBeforeLeft !== undefined
+    //     ) {
+    //         const movingLeft = range(
+    //             this.movingBeforeLeft! + e.clientX - this.mouseDownPt.x,
+    //             this.props.minLeft,
+    //             this.props.maxRight - this.state.width
+    //         );
 
-            this.props.tabBar.onTabMove(this.props.id, movingLeft);
+    //         this.props.tabBar.onTabMove(this.props.id, movingLeft);
 
-            this.setState({
-                movingLeft: movingLeft,
-            });
-        }
-    };
+    //         this.setState({
+    //             movingLeft: movingLeft,
+    //         });
+    //     }
+    // };
 
     render() {
         let config: TabConfig = getConfig(
@@ -212,13 +243,14 @@ export class Tab extends React.Component<TabProps, TabState> {
         let height = fontSize * 2;
         let path = makeTabPath(width, height, height / 6);
         let left = this.state.movingLeft || this.state.left;
-        // let inMargin = Math.round(height / 3);
-        //let top = Math.round(height / 4);
-        // let bottom = top;
+        let inMargin = Math.round(height / 3);
+        let top = Math.round(height / 4);
+        let bottom = top;
 
         return (
             <div
                 ref={this.rootRef}
+                draggable
                 style={{
                     position: "absolute",
                     left: left,
@@ -226,6 +258,11 @@ export class Tab extends React.Component<TabProps, TabState> {
                     height: height,
                     bottom: 0,
                 }}
+                onDragStart={this.onDragStart}
+                onDrag={this.onDrag}
+                onDragEnd={this.onDrayEnd}
+                onDragOver={(e) => e.preventDefault()}
+                onDragEnter={(e) => e.preventDefault()}
             >
                 <svg
                     height={height}
@@ -252,17 +289,15 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 });
                             }
                         }}
-                        onPointerDownCapture={this.onPointerDown}
-                        onPointerUpCapture={this.onPointerUp}
-                        onPointerMoveCapture={this.onPointerMove}
+                        onMouseDown={() => {}}
                     />
                 </svg>
-                {/*
+
                 <div
                     ref={this.contentRef}
-                    onPointerDown={this.onPointerDown}
-                    onPointerUp={this.onPointerUp}
-                    onPointerMove={this.onPointerMove}
+                    onDragStart={this.onDragStart}
+                    onDrag={this.onDrag}
+                    onDragEnd={this.onDrayEnd}
                     onMouseMove={() => {
                         if (!this.state.contentHover) {
                             this.setState({ contentHover: true });
@@ -283,7 +318,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     }}
                 >
                     {this.props.minLeft}
-                </div> */}
+                </div>
             </div>
         );
     }
