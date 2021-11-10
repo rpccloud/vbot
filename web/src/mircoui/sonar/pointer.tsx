@@ -1,8 +1,8 @@
 import { Point } from "..";
 
 interface PointerListener {
-    onMove: (xDelta: number, yDelta: number) => void;
-    onMoveEnd: () => {};
+    onPointerMove: (deltaX: number, deltaY: number) => void;
+    onPointerUp: () => void;
 }
 
 export class PointerManager {
@@ -29,10 +29,10 @@ export class PointerManager {
             "pointermove",
             (e) => {
                 if (this.mouseDownPoint) {
-                    const xDelta = e.clientX - this.mouseDownPoint.x;
-                    const yDelta = e.clientY - this.mouseDownPoint.y;
+                    const deltaX = e.clientX - this.mouseDownPoint.x;
+                    const deltaY = e.clientY - this.mouseDownPoint.y;
                     this.sonarMap.forEach((v) => {
-                        v.onMove(xDelta, yDelta);
+                        v.onPointerMove(deltaX, deltaY);
                     });
                 }
             },
@@ -44,7 +44,7 @@ export class PointerManager {
             (e) => {
                 this.mouseDownPoint = undefined;
                 this.sonarMap.forEach((v) => {
-                    v.onMoveEnd();
+                    v.onPointerUp();
                 });
                 this.sonarMap = new Map<number, PointerListener>();
             },
@@ -53,16 +53,16 @@ export class PointerManager {
     }
 
     public checkPointerMove(
-        onMoveStart: () => void,
-        onMove: (xDelta: number, yDelta: number) => void,
-        onMoveEnd: () => {}
+        onPointerDown: () => void,
+        onPointerMove: (xDelta: number, yDelta: number) => void,
+        onPointerUp: () => void
     ): boolean {
         if (this.mouseDownPoint) {
             const id = this.seed++;
-            onMoveStart();
+            onPointerDown();
             this.sonarMap.set(id, {
-                onMove: onMove,
-                onMoveEnd: onMoveEnd,
+                onPointerMove: onPointerMove,
+                onPointerUp: onPointerUp,
             });
             return true;
         } else {

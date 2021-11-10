@@ -11,6 +11,7 @@ import {
     ThemeContext,
 } from "..";
 import { ActionSonar } from "../sonar/action";
+import { PointerManager } from "../sonar/pointer";
 import { TabBar } from "./TabBar";
 
 interface TabConfig {
@@ -72,11 +73,9 @@ interface TabProps {
 }
 
 interface TabState {
+    width: number;
     hover: boolean;
     focus: boolean;
-    width: number;
-    left: number;
-    movingLeft?: number;
 }
 
 function makeTabPath(w: number, h: number, radius: number): string {
@@ -93,17 +92,19 @@ export class Tab extends React.Component<TabProps, TabState> {
     private rootRef = React.createRef<HTMLDivElement>();
     private contentRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
-    private dragInfo?: { x: number; y: number; left: number };
     private actionSonar = new ActionSonar([this.bgRef, this.contentRef]);
+
+    private currentLeft: number = 0;
+    private currentWidth: number = 0;
+    private beforeMovingLeft?: number;
 
     constructor(props: TabProps) {
         super(props);
 
         this.state = {
+            width: 0,
             hover: false,
             focus: false,
-            width: 0,
-            left: 0,
         };
 
         this.props.tabBar.onTabAdd(this);
@@ -113,111 +114,42 @@ export class Tab extends React.Component<TabProps, TabState> {
         this.actionSonar.close();
     }
 
-    onDragStart = (e: React.DragEvent) => {
-        var elem = document.createElement("div");
-        elem.id = "drag-ghost";
-        elem.style.position = "absolute";
-        elem.style.top = "-1000px";
-        document.body.appendChild(elem);
-        e.dataTransfer.setDragImage(elem, 0, 0);
-
-        e.dataTransfer.dropEffect = "none";
-        e.dataTransfer.effectAllowed = "none";
-
-        this.dragInfo = { x: e.clientX, y: e.clientY, left: this.state.left };
-        this.props.tabBar.onTabSelect(this.props.id);
-    };
-
-    onDrag = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (this.dragInfo) {
-            const movingLeft = range(
-                this.dragInfo.left + e.clientX - this.dragInfo.x,
-                this.props.minLeft,
-                this.props.maxRight - this.state.width
-            );
-
-            this.props.tabBar.onTabMove(this.props.id, movingLeft);
-
-            this.setState({
-                movingLeft: movingLeft,
-            });
-        }
-    };
-
-    onDrayEnd = (e: React.DragEvent) => {
-        this.dragInfo = undefined;
-        this.setState({ movingLeft: undefined });
-    };
-
-    // onPointerDown = (e: React.PointerEvent) => {
-    //     if (this.rootRef.current) {
-    //         this.rootRef.current.style.zIndex = "1";
-    //         if (this.bgRef.current) {
-    //             this.bgRef.current.style.transition = makeTransition(
-    //                 ["fill", "stroke"],
-    //                 250,
-    //                 "ease-in"
-    //             );
-    //         }
-    //     }
-
-    //     this.mouseDownPt = { x: e.clientX, y: e.clientY };
-    //     this.bgRef.current!.setPointerCapture(e.pointerId);
-    // };
-
-    // onPointerUp = (e: React.PointerEvent) => {
-    //     this.bgRef.current!.releasePointerCapture(e.pointerId);
-    //     if (this.rootRef.current) {
-    //         this.rootRef.current.style.zIndex = "0";
-    //     }
-
-    //     this.mouseDownPt = undefined;
-    //     this.movingBeforeLeft = undefined;
-    //     //  this.setState({movingLeft: undefined})
-
-    //     this.setState({ movingLeft: undefined });
-    // };
-
     setLeft(left: number) {
-        if (left !== this.state.left) {
-            this.setState({ left: left });
+        if (left !== this.currentLeft) {
+            this.currentLeft = left;
+            if (this.rootRef.current) {
+                this.rootRef.current.style.left = `${left}px`;
+            }
         }
     }
 
     setWidth(width: number) {
-        if (width !== this.state.width) {
+        if (width !== this.currentWidth) {
+            this.currentWidth = width;
             this.setState({ width: width });
         }
     }
 
-    // onPointerMove = (e: React.PointerEvent) => {
-    //     if (!this.isMoving() && this.mouseDownPt) {
-    //         this.movingBeforeLeft =
-    //             Math.abs(e.clientX - this.mouseDownPt.x) > 8
-    //                 ? this.state.left
-    //                 : undefined;
-    //     }
+    onPointerDown = () => void {};
+    onPointerUp = () => {
+        this.beforeMovingLeft = undefined;
+    };
+    onPointerMove = (deltaX: number) => {
 
-    //     if (
-    //         this.isMoving() &&
-    //         this.mouseDownPt &&
-    //         this.movingBeforeLeft !== undefined
-    //     ) {
-    //         const movingLeft = range(
-    //             this.movingBeforeLeft! + e.clientX - this.mouseDownPt.x,
-    //             this.props.minLeft,
-    //             this.props.maxRight - this.state.width
-    //         );
+        if (this.beforeMovingLeft === undefined && Math.abs(deltaX) > 8) {
+            this.beforeMovingLeft = this.currentLeft;
+        }
 
-    //         this.props.tabBar.onTabMove(this.props.id, movingLeft);
-
-    //         this.setState({
-    //             movingLeft: movingLeft,
-    //         });
-    //     }
-    // };
+        if (this.beforeMovingLeft !== undefined) {
+            const movingLeft = range(
+                this.beforeMovingLeft + deltaX,
+                this.props.minLeft,
+                this.props.maxRight - this.currentWidth
+            );
+            this.props.tabBar.onTabMove(this.props.id, movingLeft);
+            this.setLeft(movingLeft);
+        }
+    };
 
     render() {
         let config: TabConfig = getConfig(
@@ -238,7 +170,6 @@ export class Tab extends React.Component<TabProps, TabState> {
         let width = this.state.width;
         let height = fontSize * 2;
         let path = makeTabPath(width, height, height / 6);
-        let left = this.state.movingLeft || this.state.left;
         let inMargin = Math.round(height / 3);
         let top = Math.round(height / 4);
         let bottom = top;
@@ -246,25 +177,14 @@ export class Tab extends React.Component<TabProps, TabState> {
         return (
             <div
                 ref={this.rootRef}
-                draggable
                 style={{
                     position: "absolute",
-                    left: left,
                     width: width,
                     height: height,
                     bottom: 0,
                 }}
-                onDragStart={this.onDragStart}
-                onDrag={this.onDrag}
-                onDragEnd={this.onDrayEnd}
-                onDragOver={(e) => e.preventDefault()}
-                onDragEnter={(e) => e.preventDefault()}
             >
-                <svg
-                    height={height}
-                    width={width}
-                    style={{ position: "absolute" }}
-                >
+                <svg height={height} width={width}>
                     <path
                         ref={this.bgRef}
                         d={path}
@@ -277,7 +197,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 "ease-in"
                             ),
                         }}
-                        onMouseMove={() => {
+                        onPointerMove={() => {
                             this.actionSonar.checkHover(
                                 () => {
                                     this.setState({ hover: true });
@@ -287,25 +207,18 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 }
                             );
                         }}
-                        onMouseDown={() => {}}
+                        onPointerDown={() => {
+                            PointerManager.get().checkPointerMove(
+                                this.onPointerDown,
+                                this.onPointerMove,
+                                this.onPointerUp
+                            );
+                        }}
                     />
                 </svg>
 
                 <div
                     ref={this.contentRef}
-                    onDragStart={this.onDragStart}
-                    onDrag={this.onDrag}
-                    onDragEnd={this.onDrayEnd}
-                    onMouseMove={() => {
-                        this.actionSonar.checkHover(
-                            () => {
-                                this.setState({ hover: true });
-                            },
-                            () => {
-                                this.setState({ hover: false });
-                            }
-                        );
-                    }}
                     style={{
                         display: "inline-flex",
                         alignItems: "center",
@@ -315,6 +228,23 @@ export class Tab extends React.Component<TabProps, TabState> {
                         bottom: bottom,
                         left: inMargin,
                         right: inMargin,
+                    }}
+                    onPointerMove={() => {
+                        this.actionSonar.checkHover(
+                            () => {
+                                this.setState({ hover: true });
+                            },
+                            () => {
+                                this.setState({ hover: false });
+                            }
+                        );
+                    }}
+                    onPointerDown={() => {
+                        PointerManager.get().checkPointerMove(
+                            this.onPointerDown,
+                            this.onPointerMove,
+                            this.onPointerUp
+                        );
                     }}
                 >
                     {this.props.minLeft}
