@@ -25,6 +25,9 @@ export class Test extends React.Component<TestProps, TestState> {
     }
 
     componentWillUnmount() {
+        setTimeout(() => {
+            this.setState({ rect: { x: 0, y: 0, width: 0, height: 0 } });
+        }, 1000);
         this.resizeSensor?.close();
     }
 

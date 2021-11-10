@@ -6,27 +6,33 @@ interface TimeListener {
 
 class TimerManager {
     private timer?: number;
+    private timeNowMS: number;
     private slowMap = new Map<number, TimeListener>();
     private fastMap = new Map<number, TimeListener>();
     private timeCount = 0;
     private seed: number = 1;
 
     constructor() {
+        this.timeNowMS = new Date().getTime();
         this.timer = window.setInterval(this.onTimer.bind(this), 25);
     }
 
+    getNowMS() {
+        return this.timeNowMS;
+    }
+
     onTimer() {
-        const nowMS = new Date().getTime();
+        this.timeNowMS = new Date().getTime();
         this.timeCount++;
 
         if (this.timeCount % 10 === 0) {
             this.slowMap.forEach((it) => {
-                it.onTimer(nowMS);
+                it.onTimer(this.timeNowMS);
             });
         }
 
         this.fastMap.forEach((it) => {
-            it.onTimer(nowMS);
+            it.onTimer(this.timeNowMS);
         });
     }
 

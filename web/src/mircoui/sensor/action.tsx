@@ -70,64 +70,51 @@ export class ActionSensor {
     }
 
     private check() {
-        if (!this.timer) {
+        if (!this.timer && this.refs.length > 0) {
             this.timer = gTimerManager.attach(this);
             gTimerManager.fast(this.timer);
-        }
-    }
-
-    public depose() {
-        if (this.timer) {
-            gTimerManager.detach(this.timer);
-            this.timer = undefined;
-            this.lostHover();
-            this.lostActive();
-            this.lostFocus();
-        }
-    }
-
-    private lostHover() {
-        if (this.fnLostHover) {
-            this.fnLostHover();
-            this.fnLostHover = undefined;
-        }
-    }
-
-    private lostActive() {
-        if (this.fnLostActive) {
-            this.fnLostActive();
-            this.fnLostActive = undefined;
-        }
-    }
-
-    private lostFocus() {
-        if (this.fnLostFocus) {
-            this.fnLostFocus();
-            this.fnLostFocus = undefined;
         }
     }
 
     public onTimer() {
         if (this.fnLostHover) {
             if (!this.hasAction("hover")) {
-                this.lostHover();
+                this.fnLostHover();
+                this.fnLostHover = undefined;
             }
         }
 
-        if (!!this.fnLostActive) {
+        if (this.fnLostActive) {
             if (!this.hasAction("active")) {
-                this.lostActive();
+                this.fnLostActive();
+                this.fnLostActive = undefined;
             }
         }
 
         if (this.fnLostFocus) {
             if (!this.hasAction("focus")) {
-                this.lostFocus();
+                this.fnLostFocus();
+                this.fnLostFocus = undefined;
             }
         }
 
-        if (!this.fnLostFocus && !this.fnLostHover && !this.fnLostActive) {
-            this.depose();
+        if (
+            this.timer &&
+            !this.fnLostFocus &&
+            !this.fnLostHover &&
+            !this.fnLostActive
+        ) {
+            gTimerManager.detach(this.timer);
+            this.timer = undefined;
         }
+    }
+
+    public close() {
+        if (this.timer) {
+            gTimerManager.detach(this.timer);
+            this.timer = undefined;
+        }
+        this.refs = [];
+        this.onTimer();
     }
 }
