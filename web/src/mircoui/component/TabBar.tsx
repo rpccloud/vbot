@@ -222,8 +222,13 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         }
     }
 
-    onTabSelect(id: number) {
+    onPointerDown(id: number) {
         this.setState({ selectedTab: this.findRecordByID(id) });
+    }
+
+    onPointerUp(id: number) {
+        const item = this.findRecordByID(id);
+        item?.tab?.setLeft(item.left);
     }
 
     onTabMove(id: number, left: number) {

@@ -95,6 +95,7 @@ export class Tab extends React.Component<TabProps, TabState> {
     private actionSonar = new ActionSonar([this.bgRef, this.contentRef]);
 
     private currentLeft: number = 0;
+
     private currentWidth: number = 0;
     private beforeMovingLeft?: number;
 
@@ -114,11 +115,13 @@ export class Tab extends React.Component<TabProps, TabState> {
         this.actionSonar.close();
     }
 
-    setLeft(left: number) {
-        if (left !== this.currentLeft) {
-            this.currentLeft = left;
-            if (this.rootRef.current) {
-                this.rootRef.current.style.left = `${left}px`;
+    setLeft(left: number, force?: boolean) {
+        if (force || this.beforeMovingLeft === undefined) {
+            if (left !== this.currentLeft) {
+                this.currentLeft = left;
+                if (this.rootRef.current) {
+                    this.rootRef.current.style.left = `${left}px`;
+                }
             }
         }
     }
@@ -130,12 +133,14 @@ export class Tab extends React.Component<TabProps, TabState> {
         }
     }
 
-    onPointerDown = () => void {};
+    onPointerDown = () => {
+        this.props.tabBar.onPointerDown(this.props.id);
+    };
     onPointerUp = () => {
         this.beforeMovingLeft = undefined;
+        this.props.tabBar.onPointerUp(this.props.id);
     };
     onPointerMove = (deltaX: number) => {
-
         if (this.beforeMovingLeft === undefined && Math.abs(deltaX) > 8) {
             this.beforeMovingLeft = this.currentLeft;
         }
@@ -147,7 +152,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                 this.props.maxRight - this.currentWidth
             );
             this.props.tabBar.onTabMove(this.props.id, movingLeft);
-            this.setLeft(movingLeft);
+            this.setLeft(movingLeft, true);
         }
     };
 
