@@ -67,7 +67,7 @@ export class Tab extends React.Component<TabProps, TabState> {
             focus: false,
         };
 
-        this.props.tabBar.onTabAdd(this);
+        this.props.tabBar.onTabAdded(this);
     }
 
     componentWillUnmount() {
@@ -300,9 +300,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                                     height: fontSize,
                                 }}
                                 onClick={() => {
-                                    this.props.tabBar.onDeleteTab(
-                                        this.props.id
-                                    );
+                                    this.props.tabBar.deleteTab(this.props.id);
                                 }}
                             />
                         </div>

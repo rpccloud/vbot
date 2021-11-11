@@ -1,4 +1,3 @@
-import { time } from "console";
 import React from "react";
 import {
     getFontSize,
@@ -7,6 +6,7 @@ import {
     Theme,
     ThemeCache,
     ThemeContext,
+    TimerManager,
 } from "..";
 import { getSeed } from "../../app/plugin/browser/utils";
 import { ActionSonar } from "../sonar/action";
@@ -101,11 +101,11 @@ interface TabRecord {
     kind: TabKind;
     index: number;
     tab?: Tab;
+    selectedTime: number;
 }
 
 interface TabBarState {
     flushCount: number;
-    selectedTab?: TabRecord;
 }
 
 export class TabBar extends React.Component<TabBarProps, TabBarState> {
@@ -128,6 +128,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         }
     });
 
+    selectedTab?: TabRecord;
     private totalWidth: number = 0;
     private fixedWidth: number = 0;
     private fixedTabs: TabRecord[];
@@ -152,6 +153,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       maxRight: 0,
                       kind: TabKind.Fixed,
                       index: 0,
+                      selectedTime: 0,
                   };
               })
             : [];
@@ -168,6 +170,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       maxRight: 0,
                       kind: TabKind.Float,
                       index: 0,
+                      selectedTime: 0,
                   };
               })
             : [];
@@ -184,6 +187,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       maxRight: 0,
                       kind: TabKind.Dynamic,
                       index: 0,
+                      selectedTime: 0,
                   };
               })
             : [];
@@ -267,20 +271,48 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         this.resizeSonar.close();
     }
 
-    onTabAdd(tab: Tab) {
+    findLastSelectedID(): number {
+        let lastTime = 1;
+        let ret = 0;
+
+        for (let item of [
+            ...this.fixedTabs,
+            ...this.floatTabs,
+            ...this.dynamicTabs,
+        ]) {
+            if (item.selectedTime > lastTime) {
+                lastTime = item.selectedTime;
+                ret = item.id;
+            }
+        }
+
+        return ret;
+    }
+
+    deleteTab(id: number) {
+        this.dynamicTabs = this.dynamicTabs.filter((it) => it.id !== id);
+
+        if (id === this.selectedTab?.id) {
+            this.selectedTab = this.findRecordByID(this.findLastSelectedID());
+        }
+
+        this.flush(true, false);
+    }
+
+    onTabAdded(tab: Tab) {
         const item = this.findRecordByID(tab.props.id);
         if (item) {
             item.tab = tab;
         }
     }
 
-    onDeleteTab(id: number) {
-        this.dynamicTabs = this.dynamicTabs.filter((it) => it.id != id);
-        this.flush(true, false);
-    }
-
     onPointerDown(id: number) {
-        this.setState({ selectedTab: this.findRecordByID(id) });
+        const item = this.findRecordByID(id);
+        if (item) {
+            item.selectedTime = TimerManager.get().getNowMS();
+            this.selectedTab = item;
+            this.flush(true, false);
+        }
     }
 
     onPointerUp(id: number) {
@@ -337,7 +369,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 config={config.tab}
-                                selected={it.id === this.state.selectedTab?.id}
+                                selected={it.id === this.selectedTab?.id}
                                 closable={false}
                             ></Tab>
                         );
@@ -357,7 +389,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 config={config.tab}
-                                selected={it.id === this.state.selectedTab?.id}
+                                selected={it.id === this.selectedTab?.id}
                                 closable={false}
                             ></Tab>
                         );
@@ -377,7 +409,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 config={config.tab}
-                                selected={it.id === this.state.selectedTab?.id}
+                                selected={it.id === this.selectedTab?.id}
                                 closable={true}
                             ></Tab>
                         );
