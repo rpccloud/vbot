@@ -154,7 +154,7 @@ export class Tab extends React.Component<TabProps, TabState> {
             999999
         );
         let fontDisappearFactor = Math.floor(
-            range(1 - (0.5 * fontSize) / labelWidth, 0, 1) * 100
+            range(1 - (0.6 * fontSize) / labelWidth, 0, 1) * 100
         );
 
         return (
