@@ -1,5 +1,5 @@
 import React from "react";
-import { getFontSize, ITheme, range, ThemeContext } from "..";
+import { getFontSize, ITheme, range, ThemeContext, ZIndexContext } from "..";
 import { getSeed } from "../../app/plugin/browser/utils";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
@@ -258,66 +258,79 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         let height = Math.round(fontSize * 2.3);
         let outerPadding = `0px ${this.props.innerRight}px 0px ${this.props.innerLeft}px`;
         return (
-            <div style={{ padding: outerPadding }}>
-                <div
-                    ref={this.rootRef}
-                    style={{ height: height, position: "relative" }}
-                >
-                    {this.fixedTabs.map((it) => {
-                        return (
-                            <Tab
-                                key={it.id}
-                                id={it.id}
-                                tabBar={this}
-                                size={this.props.size}
-                                fontWeight={this.props.fontWeight}
-                                theme={this.props.theme}
-                                icon={it.icon}
-                                title={it.title}
-                                minLeft={it.minLeft}
-                                maxRight={it.maxRight}
-                                selected={it.id === this.state.selectedTab?.id}
-                            ></Tab>
-                        );
-                    })}
+            <ZIndexContext.Consumer>
+                {({ zIndex }) => (
+                    <div style={{ padding: outerPadding }}>
+                        <div
+                            ref={this.rootRef}
+                            style={{ height: height, position: "relative" }}
+                        >
+                            {this.fixedTabs.map((it) => {
+                                return (
+                                    <Tab
+                                        key={it.id}
+                                        id={it.id}
+                                        tabBar={this}
+                                        size={this.props.size}
+                                        fontWeight={this.props.fontWeight}
+                                        theme={this.props.theme}
+                                        icon={it.icon}
+                                        title={it.title}
+                                        minLeft={it.minLeft}
+                                        maxRight={it.maxRight}
+                                        zIndex={zIndex}
+                                        selected={
+                                            it.id === this.state.selectedTab?.id
+                                        }
+                                    ></Tab>
+                                );
+                            })}
 
-                    {this.floatTabs.map((it) => {
-                        return (
-                            <Tab
-                                key={it.id}
-                                id={it.id}
-                                tabBar={this}
-                                size={this.props.size}
-                                fontWeight={this.props.fontWeight}
-                                theme={this.props.theme}
-                                icon={it.icon}
-                                title={it.title}
-                                minLeft={it.minLeft}
-                                maxRight={it.maxRight}
-                                selected={it.id === this.state.selectedTab?.id}
-                            ></Tab>
-                        );
-                    })}
+                            {this.floatTabs.map((it) => {
+                                return (
+                                    <Tab
+                                        key={it.id}
+                                        id={it.id}
+                                        tabBar={this}
+                                        size={this.props.size}
+                                        fontWeight={this.props.fontWeight}
+                                        theme={this.props.theme}
+                                        icon={it.icon}
+                                        title={it.title}
+                                        minLeft={it.minLeft}
+                                        maxRight={it.maxRight}
+                                        zIndex={zIndex}
+                                        selected={
+                                            it.id === this.state.selectedTab?.id
+                                        }
+                                    ></Tab>
+                                );
+                            })}
 
-                    {this.dynamicTabs.map((it) => {
-                        return (
-                            <Tab
-                                key={it.id}
-                                id={it.id}
-                                tabBar={this}
-                                size={this.props.size}
-                                fontWeight={this.props.fontWeight}
-                                theme={this.props.theme}
-                                icon={it.icon}
-                                title={it.title}
-                                minLeft={it.minLeft}
-                                maxRight={it.maxRight}
-                                selected={it.id === this.state.selectedTab?.id}
-                            ></Tab>
-                        );
-                    })}
-                </div>
-            </div>
+                            {this.dynamicTabs.map((it) => {
+                                return (
+                                    <Tab
+                                        key={it.id}
+                                        id={it.id}
+                                        tabBar={this}
+                                        size={this.props.size}
+                                        fontWeight={this.props.fontWeight}
+                                        theme={this.props.theme}
+                                        icon={it.icon}
+                                        title={it.title}
+                                        minLeft={it.minLeft}
+                                        maxRight={it.maxRight}
+                                        zIndex={zIndex}
+                                        selected={
+                                            it.id === this.state.selectedTab?.id
+                                        }
+                                    ></Tab>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+            </ZIndexContext.Consumer>
         );
     }
 }

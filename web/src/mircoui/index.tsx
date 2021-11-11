@@ -347,3 +347,11 @@ interface Focus {
 export const FocusContext = React.createContext<Focus>({
     focusable: true,
 });
+
+interface ZIndex {
+    zIndex: number;
+}
+
+export const ZIndexContext = React.createContext<ZIndex>({
+    zIndex: 0,
+});

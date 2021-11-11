@@ -45,7 +45,7 @@ function getConfig(theme: Theme): TabConfig {
         selected: {
             font: theme.primary.main.lighten(5).hsla,
             background: theme.primary.auxiliary.lighten(5).hsla,
-            border: "transparent",
+            border: theme.primary.auxiliary.lighten(5).hsla,
             shadow: theme.primary.auxiliary.lighten(5).hsla,
             auxiliary: "transparent",
         },
@@ -70,10 +70,12 @@ interface TabProps {
     selected: boolean;
     minLeft: number;
     maxRight: number;
+    zIndex: number;
 }
 
 interface TabState {
     width: number;
+    active: boolean;
     hover: boolean;
     focus: boolean;
 }
@@ -104,6 +106,7 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         this.state = {
             width: 0,
+            active: false,
             hover: false,
             focus: false,
         };
@@ -134,9 +137,11 @@ export class Tab extends React.Component<TabProps, TabState> {
     }
 
     onPointerDown = () => {
+        this.setState({ active: true });
         this.props.tabBar.onPointerDown(this.props.id);
     };
     onPointerUp = () => {
+        this.setState({ active: false });
         this.beforeMovingLeft = undefined;
         this.props.tabBar.onPointerUp(this.props.id);
     };
@@ -187,6 +192,12 @@ export class Tab extends React.Component<TabProps, TabState> {
                     width: width,
                     height: height,
                     bottom: 0,
+                    zIndex: this.state.active
+                        ? this.props.zIndex + 1
+                        : this.props.zIndex,
+                    transition: this.state.active
+                        ? ""
+                        : makeTransition(["left"], 250, "ease-in"),
                 }}
             >
                 <svg height={height} width={width}>

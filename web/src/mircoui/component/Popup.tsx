@@ -1,15 +1,7 @@
 import React, { CSSProperties, ReactNode } from "react";
-import { makeTransition, Rect } from "../";
+import { makeTransition, Rect, ZIndexContext } from "../";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
-
-interface ZIndex {
-    zIndex: number;
-}
-
-const ZIndexContext = React.createContext<ZIndex>({
-    zIndex: 0,
-});
 
 interface PopupProps {
     action: Array<"hover" | "click" | "focus">;
