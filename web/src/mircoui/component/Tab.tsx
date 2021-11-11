@@ -71,11 +71,21 @@ export class Tab extends React.Component<TabProps, TabState> {
         this.actionSonar.close();
     }
 
-    setLeft(left: number, force?: boolean) {
+    setLeft(left: number, force: boolean, animate: boolean) {
         if (force || this.beforeMovingLeft === undefined) {
             if (left !== this.currentLeft) {
                 this.currentLeft = left;
+
                 if (this.rootRef.current) {
+                    if (animate) {
+                        this.rootRef.current.style.transition = makeTransition(
+                            ["left"],
+                            250,
+                            "ease-in"
+                        );
+                    } else {
+                        this.rootRef.current.style.transition = "";
+                    }
                     this.rootRef.current.style.left = `${left}px`;
                 }
             }
@@ -108,7 +118,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                 this.props.maxRight - this.currentWidth
             );
             this.props.tabBar.onTabMove(this.props.id, movingLeft);
-            this.setLeft(movingLeft, true);
+            this.setLeft(movingLeft, true, false);
         }
     };
 
@@ -144,9 +154,6 @@ export class Tab extends React.Component<TabProps, TabState> {
                     zIndex: this.props.selected
                         ? this.context.zIndex + 1
                         : this.context.zIndex,
-                    transition: this.props.selected
-                        ? ""
-                        : makeTransition(["left"], 250, "ease-in"),
                 }}
             >
                 <svg height={height} width={width}>

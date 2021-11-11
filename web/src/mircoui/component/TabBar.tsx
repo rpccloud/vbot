@@ -123,7 +123,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     private resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
         if (rect) {
             this.totalWidth = rect.width;
-            this.flush(false);
+            this.flush(false, false);
         }
     });
 
@@ -188,7 +188,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             : [];
     }
 
-    private flush(render: boolean) {
+    private flush(render: boolean, animate: boolean) {
         const resizeTabs = this.floatTabs.length + this.dynamicTabs.length;
 
         const tabWidth = range(
@@ -205,7 +205,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             item.minLeft = x;
             item.maxRight = x + item.width;
             item.index = i;
-            item.tab?.setLeft(x);
+            item.tab?.setLeft(x, false, animate);
             item.tab?.setWidth(item.width);
             x += item.width;
         }
@@ -219,7 +219,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             item.minLeft = minFloatLeft;
             item.maxRight = maxFloatRight;
             item.index = i;
-            item.tab?.setLeft(x);
+            item.tab?.setLeft(x, false, animate);
             item.tab?.setWidth(item.width);
             x += item.width;
         }
@@ -233,7 +233,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             item.minLeft = minDynamicLeft;
             item.maxRight = maxDynamicRight;
             item.index = i;
-            item.tab?.setLeft(x);
+            item.tab?.setLeft(x, false, animate);
             item.tab?.setWidth(item.width);
             x += item.width;
         }
@@ -258,7 +258,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     }
 
     componentDidMount() {
-        this.flush(true);
+        this.flush(true, false);
     }
 
     componentWillUnmount() {
@@ -279,7 +279,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
 
     onPointerUp(id: number) {
         const item = this.findRecordByID(id);
-        item?.tab?.setLeft(item.left);
+        item?.tab?.setLeft(item.left, false, true);
     }
 
     onTabMove(id: number, left: number) {
@@ -292,11 +292,11 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                 if (item.kind === TabKind.Float) {
                     this.floatTabs.splice(item.index, 1);
                     this.floatTabs.splice(idx, 0, item);
-                    this.flush(false);
+                    this.flush(false, true);
                 } else if (item.kind === TabKind.Dynamic) {
                     this.dynamicTabs.splice(item.index, 1);
                     this.dynamicTabs.splice(idx, 0, item);
-                    this.flush(false);
+                    this.flush(false, true);
                 } else {
                     // do nothing
                 }
