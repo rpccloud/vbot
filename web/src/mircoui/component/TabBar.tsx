@@ -1,3 +1,4 @@
+import { time } from "console";
 import React from "react";
 import {
     getFontSize,
@@ -271,6 +272,11 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         if (item) {
             item.tab = tab;
         }
+    }
+
+    onDeleteTab(id: number) {
+        this.dynamicTabs = this.dynamicTabs.filter((it) => it.id != id);
+        this.flush(true, false);
     }
 
     onPointerDown(id: number) {

@@ -270,7 +270,11 @@ export class Tab extends React.Component<TabProps, TabState> {
                     ) : null}
 
                     {this.props.closable ? (
-                        <>
+                        <div
+                            onPointerDown={(e) => {
+                                e.stopPropagation();
+                            }}
+                        >
                             <div
                                 style={{
                                     width:
@@ -296,10 +300,12 @@ export class Tab extends React.Component<TabProps, TabState> {
                                     height: fontSize,
                                 }}
                                 onClick={() => {
-                                    // props.onClick();
+                                    this.props.tabBar.onDeleteTab(
+                                        this.props.id
+                                    );
                                 }}
                             />
-                        </>
+                        </div>
                     ) : null}
                 </div>
             </div>

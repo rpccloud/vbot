@@ -20,7 +20,9 @@ export class PointerManager {
         window.addEventListener(
             "pointerdown",
             (e) => {
-                this.mouseDownPoint = { x: e.clientX, y: e.clientY };
+                if (e.button === 0) {
+                    this.mouseDownPoint = { x: e.clientX, y: e.clientY };
+                }
             },
             true
         );
