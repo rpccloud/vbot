@@ -6,7 +6,6 @@ import {
     Theme,
     ThemeCache,
     ThemeContext,
-    ZIndexContext,
 } from "..";
 import { getSeed } from "../../app/plugin/browser/utils";
 import { ActionSonar } from "../sonar/action";
@@ -313,82 +312,69 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             this.context.extend(this.props.theme)
         );
         return (
-            <ZIndexContext.Consumer>
-                {({ zIndex }) => (
-                    <div style={{ padding: outerPadding }}>
-                        <div
-                            ref={this.rootRef}
-                            style={{ height: height, position: "relative" }}
-                        >
-                            {this.fixedTabs.map((it) => {
-                                return (
-                                    <Tab
-                                        key={it.id}
-                                        id={it.id}
-                                        tabBar={this}
-                                        size={this.props.size}
-                                        fontWeight={this.props.fontWeight}
-                                        theme={this.props.theme}
-                                        icon={it.icon}
-                                        title={it.title}
-                                        minLeft={it.minLeft}
-                                        maxRight={it.maxRight}
-                                        zIndex={zIndex}
-                                        config={config.tab}
-                                        selected={
-                                            it.id === this.state.selectedTab?.id
-                                        }
-                                    ></Tab>
-                                );
-                            })}
+            <div style={{ padding: outerPadding }}>
+                <div
+                    ref={this.rootRef}
+                    style={{ height: height, position: "relative" }}
+                >
+                    {this.fixedTabs.map((it) => {
+                        return (
+                            <Tab
+                                key={it.id}
+                                id={it.id}
+                                tabBar={this}
+                                size={this.props.size}
+                                fontWeight={this.props.fontWeight}
+                                theme={this.props.theme}
+                                icon={it.icon}
+                                title={it.title}
+                                minLeft={it.minLeft}
+                                maxRight={it.maxRight}
+                                config={config.tab}
+                                selected={it.id === this.state.selectedTab?.id}
+                            ></Tab>
+                        );
+                    })}
 
-                            {this.floatTabs.map((it) => {
-                                return (
-                                    <Tab
-                                        key={it.id}
-                                        id={it.id}
-                                        tabBar={this}
-                                        size={this.props.size}
-                                        fontWeight={this.props.fontWeight}
-                                        theme={this.props.theme}
-                                        icon={it.icon}
-                                        title={it.title}
-                                        minLeft={it.minLeft}
-                                        maxRight={it.maxRight}
-                                        zIndex={zIndex}
-                                        config={config.tab}
-                                        selected={
-                                            it.id === this.state.selectedTab?.id
-                                        }
-                                    ></Tab>
-                                );
-                            })}
+                    {this.floatTabs.map((it) => {
+                        return (
+                            <Tab
+                                key={it.id}
+                                id={it.id}
+                                tabBar={this}
+                                size={this.props.size}
+                                fontWeight={this.props.fontWeight}
+                                theme={this.props.theme}
+                                icon={it.icon}
+                                title={it.title}
+                                minLeft={it.minLeft}
+                                maxRight={it.maxRight}
+                                config={config.tab}
+                                selected={it.id === this.state.selectedTab?.id}
+                            ></Tab>
+                        );
+                    })}
 
-                            {this.dynamicTabs.map((it) => {
-                                return (
-                                    <Tab
-                                        key={it.id}
-                                        id={it.id}
-                                        tabBar={this}
-                                        size={this.props.size}
-                                        fontWeight={this.props.fontWeight}
-                                        theme={this.props.theme}
-                                        icon={it.icon}
-                                        title={it.title}
-                                        minLeft={it.minLeft}
-                                        maxRight={it.maxRight}
-                                        zIndex={zIndex}
-                                        config={config.tab}
-                                        selected={
-                                            it.id === this.state.selectedTab?.id
-                                        }
-                                    ></Tab>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
-            </ZIndexContext.Consumer>
+                    {this.dynamicTabs.map((it) => {
+                        return (
+                            <Tab
+                                key={it.id}
+                                id={it.id}
+                                tabBar={this}
+                                size={this.props.size}
+                                fontWeight={this.props.fontWeight}
+                                theme={this.props.theme}
+                                icon={it.icon}
+                                title={it.title}
+                                minLeft={it.minLeft}
+                                maxRight={it.maxRight}
+                                config={config.tab}
+                                selected={it.id === this.state.selectedTab?.id}
+                            ></Tab>
+                        );
+                    })}
+                </div>
+            </div>
         );
     }
 }
