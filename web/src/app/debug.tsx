@@ -46,6 +46,7 @@ const Debug = () => {
                         {
                             width: 180,
                             title: "Test",
+                            default: true,
                         },
                     ]}
                     initialFloatTabs={[

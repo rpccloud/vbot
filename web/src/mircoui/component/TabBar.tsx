@@ -62,12 +62,14 @@ interface FixedTabItem {
     title?: string;
     icon?: React.ReactNode;
     param?: any;
+    default?: boolean;
 }
 
 interface FloatTabItem {
     title?: string;
     icon?: React.ReactNode;
     param?: any;
+    default?: boolean;
 }
 
 interface TabBarProps {
@@ -139,6 +141,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         super(props);
         this.resizeSonar.listenFast();
         this.state = { flushCount: 0 };
+        const nowMS = TimerManager.get().getNowMS();
         this.fixedTabs = props.initialFixedTabs
             ? props.initialFixedTabs.map((it) => {
                   this.fixedWidth += it.width;
@@ -153,7 +156,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       maxRight: 0,
                       kind: TabKind.Fixed,
                       index: 0,
-                      selectedTime: 0,
+                      selectedTime: it.default ? nowMS : 0,
                   };
               })
             : [];
@@ -170,7 +173,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       maxRight: 0,
                       kind: TabKind.Float,
                       index: 0,
-                      selectedTime: 0,
+                      selectedTime: it.default ? nowMS : 0,
                   };
               })
             : [];
@@ -187,10 +190,11 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       maxRight: 0,
                       kind: TabKind.Dynamic,
                       index: 0,
-                      selectedTime: 0,
+                      selectedTime: it.default ? nowMS : 0,
                   };
               })
             : [];
+        this.selectedTab = this.findRecordByID(this.findLastSelectedID());
     }
 
     private flush(render: boolean, animate: boolean) {
