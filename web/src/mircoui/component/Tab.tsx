@@ -6,57 +6,16 @@ import {
     ITheme,
     makeTransition,
     range,
-    Theme,
-    ThemeCache,
-    ThemeContext,
 } from "..";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { TabBar } from "./TabBar";
 
-interface TabConfig {
+export interface TabConfig {
     normal?: ColorSet;
     hover?: ColorSet;
     selected?: ColorSet;
 }
-
-function getConfig(theme: Theme): TabConfig {
-    const themeKey = theme.hashKey();
-    let record: TabConfig = themeCache.getConfig(themeKey);
-    if (record) {
-        return record;
-    }
-
-    record = {
-        normal: {
-            font: theme.primary.main.hsla,
-            background: "transparent",
-            border: theme.primary.main.hsla,
-            shadow: "transparent",
-            auxiliary: "transparent",
-        },
-        hover: {
-            font: theme.primary.main.hsla,
-            background: "transparent",
-            border: theme.primary.auxiliary.hsla,
-            shadow: "transparent",
-            auxiliary: "transparent",
-        },
-        selected: {
-            font: theme.primary.main.lighten(5).hsla,
-            background: theme.primary.auxiliary.lighten(5).hsla,
-            border: theme.primary.auxiliary.lighten(5).hsla,
-            shadow: theme.primary.auxiliary.lighten(5).hsla,
-            auxiliary: "transparent",
-        },
-    };
-
-    themeCache.setConfig(themeKey, record);
-
-    return record;
-}
-
-let themeCache = new ThemeCache();
 
 interface TabProps {
     readonly id: number;
@@ -86,11 +45,6 @@ function makeTabPath(w: number, h: number, radius: number): string {
 }
 
 export class Tab extends React.Component<TabProps, TabState> {
-    static contextType = ThemeContext;
-    static defaultProps = {
-        config: {},
-    };
-
     private rootRef = React.createRef<HTMLDivElement>();
     private contentRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
@@ -162,9 +116,7 @@ export class Tab extends React.Component<TabProps, TabState> {
     };
 
     render() {
-        let config: TabConfig = getConfig(
-            this.context.extend(this.props.theme)
-        );
+        let config = this.props.config;
 
         let color = extendColorSet(config.normal, this.props.config.normal);
 

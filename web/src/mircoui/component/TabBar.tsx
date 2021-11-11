@@ -1,9 +1,61 @@
 import React from "react";
-import { getFontSize, ITheme, range, ThemeContext, ZIndexContext } from "..";
+import {
+    getFontSize,
+    ITheme,
+    range,
+    Theme,
+    ThemeCache,
+    ThemeContext,
+    ZIndexContext,
+} from "..";
 import { getSeed } from "../../app/plugin/browser/utils";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
-import { Tab } from "./Tab";
+import { Tab, TabConfig } from "./Tab";
+
+interface TabBarConfig {
+    tab: TabConfig;
+}
+
+function getConfig(theme: Theme): TabBarConfig {
+    const themeKey = theme.hashKey();
+    let record: TabBarConfig = themeCache.getConfig(themeKey);
+    if (record) {
+        return record;
+    }
+
+    record = {
+        tab: {
+            normal: {
+                font: theme.primary.main.hsla,
+                background: "transparent",
+                border: theme.primary.main.hsla,
+                shadow: "transparent",
+                auxiliary: "transparent",
+            },
+            hover: {
+                font: theme.primary.main.hsla,
+                background: "transparent",
+                border: theme.primary.auxiliary.hsla,
+                shadow: "transparent",
+                auxiliary: "transparent",
+            },
+            selected: {
+                font: theme.primary.main.lighten(5).hsla,
+                background: theme.primary.auxiliary.lighten(5).hsla,
+                border: theme.primary.auxiliary.lighten(5).hsla,
+                shadow: theme.primary.auxiliary.lighten(5).hsla,
+                auxiliary: "transparent",
+            },
+        },
+    };
+
+    themeCache.setConfig(themeKey, record);
+
+    return record;
+}
+
+let themeCache = new ThemeCache();
 
 interface FixedTabItem {
     width: number;
@@ -257,6 +309,9 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         let fontSize = getFontSize(this.props.size);
         let height = Math.round(fontSize * 2.3);
         let outerPadding = `0px ${this.props.innerRight}px 0px ${this.props.innerLeft}px`;
+        let config: TabBarConfig = getConfig(
+            this.context.extend(this.props.theme)
+        );
         return (
             <ZIndexContext.Consumer>
                 {({ zIndex }) => (
@@ -279,6 +334,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                         minLeft={it.minLeft}
                                         maxRight={it.maxRight}
                                         zIndex={zIndex}
+                                        config={config.tab}
                                         selected={
                                             it.id === this.state.selectedTab?.id
                                         }
@@ -300,6 +356,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                         minLeft={it.minLeft}
                                         maxRight={it.maxRight}
                                         zIndex={zIndex}
+                                        config={config.tab}
                                         selected={
                                             it.id === this.state.selectedTab?.id
                                         }
@@ -321,6 +378,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                         minLeft={it.minLeft}
                                         maxRight={it.maxRight}
                                         zIndex={zIndex}
+                                        config={config.tab}
                                         selected={
                                             it.id === this.state.selectedTab?.id
                                         }
