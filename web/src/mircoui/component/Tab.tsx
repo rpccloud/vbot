@@ -10,7 +10,9 @@ import {
 } from "..";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
+import { Button } from "./Button";
 import { TabBar } from "./TabBar";
+import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
 
 export interface TabConfig {
     normal?: ColorSet;
@@ -30,6 +32,7 @@ interface TabProps {
     selected: boolean;
     minLeft: number;
     maxRight: number;
+    closable: boolean;
 }
 
 interface TabState {
@@ -139,9 +142,20 @@ export class Tab extends React.Component<TabProps, TabState> {
         let width = this.state.width;
         let height = fontSize * 2;
         let path = makeTabPath(width, height, height / 6);
-        let inMargin = Math.round(height / 3);
+        let leftMargin = Math.round(height / 3);
+        let rightMargin = Math.round(height / 3);
+        let inMargin = height / 20;
         let top = Math.round(height / 4);
         let bottom = top;
+
+        let labelWidth = range(
+            width - 2 * fontSize - leftMargin - rightMargin,
+            1,
+            999999
+        );
+        let fontDisappearFactor = Math.floor(
+            range(1 - (0.5 * fontSize) / labelWidth, 0, 1) * 100
+        );
 
         return (
             <div
@@ -151,6 +165,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     width: width,
                     height: height,
                     bottom: 0,
+                    color: color.font,
                     zIndex: this.props.selected
                         ? this.context.zIndex + 1
                         : this.context.zIndex,
@@ -192,14 +207,14 @@ export class Tab extends React.Component<TabProps, TabState> {
                 <div
                     ref={this.contentRef}
                     style={{
-                        display: "inline-flex",
+                        display: "flex",
                         alignItems: "center",
                         position: "absolute",
-                        background: "red",
+                        overflow: "hidden",
                         top: top,
                         bottom: bottom,
-                        left: inMargin,
-                        right: inMargin,
+                        left: leftMargin,
+                        right: rightMargin,
                     }}
                     onPointerMove={() => {
                         this.actionSonar.checkHover(
@@ -219,7 +234,73 @@ export class Tab extends React.Component<TabProps, TabState> {
                         );
                     }}
                 >
-                    {this.props.minLeft}
+                    {this.props.icon ? (
+                        <>
+                            {this.props.icon}
+                            <div
+                                style={{
+                                    width:
+                                        this.props.title || this.props.closable
+                                            ? inMargin
+                                            : 0,
+                                }}
+                            />
+                        </>
+                    ) : null}
+
+                    {this.props.title ? (
+                        <div
+                            style={{
+                                flex: 1,
+                                minWidth: 0,
+                            }}
+                        >
+                            <div
+                                style={{
+                                    WebkitBackgroundClip: "text",
+                                    whiteSpace: "nowrap",
+                                    color: "transparent",
+                                    userSelect: "none",
+                                    backgroundImage: `linear-gradient(to right, ${color.font} 0%, ${color.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
+                                }}
+                            >
+                                <span>{this.props.title}</span>
+                            </div>
+                        </div>
+                    ) : null}
+
+                    {this.props.closable ? (
+                        <>
+                            <div
+                                style={{
+                                    width:
+                                        this.props.icon || this.props.title
+                                            ? inMargin
+                                            : 0,
+                                }}
+                            />
+                            <Button
+                                round={true}
+                                ghost={true}
+                                border={false}
+                                focusable={false}
+                                size={this.props.size}
+                                icon={<AiOutlineCloseCircle />}
+                                config={{
+                                    normal: {
+                                        font: color.font,
+                                    },
+                                }}
+                                style={{
+                                    width: fontSize,
+                                    height: fontSize,
+                                }}
+                                onClick={() => {
+                                    // props.onClick();
+                                }}
+                            />
+                        </>
+                    ) : null}
                 </div>
             </div>
         );

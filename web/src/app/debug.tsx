@@ -49,27 +49,22 @@ const Debug = () => {
                         },
                     ]}
                     initialFloatTabs={[
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
-                        { title: "Test" },
+                        {
+                            title: "TestTestTestTestTestTestTestTestTestTestTestTest",
+                            icon: <AiOutlineLock />,
+                        },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                    ]}
+                    initialDynamicTabs={[
+                        {
+                            title: "TestTestTestTestTestTestTest",
+                            icon: <AiOutlineLock />,
+                        },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
                     ]}
                 ></TabBar>
             </div>

@@ -35,15 +35,15 @@ function getConfig(theme: Theme): TabBarConfig {
             hover: {
                 font: theme.primary.main.hsla,
                 background: "transparent",
-                border: theme.primary.auxiliary.hsla,
+                border: theme.primary.auxiliary.alpha(0.6).hsla,
                 shadow: "transparent",
                 auxiliary: "transparent",
             },
             selected: {
-                font: theme.primary.main.lighten(5).hsla,
-                background: theme.primary.auxiliary.lighten(5).hsla,
-                border: theme.primary.auxiliary.lighten(5).hsla,
-                shadow: theme.primary.auxiliary.lighten(5).hsla,
+                font: theme.primary.main.hsla,
+                background: "transparent",
+                border: theme.primary.auxiliary.hsla,
+                shadow: theme.primary.auxiliary.hsla,
                 auxiliary: "transparent",
             },
         },
@@ -332,6 +332,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 maxRight={it.maxRight}
                                 config={config.tab}
                                 selected={it.id === this.state.selectedTab?.id}
+                                closable={false}
                             ></Tab>
                         );
                     })}
@@ -351,6 +352,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 maxRight={it.maxRight}
                                 config={config.tab}
                                 selected={it.id === this.state.selectedTab?.id}
+                                closable={false}
                             ></Tab>
                         );
                     })}
@@ -370,6 +372,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 maxRight={it.maxRight}
                                 config={config.tab}
                                 selected={it.id === this.state.selectedTab?.id}
+                                closable={true}
                             ></Tab>
                         );
                     })}
