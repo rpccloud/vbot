@@ -261,3 +261,61 @@ export class SeedManager {
         return SeedManager.seed++;
     }
 }
+
+export type IConfig =
+    | undefined
+    | number
+    | string
+    | boolean
+    | Color
+    | { [key: string]: IConfig };
+
+function getConfigType(v: IConfig): string {
+    if (v === undefined) {
+        return "undefined";
+    } else if (typeof v === "number") {
+        return "number";
+    } else if (typeof v === "string") {
+        return "string";
+    } else if (typeof v === "boolean") {
+        return "boolean";
+    } else if (v instanceof Color) {
+        return "Color";
+    } else if (typeof v === "object") {
+        return "object";
+    } else {
+        return "unknown";
+    }
+}
+
+export function extendConfig(left: IConfig, right: IConfig): IConfig {
+    if (left === undefined) {
+        return right;
+    } else if (right === undefined) {
+        return left;
+    } else {
+        const lType = getConfigType(left);
+        const rType = getConfigType(right);
+
+        if (lType === "unknown" || lType !== rType) {
+            return undefined;
+        }
+
+        if (lType !== "object") {
+            return right;
+        }
+
+        let oLeft = left as { [key: string]: IConfig };
+        let oRight = right as { [key: string]: IConfig };
+
+        let ret: { [key: string]: IConfig } = { ...oLeft };
+
+        for (const key in oRight) {
+            if (right.hasOwnProperty(key)) {
+                ret[key] = extendConfig(oLeft[key], oRight[key]);
+            }
+        }
+
+        return ret;
+    }
+}

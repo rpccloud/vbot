@@ -6,6 +6,12 @@ import { Popup } from "../mircoui/component/Popup";
 import { TabBar } from "../mircoui/component/TabBar";
 import { FocusContext } from "../mircoui/context/focus";
 
+function debug() {
+    
+}
+
+debug();
+
 const Container = (props: {
     children: ReactNode;
     width: number;
