@@ -236,7 +236,6 @@ export interface ColorSet {
     background?: string;
     border?: string;
     shadow?: string;
-    auxiliary?: string;
 }
 
 export function extendColorSet(left?: ColorSet, right?: ColorSet): ColorSet {
@@ -250,7 +249,6 @@ export function extendColorSet(left?: ColorSet, right?: ColorSet): ColorSet {
             background: right.background || left.background,
             border: right.border || left.border,
             shadow: right.shadow || left.shadow,
-            auxiliary: right.auxiliary || left.auxiliary,
         };
     }
 }

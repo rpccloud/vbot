@@ -63,21 +63,18 @@ function getConfig(theme: Theme): InputConfig {
             background: "transparent",
             border: theme.default.main.hsla,
             shadow: "transparent",
-            auxiliary: theme.default.main.hsla,
         },
         hover: {
             font: theme.default.main.hsla,
             border: theme.primary.auxiliary.hsla,
             background: "transparent",
             shadow: "transparent",
-            auxiliary: theme.default.main.hsla,
         },
         focus: {
             font: theme.default.main.hsla,
             border: theme.primary.auxiliary.lighten(5).hsla,
             background: "transparent",
             shadow: theme.primary.auxiliary.lighten(5).hsla,
-            auxiliary: theme.default.main.hsla,
         },
         success: {
             font: theme.success.main.hsla,
@@ -285,7 +282,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                     justifyContent: "center",
                     color: !this.props.validator(this.state.value)
                         ? validateErrorColor
-                        : color.auxiliary,
+                        : color.font,
                     marginRight: innerMargin,
                     transition: "inherit",
                 }}
@@ -299,7 +296,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 style={{
                     color: !this.props.validator(this.state.value)
                         ? validateErrorColor
-                        : color.auxiliary,
+                        : color.font,
                     marginRight: innerMargin,
                     transition: "inherit",
                 }}

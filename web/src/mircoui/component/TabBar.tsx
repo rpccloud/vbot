@@ -24,21 +24,18 @@ function getConfig(theme: Theme): TabBarConfig {
                 background: "transparent",
                 border: theme.primary.main.hsla,
                 shadow: "transparent",
-                auxiliary: "transparent",
             },
             hover: {
                 font: theme.primary.main.hsla,
                 background: "transparent",
                 border: theme.primary.auxiliary.alpha(0.6).hsla,
                 shadow: "transparent",
-                auxiliary: "transparent",
             },
             selected: {
                 font: theme.primary.main.hsla,
                 background: "transparent",
                 border: theme.primary.auxiliary.hsla,
                 shadow: theme.primary.auxiliary.hsla,
-                auxiliary: "transparent",
             },
         },
     };
