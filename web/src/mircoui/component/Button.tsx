@@ -1,16 +1,9 @@
 import React, { CSSProperties, useContext } from "react";
 import { getFontWeight } from "../../ui/theme/config";
-import {
-    ColorSet,
-    extendColorSet,
-    FocusContext,
-    getFontSize,
-    ITheme,
-    Theme,
-    ThemeCache,
-    ThemeContext,
-} from "../";
+import { ColorSet, extendColorSet, getFontSize, ITheme, ThemeCache } from "../";
 import { ActionSonar } from "../sonar/action";
+import { Theme, ThemeContext } from "../context/theme";
+import { FocusContext } from "../context/focus";
 
 interface ButtonConfig {
     normal?: ColorSet;

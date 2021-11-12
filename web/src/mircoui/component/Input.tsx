@@ -11,17 +11,16 @@ import { Button } from "./Button";
 import {
     ColorSet,
     extendColorSet,
-    FocusContext,
     getFontSize,
     getFontWeight,
     ITheme,
-    Theme,
     ThemeCache,
-    ThemeContext,
 } from "..";
 import { ActionSonar } from "../sonar/action";
 import { TempValueSonar } from "../sonar/temp_value";
 import { ResizeSonar } from "../sonar/resize";
+import { Theme, ThemeContext } from "../context/theme";
+import { FocusContext } from "../context/focus";
 
 interface InputConfig {
     revertIcon?: React.ReactNode;

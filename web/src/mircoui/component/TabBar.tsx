@@ -1,14 +1,7 @@
 import React from "react";
-import {
-    getFontSize,
-    ITheme,
-    range,
-    Theme,
-    ThemeCache,
-    ThemeContext,
-    TimerManager,
-} from "..";
+import { getFontSize, ITheme, range, ThemeCache, TimerManager } from "..";
 import { getSeed } from "../../app/plugin/browser/utils";
+import { Theme, ThemeContext } from "../context/theme";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
 import { Tab, TabConfig } from "./Tab";

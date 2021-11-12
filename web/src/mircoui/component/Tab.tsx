@@ -6,13 +6,13 @@ import {
     ITheme,
     makeTransition,
     range,
-    ZIndexContext,
 } from "..";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
 import { TabBar } from "./TabBar";
 import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
+import { ZIndexContext } from "../context/zindex";
 
 export interface TabConfig {
     normal?: ColorSet;

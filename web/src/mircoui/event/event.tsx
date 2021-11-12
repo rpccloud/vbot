@@ -1,5 +1,9 @@
 type Handler = (...args: any) => any;
 const channelMap = new Map<string, Map<string, Map<number, Handler>>>();
+let seed = 1;
+function getSeed() {
+    return seed++;
+}
 
 export function debugChannelMap() {
     console.log("debugChannelMap start");
@@ -11,23 +15,6 @@ export function debugChannelMap() {
         });
     });
     console.log("debugChannelMap end");
-}
-
-let seed = 1;
-function getSeed() {
-    return seed++;
-}
-
-export class EventSubscription {
-    private id: string;
-    private eventName: string;
-    private handleID: number;
-
-    constructor(id: string, eventName: string, handleID: number) {
-        this.id = id;
-        this.eventName = eventName;
-        this.handleID = handleID;
-    }
 }
 
 export class EventListener {
@@ -53,7 +40,6 @@ export class EventListener {
         }
 
         const ret = eventMap.delete(this.handlerID);
-
         if (eventMap.size === 0) {
             channel.delete(this.eventName);
         }
@@ -69,7 +55,7 @@ export class EventChannel {
         this.channelID = channelID;
     }
 
-    listen(eventName: string, fn: Handler): EventListener | null {
+    public listen(eventName: string, fn: Handler): EventListener | null {
         const channel = channelMap.get(this.channelID);
         if (!channel) {
             return null;
@@ -87,7 +73,7 @@ export class EventChannel {
         return new EventListener(this.channelID, eventName, handlerID);
     }
 
-    call(eventName: string, ...args: any): Array<any> {
+    public call(eventName: string, ...args: any): Array<any> {
         let ret = new Array<any>();
         const channel = channelMap.get(this.channelID);
         if (!channel) {
@@ -106,7 +92,7 @@ export class EventChannel {
         return ret;
     }
 
-    close(): boolean {
+    public close(): boolean {
         return channelMap.delete(this.channelID);
     }
 }
