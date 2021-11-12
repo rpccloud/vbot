@@ -196,7 +196,7 @@ const Debug = () => {
                 <Container width={300}>
                     <Input
                         defaultValue="1234"
-                        mode="bare"
+                        outline="bare"
                         focusable={true}
                         submittable={true}
                         icon={<AiOutlineLock />}
@@ -209,7 +209,7 @@ const Debug = () => {
                     <div style={{ height: 20 }} />
                     <Input
                         defaultValue="1234"
-                        mode="underline"
+                        outline="underline"
                         focusable={true}
                         submittable={true}
                         icon={<AiOutlineLock />}
@@ -222,7 +222,7 @@ const Debug = () => {
                     <div style={{ height: 20 }} />
                     <Input
                         defaultValue="1234"
-                        mode="border"
+                        outline="border"
                         focusable={true}
                         submittable={true}
                         icon={<AiOutlineLock />}
@@ -236,7 +236,7 @@ const Debug = () => {
                 <Container width={300}>
                     <Input
                         defaultValue="1234"
-                        mode="bare"
+                        outline="bare"
                         focusable={true}
                         submittable={false}
                         icon={<AiOutlineLock />}
@@ -249,7 +249,7 @@ const Debug = () => {
                     <div style={{ height: 20 }} />
                     <Input
                         defaultValue="1234"
-                        mode="underline"
+                        outline="underline"
                         focusable={true}
                         submittable={false}
                         icon={<AiOutlineLock />}
@@ -262,7 +262,7 @@ const Debug = () => {
                     <div style={{ height: 20 }} />
                     <Input
                         defaultValue="12341323413412aasdfasdfasdf"
-                        mode="border"
+                        outline="border"
                         focusable={true}
                         submittable={false}
                         icon={<AiOutlineLock />}
@@ -276,7 +276,7 @@ const Debug = () => {
                 <Container width={300}>
                     <Input
                         defaultValue="1234"
-                        mode="bare"
+                        outline="bare"
                         focusable={false}
                         submittable={false}
                         icon={<AiOutlineLock />}
@@ -289,7 +289,7 @@ const Debug = () => {
                     <div style={{ height: 20 }} />
                     <Input
                         defaultValue="1234"
-                        mode="underline"
+                        outline="underline"
                         focusable={false}
                         submittable={false}
                         icon={<AiOutlineLock />}
@@ -302,7 +302,7 @@ const Debug = () => {
                     <div style={{ height: 20 }} />
                     <Input
                         defaultValue="1234"
-                        mode="border"
+                        outline="border"
                         focusable={false}
                         submittable={false}
                         icon={<AiOutlineLock />}

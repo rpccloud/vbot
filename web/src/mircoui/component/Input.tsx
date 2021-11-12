@@ -71,7 +71,8 @@ function getConfig(theme: Theme): InputConfig {
 }
 
 interface InputProps {
-    mode: "bare" | "underline" | "border";
+    type: "password" | "text";
+    outline: "bare" | "underline" | "border";
     size: "tiny" | "small" | "medium" | "large" | "xlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: ITheme;
@@ -79,7 +80,6 @@ interface InputProps {
     icon?: React.ReactNode;
     label: string;
     defaultValue: string;
-    type: "password" | "text";
     placeholder: string;
     focusable: boolean;
     submittable: boolean;
@@ -134,13 +134,13 @@ const InputButton = (props: {
 class InputCore extends React.Component<InputProps, InputState> {
     static contextType = ThemeContext;
     static defaultProps = {
-        mode: "border",
+        type: "text",
+        outline: "border",
         size: "medium",
         fontWeight: "normal",
         config: {},
         label: "",
         defaultValue: "",
-        type: "text",
         placeholder: "",
         focusable: true,
         submittable: false,
@@ -236,7 +236,7 @@ class InputCore extends React.Component<InputProps, InputState> {
         let canFocus = this.props.focusable && !this.state.submitting;
 
         const underlineView =
-            this.props.mode === "underline" ? (
+            this.props.outline === "underline" ? (
                 <div
                     style={{
                         position: "absolute",
@@ -447,7 +447,7 @@ class InputCore extends React.Component<InputProps, InputState> {
 
         let style = { ...this.props.style };
 
-        if (this.props.mode === "border") {
+        if (this.props.outline === "border") {
             style = {
                 border: `1px solid ${color.border}`,
                 boxShadow: `0px 0px ${qrHeight}px ${color.shadow}`,

@@ -104,13 +104,13 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
 interface ButtonProps {
     size: "tiny" | "small" | "medium" | "large" | "xlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
-    ghost: boolean;
     theme?: ITheme;
     config: ButtonConfig;
     icon?: React.ReactNode;
     value: string;
-    disabled: boolean;
+    ghost: boolean;
     round: boolean;
+    disabled: boolean;
     selected: boolean;
     focusable: boolean;
     border: boolean;
@@ -132,14 +132,14 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     static defaultProps = {
         size: "medium",
         fontWeight: "normal",
-        ghost: false,
         config: {},
         value: "",
-        disabled: false,
+        ghost: false,
         round: false,
+        disabled: false,
         selected: false,
-        border: true,
         focusable: true,
+        border: true,
         onClick: () => void {},
     };
 
