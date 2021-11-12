@@ -8,36 +8,14 @@ import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 
 import { Button } from "./Button";
 
-import {
-    ColorSet,
-    extendColorSet,
-    getFontSize,
-    getFontWeight,
-    ITheme,
-    ThemeCache,
-} from "..";
+import { extendColorSet, getFontSize, getFontWeight, ITheme } from "../config";
 import { ActionSonar } from "../sonar/action";
 import { TempValueSonar } from "../sonar/temp_value";
 import { ResizeSonar } from "../sonar/resize";
 import { Theme, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
-
-interface InputConfig {
-    revertIcon?: React.ReactNode;
-    submitIcon?: React.ReactNode;
-    editIcon?: React.ReactNode;
-    passwordShowIcon?: React.ReactNode;
-    passwordHiddenIcon?: React.ReactNode;
-
-    normal?: ColorSet;
-    hover?: ColorSet;
-    focus?: ColorSet;
-    success?: ColorSet;
-    warning?: ColorSet;
-
-    placeholderColor?: string;
-    validateErrorColor?: string;
-}
+import { InputConfig } from "../config";
+import { ThemeCache } from "../util";
 
 let themeCache = new ThemeCache();
 

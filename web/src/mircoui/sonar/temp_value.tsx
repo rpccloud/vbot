@@ -1,4 +1,4 @@
-import { TimerManager } from "..";
+import { TimerManager } from "../util";
 
 export class TempValueSonar {
     private delayMS: number;

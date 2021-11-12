@@ -1,5 +1,5 @@
 import React from "react";
-import { Color, ColorPair, ITheme } from "..";
+import { Color, ColorPair, ITheme } from "../config";
 
 export class Theme {
     default: ColorPair;

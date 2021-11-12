@@ -1,4 +1,5 @@
-import { TimerManager, Rect } from "..";
+import { TimerManager } from "../util";
+import { Rect } from "../config";
 
 function isRectEqual(left?: Rect, right?: Rect): boolean {
     if (left === undefined && right === undefined) {

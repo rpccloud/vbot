@@ -1,5 +1,5 @@
 import React from "react";
-import { Rect } from "..";
+import { Rect } from "../config";
 import { ResizeSonar } from "../sonar/resize";
 
 interface TestProps {}

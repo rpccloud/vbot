@@ -1,4 +1,4 @@
-import { SeedManager } from "..";
+import { SeedManager } from "../util";
 
 type Handler = (...args: any) => any;
 

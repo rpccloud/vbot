@@ -1,14 +1,11 @@
 import React from "react";
-import { getFontSize, ITheme, range, ThemeCache, TimerManager } from "..";
+import { getFontSize, ITheme, TabBarConfig } from "../config";
+import { range, ThemeCache, TimerManager } from "../util";
 import { getSeed } from "../../app/plugin/browser/utils";
 import { Theme, ThemeContext } from "../context/theme";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
-import { Tab, TabConfig } from "./Tab";
-
-interface TabBarConfig {
-    tab: TabConfig;
-}
+import { Tab } from "./Tab";
 
 function getConfig(theme: Theme): TabBarConfig {
     const themeKey = theme.hashKey();

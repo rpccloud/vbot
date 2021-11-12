@@ -1,24 +1,13 @@
 import React, { ReactNode } from "react";
-import {
-    ColorSet,
-    extendColorSet,
-    getFontSize,
-    ITheme,
-    makeTransition,
-    range,
-} from "..";
+import { extendColorSet, getFontSize, ITheme } from "../config";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
 import { TabBar } from "./TabBar";
 import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
 import { ZIndexContext } from "../context/zindex";
-
-export interface TabConfig {
-    normal?: ColorSet;
-    hover?: ColorSet;
-    selected?: ColorSet;
-}
+import { TabConfig } from "../config";
+import { makeTransition, range } from "../util";
 
 interface TabProps {
     readonly id: number;

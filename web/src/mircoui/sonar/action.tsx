@@ -1,4 +1,4 @@
-import { TimerManager } from "..";
+import { TimerManager } from "../util";
 
 function elementMatches(
     elem: Element | null,

@@ -5,11 +5,11 @@ import { Input } from "../mircoui/component/Input";
 import { Popup } from "../mircoui/component/Popup";
 import { TabBar } from "../mircoui/component/TabBar";
 import { FocusContext } from "../mircoui/context/focus";
-import { Color, extendConfig } from "../mircoui";
+import { extendConfig } from "../mircoui/config";
 
 function debug() {
-    const left = { a: "hello", s: { a: new Color(21, 1, 1, 1) } };
-    const right = { b: "world", s: undefined };
+    const left = { a: <AiOutlineLock /> };
+    const right = { a: <AiOutlineLock /> };
     console.log(extendConfig(left, right));
 }
 
@@ -143,19 +143,25 @@ const Debug = () => {
 
                 <Container width={300}>
                     <FocusContext.Provider value={{ focusable: false }}>
-                        <Button value="Click" disabled={true} />
-                        <Button icon={<AiOutlineLock />} />
+                        <Button value="Click" ghost={true} disabled={true} />
+                        <Button icon={<AiOutlineLock />} ghost={true} />
                         <Button
                             value="Click"
                             icon={<AiOutlineLock />}
                             innerMargin={6}
+                            ghost={true}
                             style={{ width: 200, justifyContent: "left" }}
                         />
 
-                        <Button icon={<AiOutlineLock />} round={true} />
+                        <Button
+                            icon={<AiOutlineLock />}
+                            round={true}
+                            ghost={true}
+                        />
                         <Button
                             value="H"
                             style={{ width: 18, height: 18 }}
+                            ghost={true}
                             round={true}
                             onClick={(e) => {}}
                             focusable={false}

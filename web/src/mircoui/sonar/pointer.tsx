@@ -1,4 +1,4 @@
-import { Point } from "..";
+import { Point } from "../config";
 
 interface PointerListener {
     onPointerMove: (deltaX: number, deltaY: number) => void;

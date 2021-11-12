@@ -1,18 +1,11 @@
 import React, { CSSProperties, useContext } from "react";
 import { getFontWeight } from "../../ui/theme/config";
-import { ColorSet, extendColorSet, getFontSize, ITheme, ThemeCache } from "../";
+import { extendConfig, getFontSize, ITheme } from "../config";
 import { ActionSonar } from "../sonar/action";
 import { Theme, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
-
-interface ButtonConfig {
-    normal?: ColorSet;
-    hover?: ColorSet;
-    focus?: ColorSet;
-    active?: ColorSet;
-    selected?: ColorSet;
-    disabled?: ColorSet;
-}
+import { ButtonConfig } from "../config";
+import { ThemeCache } from "../util";
 
 let themeCache = new ThemeCache();
 
@@ -167,31 +160,31 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     }
 
     render() {
-        let config: ButtonConfig = getConfig(
-            this.context.extend(this.props.theme),
-            this.props.ghost
-        );
+        let config = extendConfig(
+            getConfig(this.context.extend(this.props.theme), this.props.ghost),
+            this.props.config
+        ) as ButtonConfig;
 
-        let color = extendColorSet(config.normal, this.props.config.normal);
+        let colorSet = config.normal;
 
         if (this.state.focus) {
-            color = extendColorSet(config.focus, this.props.config.focus);
+            colorSet = config.focus;
         }
 
         if (this.props.selected) {
-            color = extendColorSet(config.selected, this.props.config.selected);
+            colorSet = config.selected;
         }
 
         if (this.state.hover) {
-            color = extendColorSet(config.hover, this.props.config.hover);
+            colorSet = config.hover;
         }
 
         if (this.state.active) {
-            color = extendColorSet(config.active, this.props.config.active);
+            colorSet = config.active;
         }
 
         if (this.props.disabled) {
-            color = extendColorSet(config.disabled, this.props.config.disabled);
+            colorSet = config.disabled;
         }
 
         let fontSize = getFontSize(this.props.size);
@@ -237,16 +230,16 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                 style={{
                     display: "block",
                     border: `${this.props.border ? 1 : 0}px solid ${
-                        color.border
+                        colorSet?.border
                     }`,
-                    color: color.font,
+                    color: colorSet?.font,
                     fontSize: fontSize,
                     padding: 0,
                     fontWeight: getFontWeight(this.props.fontWeight),
-                    backgroundColor: color.background,
+                    backgroundColor: colorSet?.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     boxShadow: this.props?.border
-                        ? `0px 0px ${qrHeight / 2}px ${color.shadow}`
+                        ? `0px 0px ${qrHeight / 2}px ${colorSet?.shadow}`
                         : "",
                     ...style,
                 }}
