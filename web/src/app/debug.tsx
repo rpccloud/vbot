@@ -5,9 +5,12 @@ import { Input } from "../mircoui/component/Input";
 import { Popup } from "../mircoui/component/Popup";
 import { TabBar } from "../mircoui/component/TabBar";
 import { FocusContext } from "../mircoui/context/focus";
+import { Color, extendConfig } from "../mircoui";
 
 function debug() {
-    
+    const left = { a: "hello", s: { a: new Color(21, 1, 1, 1) } };
+    const right = { b: "world", s: undefined };
+    console.log(extendConfig(left, right));
 }
 
 debug();
