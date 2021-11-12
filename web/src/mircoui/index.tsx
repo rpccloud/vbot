@@ -1,5 +1,3 @@
-import React from "react";
-
 export class ITheme {
     default?: ColorPair;
     primary?: ColorPair;

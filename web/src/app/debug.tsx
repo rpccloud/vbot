@@ -2,9 +2,9 @@ import React, { CSSProperties, ReactNode } from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { Button } from "../mircoui/component/Button";
 import { Input } from "../mircoui/component/Input";
-import { FocusContext } from "../mircoui";
 import { Popup } from "../mircoui/component/Popup";
 import { TabBar } from "../mircoui/component/TabBar";
+import { FocusContext } from "../mircoui/context/focus";
 
 const Container = (props: {
     children: ReactNode;
