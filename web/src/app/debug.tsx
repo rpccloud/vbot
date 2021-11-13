@@ -1,11 +1,13 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
+
 import { Button } from "../mircoui/component/Button";
 import { Input } from "../mircoui/component/Input";
 import { Popup } from "../mircoui/component/Popup";
-import { TabBar } from "../mircoui/component/TabBar";
 import { FocusContext } from "../mircoui/context/focus";
 import { extendConfig } from "../mircoui/config";
+import { Spin } from "../mircoui/component/Spin";
+import { TabBar } from "../mircoui/component/TabBar";
 
 function debug() {
     const left = { a: <AiOutlineLock /> };
@@ -47,6 +49,7 @@ const Debug = () => {
             }}
         >
             <div>
+                <Spin color="red" speed={1} size="large" />
                 <TabBar
                     size="large"
                     innerLeft={100}

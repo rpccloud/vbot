@@ -17,8 +17,9 @@ const cfgFontSize = {
     tiny: 8,
     small: 11,
     medium: 14,
-    large: 16,
-    xlarge: 20,
+    large: 18,
+    xlarge: 24,
+    xxlarge: 48,
 };
 
 const cfgFontWeight = {
@@ -29,7 +30,7 @@ const cfgFontWeight = {
 };
 
 export function getFontSize(
-    value: "tiny" | "small" | "medium" | "large" | "xlarge"
+    value: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge"
 ): number {
     return cfgFontSize[value];
 }
@@ -156,13 +157,15 @@ export type IConfig =
     | string
     | boolean
     | Color
+    | ColorPair
     | ColorSet
     | { [key: string]: IConfig }
     | React.ReactElement
     | ButtonConfig
     | InputConfig
     | TabConfig
-    | TabBarConfig;
+    | TabBarConfig
+    | ITheme;
 
 export function getConfigType(v: IConfig): string {
     if (v === undefined) {

@@ -102,7 +102,7 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
 }
 
 interface ButtonProps {
-    size: "tiny" | "small" | "medium" | "large" | "xlarge";
+    size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: ITheme;
     config: ButtonConfig;

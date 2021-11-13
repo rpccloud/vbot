@@ -12,7 +12,7 @@ import { makeTransition, range } from "../util";
 interface TabProps {
     readonly id: number;
     readonly tabBar: TabBar;
-    size: "tiny" | "small" | "medium" | "large" | "xlarge";
+    size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: ITheme;
     config: TabConfig;

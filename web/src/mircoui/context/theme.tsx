@@ -1,5 +1,5 @@
 import React from "react";
-import { Color, ColorPair, ITheme } from "../config";
+import { Color, ColorPair, extendConfig, ITheme } from "../config";
 
 export class Theme {
     default: ColorPair;
@@ -43,15 +43,19 @@ export class Theme {
     }
 
     extend(o: ITheme): Theme {
-        return new Theme({
-            default: this.default,
-            primary: this.primary,
-            secondary: this.secondary,
-            success: this.success,
-            warning: this.warning,
-            disabled: this.disabled,
-            ...o,
-        });
+        return new Theme(
+            extendConfig(
+                {
+                    default: this.default,
+                    primary: this.primary,
+                    secondary: this.secondary,
+                    success: this.success,
+                    warning: this.warning,
+                    disabled: this.disabled,
+                },
+                o
+            ) as any
+        );
     }
 }
 
