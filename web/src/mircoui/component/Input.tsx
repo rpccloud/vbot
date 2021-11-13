@@ -16,6 +16,7 @@ import { Theme, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
 import { InputConfig } from "../config";
 import { ThemeCache } from "../util";
+import { Spin } from "./Spin";
 
 let themeCache = new ThemeCache();
 
@@ -387,6 +388,10 @@ class InputCore extends React.Component<InputProps, InputState> {
                 />
             ) : null;
 
+        const submitProgressView = this.state.submitting ? (
+            <Spin size={this.props.size} />
+        ) : null;
+
         const submitButtonView =
             this.props.submittable &&
             !this.state.submitting &&
@@ -522,6 +527,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                     {passwordButtonView}
                     {revertButtonView}
                     {submitButtonView}
+                    {submitProgressView}
                     {editButtonView}
                     <div
                         style={{

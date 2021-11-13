@@ -1,3 +1,7 @@
+export async function sleep(timeMS: number) {
+    return new Promise((resolve) => setTimeout(resolve, timeMS));
+}
+
 export function range(v: number, min: number, max: number): number {
     if (v < min) {
         v = min;

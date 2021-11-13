@@ -5,9 +5,10 @@ import { Button } from "../mircoui/component/Button";
 import { Input } from "../mircoui/component/Input";
 import { Popup } from "../mircoui/component/Popup";
 import { FocusContext } from "../mircoui/context/focus";
-import { extendConfig } from "../mircoui/config";
+import { Color, extendConfig } from "../mircoui/config";
 import { Spin } from "../mircoui/component/Spin";
 import { TabBar } from "../mircoui/component/TabBar";
+import { sleep } from "../mircoui/util";
 
 function debug() {
     const left = { a: <AiOutlineLock /> };
@@ -206,19 +207,27 @@ const Debug = () => {
                         label="Name:"
                         placeholder="placeholder"
                         onSubmit={async () => {
+                            await sleep(2000);
                             return false;
                         }}
                     />
                     <div style={{ height: 20 }} />
                     <Input
-                        defaultValue="1234"
+                        defaultValue="Test"
                         outline="underline"
+                        theme={{
+                            primary: {
+                                main: new Color(160, 1, 0.5, 1),
+                                auxiliary: new Color(280, 1, 0.5, 1),
+                            },
+                        }}
                         focusable={true}
                         submittable={true}
                         icon={<AiOutlineLock />}
                         label="Name:"
                         placeholder="placeholder"
                         onSubmit={async () => {
+                            await sleep(2000);
                             return true;
                         }}
                     />
@@ -232,6 +241,7 @@ const Debug = () => {
                         label="Name:"
                         placeholder="placeholder"
                         onSubmit={async () => {
+                            await sleep(2000);
                             return false;
                         }}
                     />
