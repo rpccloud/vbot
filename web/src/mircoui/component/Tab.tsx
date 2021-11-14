@@ -5,7 +5,7 @@ import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
 import { TabBar } from "./TabBar";
 import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
-import { ZIndexContext } from "../context/zindex";
+import { ZIndexContext } from "../context/zIndex";
 import { TabConfig } from "../config";
 import { makeTransition, range } from "../util";
 
