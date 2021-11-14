@@ -35,7 +35,7 @@ export const ThemeContext = React.createContext<Theme>({
         contrastText: "#FFFFFFC0",
     },
     disabled: {
-        main: "#666",
-        contrastText: "#FFFFFFC0",
+        main: "#555",
+        contrastText: "#808080C0",
     },
 });

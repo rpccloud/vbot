@@ -301,7 +301,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                     border: 0,
                     padding: 0,
                     flex: 1,
-                    cursor: this.state.focus ? "text" : "default",
+                    cursor: this.state.focus ? "text" : "inherit",
                     caretColor: this.state.focus ? color?.font : "transparent",
                     background: "transparent",
                     color: this.state.value
@@ -486,6 +486,10 @@ class InputCore extends React.Component<InputProps, InputState> {
                     height: height,
                     fontWeight: fontWeight,
                     color: color?.font,
+                    cursor:
+                        !this.props.submittable && canFocus && !this.state.focus
+                            ? "pointer"
+                            : "default",
                     backgroundColor: color?.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     ...style,

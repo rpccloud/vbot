@@ -241,6 +241,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     fontWeight: getFontWeight(this.props.fontWeight),
                     backgroundColor: color?.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
+                    cursor: this.props.disabled ? "not-allowed" : "pointer",
                     boxShadow: this.props?.border
                         ? `0px 0px ${qrHeight / 2}px ${color?.shadow}`
                         : "",

@@ -171,6 +171,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 250,
                                 "ease-in"
                             ),
+                            cursor: "pointer",
                         }}
                         onPointerMove={() => {
                             this.actionSonar.checkHover(
@@ -199,6 +200,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                         alignItems: "center",
                         position: "absolute",
                         overflow: "hidden",
+                        cursor: "pointer",
                         top: top,
                         bottom: bottom,
                         left: leftMargin,
