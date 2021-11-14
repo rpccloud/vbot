@@ -25,78 +25,78 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
 
     record = {
         fill: {
-            normal: {
+            primary: {
                 font: theme.primary?.contrastText,
                 background: theme.primary?.main,
-                border: "transparent",
+                border: theme.primary?.main,
                 shadow: "transparent",
             },
             hover: {
-                font: theme.primary?.contrastText,
-                background: theme.primary?.hover,
-                border: "transparent",
+                font: theme.hover?.contrastText,
+                background: theme.hover?.main,
+                border: theme.hover?.main,
                 shadow: "transparent",
             },
-            active: {
-                font: theme.primary?.contrastText,
-                background: theme.primary?.highlight,
-                border: "transparent",
-                shadow: theme.primary?.highlight,
+            highlight: {
+                font: theme.highlight?.contrastText,
+                background: theme.highlight?.main,
+                border: theme.highlight?.main,
+                shadow: theme.highlight?.main,
             },
             focus: {
-                font: theme.primary?.contrastText,
-                background: theme.primary?.main,
-                border: theme.primary?.highlight,
+                font: theme.focus?.contrastText,
+                background: theme.focus?.main,
+                border: theme.focus?.main,
                 shadow: "transparent",
             },
             selected: {
-                font: theme.primary?.contrastText,
-                background: theme.primary?.highlight,
-                border: "transparent",
+                font: theme.selected?.contrastText,
+                background: theme.selected?.main,
+                border: theme.selected?.main,
                 shadow: "transparent",
             },
             disabled: {
                 font: theme.disabled?.contrastText,
                 background: theme.disabled?.main,
-                border: theme.disabled?.contrastText,
+                border: theme.disabled?.main,
                 shadow: "transparent",
             },
         },
         ghost: {
-            normal: {
+            primary: {
                 font: theme.primary?.main,
                 background: "transparent",
                 border: theme.primary?.main,
                 shadow: "transparent",
             },
             hover: {
-                font: theme.primary?.hover,
+                font: theme.hover?.main,
                 background: "transparent",
-                border: theme.primary?.hover,
+                border: theme.hover?.main,
                 shadow: "transparent",
             },
-            active: {
-                font: theme.primary?.highlight,
+            highlight: {
+                font: theme.highlight?.main,
                 background: "transparent",
-                border: theme.primary?.highlight,
-                shadow: theme.primary?.highlight,
+                border: theme.highlight?.main,
+                shadow: theme.highlight?.main,
             },
             focus: {
-                font: theme.primary?.main,
+                font: theme.focus?.main,
                 background: "transparent",
-                border: theme.primary?.highlight,
+                border: theme.focus?.main,
                 shadow: "transparent",
             },
             selected: {
-                font: theme.primary?.highlight,
+                font: theme.selected?.main,
                 background: "transparent",
-                border: theme.primary?.highlight,
+                border: theme.selected?.main,
                 shadow: "transparent",
             },
             disabled: {
-                font: theme.disabled?.contrastText,
+                font: theme.disabled?.main,
                 background: "transparent",
-                border: theme.disabled?.contrastText,
+                border: theme.disabled?.main,
                 shadow: "transparent",
             },
         },
@@ -129,7 +129,7 @@ interface ButtonProps {
 
 interface ButtonState {
     hover: boolean;
-    active: boolean;
+    highlight: boolean;
     focus: boolean;
 }
 
@@ -156,7 +156,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
         super(props);
         this.state = {
             hover: false,
-            active: false,
+            highlight: false,
             focus: false,
         };
     }
@@ -174,26 +174,26 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
             this.props.config
         );
 
-        let colorSet = config.normal;
+        let color = config.primary;
 
         if (this.state.focus) {
-            colorSet = config.focus;
+            color = config.focus;
         }
 
         if (this.props.selected) {
-            colorSet = config.selected;
+            color = config.selected;
         }
 
         if (this.state.hover) {
-            colorSet = config.hover;
+            color = config.hover;
         }
 
-        if (this.state.active) {
-            colorSet = config.active;
+        if (this.state.highlight) {
+            color = config.highlight;
         }
 
         if (this.props.disabled) {
-            colorSet = config.disabled;
+            color = config.disabled;
         }
 
         let fontSize = getFontSize(this.props.size);
@@ -239,16 +239,16 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                 style={{
                     display: "block",
                     border: `${this.props.border ? 1 : 0}px solid ${
-                        colorSet?.border
+                        color?.border
                     }`,
-                    color: colorSet?.font,
+                    color: color?.font,
                     fontSize: fontSize,
                     padding: 0,
                     fontWeight: getFontWeight(this.props.fontWeight),
-                    backgroundColor: colorSet?.background,
+                    backgroundColor: color?.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     boxShadow: this.props?.border
-                        ? `0px 0px ${qrHeight / 2}px ${colorSet?.shadow}`
+                        ? `0px 0px ${qrHeight / 2}px ${color?.shadow}`
                         : "",
                     ...style,
                 }}
@@ -265,10 +265,10 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                 onMouseDown={() => {
                     this.actionSonar.checkActive(
                         () => {
-                            this.setState({ active: true });
+                            this.setState({ highlight: true });
                         },
                         () => {
-                            this.setState({ active: false });
+                            this.setState({ highlight: false });
                         }
                     );
                 }}

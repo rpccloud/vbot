@@ -217,7 +217,7 @@ const Debug = () => {
                         outline="underline"
                         theme={{
                             primary: {
-                                hover: "red",
+                                contrastText: "white",
                                 main: "red",
                             },
                         }}

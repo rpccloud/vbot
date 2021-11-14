@@ -37,38 +37,42 @@ const defaultConfig = {
 
 function getConfig(theme: Theme): InputConfig {
     const themeKey = getThemeHashKey(theme);
-    let record = themeCache.getConfig(themeKey);
+    let record: InputConfig = themeCache.getConfig(themeKey);
     if (record) {
         return record;
     }
 
     record = {
         ...defaultConfig,
-        normal: {
+        primary: {
             font: theme.primary?.contrastText,
             background: "transparent",
             border: theme.primary?.main,
             shadow: "transparent",
         },
         hover: {
-            font: theme.primary?.contrastText,
+            font: theme.hover?.contrastText,
             background: "transparent",
-            border: theme.primary?.hover,
+            border: theme.hover?.main,
             shadow: "transparent",
         },
-        focus: {
-            font: theme.primary?.contrastText,
-            border: theme.primary?.highlight,
+        highlight: {
+            font: theme.highlight?.contrastText,
+            border: theme.highlight?.main,
             background: "transparent",
-            shadow: theme.primary?.highlight,
+            shadow: theme.highlight?.main,
         },
         successful: {
             font: theme.successful?.contrastText,
-            background: theme.successful?.main,
+            background: "transparent",
+            border: theme.successful?.main,
+            shadow: "transparent",
         },
         failed: {
             font: theme.failed?.contrastText,
-            background: theme.failed?.main,
+            background: "transparent",
+            border: theme.failed?.main,
+            shadow: "transparent",
         },
         placeholderColor: theme.disabled?.contrastText,
         validateErrorColor: theme.failed?.main,
@@ -192,13 +196,13 @@ class InputCore extends React.Component<InputProps, InputState> {
             this.props.config
         );
 
-        let color = cfg.normal;
+        let color = cfg.primary;
         if (this.state.hover) {
             color = cfg.hover;
         }
 
         if (this.state.focus) {
-            color = cfg.focus;
+            color = cfg.highlight;
         }
 
         if (this.state.reportStatus === "failed") {

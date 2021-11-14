@@ -41,13 +41,6 @@ export function getFontWeight(value: "lighter" | "normal" | "bold" | "bolder") {
 
 export interface PaletteColor {
     main?: string;
-    hover?: string;
-    highlight?: string;
-    contrastText?: string;
-}
-
-export interface PaletteColorLite {
-    main?: string;
     contrastText?: string;
 }
 
@@ -61,16 +54,20 @@ export type ComponentColor = {
 export interface Theme {
     default?: PaletteColor;
     primary?: PaletteColor;
-    successful?: PaletteColorLite;
-    failed?: PaletteColorLite;
-    disabled?: PaletteColorLite;
+    hover?: PaletteColor;
+    highlight?: PaletteColor;
+    focus?: PaletteColor;
+    selected?: PaletteColor;
+    successful?: PaletteColor;
+    failed?: PaletteColor;
+    disabled?: PaletteColor;
 }
 
 export type ButtonConfig = {
-    normal?: ComponentColor;
+    primary?: ComponentColor;
     hover?: ComponentColor;
     focus?: ComponentColor;
-    active?: ComponentColor;
+    highlight?: ComponentColor;
     selected?: ComponentColor;
     disabled?: ComponentColor;
 };
@@ -81,9 +78,9 @@ export interface InputConfig {
     editIcon?: React.ReactElement;
     passwordShowIcon?: React.ReactElement;
     passwordHiddenIcon?: React.ReactElement;
-    normal?: ComponentColor;
+    primary?: ComponentColor;
     hover?: ComponentColor;
-    focus?: ComponentColor;
+    highlight?: ComponentColor;
     successful?: ComponentColor;
     failed?: ComponentColor;
     placeholderColor?: string;
@@ -91,9 +88,9 @@ export interface InputConfig {
 }
 
 export interface TabConfig {
-    normal?: ComponentColor;
+    primary?: ComponentColor;
     hover?: ComponentColor;
-    selected?: ComponentColor;
+    highlight?: ComponentColor;
 }
 
 export interface TabBarConfig {

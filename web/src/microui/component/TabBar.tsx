@@ -23,22 +23,22 @@ function getConfig(theme: Theme): TabBarConfig {
 
     record = {
         tab: {
-            normal: {
+            primary: {
                 font: theme.default?.contrastText,
                 background: "transparent",
                 border: theme.default?.contrastText,
                 shadow: "transparent",
             },
             hover: {
-                font: theme.primary?.contrastText,
+                font: theme.hover?.contrastText,
                 background: "transparent",
-                border: theme.primary?.hover,
+                border: theme.hover?.main,
                 shadow: "transparent",
             },
-            selected: {
-                font: theme.primary?.contrastText,
-                background: theme.primary?.highlight,
-                border: theme.primary?.highlight,
+            highlight: {
+                font: theme.highlight?.contrastText,
+                background: theme.highlight?.main,
+                border: theme.highlight?.main,
                 shadow: "transparent",
             },
         },
@@ -369,7 +369,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 config={config.tab}
-                                selected={it.id === this.selectedTab?.id}
+                                highlight={it.id === this.selectedTab?.id}
                                 closable={false}
                             ></Tab>
                         );
@@ -388,7 +388,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 config={config.tab}
-                                selected={it.id === this.selectedTab?.id}
+                                highlight={it.id === this.selectedTab?.id}
                                 closable={false}
                             ></Tab>
                         );
@@ -407,7 +407,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
                                 config={config.tab}
-                                selected={it.id === this.selectedTab?.id}
+                                highlight={it.id === this.selectedTab?.id}
                                 closable={true}
                             ></Tab>
                         );

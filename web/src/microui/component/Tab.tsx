@@ -17,7 +17,7 @@ interface TabProps {
     config: TabConfig;
     icon?: ReactNode;
     title?: string;
-    selected: boolean;
+    highlight: boolean;
     minLeft: number;
     maxRight: number;
     closable: boolean;
@@ -116,14 +116,14 @@ export class Tab extends React.Component<TabProps, TabState> {
     render() {
         let config = this.props.config;
 
-        let color = config.normal;
+        let color = config.primary;
 
         if (this.state.hover) {
             color = config.hover;
         }
 
-        if (this.props.selected) {
-            color = config.selected;
+        if (this.props.highlight) {
+            color = config.highlight;
         }
 
         let fontSize = getFontSize(this.props.size);
@@ -154,7 +154,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     height: height,
                     bottom: 0,
                     color: color?.font,
-                    zIndex: this.props.selected
+                    zIndex: this.props.highlight
                         ? this.context.zIndex + 1
                         : this.context.zIndex,
                 }}
@@ -279,7 +279,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 size={this.props.size}
                                 icon={<AiOutlineCloseCircle />}
                                 config={{
-                                    normal: {
+                                    primary: {
                                         font: color?.font,
                                     },
                                 }}

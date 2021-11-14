@@ -4,14 +4,26 @@ import { Theme } from "../config";
 export const ThemeContext = React.createContext<Theme>({
     default: {
         main: "#000",
-        hover: "#222",
-        highlight: "#444",
         contrastText: "#FFFFFFC0",
     },
     primary: {
-        main: "#8e24aa",
-        hover: "#9c27b0",
-        highlight: "#ab47bc",
+        main: "#00897b",
+        contrastText: "#FFFFFFC0",
+    },
+    hover: {
+        main: "#009688",
+        contrastText: "#FFFFFFC0",
+    },
+    highlight: {
+        main: "#26a69a",
+        contrastText: "#FFFFFFC0",
+    },
+    focus: {
+        main: "#00897b",
+        contrastText: "#FFFFFFC0",
+    },
+    selected: {
+        main: "yellow",
         contrastText: "#FFFFFFC0",
     },
     successful: {
