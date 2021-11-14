@@ -86,15 +86,15 @@ export function getThemeHashKey(theme: Theme | undefined): string {
 export const ThemeContext = React.createContext<Theme>({
     default: {
         main: "#000",
-        contrastText: "#FFFFFFC0",
+        contrastText: "#FFFFFFD0",
     },
     primary: {
         main: "#b26500",
-        contrastText: "#FFFFFFC0",
+        contrastText: "#FFFFFFD0",
     },
     hover: {
         main: "#ff9100",
-        contrastText: "#FFFFFFC0",
+        contrastText: "#FFFFFFD0",
     },
     highlight: {
         main: "#ffa733",
@@ -102,26 +102,26 @@ export const ThemeContext = React.createContext<Theme>({
     },
     focus: {
         main: "#ffa733",
-        contrastText: "#FFFFFFC0",
+        contrastText: "#FFFFFFD0",
     },
     selected: {
         main: "yellow",
-        contrastText: "#FFFFFFC0",
+        contrastText: "#FFFFFFD0",
     },
     successful: {
         main: "#76ff03",
-        contrastText: "#FFFFFFC0",
+        contrastText: "#FFFFFFD0",
     },
     failed: {
         main: "#e91e63",
-        contrastText: "#FFFFFFC0",
+        contrastText: "#FFFFFFD0",
     },
     disabled: {
         main: "#555",
         contrastText: "#808080C0",
     },
     transition: {
-        duration: "1s",
+        duration: "220ms",
         easing: "ease-in-out",
     },
 });

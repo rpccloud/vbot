@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import {
     extendConfig,
     getFontSize,
@@ -67,6 +67,7 @@ interface TabBarProps {
     initialFixedTabs?: FixedTabItem[];
     initialFloatTabs?: FloatTabItem[];
     initialDynamicTabs?: FloatTabItem[];
+    style?: CSSProperties;
 }
 
 enum TabKind {
@@ -340,7 +341,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             this.props.config
         );
         return (
-            <div style={{ padding: outerPadding }}>
+            <div style={{ ...this.props.style, padding: outerPadding }}>
                 <div
                     ref={this.rootRef}
                     style={{ height: height, position: "relative" }}

@@ -289,7 +289,6 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                             this.props.style?.justifyContent || "center",
                         alignItems: this.props.style?.alignItems || "center",
                         padding: this.props.round ? 0 : padding,
-                        transition: "inherit",
                     }}
                 >
                     {this.props.icon}

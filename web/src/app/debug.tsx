@@ -44,6 +44,7 @@ const Debug = () => {
                 <Spin color="red" speed={1} size="large" />
                 <TabBar
                     size="large"
+                    style={{ fontWeight: 500 }}
                     innerLeft={100}
                     innerRight={100}
                     initialFixedTabs={[
