@@ -1,5 +1,11 @@
 import React from "react";
-import { extendConfig, PaletteColor, SeedManager, TimerManager } from "../util";
+import {
+    extendConfig,
+    PaletteColor,
+    SeedManager,
+    TimerManager,
+    Transition,
+} from "../util";
 
 export interface Theme {
     default?: PaletteColor;
@@ -11,6 +17,7 @@ export interface Theme {
     successful?: PaletteColor;
     failed?: PaletteColor;
     disabled?: PaletteColor;
+    transition?: Transition;
 }
 
 export class ThemeCache {
@@ -112,5 +119,9 @@ export const ThemeContext = React.createContext<Theme>({
     disabled: {
         main: "#555",
         contrastText: "#808080C0",
+    },
+    transition: {
+        duration: "1s",
+        easing: "ease-in-out",
     },
 });

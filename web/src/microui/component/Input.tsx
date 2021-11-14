@@ -5,7 +5,14 @@ import { AiOutlineEyeInvisible } from "@react-icons/all-files/ai/AiOutlineEyeInv
 import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
-import { ComponentColor, extendConfig, getFontSize, sizeKind } from "../util";
+import {
+    ComponentColor,
+    extendConfig,
+    getFontSize,
+    makeTransition,
+    sizeKind,
+    Transition,
+} from "../util";
 import { ActionSonar } from "../sonar/action";
 import { TempValueSonar } from "../sonar/tempValue";
 import { ResizeSonar } from "../sonar/resize";
@@ -51,6 +58,7 @@ let themeCache = new ThemeCache((theme) => ({
     },
     placeholderColor: theme.disabled?.contrastText,
     validateErrorColor: theme.failed?.main,
+    transition: theme.transition,
 }));
 
 const defaultConfig = {
@@ -75,6 +83,7 @@ export interface InputConfig {
     failed?: ComponentColor;
     placeholderColor?: string;
     validateErrorColor?: string;
+    transition?: Transition;
 }
 
 interface InputProps {
@@ -185,27 +194,27 @@ class InputCore extends React.Component<InputProps, InputState> {
     }
 
     render() {
-        const cfg: InputConfig = extendConfig(
+        const config: InputConfig = extendConfig(
             themeCache.getConfig(extendTheme(this.context, this.props.theme)),
             this.props.config
         );
 
-        let color = cfg.primary;
+        let color = config.primary;
 
         if (this.state.hover) {
-            color = cfg.hover;
+            color = config.hover;
         }
 
         if (this.state.focus) {
-            color = { ...cfg.highlight, ...cfg.focus };
+            color = { ...config.highlight, ...config.focus };
         }
 
         if (this.state.reportStatus === "failed") {
-            color = cfg.failed;
+            color = config.failed;
         }
 
         if (this.state.reportStatus === "successful") {
-            color = cfg.successful;
+            color = config.successful;
         }
 
         const fontSize = getFontSize(this.props.size);
@@ -257,7 +266,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                     alignItems: "center",
                     justifyContent: "center",
                     color: !this.props.validator(this.state.value)
-                        ? cfg.validateErrorColor
+                        ? config.validateErrorColor
                         : color?.font,
                     marginRight: innerMargin,
                     transition: "inherit",
@@ -271,7 +280,7 @@ class InputCore extends React.Component<InputProps, InputState> {
             <div
                 style={{
                     color: !this.props.validator(this.state.value)
-                        ? cfg.validateErrorColor
+                        ? config.validateErrorColor
                         : color?.font,
                     marginRight: innerMargin,
                     transition: "inherit",
@@ -296,9 +305,13 @@ class InputCore extends React.Component<InputProps, InputState> {
                     background: "transparent",
                     color: this.state.value
                         ? color?.font
-                        : cfg.placeholderColor,
+                        : config.placeholderColor,
                     fontWeight: "inherit",
-                    transition: "background 350ms ease-out",
+                    transition: makeTransition(
+                        ["background"],
+                        config.transition?.duration,
+                        config.transition?.easing
+                    ),
                 }}
                 placeholder={this.props.placeholder}
                 type={isShowPassword ? "text" : this.props.type}
@@ -359,8 +372,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     marginLeft={innerMargin}
                     icon={
                         this.state.showPassword
-                            ? cfg.passwordHiddenIcon
-                            : cfg.passwordShowIcon
+                            ? config.passwordHiddenIcon
+                            : config.passwordShowIcon
                     }
                     onClick={() => {
                         this.setState({
@@ -377,7 +390,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 <InputButton
                     size={this.props.size}
                     marginLeft={innerMargin}
-                    icon={cfg.revertIcon}
+                    icon={config.revertIcon}
                     onClick={() => {
                         if (this.state.stageValue !== this.state.value) {
                             this.setState({ value: this.state.stageValue });
@@ -398,7 +411,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 <InputButton
                     size={this.props.size}
                     marginLeft={innerMargin}
-                    icon={cfg.submitIcon}
+                    icon={config.submitIcon}
                     onClick={() => {
                         this.inputRef.current?.blur();
                         const currValue = this.state.value;
@@ -442,7 +455,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 <InputButton
                     size={this.props.size}
                     marginLeft={innerMargin}
-                    icon={cfg.editIcon}
+                    icon={config.editIcon}
                     onClick={() => {
                         this.inputRef.current?.focus();
                     }}
@@ -480,7 +493,11 @@ class InputCore extends React.Component<InputProps, InputState> {
                             ? "pointer"
                             : "default",
                     backgroundColor: color?.background,
-                    transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
+                    transition: makeTransition(
+                        ["background", "color", "border", "box-shadow"],
+                        config.transition?.duration,
+                        config.transition?.easing
+                    ),
                     ...style,
                 }}
                 onMouseDown={(e) => {

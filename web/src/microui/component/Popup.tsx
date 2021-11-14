@@ -1,14 +1,15 @@
-import React, { CSSProperties, ReactNode } from "react";
+import React, { CSSProperties, ReactNode, useContext } from "react";
 import { makeTransition, Rect } from "../util";
 import { ZIndexContext } from "../context/zIndex";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
+import { Theme, ThemeContext } from "../context/theme";
 
 interface PopupProps {
     action: Array<"hover" | "click" | "focus">;
     renderPopup: (rect: Rect, closePopup: () => void) => ReactNode;
     children?: ReactNode;
-    zIndex?: number;
+    popupZIndex?: number;
     zStep: number;
     style?: CSSProperties;
 }
@@ -18,8 +19,8 @@ interface PopupState {
     screenRect?: Rect;
 }
 
-export class Popup extends React.Component<PopupProps, PopupState> {
-    static contextType = ZIndexContext;
+export class PopupCore extends React.Component<PopupProps, PopupState> {
+    static contextType = ThemeContext;
     static defaultProps = {
         action: ["click"],
         zStep: 1024,
@@ -78,6 +79,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     }
 
     render() {
+        const theme: Theme = this.context;
         const popup = this.state.popup;
         const screenRect = this.state.screenRect || {
             x: 0,
@@ -85,10 +87,6 @@ export class Popup extends React.Component<PopupProps, PopupState> {
             width: 0,
             height: 0,
         };
-        const popupZIndex =
-            this.context.zIndex < 99999999
-                ? 99999999
-                : this.context.zIndex + this.props.zStep;
         return (
             <div
                 ref={this.rootRef}
@@ -126,7 +124,9 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                     }
                 }}
             >
-                <ZIndexContext.Provider value={{ zIndex: popupZIndex }}>
+                <ZIndexContext.Provider
+                    value={{ zIndex: this.props.popupZIndex || 0 }}
+                >
                     <div
                         style={{
                             position: "fixed",
@@ -137,11 +137,11 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                                 ? 0
                                 : screenRect.x + screenRect.width / 2,
                             opacity: popup ? 1 : 0,
-                            zIndex: popupZIndex,
+                            zIndex: this.props.popupZIndex,
                             transition: makeTransition(
                                 ["opacity", "width", "height", "top", "left"],
-                                250,
-                                "ease-in"
+                                theme.transition?.duration,
+                                theme.transition?.easing
                             ),
                         }}
                         onClick={(e) => {
@@ -161,3 +161,17 @@ export class Popup extends React.Component<PopupProps, PopupState> {
         );
     }
 }
+
+export const Popup = (props: PopupProps) => {
+    const { zIndex } = useContext(ZIndexContext);
+
+    const popupZIndex = props.popupZIndex
+        ? props.popupZIndex
+        : zIndex < 99999999
+        ? 99999999
+        : zIndex + props.zStep;
+
+    return <PopupCore {...props} popupZIndex={popupZIndex} />;
+};
+
+Popup.defaultProps = PopupCore.defaultProps;

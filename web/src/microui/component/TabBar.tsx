@@ -32,6 +32,7 @@ let themeCache = new ThemeCache((theme) => ({
             border: theme.highlight?.main,
             shadow: "transparent",
         },
+        transition: theme.transition,
     },
 }));
 

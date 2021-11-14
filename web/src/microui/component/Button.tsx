@@ -1,5 +1,12 @@
 import React, { CSSProperties, useContext } from "react";
-import { ComponentColor, extendConfig, getFontSize, sizeKind } from "../util";
+import {
+    ComponentColor,
+    extendConfig,
+    getFontSize,
+    makeTransition,
+    sizeKind,
+    Transition,
+} from "../util";
 import { ActionSonar } from "../sonar/action";
 import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
@@ -39,6 +46,7 @@ let themeCache = new ThemeCache((theme) => ({
             border: theme.disabled?.main,
             shadow: "transparent",
         },
+        transition: theme.transition,
     },
     ghost: {
         primary: {
@@ -74,6 +82,7 @@ let themeCache = new ThemeCache((theme) => ({
             border: theme.disabled?.main,
             shadow: "transparent",
         },
+        transition: theme.transition,
     },
 }));
 
@@ -84,6 +93,7 @@ export type ButtonConfig = {
     highlight?: ComponentColor;
     selected?: ComponentColor;
     disabled?: ComponentColor;
+    transition?: Transition;
 };
 
 interface ButtonProps {
@@ -220,7 +230,11 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     fontSize: fontSize,
                     padding: 0,
                     backgroundColor: color?.background,
-                    transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
+                    transition: makeTransition(
+                        ["background", "color", "border", "box-shadow"],
+                        config.transition?.duration,
+                        config.transition?.easing
+                    ),
                     cursor: this.props.disabled ? "not-allowed" : "pointer",
                     boxShadow: this.props?.border
                         ? `0px 0px ${qrHeight / 2}px ${color?.shadow}`

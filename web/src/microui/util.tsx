@@ -37,6 +37,11 @@ export function getFontSize(value: sizeKind): number {
     return cfgFontSize[value];
 }
 
+export interface Transition {
+    duration: string;
+    easing: string;
+}
+
 export interface PaletteColor {
     main?: string;
     contrastText?: string;
@@ -99,11 +104,11 @@ export function range(v: number, min: number, max: number): number {
 
 export function makeTransition(
     attrs: Array<string>,
-    timeMS: number,
-    timingFunc: string
+    duration?: string,
+    easing?: string
 ): string {
     const vArray = attrs.map((v) => {
-        return `${v} ${timeMS}ms ${timingFunc}`;
+        return `${v} ${duration} ${easing}`;
     });
 
     return vArray.join(",");

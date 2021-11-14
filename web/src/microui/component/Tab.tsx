@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { ComponentColor, getFontSize, sizeKind } from "../util";
+import { ComponentColor, getFontSize, sizeKind, Transition } from "../util";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
@@ -12,6 +12,7 @@ export interface TabConfig {
     primary?: ComponentColor;
     hover?: ComponentColor;
     highlight?: ComponentColor;
+    transition?: Transition;
 }
 
 interface TabProps {
@@ -69,14 +70,15 @@ export class Tab extends React.Component<TabProps, TabState> {
     setLeft(left: number, force: boolean, animate: boolean) {
         if (force || this.beforeMovingLeft === undefined) {
             if (left !== this.currentLeft) {
+                const config = this.props.config;
                 this.currentLeft = left;
 
                 if (this.rootRef.current) {
                     if (animate) {
                         this.rootRef.current.style.transition = makeTransition(
                             ["left"],
-                            250,
-                            "ease-in"
+                            config.transition?.duration,
+                            config.transition?.easing
                         );
                     } else {
                         this.rootRef.current.style.transition = "";
@@ -172,8 +174,8 @@ export class Tab extends React.Component<TabProps, TabState> {
                             stroke: color?.border,
                             transition: makeTransition(
                                 ["fill", "stroke"],
-                                250,
-                                "ease-in"
+                                config.transition?.duration,
+                                config.transition?.easing
                             ),
                             cursor: "pointer",
                         }}
