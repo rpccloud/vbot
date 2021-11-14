@@ -18,8 +18,8 @@ const cfgFontSize = {
     small: 11,
     medium: 14,
     large: 18,
-    xlarge: 24,
-    xxlarge: 48,
+    xLarge: 24,
+    xxLarge: 48,
 };
 
 const cfgFontWeight = {
@@ -30,7 +30,7 @@ const cfgFontWeight = {
 };
 
 export function getFontSize(
-    value: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge"
+    value: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge"
 ): number {
     return cfgFontSize[value];
 }

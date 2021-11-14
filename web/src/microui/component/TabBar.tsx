@@ -67,7 +67,7 @@ interface FloatTabItem {
 }
 
 interface TabBarProps {
-    size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
+    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: Theme;
     config: TabBarConfig;

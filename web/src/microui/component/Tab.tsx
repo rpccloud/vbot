@@ -12,7 +12,7 @@ import { makeTransition, range } from "../util";
 interface TabProps {
     readonly id: number;
     readonly tabBar: TabBar;
-    size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
+    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     config: TabConfig;
     icon?: ReactNode;

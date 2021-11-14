@@ -81,7 +81,7 @@ function getConfig(theme: Theme): InputConfig {
 interface InputProps {
     type: "password" | "text";
     outline: "bare" | "underline" | "border";
-    size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
+    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: Theme;
     config: InputConfig;
@@ -111,7 +111,7 @@ interface InputState {
 }
 
 const InputButton = (props: {
-    size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
+    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
     icon: React.ReactNode;
     marginLeft: number;
     onClick: () => void;

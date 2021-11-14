@@ -4,7 +4,7 @@ import { AiOutlineLoading3Quarters } from "@react-icons/all-files/ai/AiOutlineLo
 import { getFontSize } from "../config";
 
 interface SpinProps {
-    size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
+    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
     icon: React.ReactNode;
     color?: string;
     speed: number;

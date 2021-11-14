@@ -1,6 +1,12 @@
 import React, { CSSProperties, useContext } from "react";
 import { getFontWeight } from "../../ui/theme/config";
-import { extendConfig, extendTheme, getFontSize, getThemeHashKey, Theme } from "../config";
+import {
+    extendConfig,
+    extendTheme,
+    getFontSize,
+    getThemeHashKey,
+    Theme,
+} from "../config";
 import { ActionSonar } from "../sonar/action";
 import { ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
@@ -102,7 +108,7 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
 }
 
 interface ButtonProps {
-    size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
+    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: Theme;
     config: ButtonConfig;
