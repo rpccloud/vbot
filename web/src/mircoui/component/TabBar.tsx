@@ -26,7 +26,7 @@ function getConfig(theme: Theme): TabBarConfig {
             normal: {
                 font: theme.default?.contrastText,
                 background: "transparent",
-                border: theme.default?.main,
+                border: theme.default?.contrastText,
                 shadow: "transparent",
             },
             hover: {
@@ -37,7 +37,7 @@ function getConfig(theme: Theme): TabBarConfig {
             },
             selected: {
                 font: theme.primary?.contrastText,
-                background: "transparent",
+                background: theme.primary?.highlight,
                 border: theme.primary?.highlight,
                 shadow: "transparent",
             },
