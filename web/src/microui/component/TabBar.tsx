@@ -6,6 +6,7 @@ import {
     getThemeHashKey,
     extendConfig,
     extendTheme,
+    sizeKind,
 } from "../config";
 import { range, ThemeCache, TimerManager } from "../util";
 import { getSeed } from "../../app/plugin/browser/utils";
@@ -67,7 +68,7 @@ interface FloatTabItem {
 }
 
 interface TabBarProps {
-    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
+    size: sizeKind;
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: Theme;
     config: TabBarConfig;
@@ -363,7 +364,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 id={it.id}
                                 tabBar={this}
                                 size={this.props.size}
-                                fontWeight={this.props.fontWeight}
                                 icon={it.icon}
                                 title={it.title}
                                 minLeft={it.minLeft}
@@ -382,7 +382,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 id={it.id}
                                 tabBar={this}
                                 size={this.props.size}
-                                fontWeight={this.props.fontWeight}
                                 icon={it.icon}
                                 title={it.title}
                                 minLeft={it.minLeft}
@@ -401,7 +400,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 id={it.id}
                                 tabBar={this}
                                 size={this.props.size}
-                                fontWeight={this.props.fontWeight}
                                 icon={it.icon}
                                 title={it.title}
                                 minLeft={it.minLeft}

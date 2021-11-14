@@ -14,29 +14,28 @@ export interface Rect {
 }
 
 const cfgFontSize = {
-    tiny: 8,
+    "xx-small": 6,
+    "x-small": 9,
     small: 11,
     medium: 14,
     large: 18,
-    xLarge: 24,
-    xxLarge: 48,
+    "x-large": 24,
+    "xx-large": 48,
+    "xxx-large": 128,
 };
 
-const cfgFontWeight = {
-    lighter: 200,
-    normal: 400,
-    bold: 700,
-    bolder: 900,
-};
+export type sizeKind =
+    | "xx-small"
+    | "x-small"
+    | "small"
+    | "medium"
+    | "large"
+    | "x-large"
+    | "xx-large"
+    | "xxx-large";
 
-export function getFontSize(
-    value: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge"
-): number {
+export function getFontSize(value: sizeKind): number {
     return cfgFontSize[value];
-}
-
-export function getFontWeight(value: "lighter" | "normal" | "bold" | "bolder") {
-    return cfgFontWeight[value];
 }
 
 export interface PaletteColor {

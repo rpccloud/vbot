@@ -12,8 +12,8 @@ import {
     extendConfig,
     extendTheme,
     getFontSize,
-    getFontWeight,
     getThemeHashKey,
+    sizeKind,
     Theme,
 } from "../config";
 import { ActionSonar } from "../sonar/action";
@@ -88,8 +88,7 @@ function getConfig(theme: Theme): InputConfig {
 interface InputProps {
     type: "password" | "text";
     outline: "bare" | "underline" | "border";
-    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
-    fontWeight: "lighter" | "normal" | "bold" | "bolder";
+    size: sizeKind;
     theme?: Theme;
     config: InputConfig;
     icon?: React.ReactNode;
@@ -118,7 +117,7 @@ interface InputState {
 }
 
 const InputButton = (props: {
-    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
+    size: sizeKind;
     icon: React.ReactNode;
     marginLeft: number;
     onClick: () => void;
@@ -236,7 +235,6 @@ class InputCore extends React.Component<InputProps, InputState> {
                 : this.props.outline === "border"
                 ? qrHeight
                 : 0;
-        const fontWeight = getFontWeight(this.props.fontWeight);
 
         const isShowPassword =
             this.props.type === "password" && this.state.showPassword;
@@ -484,7 +482,6 @@ class InputCore extends React.Component<InputProps, InputState> {
                     overflow: "clip",
                     fontSize: fontSize,
                     height: height,
-                    fontWeight: fontWeight,
                     color: color?.font,
                     cursor:
                         !this.props.submittable && canFocus && !this.state.focus

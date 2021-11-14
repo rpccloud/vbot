@@ -1,10 +1,10 @@
 import React, { CSSProperties, useContext } from "react";
-import { getFontWeight } from "../../ui/theme/config";
 import {
     extendConfig,
     extendTheme,
     getFontSize,
     getThemeHashKey,
+    sizeKind,
     Theme,
 } from "../config";
 import { ActionSonar } from "../sonar/action";
@@ -102,8 +102,7 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
 }
 
 interface ButtonProps {
-    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
-    fontWeight: "lighter" | "normal" | "bold" | "bolder";
+    size: sizeKind;
     theme?: Theme;
     config: ButtonConfig;
     icon?: React.ReactNode;
@@ -238,7 +237,6 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     color: color?.font,
                     fontSize: fontSize,
                     padding: 0,
-                    fontWeight: getFontWeight(this.props.fontWeight),
                     backgroundColor: color?.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     cursor: this.props.disabled ? "not-allowed" : "pointer",

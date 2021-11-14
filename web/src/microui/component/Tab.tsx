@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { getFontSize } from "../config";
+import { getFontSize, sizeKind } from "../config";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
@@ -12,8 +12,7 @@ import { makeTransition, range } from "../util";
 interface TabProps {
     readonly id: number;
     readonly tabBar: TabBar;
-    size: "tiny" | "small" | "medium" | "large" | "xLarge" | "xxLarge";
-    fontWeight: "lighter" | "normal" | "bold" | "bolder";
+    size: sizeKind;
     config: TabConfig;
     icon?: ReactNode;
     title?: string;
