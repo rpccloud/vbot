@@ -1,13 +1,18 @@
 import React, { ReactNode } from "react";
-import { getFontSize, sizeKind } from "../config";
+import { ComponentColor, getFontSize, sizeKind } from "../util";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
 import { TabBar } from "./TabBar";
 import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
 import { ZIndexContext } from "../context/zIndex";
-import { TabConfig } from "../config";
 import { makeTransition, range } from "../util";
+
+export interface TabConfig {
+    primary?: ComponentColor;
+    hover?: ComponentColor;
+    highlight?: ComponentColor;
+}
 
 interface TabProps {
     readonly id: number;

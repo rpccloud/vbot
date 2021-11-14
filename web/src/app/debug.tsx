@@ -5,18 +5,9 @@ import { Button } from "../microui/component/Button";
 import { Input } from "../microui/component/Input";
 import { Popup } from "../microui/component/Popup";
 import { FocusContext } from "../microui/context/focus";
-import { extendConfig } from "../microui/config";
 import { Spin } from "../microui/component/Spin";
 import { TabBar } from "../microui/component/TabBar";
 import { sleep } from "../microui/util";
-
-function debug() {
-    const left = { a: <AiOutlineLock /> };
-    const right = { a: <AiOutlineLock /> };
-    console.log(extendConfig(left, right));
-}
-
-debug();
 
 const Container = (props: {
     children: ReactNode;
@@ -167,6 +158,9 @@ const Debug = () => {
                             style={{ width: 18, height: 18 }}
                             ghost={true}
                             round={true}
+                            theme={{
+                                primary: { main: "red", contrastText: "green" },
+                            }}
                             onClick={(e) => {}}
                             focusable={false}
                         />

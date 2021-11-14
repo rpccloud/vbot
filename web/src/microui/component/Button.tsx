@@ -1,16 +1,8 @@
 import React, { CSSProperties, useContext } from "react";
-import {
-    extendConfig,
-    extendTheme,
-    getFontSize,
-    sizeKind,
-    Theme,
-} from "../config";
+import { ComponentColor, extendConfig, getFontSize, sizeKind } from "../util";
 import { ActionSonar } from "../sonar/action";
-import { ThemeContext } from "../context/theme";
+import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
-import { ButtonConfig } from "../config";
-import { ThemeCache } from "../util";
 
 let themeCache = new ThemeCache((theme) => ({
     fill: {
@@ -84,6 +76,15 @@ let themeCache = new ThemeCache((theme) => ({
         },
     },
 }));
+
+export type ButtonConfig = {
+    primary?: ComponentColor;
+    hover?: ComponentColor;
+    focus?: ComponentColor;
+    highlight?: ComponentColor;
+    selected?: ComponentColor;
+    disabled?: ComponentColor;
+};
 
 interface ButtonProps {
     size: sizeKind;

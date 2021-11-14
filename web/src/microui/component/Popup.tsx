@@ -1,6 +1,5 @@
 import React, { CSSProperties, ReactNode } from "react";
-import { Rect } from "../config";
-import { makeTransition } from "../util";
+import { makeTransition, Rect } from "../util";
 import { ZIndexContext } from "../context/zIndex";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";

@@ -1,4 +1,85 @@
-import { getThemeHashKey, Theme } from "./config";
+import React from "react";
+
+export interface Point {
+    x: number;
+    y: number;
+}
+
+export interface Rect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+const cfgFontSize = {
+    "xx-small": 6,
+    "x-small": 9,
+    small: 11,
+    medium: 14,
+    large: 18,
+    "x-large": 24,
+    "xx-large": 48,
+    "xxx-large": 128,
+};
+
+export type sizeKind =
+    | "xx-small"
+    | "x-small"
+    | "small"
+    | "medium"
+    | "large"
+    | "x-large"
+    | "xx-large"
+    | "xxx-large";
+
+export function getFontSize(value: sizeKind): number {
+    return cfgFontSize[value];
+}
+
+export interface PaletteColor {
+    main?: string;
+    contrastText?: string;
+}
+
+export type ComponentColor = {
+    font?: string;
+    background?: string;
+    border?: string;
+    shadow?: string;
+};
+
+export function extendConfig(left: any, right: any): any {
+    if (left === undefined) {
+        return right;
+    } else if (right === undefined) {
+        return left;
+    } else {
+        const lType = React.isValidElement(left) ? "ReactNode" : typeof left;
+        const rType = React.isValidElement(right) ? "ReactNode" : typeof right;
+
+        if (lType !== rType) {
+            return undefined;
+        }
+
+        if (lType !== "object") {
+            return right;
+        }
+
+        let oLeft = left as { [key: string]: any };
+        let oRight = right as { [key: string]: any };
+
+        let ret: { [key: string]: any } = { ...oLeft };
+
+        for (const key in oRight) {
+            if (right.hasOwnProperty(key)) {
+                ret[key] = extendConfig(oLeft[key], oRight[key]);
+            }
+        }
+
+        return ret;
+    }
+}
 
 export async function sleep(timeMS: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMS));
@@ -105,39 +186,6 @@ export class TimerManager {
             clearInterval(this.timer);
             this.timer = undefined;
         }
-    }
-}
-
-export class ThemeCache {
-    private configMap = new Map<string, { timeMS: number; config: any }>();
-    private onGet: (theme: Theme) => any;
-
-    constructor(onGet: (theme: Theme) => any) {
-        this.onGet = onGet;
-        TimerManager.get().attach(this);
-    }
-
-    onTimer(nowMS: number): void {
-        this.configMap.forEach((item, key) => {
-            if (nowMS - item.timeMS > 10000) {
-                this.configMap.delete(key);
-            }
-        });
-    }
-
-    getConfig(theme: Theme): any {
-        const key = getThemeHashKey(theme);
-        let item = this.configMap.get(key);
-
-        if (!item) {
-            item = {
-                timeMS: TimerManager.get().getNowMS(),
-                config: this.onGet(theme),
-            };
-            this.configMap.set(key, item);
-        }
-
-        return item.config;
     }
 }
 

@@ -1,18 +1,16 @@
 import React from "react";
 import {
-    getFontSize,
-    Theme,
-    TabBarConfig,
     extendConfig,
-    extendTheme,
+    getFontSize,
+    range,
     sizeKind,
-} from "../config";
-import { range, ThemeCache, TimerManager } from "../util";
+    TimerManager,
+} from "../util";
 import { getSeed } from "../../app/plugin/browser/utils";
-import { ThemeContext } from "../context/theme";
+import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
-import { Tab } from "./Tab";
+import { Tab, TabConfig } from "./Tab";
 
 let themeCache = new ThemeCache((theme) => ({
     tab: {
@@ -50,6 +48,10 @@ interface FloatTabItem {
     icon?: React.ReactNode;
     param?: any;
     default?: boolean;
+}
+
+export interface TabBarConfig {
+    tab: TabConfig;
 }
 
 interface TabBarProps {

@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import { ThemeContext } from "../context/theme";
 import { AiOutlineLoading3Quarters } from "@react-icons/all-files/ai/AiOutlineLoading3Quarters";
-import { getFontSize, sizeKind } from "../config";
+import { getFontSize, sizeKind } from "../util";
 
 interface SpinProps {
     size: sizeKind;

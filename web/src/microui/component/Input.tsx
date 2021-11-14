@@ -5,23 +5,13 @@ import { AiOutlineEyeInvisible } from "@react-icons/all-files/ai/AiOutlineEyeInv
 import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
-
-import { Button } from "./Button";
-
-import {
-    extendConfig,
-    extendTheme,
-    getFontSize,
-    sizeKind,
-    Theme,
-} from "../config";
+import { ComponentColor, extendConfig, getFontSize, sizeKind } from "../util";
 import { ActionSonar } from "../sonar/action";
 import { TempValueSonar } from "../sonar/tempValue";
 import { ResizeSonar } from "../sonar/resize";
-import { ThemeContext } from "../context/theme";
+import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
-import { InputConfig } from "../config";
-import { ThemeCache } from "../util";
+import { Button } from "./Button";
 import { Spin } from "./Spin";
 
 let themeCache = new ThemeCache((theme) => ({
@@ -70,6 +60,22 @@ const defaultConfig = {
     passwordShowIcon: <AiOutlineEye />,
     passwordHiddenIcon: <AiOutlineEyeInvisible />,
 };
+
+export interface InputConfig {
+    revertIcon?: React.ReactElement;
+    submitIcon?: React.ReactElement;
+    editIcon?: React.ReactElement;
+    passwordShowIcon?: React.ReactElement;
+    passwordHiddenIcon?: React.ReactElement;
+    primary?: ComponentColor;
+    hover?: ComponentColor;
+    highlight?: ComponentColor;
+    focus?: ComponentColor;
+    successful?: ComponentColor;
+    failed?: ComponentColor;
+    placeholderColor?: string;
+    validateErrorColor?: string;
+}
 
 interface InputProps {
     type: "password" | "text";
