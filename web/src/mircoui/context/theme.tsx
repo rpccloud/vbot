@@ -1,89 +1,85 @@
 import React from "react";
-import { Color, ColorPair, extendConfig, ITheme } from "../config";
+import { Theme } from "../config";
 
-export class Theme {
-    default: ColorPair;
-    primary: ColorPair;
-    secondary: ColorPair;
-    success: ColorPair;
-    warning: ColorPair;
-    disabled: ColorPair;
+// export class Theme {
+//     public default: ThemeItem;
+//     public primary: ThemeItem;
+//     public successful: ThemeItemSimple;
+//     public failed: ThemeItemSimple;
+//     public disabled: ThemeItemSimple;
 
-    constructor(o: {
-        default: ColorPair;
-        primary: ColorPair;
-        secondary: ColorPair;
-        success: ColorPair;
-        warning: ColorPair;
-        disabled: ColorPair;
-    }) {
-        this.default = o.default;
-        this.primary = o.primary;
-        this.secondary = o.secondary;
-        this.success = o.success;
-        this.warning = o.warning;
-        this.disabled = o.disabled;
-    }
+//     constructor(o: {
+//         default: ThemeItem;
+//         primary: ThemeItem;
+//         successful: ThemeItemSimple;
+//         failed: ThemeItemSimple;
+//         disabled: ThemeItemSimple;
+//     }) {
+//         this.default = o.default;
+//         this.primary = o.primary;
+//         this.successful = o.successful;
+//         this.failed = o.failed;
+//         this.disabled = o.disabled;
+//     }
 
-    hashKey(): string {
-        return [
-            this.default.main.hsla,
-            this.default.auxiliary.hsla,
-            this.primary.main.hsla,
-            this.primary.auxiliary.hsla,
-            this.secondary.main.hsla,
-            this.secondary.auxiliary.hsla,
-            this.success.main.hsla,
-            this.success.auxiliary.hsla,
-            this.warning.main.hsla,
-            this.warning.auxiliary.hsla,
-            this.disabled.main.hsla,
-            this.disabled.auxiliary.hsla,
-        ].join("-");
-    }
+//     hashKey(): string {
+//         return [
+//             this.default.light,
+//             this.default.main,
+//             this.default.dark,
+//             this.default.contrastText,
+//             this.primary.light,
+//             this.primary.main,
+//             this.primary.dark,
+//             this.primary.contrastText,
+//             this.successful.main,
+//             this.successful.contrastText,
+//             this.failed.main,
+//             this.failed.contrastText,
+//             this.disabled.main,
+//             this.disabled.contrastText,
+//         ].join("-");
+//     }
 
-    extend(o: ITheme): Theme {
-        return new Theme(
-            extendConfig(
-                {
-                    default: this.default,
-                    primary: this.primary,
-                    secondary: this.secondary,
-                    success: this.success,
-                    warning: this.warning,
-                    disabled: this.disabled,
-                },
-                o
-            ) as any
-        );
-    }
-}
+//     extend(o: ITheme): Theme {
+//         return new Theme(
+//             extendConfig(
+//                 {
+//                     default: this.default,
+//                     primary: this.primary,
+//                     successful: this.successful,
+//                     failed: this.failed,
+//                     disabled: this.disabled,
+//                 },
+//                 o
+//             ) as any
+//         );
+//     }
+// }
 
-export const ThemeContext = React.createContext<Theme>(
-    new Theme({
-        default: {
-            main: new Color(0, 0, 0.9, 1),
-            auxiliary: new Color(0, 0, 0.1, 1),
-        },
-        primary: {
-            main: new Color(0, 0, 0.9, 1),
-            auxiliary: new Color(32, 1, 0.5, 1),
-        },
-        secondary: {
-            main: new Color(0, 0, 0.7, 1),
-            auxiliary: new Color(32, 1, 0.4, 1),
-        },
-        success: {
-            main: new Color(0, 0, 0.9, 1),
-            auxiliary: new Color(114, 1, 0.5, 1),
-        },
-        warning: {
-            main: new Color(0, 0, 0.9, 1),
-            auxiliary: new Color(0, 1, 0.5, 1),
-        },
-        disabled: {
-            main: new Color(0, 0, 0.4, 1),
-            auxiliary: new Color(0, 0, 0.3, 1),
-        },
-    })
-);
+export const ThemeContext = React.createContext<Theme>({
+    default: {
+        main: "#000",
+        hover: "#222",
+        highlight: "#444",
+        contrastText: "#FFFFFFC0",
+    },
+    primary: {
+        main: "#8e24aa",
+        hover: "#9c27b0",
+        highlight: "#ab47bc",
+        contrastText: "#FFFFFFC0",
+    },
+    successful: {
+        main: "#76ff03",
+        contrastText: "#FFFFFFC0",
+    },
+    failed: {
+        main: "#e91e63",
+        contrastText: "#FFFFFFC0",
+    },
+    disabled: {
+        main: "#37474f",
+        contrastText: "#FFFFFFC0",
+    },
+});

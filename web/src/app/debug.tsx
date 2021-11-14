@@ -5,7 +5,7 @@ import { Button } from "../mircoui/component/Button";
 import { Input } from "../mircoui/component/Input";
 import { Popup } from "../mircoui/component/Popup";
 import { FocusContext } from "../mircoui/context/focus";
-import { Color, extendConfig } from "../mircoui/config";
+import { extendConfig } from "../mircoui/config";
 import { Spin } from "../mircoui/component/Spin";
 import { TabBar } from "../mircoui/component/TabBar";
 import { sleep } from "../mircoui/util";
@@ -217,8 +217,8 @@ const Debug = () => {
                         outline="underline"
                         theme={{
                             primary: {
-                                main: new Color(160, 1, 0.5, 1),
-                                auxiliary: new Color(280, 1, 0.5, 1),
+                                hover: "red",
+                                main: "red",
                             },
                         }}
                         focusable={true}

@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { extendColorSet, getFontSize, ITheme } from "../config";
+import { getFontSize } from "../config";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
@@ -14,7 +14,6 @@ interface TabProps {
     readonly tabBar: TabBar;
     size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
-    theme?: ITheme;
     config: TabConfig;
     icon?: ReactNode;
     title?: string;
@@ -117,14 +116,14 @@ export class Tab extends React.Component<TabProps, TabState> {
     render() {
         let config = this.props.config;
 
-        let color = extendColorSet(config.normal, this.props.config.normal);
+        let color = config.normal;
 
         if (this.state.hover) {
-            color = extendColorSet(config.hover, this.props.config.hover);
+            color = config.hover;
         }
 
         if (this.props.selected) {
-            color = extendColorSet(config.selected, this.props.config.selected);
+            color = config.selected;
         }
 
         let fontSize = getFontSize(this.props.size);
@@ -154,7 +153,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     width: width,
                     height: height,
                     bottom: 0,
-                    color: color.font,
+                    color: color?.font,
                     zIndex: this.props.selected
                         ? this.context.zIndex + 1
                         : this.context.zIndex,
@@ -165,8 +164,8 @@ export class Tab extends React.Component<TabProps, TabState> {
                         ref={this.bgRef}
                         d={path}
                         style={{
-                            fill: color.background,
-                            stroke: color.border,
+                            fill: color?.background,
+                            stroke: color?.border,
                             transition: makeTransition(
                                 ["fill", "stroke"],
                                 250,
@@ -250,7 +249,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                                     whiteSpace: "nowrap",
                                     color: "transparent",
                                     userSelect: "none",
-                                    backgroundImage: `linear-gradient(to right, ${color.font} 0%, ${color.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
+                                    backgroundImage: `linear-gradient(to right, ${color?.font} 0%, ${color?.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
                                 }}
                             >
                                 <span>{this.props.title}</span>
@@ -281,7 +280,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 icon={<AiOutlineCloseCircle />}
                                 config={{
                                     normal: {
-                                        font: color.font,
+                                        font: color?.font,
                                     },
                                 }}
                                 style={{

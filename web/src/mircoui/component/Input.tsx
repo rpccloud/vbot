@@ -8,11 +8,18 @@ import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 
 import { Button } from "./Button";
 
-import { extendColorSet, getFontSize, getFontWeight, ITheme } from "../config";
+import {
+    extendConfig,
+    extendTheme,
+    getFontSize,
+    getFontWeight,
+    getThemeHashKey,
+    Theme,
+} from "../config";
 import { ActionSonar } from "../sonar/action";
 import { TempValueSonar } from "../sonar/temp_value";
 import { ResizeSonar } from "../sonar/resize";
-import { Theme, ThemeContext } from "../context/theme";
+import { ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
 import { InputConfig } from "../config";
 import { ThemeCache } from "../util";
@@ -29,7 +36,7 @@ const defaultConfig = {
 };
 
 function getConfig(theme: Theme): InputConfig {
-    const themeKey = theme.hashKey();
+    const themeKey = getThemeHashKey(theme);
     let record = themeCache.getConfig(themeKey);
     if (record) {
         return record;
@@ -38,33 +45,33 @@ function getConfig(theme: Theme): InputConfig {
     record = {
         ...defaultConfig,
         normal: {
-            font: theme.default.main.hsla,
+            font: theme.primary?.contrastText,
             background: "transparent",
-            border: theme.default.main.hsla,
+            border: theme.primary?.main,
             shadow: "transparent",
         },
         hover: {
-            font: theme.default.main.hsla,
-            border: theme.primary.auxiliary.hsla,
+            font: theme.primary?.contrastText,
             background: "transparent",
+            border: theme.primary?.hover,
             shadow: "transparent",
         },
         focus: {
-            font: theme.default.main.hsla,
-            border: theme.primary.auxiliary.lighten(5).hsla,
+            font: theme.primary?.contrastText,
+            border: theme.primary?.highlight,
             background: "transparent",
-            shadow: theme.primary.auxiliary.lighten(5).hsla,
+            shadow: theme.primary?.highlight,
         },
-        success: {
-            font: theme.success.main.hsla,
-            background: theme.success.auxiliary.hsla,
+        successful: {
+            font: theme.successful?.contrastText,
+            background: theme.successful?.main,
         },
-        warning: {
-            font: theme.warning.main.hsla,
-            background: theme.warning.auxiliary.hsla,
+        failed: {
+            font: theme.failed?.contrastText,
+            background: theme.failed?.main,
         },
-        placeholderColor: theme.default.main.alpha(0.4).hsla,
-        validateErrorColor: theme.warning.auxiliary.hsla,
+        placeholderColor: theme.disabled?.contrastText,
+        validateErrorColor: theme.failed?.main,
     };
 
     themeCache.setConfig(themeKey, record);
@@ -76,7 +83,7 @@ interface InputProps {
     outline: "bare" | "underline" | "border";
     size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
-    theme?: ITheme;
+    theme?: Theme;
     config: InputConfig;
     icon?: React.ReactNode;
     label: string;
@@ -100,7 +107,7 @@ interface InputState {
     value: string;
     stageValue: string;
     submitting: boolean;
-    reportStatus: "success" | "warning" | "none";
+    reportStatus: "successful" | "failed" | "none";
 }
 
 const InputButton = (props: {
@@ -180,26 +187,26 @@ class InputCore extends React.Component<InputProps, InputState> {
     }
 
     render() {
-        const cfg: InputConfig = getConfig(
-            this.context.extend(this.props.theme)
+        const cfg: InputConfig = extendConfig(
+            getConfig(extendTheme(this.context, this.props.theme)),
+            this.props.config
         );
-        const propCfg = this.props.config;
-        let color = extendColorSet(cfg.normal, propCfg.normal);
 
+        let color = cfg.normal;
         if (this.state.hover) {
-            color = extendColorSet(cfg.hover, propCfg.hover);
+            color = cfg.hover;
         }
 
         if (this.state.focus) {
-            color = extendColorSet(cfg.focus, propCfg.focus);
+            color = cfg.focus;
         }
 
-        if (this.state.reportStatus === "warning") {
-            color = extendColorSet(cfg.warning, propCfg.warning);
+        if (this.state.reportStatus === "failed") {
+            color = cfg.failed;
         }
 
-        if (this.state.reportStatus === "success") {
-            color = extendColorSet(cfg.success, propCfg.success);
+        if (this.state.reportStatus === "successful") {
+            color = cfg.successful;
         }
 
         const fontSize = getFontSize(this.props.size);
@@ -219,18 +226,6 @@ class InputCore extends React.Component<InputProps, InputState> {
                 : qrHeight;
         const fontWeight = getFontWeight(this.props.fontWeight);
 
-        const submitIcon = propCfg.submitIcon || cfg.submitIcon;
-        const editIcon = propCfg.editIcon || cfg.editIcon;
-        const revertIcon = propCfg.revertIcon || cfg.revertIcon;
-        const passwordShowIcon =
-            propCfg.passwordShowIcon || cfg.passwordShowIcon;
-        const passwordHiddenIcon =
-            propCfg.passwordHiddenIcon || cfg.passwordHiddenIcon;
-        const placeholderColor =
-            propCfg.placeholderColor || cfg.placeholderColor;
-        const validateErrorColor =
-            propCfg.validateErrorColor || cfg.validateErrorColor;
-
         const isShowPassword =
             this.props.type === "password" && this.state.showPassword;
 
@@ -244,8 +239,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                         width: "100%",
                         bottom: 0,
                         height: 1,
-                        background: color.border,
-                        boxShadow: `0px 0px ${qrHeight}px ${color.shadow}`,
+                        background: color?.border,
+                        boxShadow: `0px 0px ${qrHeight}px ${color?.shadow}`,
                         transition: "inherit",
                     }}
                 />
@@ -260,8 +255,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     alignItems: "center",
                     justifyContent: "center",
                     color: !this.props.validator(this.state.value)
-                        ? validateErrorColor
-                        : color.font,
+                        ? cfg.validateErrorColor
+                        : color?.font,
                     marginRight: innerMargin,
                     transition: "inherit",
                 }}
@@ -274,8 +269,8 @@ class InputCore extends React.Component<InputProps, InputState> {
             <div
                 style={{
                     color: !this.props.validator(this.state.value)
-                        ? validateErrorColor
-                        : color.font,
+                        ? cfg.validateErrorColor
+                        : color?.font,
                     marginRight: innerMargin,
                     transition: "inherit",
                 }}
@@ -295,9 +290,11 @@ class InputCore extends React.Component<InputProps, InputState> {
                     padding: 0,
                     flex: 1,
                     cursor: this.state.focus ? "text" : "default",
-                    caretColor: this.state.focus ? color.font : "transparent",
+                    caretColor: this.state.focus ? color?.font : "transparent",
                     background: "transparent",
-                    color: this.state.value ? color.font : placeholderColor,
+                    color: this.state.value
+                        ? color?.font
+                        : cfg.placeholderColor,
                     fontWeight: "inherit",
                     transition: "background 350ms ease-out",
                 }}
@@ -344,7 +341,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                                     this.setState({
                                         value: this.state.stageValue,
                                     });
-                                    this.tempValueSonar.setValue("warning");
+                                    this.tempValueSonar.setValue("failed");
                                 }
                             }
                         );
@@ -360,8 +357,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     marginLeft={innerMargin}
                     icon={
                         this.state.showPassword
-                            ? passwordHiddenIcon
-                            : passwordShowIcon
+                            ? cfg.passwordHiddenIcon
+                            : cfg.passwordShowIcon
                     }
                     onClick={() => {
                         this.setState({
@@ -378,7 +375,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 <InputButton
                     size={this.props.size}
                     marginLeft={innerMargin}
-                    icon={revertIcon}
+                    icon={cfg.revertIcon}
                     onClick={() => {
                         if (this.state.stageValue !== this.state.value) {
                             this.setState({ value: this.state.stageValue });
@@ -399,7 +396,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 <InputButton
                     size={this.props.size}
                     marginLeft={innerMargin}
-                    icon={submitIcon}
+                    icon={cfg.submitIcon}
                     onClick={() => {
                         this.inputRef.current?.blur();
                         const currValue = this.state.value;
@@ -409,17 +406,17 @@ class InputCore extends React.Component<InputProps, InputState> {
                             this.state.stageValue !== currValue
                         ) {
                             this.setState({ submitting: true });
-                            let success = false;
+                            let successful = false;
                             this.props
                                 .onSubmit(this.state.stageValue, currValue)
                                 .then((v) => {
-                                    success = v;
+                                    successful = v;
                                 })
                                 .catch(() => {
-                                    success = false;
+                                    successful = false;
                                 })
                                 .finally(() => {
-                                    if (success) {
+                                    if (successful) {
                                         this.setState({
                                             stageValue: currValue,
                                         });
@@ -429,7 +426,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                                         });
                                     }
                                     this.tempValueSonar.setValue(
-                                        success ? "success" : "warning"
+                                        successful ? "successful" : "failed"
                                     );
                                     this.setState({ submitting: false });
                                 });
@@ -443,7 +440,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                 <InputButton
                     size={this.props.size}
                     marginLeft={innerMargin}
-                    icon={editIcon}
+                    icon={cfg.editIcon}
                     onClick={() => {
                         this.inputRef.current?.focus();
                     }}
@@ -454,8 +451,8 @@ class InputCore extends React.Component<InputProps, InputState> {
 
         if (this.props.outline === "border") {
             style = {
-                border: `1px solid ${color.border}`,
-                boxShadow: `0px 0px ${qrHeight}px ${color.shadow}`,
+                border: `1px solid ${color?.border}`,
+                boxShadow: `0px 0px ${qrHeight}px ${color?.shadow}`,
                 ...style,
             };
         } else {
@@ -476,8 +473,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     fontSize: fontSize,
                     height: height,
                     fontWeight: fontWeight,
-                    color: color.font,
-                    backgroundColor: color.background,
+                    color: color?.font,
+                    backgroundColor: color?.background,
                     transition: `background 250ms ease-out, color 250ms ease-out, border 250ms ease-out, box-shadow 250ms ease-out`,
                     ...style,
                 }}

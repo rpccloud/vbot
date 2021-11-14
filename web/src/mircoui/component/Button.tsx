@@ -1,8 +1,8 @@
 import React, { CSSProperties, useContext } from "react";
 import { getFontWeight } from "../../ui/theme/config";
-import { extendConfig, getFontSize, ITheme } from "../config";
+import { extendConfig, extendTheme, getFontSize, getThemeHashKey, Theme } from "../config";
 import { ActionSonar } from "../sonar/action";
-import { Theme, ThemeContext } from "../context/theme";
+import { ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
 import { ButtonConfig } from "../config";
 import { ThemeCache } from "../util";
@@ -10,7 +10,7 @@ import { ThemeCache } from "../util";
 let themeCache = new ThemeCache();
 
 function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
-    const themeKey = theme.hashKey();
+    const themeKey = getThemeHashKey(theme);
     let record: { fill: ButtonConfig; ghost: ButtonConfig } =
         themeCache.getConfig(themeKey);
     if (record) {
@@ -20,77 +20,77 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
     record = {
         fill: {
             normal: {
-                font: theme.secondary.main.hsla,
-                background: theme.secondary.auxiliary.hsla,
+                font: theme.primary?.contrastText,
+                background: theme.primary?.main,
                 border: "transparent",
                 shadow: "transparent",
             },
             hover: {
-                font: theme.primary.main.hsla,
-                background: theme.primary.auxiliary.hsla,
+                font: theme.primary?.contrastText,
+                background: theme.primary?.hover,
                 border: "transparent",
                 shadow: "transparent",
             },
             active: {
-                font: theme.primary.main.lighten(5).hsla,
-                background: theme.primary.auxiliary.lighten(5).hsla,
+                font: theme.primary?.contrastText,
+                background: theme.primary?.highlight,
                 border: "transparent",
-                shadow: theme.primary.auxiliary.lighten(5).hsla,
+                shadow: theme.primary?.highlight,
             },
             focus: {
-                font: theme.secondary.main.hsla,
-                background: theme.secondary.auxiliary.hsla,
-                border: theme.primary.auxiliary.lighten(5).hsla,
+                font: theme.primary?.contrastText,
+                background: theme.primary?.main,
+                border: theme.primary?.highlight,
                 shadow: "transparent",
             },
             selected: {
-                font: theme.primary.main.hsla,
-                background: theme.primary.auxiliary.hsla,
+                font: theme.primary?.contrastText,
+                background: theme.primary?.highlight,
                 border: "transparent",
                 shadow: "transparent",
             },
             disabled: {
-                font: theme.disabled.main.hsla,
-                background: theme.disabled.auxiliary.hsla,
-                border: theme.disabled.main.hsla,
+                font: theme.disabled?.contrastText,
+                background: theme.disabled?.main,
+                border: theme.disabled?.contrastText,
                 shadow: "transparent",
             },
         },
         ghost: {
             normal: {
-                font: theme.secondary.auxiliary.hsla,
+                font: theme.primary?.main,
                 background: "transparent",
-                border: theme.secondary.auxiliary.hsla,
+                border: theme.primary?.main,
                 shadow: "transparent",
             },
             hover: {
-                font: theme.primary.auxiliary.hsla,
+                font: theme.primary?.hover,
                 background: "transparent",
-                border: theme.primary.auxiliary.hsla,
+                border: theme.primary?.hover,
                 shadow: "transparent",
             },
             active: {
-                font: theme.primary.auxiliary.lighten(5).hsla,
+                font: theme.primary?.highlight,
                 background: "transparent",
-                border: theme.primary.auxiliary.lighten(5).hsla,
-                shadow: theme.primary.auxiliary.lighten(5).hsla,
+                border: theme.primary?.highlight,
+                shadow: theme.primary?.highlight,
             },
             focus: {
-                font: theme.secondary.auxiliary.hsla,
+                font: theme.primary?.main,
                 background: "transparent",
-                border: theme.primary.auxiliary.lighten(5).hsla,
+                border: theme.primary?.highlight,
                 shadow: "transparent",
             },
             selected: {
-                font: theme.primary.auxiliary.hsla,
+                font: theme.primary?.highlight,
                 background: "transparent",
-                border: theme.primary.auxiliary.hsla,
+                border: theme.primary?.highlight,
                 shadow: "transparent",
             },
             disabled: {
-                font: theme.disabled.auxiliary.hsla,
+                font: theme.disabled?.contrastText,
                 background: "transparent",
-                border: theme.disabled.auxiliary.hsla,
+                border: theme.disabled?.contrastText,
                 shadow: "transparent",
             },
         },
@@ -104,7 +104,7 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
 interface ButtonProps {
     size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
-    theme?: ITheme;
+    theme?: Theme;
     config: ButtonConfig;
     icon?: React.ReactNode;
     value: string;
@@ -160,10 +160,13 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     }
 
     render() {
-        let config = extendConfig(
-            getConfig(this.context.extend(this.props.theme), this.props.ghost),
+        let config: ButtonConfig = extendConfig(
+            getConfig(
+                extendTheme(this.context, this.props.theme),
+                this.props.ghost
+            ),
             this.props.config
-        ) as ButtonConfig;
+        );
 
         let colorSet = config.normal;
 

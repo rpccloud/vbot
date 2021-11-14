@@ -1,14 +1,21 @@
 import React from "react";
-import { getFontSize, ITheme, TabBarConfig } from "../config";
+import {
+    getFontSize,
+    Theme,
+    TabBarConfig,
+    getThemeHashKey,
+    extendConfig,
+    extendTheme,
+} from "../config";
 import { range, ThemeCache, TimerManager } from "../util";
 import { getSeed } from "../../app/plugin/browser/utils";
-import { Theme, ThemeContext } from "../context/theme";
+import { ThemeContext } from "../context/theme";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
 import { Tab } from "./Tab";
 
 function getConfig(theme: Theme): TabBarConfig {
-    const themeKey = theme.hashKey();
+    const themeKey = getThemeHashKey(theme);
     let record: TabBarConfig = themeCache.getConfig(themeKey);
     if (record) {
         return record;
@@ -17,22 +24,22 @@ function getConfig(theme: Theme): TabBarConfig {
     record = {
         tab: {
             normal: {
-                font: theme.primary.main.hsla,
+                font: theme.default?.contrastText,
                 background: "transparent",
-                border: theme.primary.main.hsla,
+                border: theme.default?.main,
                 shadow: "transparent",
             },
             hover: {
-                font: theme.primary.main.hsla,
+                font: theme.primary?.contrastText,
                 background: "transparent",
-                border: theme.primary.auxiliary.alpha(0.6).hsla,
+                border: theme.primary?.hover,
                 shadow: "transparent",
             },
             selected: {
-                font: theme.primary.main.hsla,
+                font: theme.primary?.contrastText,
                 background: "transparent",
-                border: theme.primary.auxiliary.hsla,
-                shadow: theme.primary.auxiliary.hsla,
+                border: theme.primary?.highlight,
+                shadow: "transparent",
             },
         },
     };
@@ -62,7 +69,8 @@ interface FloatTabItem {
 interface TabBarProps {
     size: "tiny" | "small" | "medium" | "large" | "xlarge" | "xxlarge";
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
-    theme?: ITheme;
+    theme?: Theme;
+    config: TabBarConfig;
     minTabWidth: number;
     maxTabWidth: number;
     innerLeft: number;
@@ -102,6 +110,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     static defaultProps = {
         size: "medium",
         fontWeight: "normal",
+        config: {},
         minTabWidth: 50,
         maxTabWidth: 240,
         innerLeft: 0,
@@ -337,8 +346,9 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         let fontSize = getFontSize(this.props.size);
         let height = Math.round(fontSize * 2.3);
         let outerPadding = `0px ${this.props.innerRight}px 0px ${this.props.innerLeft}px`;
-        let config: TabBarConfig = getConfig(
-            this.context.extend(this.props.theme)
+        let config: TabBarConfig = extendConfig(
+            getConfig(extendTheme(this.context, this.props.theme)),
+            this.props.config
         );
         return (
             <div style={{ padding: outerPadding }}>
@@ -354,7 +364,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 tabBar={this}
                                 size={this.props.size}
                                 fontWeight={this.props.fontWeight}
-                                theme={this.props.theme}
                                 icon={it.icon}
                                 title={it.title}
                                 minLeft={it.minLeft}
@@ -374,7 +383,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 tabBar={this}
                                 size={this.props.size}
                                 fontWeight={this.props.fontWeight}
-                                theme={this.props.theme}
                                 icon={it.icon}
                                 title={it.title}
                                 minLeft={it.minLeft}
@@ -394,7 +402,6 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 tabBar={this}
                                 size={this.props.size}
                                 fontWeight={this.props.fontWeight}
-                                theme={this.props.theme}
                                 icon={it.icon}
                                 title={it.title}
                                 minLeft={it.minLeft}
