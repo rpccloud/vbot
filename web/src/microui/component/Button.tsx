@@ -44,10 +44,7 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
                 shadow: theme.highlight?.main,
             },
             focus: {
-                font: theme.focus?.contrastText,
-                background: theme.focus?.main,
                 border: theme.focus?.main,
-                shadow: "transparent",
             },
             selected: {
                 font: theme.selected?.contrastText,
@@ -82,10 +79,7 @@ function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
                 shadow: theme.highlight?.main,
             },
             focus: {
-                font: theme.focus?.main,
-                background: "transparent",
                 border: theme.focus?.main,
-                shadow: "transparent",
             },
             selected: {
                 font: theme.selected?.main,
@@ -176,14 +170,6 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
         let color = config.primary;
 
-        if (this.state.focus) {
-            color = config.focus;
-        }
-
-        if (this.props.selected) {
-            color = config.selected;
-        }
-
         if (this.state.hover) {
             color = config.hover;
         }
@@ -194,6 +180,14 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
         if (this.props.disabled) {
             color = config.disabled;
+        }
+
+        if (this.props.selected) {
+            color = config.selected;
+        }
+
+        if (this.state.focus) {
+            color = { ...color, ...config.focus };
         }
 
         let fontSize = getFontSize(this.props.size);

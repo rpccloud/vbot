@@ -51,7 +51,7 @@ export class Spin extends React.Component<SpinProps, SpinState> {
         let color =
             this.props.color !== undefined
                 ? this.props.color
-                : this.context.primary.auxiliary.hsla;
+                : this.context.primary.main;
         let fontSize = getFontSize(this.props.size);
         let width =
             this.props.style?.width !== undefined

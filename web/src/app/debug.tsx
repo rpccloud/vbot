@@ -146,7 +146,7 @@ const Debug = () => {
                 </Container>
 
                 <Container width={300}>
-                    <FocusContext.Provider value={{ focusable: false }}>
+                    <FocusContext.Provider value={{ focusable: true }}>
                         <Button value="Click" ghost={true} disabled={true} />
                         <Button icon={<AiOutlineLock />} ghost={true} />
                         <Button
@@ -215,12 +215,6 @@ const Debug = () => {
                     <Input
                         defaultValue="Test"
                         outline="underline"
-                        theme={{
-                            primary: {
-                                contrastText: "white",
-                                main: "red",
-                            },
-                        }}
                         focusable={true}
                         submittable={true}
                         icon={<AiOutlineLock />}

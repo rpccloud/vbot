@@ -7,19 +7,19 @@ export const ThemeContext = React.createContext<Theme>({
         contrastText: "#FFFFFFC0",
     },
     primary: {
-        main: "#00897b",
+        main: "#b26500",
         contrastText: "#FFFFFFC0",
     },
     hover: {
-        main: "#009688",
+        main: "#ff9100",
         contrastText: "#FFFFFFC0",
     },
     highlight: {
-        main: "#26a69a",
-        contrastText: "#FFFFFFC0",
+        main: "#ffa733",
+        contrastText: "#FFFFFFFF",
     },
     focus: {
-        main: "#00897b",
+        main: "#ffa733",
         contrastText: "#FFFFFFC0",
     },
     selected: {
@@ -36,6 +36,6 @@ export const ThemeContext = React.createContext<Theme>({
     },
     disabled: {
         main: "#666",
-        contrastText: "#FFFFFF30",
+        contrastText: "#FFFFFFC0",
     },
 });

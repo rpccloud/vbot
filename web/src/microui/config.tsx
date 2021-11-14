@@ -81,6 +81,7 @@ export interface InputConfig {
     primary?: ComponentColor;
     hover?: ComponentColor;
     highlight?: ComponentColor;
+    focus?: ComponentColor;
     successful?: ComponentColor;
     failed?: ComponentColor;
     placeholderColor?: string;

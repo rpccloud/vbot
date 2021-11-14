@@ -62,15 +62,18 @@ function getConfig(theme: Theme): InputConfig {
             background: "transparent",
             shadow: theme.highlight?.main,
         },
+        focus: {
+            border: theme.focus?.main,
+        },
         successful: {
             font: theme.successful?.contrastText,
-            background: "transparent",
+            background: theme.successful?.main,
             border: theme.successful?.main,
             shadow: "transparent",
         },
         failed: {
             font: theme.failed?.contrastText,
-            background: "transparent",
+            background: theme.failed?.main,
             border: theme.failed?.main,
             shadow: "transparent",
         },
@@ -197,12 +200,13 @@ class InputCore extends React.Component<InputProps, InputState> {
         );
 
         let color = cfg.primary;
+
         if (this.state.hover) {
             color = cfg.hover;
         }
 
         if (this.state.focus) {
-            color = cfg.highlight;
+            color = { ...cfg.highlight, ...cfg.focus };
         }
 
         if (this.state.reportStatus === "failed") {
@@ -223,11 +227,15 @@ class InputCore extends React.Component<InputProps, InputState> {
         let innerLeft =
             this.props.innerLeft !== undefined
                 ? this.props.innerLeft
-                : qrHeight;
+                : this.props.outline === "border"
+                ? qrHeight
+                : 0;
         let innerRight =
             this.props.innerRight !== undefined
                 ? this.props.innerRight
-                : qrHeight;
+                : this.props.outline === "border"
+                ? qrHeight
+                : 0;
         const fontWeight = getFontWeight(this.props.fontWeight);
 
         const isShowPassword =
@@ -244,7 +252,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                         bottom: 0,
                         height: 1,
                         background: color?.border,
-                        boxShadow: `0px 0px ${qrHeight}px ${color?.shadow}`,
+                        boxShadow: `0px 0px ${qrHeight / 2}px ${color?.shadow}`,
                         transition: "inherit",
                     }}
                 />
@@ -456,7 +464,7 @@ class InputCore extends React.Component<InputProps, InputState> {
         if (this.props.outline === "border") {
             style = {
                 border: `1px solid ${color?.border}`,
-                boxShadow: `0px 0px ${qrHeight}px ${color?.shadow}`,
+                boxShadow: `0px 0px ${qrHeight / 2}px ${color?.shadow}`,
                 ...style,
             };
         } else {
