@@ -3,7 +3,6 @@ import {
     getFontSize,
     Theme,
     TabBarConfig,
-    getThemeHashKey,
     extendConfig,
     extendTheme,
     sizeKind,
@@ -15,42 +14,28 @@ import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
 import { Tab } from "./Tab";
 
-function getConfig(theme: Theme): TabBarConfig {
-    const themeKey = getThemeHashKey(theme);
-    let record: TabBarConfig = themeCache.getConfig(themeKey);
-    if (record) {
-        return record;
-    }
-
-    record = {
-        tab: {
-            primary: {
-                font: theme.default?.contrastText,
-                background: "transparent",
-                border: theme.default?.contrastText,
-                shadow: "transparent",
-            },
-            hover: {
-                font: theme.hover?.contrastText,
-                background: "transparent",
-                border: theme.hover?.main,
-                shadow: "transparent",
-            },
-            highlight: {
-                font: theme.highlight?.contrastText,
-                background: theme.highlight?.main,
-                border: theme.highlight?.main,
-                shadow: "transparent",
-            },
+let themeCache = new ThemeCache((theme) => ({
+    tab: {
+        primary: {
+            font: theme.default?.contrastText,
+            background: "transparent",
+            border: theme.default?.contrastText,
+            shadow: "transparent",
         },
-    };
-
-    themeCache.setConfig(themeKey, record);
-
-    return record;
-}
-
-let themeCache = new ThemeCache();
+        hover: {
+            font: theme.hover?.contrastText,
+            background: "transparent",
+            border: theme.hover?.main,
+            shadow: "transparent",
+        },
+        highlight: {
+            font: theme.highlight?.contrastText,
+            background: theme.highlight?.main,
+            border: theme.highlight?.main,
+            shadow: "transparent",
+        },
+    },
+}));
 
 interface FixedTabItem {
     width: number;
@@ -348,7 +333,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         let height = Math.round(fontSize * 2.3);
         let outerPadding = `0px ${this.props.innerRight}px 0px ${this.props.innerLeft}px`;
         let config: TabBarConfig = extendConfig(
-            getConfig(extendTheme(this.context, this.props.theme)),
+            themeCache.getConfig(extendTheme(this.context, this.props.theme)),
             this.props.config
         );
         return (

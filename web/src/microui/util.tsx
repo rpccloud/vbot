@@ -1,3 +1,5 @@
+import { getThemeHashKey, Theme } from "./config";
+
 export async function sleep(timeMS: number) {
     return new Promise((resolve) => setTimeout(resolve, timeMS));
 }
@@ -108,10 +110,11 @@ export class TimerManager {
 
 export class ThemeCache {
     private configMap = new Map<string, { timeMS: number; config: any }>();
-    private timer: number;
+    private onGet: (theme: Theme) => any;
 
-    constructor() {
-        this.timer = TimerManager.get().attach(this);
+    constructor(onGet: (theme: Theme) => any) {
+        this.onGet = onGet;
+        TimerManager.get().attach(this);
     }
 
     onTimer(nowMS: number): void {
@@ -122,23 +125,19 @@ export class ThemeCache {
         });
     }
 
-    getConfig(key: string): any {
+    getConfig(theme: Theme): any {
+        const key = getThemeHashKey(theme);
         let item = this.configMap.get(key);
 
-        if (item) {
-            item.timeMS = TimerManager.get().getNowMS();
+        if (!item) {
+            item = {
+                timeMS: TimerManager.get().getNowMS(),
+                config: this.onGet(theme),
+            };
             this.configMap.set(key, item);
-            return item.config;
-        } else {
-            return null;
         }
-    }
 
-    setConfig(key: string, config: any) {
-        this.configMap.set(key, {
-            timeMS: TimerManager.get().getNowMS(),
-            config: config,
-        });
+        return item.config;
     }
 }
 

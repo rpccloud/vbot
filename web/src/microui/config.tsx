@@ -142,14 +142,19 @@ const themeIDPropertyName = "@-micro-ui-theme-id-#";
 export function extendTheme(left: Theme, right: Theme | undefined): Theme {
     const leftHash = getThemeHashKey(left);
     const rightHash = getThemeHashKey(right);
-    const ret = extendConfig(left, right);
+
+    if (leftHash.endsWith(leftHash)) {
+        return left;
+    }
+
+    const ret = extendConfig({ ...left }, { ...right });
     ret[themeIDPropertyName] = `${leftHash}-${rightHash}`;
     return ret;
 }
 
 export function getThemeHashKey(theme: Theme | undefined): string {
     if (theme === undefined) {
-        return "";
+        return "@";
     }
 
     let o = theme as { [key: string]: any };

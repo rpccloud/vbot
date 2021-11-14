@@ -12,7 +12,6 @@ import {
     extendConfig,
     extendTheme,
     getFontSize,
-    getThemeHashKey,
     sizeKind,
     Theme,
 } from "../config";
@@ -25,7 +24,44 @@ import { InputConfig } from "../config";
 import { ThemeCache } from "../util";
 import { Spin } from "./Spin";
 
-let themeCache = new ThemeCache();
+let themeCache = new ThemeCache((theme) => ({
+    ...defaultConfig,
+    primary: {
+        font: theme.primary?.contrastText,
+        background: "transparent",
+        border: theme.primary?.main,
+        shadow: "transparent",
+    },
+    hover: {
+        font: theme.hover?.contrastText,
+        background: "transparent",
+        border: theme.hover?.main,
+        shadow: "transparent",
+    },
+    highlight: {
+        font: theme.highlight?.contrastText,
+        border: theme.highlight?.main,
+        background: "transparent",
+        shadow: theme.highlight?.main,
+    },
+    focus: {
+        border: theme.focus?.main,
+    },
+    successful: {
+        font: theme.successful?.contrastText,
+        background: theme.successful?.main,
+        border: theme.successful?.main,
+        shadow: "transparent",
+    },
+    failed: {
+        font: theme.failed?.contrastText,
+        background: theme.failed?.main,
+        border: theme.failed?.main,
+        shadow: "transparent",
+    },
+    placeholderColor: theme.disabled?.contrastText,
+    validateErrorColor: theme.failed?.main,
+}));
 
 const defaultConfig = {
     revertIcon: <AiOutlineClose />,
@@ -34,56 +70,6 @@ const defaultConfig = {
     passwordShowIcon: <AiOutlineEye />,
     passwordHiddenIcon: <AiOutlineEyeInvisible />,
 };
-
-function getConfig(theme: Theme): InputConfig {
-    const themeKey = getThemeHashKey(theme);
-    let record: InputConfig = themeCache.getConfig(themeKey);
-    if (record) {
-        return record;
-    }
-
-    record = {
-        ...defaultConfig,
-        primary: {
-            font: theme.primary?.contrastText,
-            background: "transparent",
-            border: theme.primary?.main,
-            shadow: "transparent",
-        },
-        hover: {
-            font: theme.hover?.contrastText,
-            background: "transparent",
-            border: theme.hover?.main,
-            shadow: "transparent",
-        },
-        highlight: {
-            font: theme.highlight?.contrastText,
-            border: theme.highlight?.main,
-            background: "transparent",
-            shadow: theme.highlight?.main,
-        },
-        focus: {
-            border: theme.focus?.main,
-        },
-        successful: {
-            font: theme.successful?.contrastText,
-            background: theme.successful?.main,
-            border: theme.successful?.main,
-            shadow: "transparent",
-        },
-        failed: {
-            font: theme.failed?.contrastText,
-            background: theme.failed?.main,
-            border: theme.failed?.main,
-            shadow: "transparent",
-        },
-        placeholderColor: theme.disabled?.contrastText,
-        validateErrorColor: theme.failed?.main,
-    };
-
-    themeCache.setConfig(themeKey, record);
-    return record;
-}
 
 interface InputProps {
     type: "password" | "text";
@@ -194,7 +180,7 @@ class InputCore extends React.Component<InputProps, InputState> {
 
     render() {
         const cfg: InputConfig = extendConfig(
-            getConfig(extendTheme(this.context, this.props.theme)),
+            themeCache.getConfig(extendTheme(this.context, this.props.theme)),
             this.props.config
         );
 

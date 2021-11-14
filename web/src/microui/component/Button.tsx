@@ -3,7 +3,6 @@ import {
     extendConfig,
     extendTheme,
     getFontSize,
-    getThemeHashKey,
     sizeKind,
     Theme,
 } from "../config";
@@ -13,93 +12,78 @@ import { FocusContext } from "../context/focus";
 import { ButtonConfig } from "../config";
 import { ThemeCache } from "../util";
 
-let themeCache = new ThemeCache();
-
-function getConfig(theme: Theme, ghost: boolean): ButtonConfig {
-    const themeKey = getThemeHashKey(theme);
-    let record: { fill: ButtonConfig; ghost: ButtonConfig } =
-        themeCache.getConfig(themeKey);
-    if (record) {
-        return ghost ? record.ghost : record.fill;
-    }
-
-    record = {
-        fill: {
-            primary: {
-                font: theme.primary?.contrastText,
-                background: theme.primary?.main,
-                border: theme.primary?.main,
-                shadow: "transparent",
-            },
-            hover: {
-                font: theme.hover?.contrastText,
-                background: theme.hover?.main,
-                border: theme.hover?.main,
-                shadow: "transparent",
-            },
-            highlight: {
-                font: theme.highlight?.contrastText,
-                background: theme.highlight?.main,
-                border: theme.highlight?.main,
-                shadow: theme.highlight?.main,
-            },
-            focus: {
-                border: theme.focus?.main,
-            },
-            selected: {
-                font: theme.selected?.contrastText,
-                background: theme.selected?.main,
-                border: theme.selected?.main,
-                shadow: "transparent",
-            },
-            disabled: {
-                font: theme.disabled?.contrastText,
-                background: theme.disabled?.main,
-                border: theme.disabled?.main,
-                shadow: "transparent",
-            },
+let themeCache = new ThemeCache((theme) => ({
+    fill: {
+        primary: {
+            font: theme.primary?.contrastText,
+            background: theme.primary?.main,
+            border: theme.primary?.main,
+            shadow: "transparent",
         },
-        ghost: {
-            primary: {
-                font: theme.primary?.main,
-                background: "transparent",
-                border: theme.primary?.main,
-                shadow: "transparent",
-            },
-            hover: {
-                font: theme.hover?.main,
-                background: "transparent",
-                border: theme.hover?.main,
-                shadow: "transparent",
-            },
-            highlight: {
-                font: theme.highlight?.main,
-                background: "transparent",
-                border: theme.highlight?.main,
-                shadow: theme.highlight?.main,
-            },
-            focus: {
-                border: theme.focus?.main,
-            },
-            selected: {
-                font: theme.selected?.main,
-                background: "transparent",
-                border: theme.selected?.main,
-                shadow: "transparent",
-            },
-            disabled: {
-                font: theme.disabled?.main,
-                background: "transparent",
-                border: theme.disabled?.main,
-                shadow: "transparent",
-            },
+        hover: {
+            font: theme.hover?.contrastText,
+            background: theme.hover?.main,
+            border: theme.hover?.main,
+            shadow: "transparent",
         },
-    };
-
-    themeCache.setConfig(themeKey, record);
-
-    return ghost ? record.ghost : record.fill;
-}
+        highlight: {
+            font: theme.highlight?.contrastText,
+            background: theme.highlight?.main,
+            border: theme.highlight?.main,
+            shadow: theme.highlight?.main,
+        },
+        focus: {
+            border: theme.focus?.main,
+        },
+        selected: {
+            font: theme.selected?.contrastText,
+            background: theme.selected?.main,
+            border: theme.selected?.main,
+            shadow: "transparent",
+        },
+        disabled: {
+            font: theme.disabled?.contrastText,
+            background: theme.disabled?.main,
+            border: theme.disabled?.main,
+            shadow: "transparent",
+        },
+    },
+    ghost: {
+        primary: {
+            font: theme.primary?.main,
+            background: "transparent",
+            border: theme.primary?.main,
+            shadow: "transparent",
+        },
+        hover: {
+            font: theme.hover?.main,
+            background: "transparent",
+            border: theme.hover?.main,
+            shadow: "transparent",
+        },
+        highlight: {
+            font: theme.highlight?.main,
+            background: "transparent",
+            border: theme.highlight?.main,
+            shadow: theme.highlight?.main,
+        },
+        focus: {
+            border: theme.focus?.main,
+        },
+        selected: {
+            font: theme.selected?.main,
+            background: "transparent",
+            border: theme.selected?.main,
+            shadow: "transparent",
+        },
+        disabled: {
+            font: theme.disabled?.main,
+            background: "transparent",
+            border: theme.disabled?.main,
+            shadow: "transparent",
+        },
+    },
+}));
 
 interface ButtonProps {
     size: sizeKind;
@@ -160,12 +144,9 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
     render() {
         let config: ButtonConfig = extendConfig(
-            getConfig(
-                extendTheme(this.context, this.props.theme),
-                this.props.ghost
-            ),
+            themeCache.getConfig(extendTheme(this.context, this.props.theme)),
             this.props.config
-        );
+        )[this.props.ghost ? "ghost" : "fill"];
 
         let color = config.primary;
 
