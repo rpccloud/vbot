@@ -1,14 +1,14 @@
 import React, { CSSProperties, ReactNode } from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 
-import { Button } from "../mircoui/component/Button";
-import { Input } from "../mircoui/component/Input";
-import { Popup } from "../mircoui/component/Popup";
-import { FocusContext } from "../mircoui/context/focus";
-import { extendConfig } from "../mircoui/config";
-import { Spin } from "../mircoui/component/Spin";
-import { TabBar } from "../mircoui/component/TabBar";
-import { sleep } from "../mircoui/util";
+import { Button } from "../microui/component/Button";
+import { Input } from "../microui/component/Input";
+import { Popup } from "../microui/component/Popup";
+import { FocusContext } from "../microui/context/focus";
+import { extendConfig } from "../microui/config";
+import { Spin } from "../microui/component/Spin";
+import { TabBar } from "../microui/component/TabBar";
+import { sleep } from "../microui/util";
 
 function debug() {
     const left = { a: <AiOutlineLock /> };

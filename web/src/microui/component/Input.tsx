@@ -17,7 +17,7 @@ import {
     Theme,
 } from "../config";
 import { ActionSonar } from "../sonar/action";
-import { TempValueSonar } from "../sonar/temp_value";
+import { TempValueSonar } from "../sonar/tempValue";
 import { ResizeSonar } from "../sonar/resize";
 import { ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
