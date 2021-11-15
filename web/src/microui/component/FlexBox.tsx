@@ -1,6 +1,9 @@
 import React from "react";
+import { Theme, ThemeContext } from "../context/theme";
+import { makeTransition } from "../util";
 
 interface FlexBoxProps {
+    animated: boolean;
     flexFlow: "column" | "row";
     justifyContent:
         | "flex-start"
@@ -18,14 +21,39 @@ interface FlexBoxProps {
 interface FlexBoxState {}
 
 class FlexBoxCore extends React.Component<FlexBoxProps, FlexBoxState> {
+    static contextType = ThemeContext;
+
+    private rootRef = React.createRef<HTMLDivElement>();
+
     constructor(props: FlexBoxProps) {
         super(props);
         this.state = {};
     }
 
+    componentDidMount() {
+        if (this.props.animated) {
+            const theme: Theme = this.context;
+
+            if (this.rootRef.current) {
+                this.rootRef.current.style.opacity = "0";
+                this.rootRef.current.style.transition = makeTransition(
+                    ["opacity"],
+                    theme.transition?.duration,
+                    theme.transition?.easing
+                );
+                setTimeout(() => {
+                    if (this.rootRef.current) {
+                        this.rootRef.current.style.opacity = "1";
+                    }
+                }, 10);
+            }
+        }
+    }
+
     render() {
         return (
             <div
+                ref={this.rootRef}
                 style={{
                     display: "flex",
                     flexFlow: this.props.flexFlow,
@@ -45,6 +73,7 @@ export const FlexBox = (props: FlexBoxProps) => {
 };
 
 FlexBox.defaultProps = {
+    animated: false,
     flexFlow: "column",
     justifyContent: "center",
     alignItems: "center",

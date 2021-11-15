@@ -48,8 +48,8 @@ export class AppConfig {
         this.setLang(window.navigator.language);
         this.rootRoute = "start";
         this.headHeight = 48;
-        this.footerHeight = 32;
-        this.margin = 16;
+        this.footerHeight = 24;
+        this.margin = 20;
     }
 
     async setLang(lang: string) {

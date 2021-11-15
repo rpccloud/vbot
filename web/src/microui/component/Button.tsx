@@ -102,7 +102,7 @@ interface ButtonProps {
     theme?: Theme;
     config: ButtonConfig;
     icon?: React.ReactNode;
-    value: string;
+    text: string;
     ghost: boolean;
     round: boolean;
     disabled: boolean;
@@ -282,13 +282,13 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     <span
                         style={{
                             width:
-                                this.props.icon && this.props.value
+                                this.props.icon && this.props.text
                                     ? innerMargin
                                     : 0,
                             height: 0,
                         }}
                     />
-                    {this.props.value}
+                    {this.props.text}
                 </div>
             </div>
         );
@@ -310,7 +310,7 @@ export const Button = (props: ButtonProps) => {
 Button.defaultProps = {
     fontWeight: "normal",
     config: {},
-    value: "",
+    text: "",
     ghost: false,
     round: false,
     disabled: false,

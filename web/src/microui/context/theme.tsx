@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    Background,
+    DefaultColor,
     extendConfig,
     PaletteColor,
     SeedManager,
@@ -9,9 +9,9 @@ import {
 } from "../util";
 
 export interface Theme {
-    background?: Background;
-    default?: PaletteColor;
+    default?: DefaultColor;
     primary?: PaletteColor;
+    secondary?: PaletteColor;
     hover?: PaletteColor;
     highlight?: PaletteColor;
     focus?: PaletteColor;
@@ -87,11 +87,21 @@ export function getThemeHashKey(theme: Theme | undefined): string {
 
 export const ThemeContext = React.createContext<Theme>({
     default: {
-        main: "#000",
+        backgroundLight: "rgb(0,32,65)",
+        backgroundDark: "rgb(10, 25, 41)",
         contrastText: "#FFFFFFD0",
+        outline: "rgb(00,127,255)",
+        divider: "rgb(255,47,76)",
+        makeBackground: (light?: string, dark?: string) => {
+            return `radial-gradient(${light} 0%, ${dark} 70%, ${dark} 100%)`;
+        },
     },
     primary: {
         main: "#b26500",
+        contrastText: "#FFFFFFD0",
+    },
+    secondary: {
+        main: "#0080FFFF",
         contrastText: "#FFFFFFD0",
     },
     hover: {
@@ -125,13 +135,5 @@ export const ThemeContext = React.createContext<Theme>({
     transition: {
         duration: "220ms",
         easing: "ease-in-out",
-    },
-    background: {
-        light: "rgb(0, 30, 60)",
-        dark: "rgb(10, 25, 41)",
-        outline: "rgb(19,47,76)",
-        makeBackground: (light?: string, dark?: string) => {
-            return `radial-gradient(${light} 0%, ${dark} 70%, ${dark} 100%)`;
-        },
     },
 });

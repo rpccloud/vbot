@@ -10,12 +10,12 @@ const Header = () => {
             flexFlow="row"
             style={{
                 fontWeight: 700,
-                height: AppConfig.get().headHeight,
+                minHeight: AppConfig.get().headHeight,
             }}
         >
             <Span
-                size="large"
-                value="Vbot"
+                size="x-large"
+                text="Vbot"
                 style={{ marginLeft: AppConfig.get().margin }}
             />
         </FlexBox>

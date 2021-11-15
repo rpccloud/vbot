@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 
-// import { UserOutlined, LockOutlined } from "@ant-design/icons";
-
-// import { message } from "antd";
 import { observer } from "mobx-react-lite";
-// import Card from "../ui/component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
-import { AppConfig, AppUser } from "./AppManager";
-import { RPCMap } from "rpccloud-client-js/build/types";
-import { delay } from "../util/util";
-import Input from "../ui/component/Input";
 import Plugin from "./plugin";
 import { Page } from "../microui/component/Page";
 import { FlexBox } from "../microui/component/FlexBox";
+import { Span } from "../microui/component/Span";
+import { Input } from "../microui/component/Input";
+
+import { AiOutlineUser } from "@react-icons/all-files/ai/AiOutlineUser";
+import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
+import { Divider } from "../microui/component/Divider";
+import { ThemeContext } from "../microui/context/theme";
+import { Button } from "../microui/component/Button";
+import { AppConfig } from "./AppManager";
 
 class Data {
     user: string;
@@ -55,10 +56,58 @@ class Data {
 const data = new Data();
 
 const Login = observer(() => {
+    const theme = useContext(ThemeContext);
     return (
         <Page>
-            <Plugin kind="header" />=
+            <Plugin kind="header" />
             <FlexBox style={{ flex: "1 0 0", flexFlow: "row" }}>
+                <FlexBox
+                    animated={true}
+                    alignItems="stretch"
+                    style={{
+                        width: 400,
+                        padding: AppConfig.get().margin,
+                        backgroundColor: theme.default?.backgroundLight,
+                        border: `1px solid ${theme.default?.outline}`,
+                        borderRadius: 10,
+                    }}
+                >
+                    <Span text="Login" size="x-large" />
+                    <Divider space={AppConfig.get().margin} />
+                    <Input
+                        type="text"
+                        outline="underline"
+                        size="large"
+                        defaultValue={data.user}
+                        placeholder="Input username"
+                        icon={<AiOutlineUser />}
+                        onChange={(e) => {
+                            data.setUser(e.target.value);
+                        }}
+                    />
+                    <Divider space={AppConfig.get().margin} />
+                    <Input
+                        type="password"
+                        outline="underline"
+                        size="large"
+                        defaultValue={data.password}
+                        placeholder="Input password"
+                        icon={<AiOutlineLock />}
+                        onChange={(e) => {
+                            data.setPassword(e.target.value);
+                        }}
+                    />
+                    <Divider space={AppConfig.get().margin * 2} />
+                    <FlexBox flexFlow="row" justifyContent="flex-end">
+                        <Button text="Cancel" ghost={true} />
+                        <Button
+                            text="Login"
+                            ghost={true}
+                            style={{ marginLeft: AppConfig.get().margin }}
+                        />
+                    </FlexBox>
+                </FlexBox>
+
                 {/* <Card
                     title="Login"
                     width={460}

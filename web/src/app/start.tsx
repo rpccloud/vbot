@@ -27,15 +27,16 @@ export const Start = observer((props: any) => {
         <Page>
             <Plugin kind="header" />
             <FlexBox
+                animated={true}
                 flexFlow="row"
                 style={{
                     flex: "1 0 0",
                 }}
             >
-                <Spin size="xx-large" />
+                <Spin size="x-large" />
                 <Span
-                    size="xx-large"
-                    value="Loading ..."
+                    size="x-large"
+                    text="Loading ..."
                     style={{ marginLeft: 24 }}
                 />
             </FlexBox>

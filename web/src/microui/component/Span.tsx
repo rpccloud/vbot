@@ -5,7 +5,7 @@ import { ThemeContext } from "../context/theme";
 import { getFontSize, sizeKind } from "../util";
 
 interface SpanProps {
-    value: string;
+    text: string;
     size?: sizeKind;
     color?: string;
     style?: React.CSSProperties;
@@ -36,7 +36,7 @@ class SpanCore extends React.Component<SpanProps, SpanState> {
                     ...this.props.style,
                 }}
             >
-                {this.props.value}
+                {this.props.text}
             </span>
         );
     }
@@ -48,5 +48,5 @@ export const Span = (props: SpanProps) => {
 };
 
 Span.defaultProps = {
-    value: "",
+    text: "",
 };

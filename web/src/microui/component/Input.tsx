@@ -372,8 +372,8 @@ class InputCore extends React.Component<InputProps, InputState> {
                     marginLeft={innerMargin}
                     icon={
                         this.state.showPassword
-                            ? config.passwordHiddenIcon
-                            : config.passwordShowIcon
+                            ? config.passwordShowIcon
+                            : config.passwordHiddenIcon
                     }
                     onClick={() => {
                         this.setState({

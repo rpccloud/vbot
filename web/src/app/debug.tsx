@@ -157,10 +157,10 @@ const Debug = () => {
 
             <div style={{ display: "flex", flexFlow: "row" }}>
                 <Container width={300}>
-                    <Button value="Click" disabled={true} />
+                    <Button text="Click" disabled={true} />
                     <Button icon={<AiOutlineLock />} />
                     <Button
-                        value="Click"
+                        text="Click"
                         icon={<AiOutlineLock />}
                         innerMargin={6}
                         style={{ width: 200, justifyContent: "left" }}
@@ -168,7 +168,7 @@ const Debug = () => {
 
                     <Button icon={<AiOutlineLock />} round={true} />
                     <Button
-                        value="H"
+                        text="H"
                         style={{ width: 18, height: 18 }}
                         round={true}
                         onClick={(e) => {}}
@@ -178,10 +178,10 @@ const Debug = () => {
 
                 <Container width={300}>
                     <FocusContext.Provider value={{ focusable: true }}>
-                        <Button value="Click" ghost={true} disabled={true} />
+                        <Button text="Click" ghost={true} disabled={true} />
                         <Button icon={<AiOutlineLock />} ghost={true} />
                         <Button
-                            value="Click"
+                            text="Click"
                             icon={<AiOutlineLock />}
                             innerMargin={6}
                             ghost={true}
@@ -194,7 +194,7 @@ const Debug = () => {
                             ghost={true}
                         />
                         <Button
-                            value="H"
+                            text="H"
                             style={{ width: 18, height: 18 }}
                             ghost={true}
                             round={true}
@@ -209,10 +209,10 @@ const Debug = () => {
 
                 <Container width={300}>
                     <div style={{ display: "flex" }}>
-                        <Button value="Click" disabled={true} />
+                        <Button text="Click" disabled={true} />
                         <Button icon={<AiOutlineLock />} />
                         <Button
-                            value="Click"
+                            text="Click"
                             icon={<AiOutlineLock />}
                             innerMargin={6}
                             style={{ width: 120, justifyContent: "left" }}
@@ -220,7 +220,7 @@ const Debug = () => {
 
                         <Button icon={<AiOutlineLock />} round={true} />
                         <Button
-                            value="H"
+                            text="H"
                             style={{ width: 18, height: 18 }}
                             round={true}
                             onClick={(e) => {}}

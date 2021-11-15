@@ -17,14 +17,14 @@ export class Page extends React.Component<PageProps, PageState> {
     }
 
     render() {
-        const background = this.context.background;
+        const config = this.context.default;
 
         return (
             <div
                 style={{
-                    background: background?.makeBackground(
-                        background.light,
-                        background.dark
+                    background: config?.makeBackground(
+                        config.backgroundLight,
+                        config.backgroundDark
                     ),
                     display: "flex",
                     flexFlow: "column",

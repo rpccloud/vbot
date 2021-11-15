@@ -42,10 +42,12 @@ export interface Transition {
     easing: string;
 }
 
-export interface Background {
-    light?: string;
-    dark?: string;
+export interface DefaultColor {
+    backgroundLight?: string;
+    backgroundDark?: string;
+    contrastText?: string;
     outline?: string;
+    divider?: string;
     makeBackground?: (light?: string, dark?: string) => string;
 }
 
