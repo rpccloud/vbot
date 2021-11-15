@@ -10,6 +10,7 @@ import {
 import { ActionSonar } from "../sonar/action";
 import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
+import { SizeContext } from "../context/size";
 
 let themeCache = new ThemeCache((theme) => ({
     fill: {
@@ -97,7 +98,7 @@ export type ButtonConfig = {
 };
 
 interface ButtonProps {
-    size: sizeKind;
+    size?: sizeKind;
     theme?: Theme;
     config: ButtonConfig;
     icon?: React.ReactNode;
@@ -123,20 +124,6 @@ interface ButtonState {
 
 class ButtonCore extends React.Component<ButtonProps, ButtonState> {
     static contextType = ThemeContext;
-    static defaultProps = {
-        size: "medium",
-        fontWeight: "normal",
-        config: {},
-        value: "",
-        ghost: false,
-        round: false,
-        disabled: false,
-        selected: false,
-        focusable: true,
-        border: true,
-        onClick: () => void {},
-    };
-
     private rootRef = React.createRef<HTMLDivElement>();
     private actionSonar = new ActionSonar([this.rootRef]);
 
@@ -181,7 +168,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
             color = { ...color, ...config.focus };
         }
 
-        let fontSize = getFontSize(this.props.size);
+        let fontSize = getFontSize(this.props.size || "medium");
         let height = Math.round(fontSize * 2.3);
         let qrHeight = Math.round(height / 4);
         let innerMargin =
@@ -310,7 +297,25 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
 export const Button = (props: ButtonProps) => {
     const { focusable } = useContext(FocusContext);
-    return <ButtonCore {...props} focusable={focusable && props.focusable} />;
+    const { size } = useContext(SizeContext);
+    return (
+        <ButtonCore
+            {...props}
+            size={props.size || size}
+            focusable={focusable && props.focusable}
+        />
+    );
 };
 
-Button.defaultProps = ButtonCore.defaultProps;
+Button.defaultProps = {
+    fontWeight: "normal",
+    config: {},
+    value: "",
+    ghost: false,
+    round: false,
+    disabled: false,
+    selected: false,
+    focusable: true,
+    border: true,
+    onClick: () => void {},
+};

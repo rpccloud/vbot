@@ -26,6 +26,8 @@ export class Page extends React.Component<PageProps, PageState> {
                         background.light,
                         background.dark
                     ),
+                    display: "flex",
+                    flexFlow: "column",
                     width: "100vw",
                     height: "100vh",
                     ...this.props.style,

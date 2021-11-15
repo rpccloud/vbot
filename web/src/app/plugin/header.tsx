@@ -1,5 +1,6 @@
 import React from "react";
 import { FlexBox } from "../../microui/component/FlexBox";
+import { Span } from "../../microui/component/Span";
 import { AppConfig } from "../AppManager";
 
 const Header = () => {
@@ -7,13 +8,16 @@ const Header = () => {
         <FlexBox
             justifyContent="flex-start"
             flexFlow="row"
-            size="large"
             style={{
                 fontWeight: 700,
                 height: AppConfig.get().headHeight,
             }}
         >
-            <div style={{ marginLeft: AppConfig.get().margin }}>Vbot</div>
+            <Span
+                size="large"
+                value="Vbot"
+                style={{ marginLeft: AppConfig.get().margin }}
+            />
         </FlexBox>
     );
 };

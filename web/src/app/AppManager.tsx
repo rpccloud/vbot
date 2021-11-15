@@ -25,6 +25,17 @@ export default observer(function () {
     ) : null;
 });
 
+export class AppError {
+    public report(e: any) {
+        console.log(e);
+    }
+
+    private static instance = new AppError();
+    static get(): AppError {
+        return AppError.instance;
+    }
+}
+
 export class AppConfig {
     locale?: Locale;
     rootRoute: string;

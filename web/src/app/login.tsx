@@ -1,16 +1,18 @@
 import React from "react";
 
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+// import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
-import { message } from "antd";
+// import { message } from "antd";
 import { observer } from "mobx-react-lite";
-import Card from "../ui/component/Card";
+// import Card from "../ui/component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
 import { AppConfig, AppUser } from "./AppManager";
 import { RPCMap } from "rpccloud-client-js/build/types";
 import { delay } from "../util/util";
 import Input from "../ui/component/Input";
 import Plugin from "./plugin";
+import { Page } from "../microui/component/Page";
+import { FlexBox } from "../microui/component/FlexBox";
 
 class Data {
     user: string;
@@ -54,16 +56,10 @@ const data = new Data();
 
 const Login = observer(() => {
     return (
-        <div
-            className="vbot-fill-viewport"
-            style={{ display: "flex", flexFlow: "column" }}
-        >
-            <Plugin kind="header" />
-            <div
-                style={{ display: "flex", flex: "1 0 0", flexFlow: "row" }}
-                className="vbot-container-center"
-            >
-                <Card
+        <Page>
+            <Plugin kind="header" />=
+            <FlexBox style={{ flex: "1 0 0", flexFlow: "row" }}>
+                {/* <Card
                     title="Login"
                     width={460}
                     nextName="Login"
@@ -121,10 +117,10 @@ const Login = observer(() => {
                         }}
                     />
                     <div style={{ height: 20 }} />
-                </Card>
-            </div>
+                </Card> */}
+            </FlexBox>
             <Plugin kind="footer" />
-        </div>
+        </Page>
     );
 });
 
