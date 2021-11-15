@@ -6,7 +6,7 @@ import { message } from "antd";
 import { observer } from "mobx-react-lite";
 import Card from "../ui/component/Card";
 import { makeAutoObservable, runInAction } from "mobx";
-import { AppData, AppUser } from "./AppManager";
+import { AppConfig, AppUser } from "./AppManager";
 import { RPCMap } from "rpccloud-client-js/build/types";
 import { delay } from "../util/util";
 import Input from "../ui/component/Input";
@@ -83,16 +83,16 @@ const Login = observer(() => {
                                 );
                                 AppUser.setUserName(userName as string);
                                 AppUser.setSessionID(sessionID as string);
-                                AppData.get().setRootRoute("main");
+                                AppConfig.get().setRootRoute("main");
                             } else {
                                 message.error("Username or password error");
                                 await delay(2000);
-                                AppData.get().setRootRoute("start");
+                                AppConfig.get().setRootRoute("start");
                             }
                         } catch (e) {
                             message.error((e as any).getMessage());
                             await delay(2000);
-                            AppData.get().setRootRoute("start");
+                            AppConfig.get().setRootRoute("start");
                         } finally {
                             data.reset();
                         }

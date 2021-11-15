@@ -309,13 +309,8 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 }
 
 export const Button = (props: ButtonProps) => {
-    const focusContext = useContext(FocusContext);
-    return (
-        <ButtonCore
-            {...props}
-            focusable={focusContext.focusable && props.focusable}
-        />
-    );
+    const { focusable } = useContext(FocusContext);
+    return <ButtonCore {...props} focusable={focusable && props.focusable} />;
 };
 
 Button.defaultProps = ButtonCore.defaultProps;

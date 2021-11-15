@@ -20,19 +20,25 @@ const routeMap: Map<string, React.ReactNode> = new Map([
 ]);
 
 export default observer(function () {
-    return AppData.get().isValid() ? (
-        <>{routeMap.get(AppData.get().rootRoute)}</>
+    return AppConfig.get().isValid() ? (
+        <>{routeMap.get(AppConfig.get().rootRoute)}</>
     ) : null;
 });
 
-export class AppData {
+export class AppConfig {
     locale?: Locale;
     rootRoute: string;
+    headHeight: number;
+    footerHeight: number;
+    margin: number;
 
     private constructor() {
         makeAutoObservable(this);
         this.setLang(window.navigator.language);
         this.rootRoute = "start";
+        this.headHeight = 48;
+        this.footerHeight = 32;
+        this.margin = 16;
     }
 
     async setLang(lang: string) {
@@ -52,9 +58,9 @@ export class AppData {
         return !!this.locale;
     }
 
-    private static instance = new AppData();
-    static get(): AppData {
-        return AppData.instance;
+    private static instance = new AppConfig();
+    static get(): AppConfig {
+        return AppConfig.instance;
     }
 }
 
@@ -88,6 +94,6 @@ export class AppUser {
     }
 }
 
-// window.onbeforeunload = function(event) {
+// window.onbeforeunload = function (event) {
 //     event.returnValue = "false";
-// }
+// };

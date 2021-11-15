@@ -5,9 +5,9 @@ import { getFontSize, sizeKind } from "../util";
 interface FlexBoxProps {
     flexFlow: "column" | "row";
     justifyContent:
-        | "left"
+        | "flex-start"
+        | "flex-end"
         | "center"
-        | "right"
         | "stretch"
         | "space-evenly"
         | "space-between"

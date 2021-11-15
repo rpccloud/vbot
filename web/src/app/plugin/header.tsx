@@ -1,25 +1,21 @@
 import React from "react";
-
-const styles = {
-    container: {
-        height: "var(--Vbot-HeaderHeight)",
-        color: "var(--Vbot-PrimaryColor)",
-        display: "flex",
-        alignItems: "center",
-    },
-    logo: {
-        fontSize: "var(--Vbot-FontSizeLarge)",
-        marginLeft: 24,
-        fontWeight: 900,
-    },
-}
+import { FlexBox } from "../../microui/component/FlexBox";
+import { AppConfig } from "../AppManager";
 
 const Header = () => {
     return (
-        <div className="vbot-header" style={styles.container}>
-            <div style={styles.logo}>Vbot</div>
-        </div>
-    )
-}
+        <FlexBox
+            justifyContent="flex-start"
+            flexFlow="row"
+            size="large"
+            style={{
+                fontWeight: 700,
+                height: AppConfig.get().headHeight,
+            }}
+        >
+            <div style={{ marginLeft: AppConfig.get().margin }}>Vbot</div>
+        </FlexBox>
+    );
+};
 
-export default Header
+export default Header;

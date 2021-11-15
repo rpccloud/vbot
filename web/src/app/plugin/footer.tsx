@@ -1,19 +1,21 @@
-import React from "react";
-
-const styles = {
-    container: {
-        fontSize: "var(--Vbot-FontSizeSmall)",
-        minHeight: "var(--Vbot-FooterHeight)",
-        color: "var(--Vbot-FontColorLighten)",
-    }
-}
+import React, { useContext } from "react";
+import { FlexBox } from "../../microui/component/FlexBox";
+import { ThemeContext } from "../../microui/context/theme";
+import { AppConfig } from "../AppManager";
 
 const Footer = () => {
+    const theme = useContext(ThemeContext);
     return (
-        <div className="vbot-container-center" style={styles.container} >
+        <FlexBox
+            size="small"
+            style={{
+                color: theme.disabled?.contrastText,
+                height: AppConfig.get().footerHeight,
+            }}
+        >
             Copyright rpccloud.com ©2021 Created by tianshuo
-        </div>
-    )
-}
+        </FlexBox>
+    );
+};
 
-export default Footer
+export default Footer;

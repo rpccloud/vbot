@@ -45,6 +45,7 @@ export interface Transition {
 export interface Background {
     light?: string;
     dark?: string;
+    outline?: string;
     makeBackground?: (light?: string, dark?: string) => string;
 }
 

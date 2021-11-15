@@ -6,7 +6,7 @@ import { message, Spin } from "antd";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
-import { AppData, AppUser } from "./AppManager";
+import { AppConfig, AppUser } from "./AppManager";
 import Card from "../ui/component/Card";
 import { delay } from "../util/util";
 import Input from "../ui/component/Input";
@@ -198,11 +198,11 @@ const Register = observer((props: any) => {
                         "admin",
                         data.password
                     );
-                    AppData.get().setRootRoute("login");
+                    AppConfig.get().setRootRoute("login");
                 } catch (e) {
                     message.error((e as any).getMessage());
                     await delay(1000);
-                    AppData.get().setRootRoute("start");
+                    AppConfig.get().setRootRoute("start");
                 } finally {
                     data.reset();
                     setShow(0);

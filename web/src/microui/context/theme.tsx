@@ -127,10 +127,11 @@ export const ThemeContext = React.createContext<Theme>({
         easing: "ease-in-out",
     },
     background: {
-        light: "#444",
-        dark: "#111",
+        light: "rgb(0, 30, 60)",
+        dark: "rgb(10, 25, 41)",
+        outline: "rgb(19,47,76)",
         makeBackground: (light?: string, dark?: string) => {
-            return `radial-gradient(${light}, ${dark})`;
+            return `radial-gradient(${light} 0%, ${dark} 70%, ${dark} 100%)`;
         },
     },
 });
