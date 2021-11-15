@@ -35,7 +35,7 @@ const Debug = () => {
     return (
         <div
             style={{
-                background: "white",
+                background: "#111",
                 position: "fixed",
                 width: "100vw",
                 height: "100vh",
@@ -51,10 +51,6 @@ const Debug = () => {
                         height="1"
                         style={{ overflow: "visible" }}
                     >
-                        <clipPath>
-                            <circle id="myClip" cx="40" cy="35" r="60" />
-                        </clipPath>
-
                         <filter id="shadow">
                             <feDropShadow
                                 dx="0"
@@ -69,15 +65,10 @@ const Debug = () => {
 
                         <path
                             id="heart"
-                            d="M10,30 A20,20,0,0,1,50,30 A20,20,0,0,1,90,30 Q90,60,50,90 Q10,60,10,30 Z"
-                        />
-
-                        <use
                             filter="url(#shadow)"
-                            clip-path="url(#myClip)"
-                            href="#heart"
-                            fill="red"
+                            d="M10,30 A20,20,0,0,1,50,30 A20,20,0,0,1,90,30 Q90,60,50,90 Q10,60,10,30 Z"
                             stroke={click ? "yellow" : "blue"}
+                            fill="red"
                             style={{
                                 transition: "stroke 250ms ease-in",
                                 boxShadow: `0px 0px 4px red`,
