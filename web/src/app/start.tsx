@@ -4,6 +4,7 @@ import { AppData, AppUser } from "./AppManager";
 import { observer } from "mobx-react-lite";
 import { delay } from "../util/util";
 import Plugin from "./plugin";
+import { Page } from "../microui/component/Page";
 
 const styles = {
     text: {
@@ -13,7 +14,7 @@ const styles = {
     },
 };
 
-const StartPage = observer((props: any) => {
+export const Start = observer((props: any) => {
     setTimeout(async () => {
         try {
             let ret = await AppUser.send(3000, "#.user:IsInitialized");
@@ -29,10 +30,7 @@ const StartPage = observer((props: any) => {
     });
 
     return (
-        <div
-            className="vbot-fill-viewport"
-            style={{ display: "flex", flexFlow: "column" }}
-        >
+        <Page>
             <Plugin kind="header" />
             <div
                 style={{ display: "flex", flex: "1 0 0", flexFlow: "row" }}
@@ -42,8 +40,6 @@ const StartPage = observer((props: any) => {
                 <div style={styles.text}>Loading ...</div>
             </div>
             <Plugin kind="footer" />
-        </div>
+        </Page>
     );
 });
-
-export default StartPage;

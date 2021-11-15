@@ -8,28 +8,20 @@ import Main from "./main";
 import Login from "./login";
 import Register from "./register";
 import Debug from "./debug";
-import { ConfigProvider } from "antd";
-import StartPage from "./start";
+import { Start } from "./start";
 import { RPCAny } from "rpccloud-client-js/build/types";
 
-import { ThemeContext, ThemeConfig } from "../ui/theme/config";
-
-const routeMap: Map<string, any> = new Map([
-    ["start", <StartPage />],
+const routeMap: Map<string, React.ReactNode> = new Map([
+    ["start", <Start />],
     ["main", <Main />],
     ["login", <Login />],
     ["register", <Register />],
     ["debug", <Debug />],
 ]);
 
-export default observer(() => {
-    const appData = AppData.get();
-    return appData.isValid() ? (
-        <ThemeContext.Provider value={ThemeConfig.get()}>
-            <ConfigProvider locale={AppData.get().locale?.antd}>
-                {routeMap.get(AppData.get().rootRoute)}
-            </ConfigProvider>
-        </ThemeContext.Provider>
+export default observer(function () {
+    return AppData.get().isValid() ? (
+        <>{routeMap.get(AppData.get().rootRoute)}</>
     ) : null;
 });
 
@@ -40,7 +32,7 @@ export class AppData {
     private constructor() {
         makeAutoObservable(this);
         this.setLang(window.navigator.language);
-        this.rootRoute = "debug";
+        this.rootRoute = "start";
     }
 
     async setLang(lang: string) {
@@ -77,6 +69,10 @@ export class AppUser {
 
     static setSessionID(sessionID: string) {
         AppUser.sessionID = sessionID;
+    }
+
+    static getUserName(): string {
+        return AppUser.userName;
     }
 
     static setUserName(userName: string) {
