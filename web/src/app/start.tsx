@@ -1,18 +1,11 @@
 import React from "react";
-import { message, Spin } from "antd";
 import { AppData, AppUser } from "./AppManager";
 import { observer } from "mobx-react-lite";
 import { delay } from "../util/util";
 import Plugin from "./plugin";
 import { Page } from "../microui/component/Page";
-
-const styles = {
-    text: {
-        fontSize: "var(--Vbot-FontSizeLarge)",
-        color: "var(--Vbot-FontColor)",
-        marginLeft: 16,
-    },
-};
+import { Spin } from "../microui/component/Spin";
+import { FlexBox } from "../microui/component/FlexBox";
 
 export const Start = observer((props: any) => {
     setTimeout(async () => {
@@ -24,21 +17,24 @@ export const Start = observer((props: any) => {
                 AppData.get().setRootRoute("register");
             }
         } catch (e) {
-            message.error((e as any).getMessage());
+            //   message.error((e as any).getMessage());
             await delay(2000);
         }
     });
 
     return (
-        <Page>
+        <Page style={{ display: "flex", flexFlow: "column" }}>
             <Plugin kind="header" />
-            <div
-                style={{ display: "flex", flex: "1 0 0", flexFlow: "row" }}
-                className="vbot-container-center"
+            <FlexBox
+                flexFlow="row"
+                style={{
+                    flex: "1 0 0",
+                }}
+                size="x-large"
             >
-                <Spin size="large" />
-                <div style={styles.text}>Loading ...</div>
-            </div>
+                <Spin size="xx-large" />
+                <div style={{ marginLeft: 24 }}>Loading ...</div>
+            </FlexBox>
             <Plugin kind="footer" />
         </Page>
     );

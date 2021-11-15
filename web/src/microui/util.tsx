@@ -19,8 +19,8 @@ const cfgFontSize = {
     medium: 14,
     large: 18,
     "x-large": 24,
-    "xx-large": 48,
-    "xxx-large": 128,
+    "xx-large": 32,
+    "xxx-large": 64,
 };
 
 export type sizeKind =
@@ -40,6 +40,12 @@ export function getFontSize(value: sizeKind): number {
 export interface Transition {
     duration: string;
     easing: string;
+}
+
+export interface Background {
+    light?: string;
+    dark?: string;
+    makeBackground?: (light?: string, dark?: string) => string;
 }
 
 export interface PaletteColor {

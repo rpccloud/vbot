@@ -1,5 +1,6 @@
 import React from "react";
 import {
+    Background,
     extendConfig,
     PaletteColor,
     SeedManager,
@@ -8,6 +9,7 @@ import {
 } from "../util";
 
 export interface Theme {
+    background?: Background;
     default?: PaletteColor;
     primary?: PaletteColor;
     hover?: PaletteColor;
@@ -123,5 +125,12 @@ export const ThemeContext = React.createContext<Theme>({
     transition: {
         duration: "220ms",
         easing: "ease-in-out",
+    },
+    background: {
+        light: "#444",
+        dark: "#111",
+        makeBackground: (light?: string, dark?: string) => {
+            return `radial-gradient(${light}, ${dark})`;
+        },
     },
 });
