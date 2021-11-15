@@ -42,43 +42,44 @@ const Debug = () => {
                 padding: 16,
             }}
         >
-            <div>
-                <Spin color="red" speed={1} size="large" />
-                <div style={{ position: "absolute", top: 100 }}>
-                    <svg
-                        viewBox="0 0 1 1"
-                        width="1"
-                        height="1"
-                        style={{ overflow: "visible" }}
-                    >
-                        <filter id="shadow">
-                            <feDropShadow
-                                dx="0"
-                                dy="0"
-                                stdDeviation="2"
-                                style={{
-                                    floodColor: click ? "yellow" : "blue",
-                                    transition: "flood-color 250ms ease-in",
-                                }}
-                            />
-                        </filter>
-
-                        <path
-                            id="heart"
-                            filter="url(#shadow)"
-                            d="M10,30 A20,20,0,0,1,50,30 A20,20,0,0,1,90,30 Q90,60,50,90 Q10,60,10,30 Z"
-                            stroke={click ? "yellow" : "blue"}
-                            fill="red"
+            <div style={{ position: "absolute", top: 100, display: "none" }}>
+                <svg
+                    viewBox="0 0 1 1"
+                    width="1"
+                    height="1"
+                    style={{ overflow: "visible" }}
+                >
+                    <filter id="shadow">
+                        <feDropShadow
+                            dx="0"
+                            dy="0"
+                            stdDeviation="2"
                             style={{
-                                transition: "stroke 250ms ease-in",
-                                boxShadow: `0px 0px 4px red`,
-                            }}
-                            onClick={() => {
-                                setClick(!click);
+                                floodColor: click ? "yellow" : "blue",
+                                transition: "flood-color 250ms ease-in",
                             }}
                         />
-                    </svg>
-                </div>
+                    </filter>
+
+                    <path
+                        id="heart"
+                        filter="url(#shadow)"
+                        d="M10,30 A20,20,0,0,1,50,30 A20,20,0,0,1,90,30 Q90,60,50,90 Q10,60,10,30 Z"
+                        stroke={click ? "yellow" : "blue"}
+                        fill="red"
+                        style={{
+                            transition: "stroke 250ms ease-in",
+                            boxShadow: `0px 0px 4px red`,
+                        }}
+                        onClick={() => {
+                            setClick(!click);
+                        }}
+                    />
+                </svg>
+            </div>
+
+            <div>
+                <Spin color="red" speed={1} size="large" />
 
                 <TabBar
                     size="large"
