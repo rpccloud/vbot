@@ -16,8 +16,8 @@ function hasState(elem: Element, state: string): boolean {
             return true;
         }
 
-        for (let child of elem.children) {
-            if (hasState(child, state)) {
+        for (let i = 0; i < elem.children.length; i++) {
+            if (hasState(elem.children[i], state)) {
                 return true;
             }
         }

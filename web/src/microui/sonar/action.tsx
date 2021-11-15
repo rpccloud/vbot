@@ -14,8 +14,8 @@ function elementMatches(
     }
 
     if (matchChildren) {
-        for (let child of elem.children) {
-            if (elementMatches(child, state, true)) {
+        for (let i = 0; i < elem.children.length; i++) {
+            if (elementMatches(elem.children[i], state, true)) {
                 return true;
             }
         }

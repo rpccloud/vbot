@@ -1,4 +1,4 @@
-import React, { CSSProperties, ReactNode } from "react";
+import React, { CSSProperties, ReactNode, useState } from "react";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 
 import { Button } from "../microui/component/Button";
@@ -30,10 +30,12 @@ const Container = (props: {
 );
 
 const Debug = () => {
+    const [click, setClick] = useState(false);
+
     return (
         <div
             style={{
-                background: "#444",
+                background: "white",
                 position: "fixed",
                 width: "100vw",
                 height: "100vh",
@@ -42,6 +44,51 @@ const Debug = () => {
         >
             <div>
                 <Spin color="red" speed={1} size="large" />
+                <div style={{ position: "absolute", top: 100 }}>
+                    <svg
+                        viewBox="0 0 1 1"
+                        width="1"
+                        height="1"
+                        style={{ overflow: "visible" }}
+                    >
+                        <clipPath>
+                            <circle id="myClip" cx="40" cy="35" r="60" />
+                        </clipPath>
+
+                        <filter id="shadow">
+                            <feDropShadow
+                                dx="0"
+                                dy="0"
+                                stdDeviation="2"
+                                style={{
+                                    floodColor: click ? "yellow" : "blue",
+                                    transition: "flood-color 250ms ease-in",
+                                }}
+                            />
+                        </filter>
+
+                        <path
+                            id="heart"
+                            d="M10,30 A20,20,0,0,1,50,30 A20,20,0,0,1,90,30 Q90,60,50,90 Q10,60,10,30 Z"
+                        />
+
+                        <use
+                            filter="url(#shadow)"
+                            clip-path="url(#myClip)"
+                            href="#heart"
+                            fill="red"
+                            stroke={click ? "yellow" : "blue"}
+                            style={{
+                                transition: "stroke 250ms ease-in",
+                                boxShadow: `0px 0px 4px red`,
+                            }}
+                            onClick={() => {
+                                setClick(!click);
+                            }}
+                        />
+                    </svg>
+                </div>
+
                 <TabBar
                     size="large"
                     style={{ fontWeight: 500 }}
