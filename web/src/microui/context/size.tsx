@@ -1,10 +1,8 @@
 import React from "react";
-import { sizeKind } from "../util";
+import { Size } from "../util";
 
-interface Size {
-    size: sizeKind;
-}
-
-export const SizeContext = React.createContext<Size>({
+export const SizeContext = React.createContext<{
+    size: Size;
+}>({
     size: "medium",
 });

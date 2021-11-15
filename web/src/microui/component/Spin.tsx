@@ -1,10 +1,10 @@
 import React, { CSSProperties } from "react";
 import { ThemeContext } from "../context/theme";
 import { AiOutlineLoading3Quarters } from "@react-icons/all-files/ai/AiOutlineLoading3Quarters";
-import { getFontSize, sizeKind } from "../util";
+import { getFontSize, Size } from "../util";
 
 interface SpinProps {
-    size: sizeKind;
+    size: Size;
     icon: React.ReactNode;
     color?: string;
     speed: number;

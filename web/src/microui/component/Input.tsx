@@ -10,7 +10,7 @@ import {
     extendConfig,
     getFontSize,
     makeTransition,
-    sizeKind,
+    Size,
     Transition,
 } from "../util";
 import { ActionSonar } from "../sonar/action";
@@ -89,7 +89,7 @@ export interface InputConfig {
 interface InputProps {
     type: "password" | "text";
     outline: "bare" | "underline" | "border";
-    size: sizeKind;
+    size: Size;
     theme?: Theme;
     config: InputConfig;
     icon?: React.ReactNode;
@@ -118,7 +118,7 @@ interface InputState {
 }
 
 const InputButton = (props: {
-    size: sizeKind;
+    size: Size;
     icon: React.ReactNode;
     marginLeft: number;
     onClick: () => void;

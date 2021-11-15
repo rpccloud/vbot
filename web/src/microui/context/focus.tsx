@@ -1,9 +1,7 @@
 import React from "react";
 
-interface Focus {
+export const FocusContext = React.createContext<{
     focusable: boolean;
-}
-
-export const FocusContext = React.createContext<Focus>({
+}>({
     focusable: true,
 });

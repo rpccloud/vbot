@@ -13,7 +13,9 @@ import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { Divider } from "../microui/component/Divider";
 import { ThemeContext } from "../microui/context/theme";
 import { Button } from "../microui/component/Button";
-import { AppConfig } from "./AppManager";
+import { AppConfig, AppError, AppUser } from "./AppManager";
+import { RPCMap } from "rpccloud-client-js/build/types";
+import { sleep } from "../microui/util";
 
 class Data {
     user: string;
@@ -99,11 +101,50 @@ const Login = observer(() => {
                     />
                     <Divider space={AppConfig.get().margin * 2} />
                     <FlexBox flexFlow="row" justifyContent="flex-end">
-                        <Button text="Cancel" ghost={true} />
                         <Button
                             text="Login"
+                            disabled={
+                                !data.user || !data.password || data.loading
+                            }
                             ghost={true}
                             style={{ marginLeft: AppConfig.get().margin }}
+                            onClick={async () => {
+                                try {
+                                    let ret = await AppUser.send(
+                                        8000,
+                                        "#.user:Login",
+                                        data.user,
+                                        data.password
+                                    );
+                                    if (ret) {
+                                        const userName = (ret as RPCMap).get(
+                                            "name"
+                                        );
+                                        const sessionID = (ret as RPCMap).get(
+                                            "sessionID"
+                                        );
+                                        AppUser.setUserName(userName as string);
+                                        AppUser.setSessionID(
+                                            sessionID as string
+                                        );
+                                        AppConfig.get().setRootRoute("main");
+                                    } else {
+                                        AppError.get().report(
+                                            "Username or password error"
+                                        );
+                                        await sleep(2000);
+                                        AppConfig.get().setRootRoute("start");
+                                    }
+                                } catch (e) {
+                                    AppError.get().report(
+                                        (e as any).getMessage()
+                                    );
+                                    await sleep(2000);
+                                    AppConfig.get().setRootRoute("start");
+                                } finally {
+                                    data.reset();
+                                }
+                            }}
                         />
                     </FlexBox>
                 </FlexBox>

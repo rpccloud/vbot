@@ -1,11 +1,5 @@
 import React, { CSSProperties } from "react";
-import {
-    extendConfig,
-    getFontSize,
-    range,
-    sizeKind,
-    TimerManager,
-} from "../util";
+import { extendConfig, getFontSize, range, Size, TimerManager } from "../util";
 import { getSeed } from "../../app/plugin/browser/utils";
 import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { ActionSonar } from "../sonar/action";
@@ -56,7 +50,7 @@ export interface TabBarConfig {
 }
 
 interface TabBarProps {
-    size: sizeKind;
+    size: Size;
     fontWeight: "lighter" | "normal" | "bold" | "bolder";
     theme?: Theme;
     config: TabBarConfig;

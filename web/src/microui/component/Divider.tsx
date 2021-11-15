@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import { SizeContext } from "../context/size";
+import React from "react";
 import { ThemeContext } from "../context/theme";
 
 interface DividerProps {
@@ -106,7 +105,6 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
 }
 
 export const Divider = (props: DividerProps) => {
-    const { size } = useContext(SizeContext);
     return <DividerCore {...props} />;
 };
 

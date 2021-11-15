@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { ComponentColor, getFontSize, sizeKind, Transition } from "../util";
+import { ComponentColor, getFontSize, Size, Transition } from "../util";
 import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
@@ -18,7 +18,7 @@ export interface TabConfig {
 interface TabProps {
     readonly id: number;
     readonly tabBar: TabBar;
-    size: sizeKind;
+    size: Size;
     config: TabConfig;
     icon?: ReactNode;
     title?: string;

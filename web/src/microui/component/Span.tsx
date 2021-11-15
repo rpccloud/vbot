@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { SizeContext } from "../context/size";
 import { ThemeContext } from "../context/theme";
 
-import { getFontSize, sizeKind } from "../util";
+import { getFontSize, Size } from "../util";
 
 interface SpanProps {
     text: string;
-    size?: sizeKind;
+    size?: Size;
     color?: string;
     style?: React.CSSProperties;
 }

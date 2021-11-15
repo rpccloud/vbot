@@ -23,7 +23,7 @@ const cfgFontSize = {
     "xxx-large": 64,
 };
 
-export type sizeKind =
+export type Size =
     | "xx-small"
     | "x-small"
     | "small"
@@ -33,7 +33,7 @@ export type sizeKind =
     | "xx-large"
     | "xxx-large";
 
-export function getFontSize(value: sizeKind): number {
+export function getFontSize(value: Size): number {
     return cfgFontSize[value];
 }
 

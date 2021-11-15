@@ -4,13 +4,14 @@ import {
     extendConfig,
     getFontSize,
     makeTransition,
-    sizeKind,
+    Size,
     Transition,
 } from "../util";
 import { ActionSonar } from "../sonar/action";
 import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
 import { SizeContext } from "../context/size";
+import { BorderRadiusContext } from "../context/borderRadius";
 
 let themeCache = new ThemeCache((theme) => ({
     fill: {
@@ -98,7 +99,7 @@ export type ButtonConfig = {
 };
 
 interface ButtonProps {
-    size?: sizeKind;
+    size?: Size;
     theme?: Theme;
     config: ButtonConfig;
     icon?: React.ReactNode;
@@ -109,6 +110,7 @@ interface ButtonProps {
     selected: boolean;
     focusable: boolean;
     border: boolean;
+    borderRadius?: number;
     innerMargin?: number;
     innerLeft?: number;
     innerRight?: number;
@@ -213,6 +215,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     border: `${this.props.border ? 1 : 0}px solid ${
                         color?.border
                     }`,
+                    borderRadius: this.props.borderRadius,
                     color: color?.font,
                     fontSize: fontSize,
                     padding: 0,
@@ -298,11 +301,17 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 export const Button = (props: ButtonProps) => {
     const { focusable } = useContext(FocusContext);
     const { size } = useContext(SizeContext);
+    const { borderRadius } = useContext(BorderRadiusContext);
     return (
         <ButtonCore
             {...props}
             size={props.size || size}
             focusable={focusable && props.focusable}
+            borderRadius={
+                props.borderRadius !== undefined
+                    ? props.borderRadius
+                    : borderRadius
+            }
         />
     );
 };
