@@ -3,7 +3,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
 import { AppConfig, AppError, AppUser } from "./AppManager";
-import Plugin from "./plugin";
+import { Plugin } from "./plugin";
 import { ThemeContext } from "../microui/context/theme";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Divider } from "../microui/component/Divider";

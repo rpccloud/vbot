@@ -5,7 +5,7 @@ import { ThemeContext } from "../context/theme";
 import { getFontSize, Size } from "../util";
 
 interface SpanProps {
-    children?: string;
+    children?: React.ReactNode;
     size?: Size;
     color?: string;
     style?: React.CSSProperties;

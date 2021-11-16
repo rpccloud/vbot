@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
+import { FlexBox } from "../../microui/component/FlexBox";
+import { Span } from "../../microui/component/Span";
+import { ThemeContext } from "../../microui/context/theme";
 import Browser from "./browser";
 import Footer from "./footer";
 import Header from "./header";
@@ -14,7 +17,8 @@ export interface PluginProps {
     tabID?: number;
 }
 
-const Plugin = (props: PluginProps) => {
+export const Plugin = (props: PluginProps) => {
+    const theme = useContext(ThemeContext);
     switch (props.kind) {
         case "header":
             return <Header />;
@@ -64,18 +68,11 @@ const Plugin = (props: PluginProps) => {
             );
         default:
             return (
-                <div className="vbot-container-center ">
-                    <div
-                        style={{
-                            color: "var(--Vbot-ErrorColor)",
-                            fontSize: "var(--Vbot-FontSizeLarge)",
-                        }}
-                    >
+                <FlexBox>
+                    <Span color={theme.failed?.main}>
                         Unknown plugin kind "{props.kind}"
-                    </div>
-                </div>
+                    </Span>
+                </FlexBox>
             );
     }
 };
-
-export default Plugin;

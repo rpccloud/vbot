@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Layout, Menu } from "antd";
 import { LaptopOutlined, UserOutlined } from "@ant-design/icons";
-import Plugin, { PluginProps } from "..";
+import { Plugin, PluginProps } from "..";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { getChannel } from "../../../ui/event/event";

@@ -13,7 +13,7 @@ import {
 import { AppUser } from "../../AppManager";
 import { toObject } from "rpccloud-client-js/build/types";
 import { getChannel } from "../../../ui/event/event";
-import Plugin, { PluginProps } from "..";
+import { Plugin, PluginProps } from "..";
 import Button, { ButtonContext } from "../../../ui/component/Button";
 
 class Data {

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { observer } from "mobx-react-lite";
 import { makeAutoObservable, runInAction } from "mobx";
-import Plugin from "./plugin";
+import { Plugin } from "./plugin";
 import { Page } from "../microui/component/Page";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Span } from "../microui/component/Span";

@@ -2,7 +2,7 @@ import React from "react";
 import { AppConfig, AppError, AppUser } from "./AppManager";
 import { observer } from "mobx-react-lite";
 import { delay } from "../util/util";
-import Plugin from "./plugin";
+import { Plugin } from "./plugin";
 import { Page } from "../microui/component/Page";
 import { Spin } from "../microui/component/Spin";
 import { FlexBox } from "../microui/component/FlexBox";
