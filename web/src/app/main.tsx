@@ -39,7 +39,6 @@ export const Main = () => {
                     config={{
                         tab: {
                             highlight: {
-                                font: theme.primary?.main,
                                 background: "transparent",
                             },
                         },
@@ -75,13 +74,13 @@ export const Main = () => {
                 <Divider
                     space={1}
                     lineWidth={1}
-                    color={theme.highlight?.main}
+                    color={theme.default?.outline}
                 />
                 <FlexBox style={{ flex: 1 }} />
                 <Divider
                     space={1}
                     lineWidth={1}
-                    color={theme.highlight?.main}
+                    color={theme.default?.outline}
                 />
             </FlexBox>
             <Plugin kind="footer" />

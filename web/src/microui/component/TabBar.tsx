@@ -1,10 +1,18 @@
 import React, { CSSProperties } from "react";
-import { extendConfig, getFontSize, range, Size, TimerManager } from "../util";
+import {
+    extendConfig,
+    getFontSize,
+    range,
+    SeedManager,
+    Size,
+    TimerManager,
+} from "../util";
 import { getSeed } from "../../app/plugin/browser/utils";
 import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
 import { Tab, TabConfig } from "./Tab";
+import { EventListener } from "../event/channel";
 
 let themeCache = new ThemeCache((theme) => ({
     tab: {
@@ -62,6 +70,7 @@ interface TabBarProps {
     initialFloatTabs?: FloatTabItem[];
     initialDynamicTabs?: FloatTabItem[];
     style?: CSSProperties;
+    onInit: (id: string) => void;
 }
 
 enum TabKind {
@@ -99,8 +108,12 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         maxTabWidth: 240,
         innerLeft: 0,
         innerRight: 0,
+        onInit: () => {},
     };
 
+    private readonly id: string;
+    private listener_addTab: EventListener;
+    private listener_onChange: EventListener;
     private rootRef = React.createRef<HTMLDivElement>();
     private actionSonar = new ActionSonar([this.rootRef]);
     private resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
@@ -119,6 +132,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
 
     constructor(props: TabBarProps) {
         super(props);
+        this.id = `micro-ui-tab-bar-${SeedManager.getSeed()}`;
         this.resizeSonar.listenFast();
         this.state = { flushCount: 0 };
         const nowMS = TimerManager.get().getNowMS();
@@ -175,6 +189,14 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
               })
             : [];
         this.selectedTab = this.findRecordByID(this.findLastSelectedID());
+
+        this.listener_addTab = new EventListener(this.id, "addTab", () => {});
+        this.listener_onChange = new EventListener(
+            this.id,
+            "onChange",
+            () => {}
+        );
+        props.onInit(this.id);
     }
 
     private flush(render: boolean, animate: boolean) {
@@ -253,6 +275,8 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     componentWillUnmount() {
         this.actionSonar.close();
         this.resizeSonar.close();
+        this.listener_addTab.close();
+        this.listener_onChange.close();
     }
 
     findLastSelectedID(): number {

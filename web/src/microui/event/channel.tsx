@@ -5,8 +5,8 @@ type Handler = (...args: any) => any;
 class ChannelManager {
     private static channelMap = new Map<string, Map<number, Handler>>();
 
-    public static call(target: string, args: any[]): Array<any> {
-        let handlerMap = ChannelManager.channelMap.get(target);
+    public static call(eid: string, args: any[]): Array<any> {
+        let handlerMap = ChannelManager.channelMap.get(eid);
 
         if (!handlerMap) {
             return [];
@@ -21,12 +21,12 @@ class ChannelManager {
         return ret;
     }
 
-    public static addListener(target: string, handler: Handler): number {
-        let handlerMap = ChannelManager.channelMap.get(target);
+    public static addListener(eid: string, handler: Handler): number {
+        let handlerMap = ChannelManager.channelMap.get(eid);
 
         if (!handlerMap) {
             handlerMap = new Map<number, Handler>();
-            ChannelManager.channelMap.set(target, handlerMap);
+            ChannelManager.channelMap.set(eid, handlerMap);
         }
 
         const handlerID = SeedManager.getSeed();
@@ -34,22 +34,22 @@ class ChannelManager {
         return handlerID;
     }
 
-    public static removeListener(target: string, handlerID: number): boolean {
-        let handlerMap = ChannelManager.channelMap.get(target);
+    public static removeListener(eid: string, handlerID: number): boolean {
+        let handlerMap = ChannelManager.channelMap.get(eid);
         if (!handlerMap) {
             return false;
         }
 
         const ret = handlerMap.delete(handlerID);
-        ChannelManager.check(target);
+        ChannelManager.check(eid);
         return ret;
     }
 
-    private static check(target: string) {
-        let handlerMap = ChannelManager.channelMap.get(target);
+    private static check(eid: string) {
+        let handlerMap = ChannelManager.channelMap.get(eid);
 
         if (handlerMap?.size === 0) {
-            ChannelManager.channelMap.delete(target);
+            ChannelManager.channelMap.delete(eid);
         }
     }
 
@@ -65,20 +65,25 @@ class ChannelManager {
 }
 
 export class EventListener {
-    private readonly target: string;
+    private readonly eid: string;
     private readonly handlerID: number;
 
-    constructor(target: string, handler: Handler) {
-        const handlerID = ChannelManager.addListener(target, handler);
-        this.target = target;
+    constructor(target: string, action: string, handler: Handler) {
+        const eid = `${target}:${action}`;
+        const handlerID = ChannelManager.addListener(eid, handler);
+        this.eid = eid;
         this.handlerID = handlerID;
     }
 
     public close(): boolean {
-        return ChannelManager.removeListener(this.target, this.handlerID);
+        return ChannelManager.removeListener(this.eid, this.handlerID);
     }
 }
 
-export function evalEvent(target: string, ...args: any): Array<any> {
-    return ChannelManager.call(target, args);
+export function evalEvent(
+    target: string,
+    action: string,
+    ...args: any
+): Array<any> {
+    return ChannelManager.call(`${target}:${action}`, args);
 }
