@@ -57,7 +57,7 @@ class Data {
 
 const data = new Data();
 
-const Login = observer(() => {
+export const Login = observer(() => {
     const theme = useContext(ThemeContext);
     return (
         <Page>
@@ -153,5 +153,3 @@ const Login = observer(() => {
         </Page>
     );
 });
-
-export default Login;

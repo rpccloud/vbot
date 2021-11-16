@@ -206,7 +206,7 @@ const TermsOfService = observer(
     }
 );
 
-const Register = observer((props: any) => {
+export const Register = observer((props: any) => {
     let [show, setShow] = useState(0);
 
     let inner: React.ReactNode | null = null;
@@ -277,5 +277,3 @@ const Register = observer((props: any) => {
         </Page>
     );
 });
-
-export default Register;

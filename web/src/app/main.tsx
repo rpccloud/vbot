@@ -1,7 +1,7 @@
 import React from "react";
 import Plugin from "./plugin";
 
-const Main = () => (
+export const Main = () => (
     <div
         className="vbot-fill-viewport"
         style={{ display: "flex", flexFlow: "column" }}
@@ -11,5 +11,3 @@ const Main = () => (
         <Plugin kind="footer" />
     </div>
 );
-
-export default Main;
