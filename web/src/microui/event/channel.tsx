@@ -1,8 +1,8 @@
 import { SeedManager } from "../util";
 
-type HandlerParam = {
+export type HandlerParam = {
     action: string;
-    param: any[];
+    args: any[];
     callback?: (param: any) => void;
 };
 

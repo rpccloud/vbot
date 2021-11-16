@@ -12,7 +12,7 @@ import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
 import { Tab, TabConfig } from "./Tab";
-import { EventListener } from "../event/channel";
+import { EventListener, HandlerParam } from "../event/channel";
 
 let themeCache = new ThemeCache((theme) => ({
     tab: {
@@ -79,7 +79,7 @@ enum TabKind {
     Dynamic,
 }
 
-interface TabRecord {
+export interface TabRecord {
     readonly id: number;
     title?: string;
     icon?: React.ReactNode;
@@ -114,6 +114,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     private readonly id: string;
     private eventListener: EventListener;
     private rootRef = React.createRef<HTMLDivElement>();
+    private changeCallbacks: ((v: any) => void)[] = [];
     private actionSonar = new ActionSonar([this.rootRef]);
     private resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
         if (rect) {
@@ -189,9 +190,19 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             : [];
         this.selectedTab = this.findRecordByID(this.findLastSelectedID());
 
-        this.eventListener = new EventListener(this.id, () => {});
+        this.eventListener = new EventListener(this.id, this.onEventListen);
         props.onInit(this.id);
     }
+
+    private onEventListen = (param: HandlerParam) => {
+        switch (param.action) {
+            case "HookChange":
+                if (param.callback) {
+                    this.changeCallbacks.push(param.callback);
+                }
+                break;
+        }
+    };
 
     private flush(render: boolean, animate: boolean) {
         const resizeTabs = this.floatTabs.length + this.dynamicTabs.length;
@@ -247,6 +258,19 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             this.setState((state) => ({
                 flushCount: state.flushCount + 1,
             }));
+        }
+
+        // fire HookChange functions
+        if (this.changeCallbacks.length > 0) {
+            const param = {
+                fixedTabs: this.fixedTabs,
+                floatTabs: this.floatTabs,
+                dynamicTabs: this.dynamicTabs,
+                selectedTab: this.selectedTab,
+            };
+            for (let i = 0; i < this.changeCallbacks.length; i++) {
+                this.changeCallbacks[i](param);
+            }
         }
     }
 
