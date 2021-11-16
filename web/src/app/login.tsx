@@ -74,7 +74,7 @@ const Login = observer(() => {
                         borderRadius: 10,
                     }}
                 >
-                    <Span text="Login" size="x-large" />
+                    <Span size="x-large">Login</Span>
                     <Divider space={AppConfig.get().margin} />
                     <Input
                         type="text"
@@ -99,7 +99,7 @@ const Login = observer(() => {
                             data.setPassword(e.target.value);
                         }}
                     />
-                    <Divider space={AppConfig.get().margin * 2} />
+                    <Divider space={AppConfig.get().margin} />
                     <FlexBox flexFlow="row" justifyContent="flex-end">
                         <Button
                             text="Login"
@@ -148,66 +148,6 @@ const Login = observer(() => {
                         />
                     </FlexBox>
                 </FlexBox>
-
-                {/* <Card
-                    title="Login"
-                    width={460}
-                    nextName="Login"
-                    canNext={!!data.user && !!data.password && !data.loading}
-                    onNext={async () => {
-                        try {
-                            let ret = await AppUser.send(
-                                8000,
-                                "#.user:Login",
-                                data.user,
-                                data.password
-                            );
-                            if (ret) {
-                                const userName = (ret as RPCMap).get("name");
-                                const sessionID = (ret as RPCMap).get(
-                                    "sessionID"
-                                );
-                                AppUser.setUserName(userName as string);
-                                AppUser.setSessionID(sessionID as string);
-                                AppConfig.get().setRootRoute("main");
-                            } else {
-                                message.error("Username or password error");
-                                await delay(2000);
-                                AppConfig.get().setRootRoute("start");
-                            }
-                        } catch (e) {
-                            message.error((e as any).getMessage());
-                            await delay(2000);
-                            AppConfig.get().setRootRoute("start");
-                        } finally {
-                            data.reset();
-                        }
-                    }}
-                >
-                    <div style={{ height: 20 }} />
-                    <Input
-                        type="text"
-                        size="medium"
-                        defaultValue={data.user}
-                        placeholder="Input Username"
-                        prefixIcon={<UserOutlined />}
-                        onChange={(value) => {
-                            data.setUser(value);
-                        }}
-                    />
-                    <div style={{ height: 20 }} />
-                    <Input
-                        type="password"
-                        size="medium"
-                        defaultValue={data.password}
-                        placeholder="Input password"
-                        prefixIcon={<LockOutlined />}
-                        onChange={(value) => {
-                            data.setPassword(value);
-                        }}
-                    />
-                    <div style={{ height: 20 }} />
-                </Card> */}
             </FlexBox>
             <Plugin kind="footer" />
         </Page>

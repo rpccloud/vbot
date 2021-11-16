@@ -1,16 +1,20 @@
-import React, { useState } from "react";
-
-import { LockOutlined } from "@ant-design/icons";
-
-import { message, Spin } from "antd";
+import React, { useContext, useState } from "react";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
-import { AppConfig, AppUser } from "./AppManager";
-import Card from "../ui/component/Card";
-import { delay } from "../util/util";
-import Input from "../ui/component/Input";
+import { AppConfig, AppError, AppUser } from "./AppManager";
 import Plugin from "./plugin";
+import { ThemeContext } from "../microui/context/theme";
+import { FlexBox } from "../microui/component/FlexBox";
+import { Divider } from "../microui/component/Divider";
+import { Input } from "../microui/component/Input";
+import { Button } from "../microui/component/Button";
+import { Page } from "../microui/component/Page";
+import { Spin } from "../microui/component/Spin";
+import { Span } from "../microui/component/Span";
+import { sleep } from "../microui/util";
+
+import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 
 class Data {
     password: string;
@@ -44,188 +48,233 @@ class Data {
 
 const data = new Data();
 
-const styles = {
-    carousel: {
-        content: {
-            color: "var(--Vbot-FontColor)",
-            height: "calc(100vh - var(--Vbot-HeaderHeight) - var(--Vbot-FooterHeight))",
-        },
-    },
-    password: {
-        container: {
-            marginBottom: 0,
-        },
-        wrong: {
-            fontSize: "var(--Vbot-FontSizeSmall)",
-            color: "var(--Vbot-WarningColor)",
-        },
-    },
-};
-
-const CardPassword = observer((props: { onNext: () => void }) => {
+const SetPassword = observer((props: { onNext: () => void }) => {
+    const theme = useContext(ThemeContext);
+    const minPassLength = 9;
     const password = data.password;
     const confirm = data.confirm;
-    let indicator: any = null;
     let canNext = false;
 
+    let errors: string[] = [];
+
     if (password !== confirm) {
-        indicator = (
-            <ul style={styles.password.container}>
-                <li style={styles.password.wrong}>Password does not match</li>
-            </ul>
-        );
+        errors.push("Password does not match");
     } else {
         const passwordInfo = passwordStrength(password);
         const hasLowerChar = passwordInfo.contains.includes("lowercase");
         const hasUpperChar = passwordInfo.contains.includes("uppercase");
         const hasNumberChar = passwordInfo.contains.includes("number");
-        const lengthOK = passwordInfo.length > 8;
-        const lowerView = hasLowerChar ? null : (
-            <li style={styles.password.wrong}>
-                Password must contains lower letter
-            </li>
-        );
-        const upperView = hasUpperChar ? null : (
-            <li style={styles.password.wrong}>
-                Password must contains upper letter
-            </li>
-        );
-        const numberView = hasNumberChar ? null : (
-            <li style={styles.password.wrong}>
-                Password must contains upper number
-            </li>
-        );
-        const lengthView = lengthOK ? null : (
-            <li style={styles.password.wrong}>
-                Password length must be bigger than 8
-            </li>
-        );
-        indicator = (
-            <ul style={styles.password.container}>
-                {lowerView}
-                {upperView}
-                {numberView}
-                {lengthView}
-            </ul>
-        );
+        const lengthOK = passwordInfo.length >= minPassLength;
+
+        if (!hasLowerChar) {
+            errors.push("Password must contains lower letter");
+        }
+
+        if (!hasUpperChar) {
+            errors.push("Password must contains upper letter");
+        }
+
+        if (!hasNumberChar) {
+            errors.push("Password must contains upper number");
+        }
+
+        if (!lengthOK) {
+            errors.push(
+                `Password length must be bigger than ${minPassLength - 1}`
+            );
+        }
+
         canNext = hasLowerChar && hasUpperChar && hasNumberChar && lengthOK;
     }
 
     return (
-        <Card
-            title="System initialize - set admin password"
-            width={420}
-            height={360}
-            nextName="Next"
-            canNext={canNext}
-            onNext={props.onNext}
+        <FlexBox
+            animated={true}
+            alignItems="stretch"
+            style={{
+                width: 400,
+                height: 400,
+                padding: AppConfig.get().margin,
+                backgroundColor: theme.default?.backgroundLight,
+                border: `1px solid ${theme.default?.outline}`,
+                borderRadius: 10,
+            }}
         >
-            <div style={{ height: 20 }} />
+            <Span size="x-large">Set admin password</Span>
+            <Divider space={AppConfig.get().margin} />
             <Input
-                size="medium"
                 type="password"
-                placeholder="Input password"
+                outline="underline"
+                size="large"
                 defaultValue={data.password}
-                prefixIcon={<LockOutlined />}
-                onChange={(value) => {
-                    data.setPassword(value);
+                placeholder="Input password"
+                icon={<AiOutlineLock />}
+                onChange={(e) => {
+                    data.setPassword(e.target.value);
                 }}
             />
-            <div style={{ height: 20 }} />
+            <Divider space={AppConfig.get().margin} />
             <Input
-                size="medium"
                 type="password"
-                placeholder="Confirm password"
+                outline="underline"
+                size="large"
                 defaultValue={data.confirm}
-                prefixIcon={<LockOutlined />}
-                onChange={(value) => {
-                    data.setConfirm(value);
+                placeholder="Confirm password"
+                icon={<AiOutlineLock />}
+                onChange={(e) => {
+                    data.setConfirm(e.target.value);
                 }}
             />
-            <div style={{ height: 20 }} />
-            {indicator}
-        </Card>
+
+            <Divider space={AppConfig.get().margin} />
+
+            <FlexBox style={{ flex: 1 }}>
+                {errors.map((it) => {
+                    return (
+                        <Span
+                            key={it}
+                            color={theme.failed?.main}
+                            style={{ marginLeft: 8 }}
+                        >
+                            {it}
+                        </Span>
+                    );
+                })}
+            </FlexBox>
+
+            <Divider space={AppConfig.get().margin} />
+
+            <FlexBox flexFlow="row" justifyContent="flex-end">
+                <Button
+                    text="Next"
+                    disabled={!canNext}
+                    ghost={true}
+                    style={{ marginLeft: AppConfig.get().margin }}
+                    onClick={() => props.onNext()}
+                    onEnter={() => props.onNext()}
+                />
+            </FlexBox>
+        </FlexBox>
     );
 });
 
-const CardAgree = observer(
-    (props: { onPrev: () => void; onNext: () => void }) => (
-        <Card
-            title="初始化系统 - 同意协议"
-            width={420}
-            height={360}
-            prevName="上一步"
-            nextName="同意并初始化"
-            canPrev={true}
-            canNext={true}
-            onPrev={props.onPrev}
-            onNext={props.onNext}
-        >
-            <div>用户协议内容</div>
-        </Card>
-    )
-);
+const TermsOfService = observer(
+    (props: { onPrev: () => void; onNext: () => void }) => {
+        const theme = useContext(ThemeContext);
 
-const CardWaiting = observer(() => (
-    <Card title="初始化系统 - 进行中..." width={420} height={360}>
-        <div className="vbot-container-center">
-            <Spin size="large" />
-        </div>
-    </Card>
-));
+        return (
+            <FlexBox
+                animated={true}
+                alignItems="stretch"
+                style={{
+                    width: 400,
+                    height: 400,
+                    padding: AppConfig.get().margin,
+                    backgroundColor: theme.default?.backgroundLight,
+                    border: `1px solid ${theme.default?.outline}`,
+                    borderRadius: 10,
+                }}
+            >
+                <Span size="x-large">Terms Of Service</Span>
+
+                <Divider space={AppConfig.get().margin} />
+
+                <FlexBox style={{ flex: 1 }}>
+                    <Span>TermsOfService</Span>
+                </FlexBox>
+
+                <Divider space={AppConfig.get().margin} />
+
+                <FlexBox flexFlow="row" justifyContent="flex-end">
+                    <Button
+                        text="I decline"
+                        ghost={true}
+                        style={{ marginLeft: AppConfig.get().margin }}
+                        onClick={() => props.onPrev()}
+                        onEnter={() => props.onPrev()}
+                    />
+                    <Button
+                        text="I agree"
+                        ghost={true}
+                        style={{ marginLeft: AppConfig.get().margin }}
+                        onClick={() => props.onNext()}
+                        onEnter={() => props.onNext()}
+                    />
+                </FlexBox>
+            </FlexBox>
+        );
+    }
+);
 
 const Register = observer((props: any) => {
     let [show, setShow] = useState(0);
 
-    const view0 = (
-        <CardPassword
-            onNext={() => {
-                setShow(1);
-            }}
-        />
-    );
-    const view1 = (
-        <CardAgree
-            onPrev={() => {
-                setShow(0);
-            }}
-            onNext={async () => {
-                setShow(2);
-                try {
-                    await AppUser.send(
-                        8000,
-                        "#.user:Create",
-                        "admin",
-                        data.password
-                    );
-                    AppConfig.get().setRootRoute("login");
-                } catch (e) {
-                    message.error((e as any).getMessage());
-                    await delay(1000);
-                    AppConfig.get().setRootRoute("start");
-                } finally {
-                    data.reset();
-                    setShow(0);
-                }
-            }}
-        />
-    );
-    const view2 = <CardWaiting />;
+    let inner: React.ReactNode | null = null;
+
+    switch (show) {
+        case 0:
+            inner = (
+                <SetPassword
+                    onNext={() => {
+                        setShow(1);
+                    }}
+                />
+            );
+            break;
+        case 1:
+            inner = (
+                <TermsOfService
+                    onPrev={() => {
+                        setShow(0);
+                    }}
+                    onNext={async () => {
+                        setShow(2);
+                        try {
+                            await AppUser.send(
+                                8000,
+                                "#.user:Create",
+                                "admin",
+                                data.password
+                            );
+                            AppConfig.get().setRootRoute("login");
+                        } catch (e) {
+                            AppError.get().report((e as any).getMessage());
+                            await sleep(1000);
+                            AppConfig.get().setRootRoute("start");
+                        } finally {
+                            data.reset();
+                            setShow(0);
+                        }
+                    }}
+                />
+            );
+            break;
+        case 2:
+            inner = (
+                <FlexBox
+                    animated={true}
+                    flexFlow="row"
+                    style={{
+                        flex: "1",
+                    }}
+                >
+                    <Spin size="x-large" />
+                    <Span size="x-large" style={{ marginLeft: 24 }}>
+                        Initializing ...
+                    </Span>
+                </FlexBox>
+            );
+            break;
+    }
 
     return (
-        <div
-            className="vbot-fill-viewport"
-            style={{ display: "flex", flexFlow: "column" }}
-        >
+        <Page>
             <Plugin kind="header" />
-            <div
-                style={{ display: "flex", flex: "1 0 0", flexFlow: "row" }}
-                className="vbot-container-center"
-            >
-                {[view0, view1, view2][show]}
-            </div>
+            <FlexBox style={{ flex: "1 0 0", flexFlow: "row" }}>
+                {inner}
+            </FlexBox>
             <Plugin kind="footer" />
-        </div>
+        </Page>
     );
 });
 

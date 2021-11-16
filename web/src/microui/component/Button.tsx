@@ -116,6 +116,7 @@ interface ButtonProps {
     innerRight?: number;
     style?: CSSProperties;
     onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
+    onEnter: () => void;
 }
 
 interface ButtonState {
@@ -268,6 +269,16 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                         this.props.onClick(e);
                     }
                 }}
+                onKeyPress={(e) => {
+                    if (
+                        !e.ctrlKey &&
+                        !e.altKey &&
+                        !e.shiftKey &&
+                        e.code === "Enter"
+                    ) {
+                        this.props.onEnter();
+                    }
+                }}
             >
                 <div
                     tabIndex={canFocus ? 0 : -1}
@@ -327,4 +338,5 @@ Button.defaultProps = {
     focusable: true,
     border: true,
     onClick: () => void {},
+    onEnter: () => {},
 };

@@ -13,11 +13,9 @@ const Header = () => {
                 minHeight: AppConfig.get().headHeight,
             }}
         >
-            <Span
-                size="x-large"
-                text="Vbot"
-                style={{ marginLeft: AppConfig.get().margin }}
-            />
+            <Span size="x-large" style={{ marginLeft: AppConfig.get().margin }}>
+                Vbot
+            </Span>
         </FlexBox>
     );
 };

@@ -34,11 +34,9 @@ export const Start = observer((props: any) => {
                 }}
             >
                 <Spin size="x-large" />
-                <Span
-                    size="x-large"
-                    text="Loading ..."
-                    style={{ marginLeft: 24 }}
-                />
+                <Span size="x-large" style={{ marginLeft: 24 }}>
+                    Loading ...
+                </Span>
             </FlexBox>
             <Plugin kind="footer" />
         </Page>

@@ -291,78 +291,84 @@ class InputCore extends React.Component<InputProps, InputState> {
         ) : null;
 
         const inputView = (
-            <input
-                ref={this.inputRef}
-                tabIndex={-1}
-                style={{
-                    outline: "none",
-                    minWidth: fontSize,
-                    border: 0,
-                    padding: 0,
-                    flex: 1,
-                    cursor: this.state.focus ? "text" : "inherit",
-                    caretColor: this.state.focus ? color?.font : "transparent",
-                    background: "transparent",
-                    color: this.state.value
-                        ? color?.font
-                        : config.placeholderColor,
-                    fontWeight: "inherit",
-                    transition: makeTransition(
-                        ["background"],
-                        config.transition?.duration,
-                        config.transition?.easing
-                    ),
-                }}
-                placeholder={this.props.placeholder}
-                type={isShowPassword ? "text" : this.props.type}
-                value={this.state.value}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    if (this.state.focus) {
-                        this.setState({ value: e.target.value });
-                        this.props.onChange(e);
-                    }
-                }}
-                onFocus={(e) => {
-                    if (canFocus && !this.state.focus) {
-                        this.inputRef.current?.setSelectionRange(
-                            this.state.value.length,
-                            this.state.value.length
-                        );
-                        const resizeSonar = new ResizeSonar(
-                            this.inputRef,
-                            () => {
-                                if (this.props.submittable) {
-                                    const elem = this.inputRef.current;
-                                    if (elem) {
-                                        elem.scrollLeft = elem.scrollWidth;
+            <form style={{ flex: 1 }}>
+                <input
+                    ref={this.inputRef}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    style={{
+                        width: "100%",
+                        outline: "none",
+                        minWidth: fontSize,
+                        border: 0,
+                        padding: 0,
+                        cursor: this.state.focus ? "text" : "inherit",
+                        caretColor: this.state.focus
+                            ? color?.font
+                            : "transparent",
+                        background: "transparent",
+                        color: this.state.value
+                            ? color?.font
+                            : config.placeholderColor,
+                        fontWeight: "inherit",
+                        transition: makeTransition(
+                            ["background"],
+                            config.transition?.duration,
+                            config.transition?.easing
+                        ),
+                    }}
+                    placeholder={this.props.placeholder}
+                    type={isShowPassword ? "text" : this.props.type}
+                    value={this.state.value}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        if (this.state.focus) {
+                            this.setState({ value: e.target.value });
+                            this.props.onChange(e);
+                        }
+                    }}
+                    onFocus={(e) => {
+                        if (canFocus && !this.state.focus) {
+                            this.inputRef.current?.setSelectionRange(
+                                this.state.value.length,
+                                this.state.value.length
+                            );
+                            const resizeSonar = new ResizeSonar(
+                                this.inputRef,
+                                () => {
+                                    if (this.props.submittable) {
+                                        const elem = this.inputRef.current;
+                                        if (elem) {
+                                            elem.scrollLeft = elem.scrollWidth;
+                                        }
+                                    }
+                                    resizeSonar.close();
+                                }
+                            );
+
+                            this.actionSonar.checkFocus(
+                                () => {
+                                    this.setState({ focus: true });
+                                },
+                                () => {
+                                    resizeSonar.close();
+                                    this.setState({ focus: false });
+                                    if (
+                                        !this.state.submitting &&
+                                        this.props.submittable &&
+                                        this.state.value !==
+                                            this.state.stageValue
+                                    ) {
+                                        this.setState({
+                                            value: this.state.stageValue,
+                                        });
+                                        this.tempValueSonar.setValue("failed");
                                     }
                                 }
-                                resizeSonar.close();
-                            }
-                        );
-
-                        this.actionSonar.checkFocus(
-                            () => {
-                                this.setState({ focus: true });
-                            },
-                            () => {
-                                resizeSonar.close();
-                                this.setState({ focus: false });
-                                if (
-                                    !this.state.submitting &&
-                                    this.props.submittable &&
-                                    this.state.value !== this.state.stageValue
-                                ) {
-                                    this.setState({
-                                        value: this.state.stageValue,
-                                    });
-                                    this.tempValueSonar.setValue("failed");
-                                }
-                            }
-                        );
-                    }
-                }}
-            />
+                            );
+                        }
+                    }}
+                />
+            </form>
         );
 
         const passwordButtonView =

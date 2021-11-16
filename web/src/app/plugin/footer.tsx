@@ -10,12 +10,13 @@ const Footer = () => {
         <FlexBox>
             <Span
                 size="small"
-                text="Copyright rpccloud.com ©2021 Created by tianshuo"
                 style={{
                     color: theme.disabled?.contrastText,
                     minHeight: AppConfig.get().footerHeight,
                 }}
-            />
+            >
+                Copyright rpccloud.com ©2021 Created by tianshuo
+            </Span>
         </FlexBox>
     );
 };
