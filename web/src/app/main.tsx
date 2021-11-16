@@ -39,6 +39,7 @@ export const Main = () => {
                     config={{
                         tab: {
                             highlight: {
+                                font: theme.primary?.main,
                                 background: "transparent",
                             },
                         },
