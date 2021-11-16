@@ -112,8 +112,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     };
 
     private readonly id: string;
-    private listener_addTab: EventListener;
-    private listener_onChange: EventListener;
+    private eventListener: EventListener;
     private rootRef = React.createRef<HTMLDivElement>();
     private actionSonar = new ActionSonar([this.rootRef]);
     private resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
@@ -190,12 +189,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             : [];
         this.selectedTab = this.findRecordByID(this.findLastSelectedID());
 
-        this.listener_addTab = new EventListener(this.id, "addTab", () => {});
-        this.listener_onChange = new EventListener(
-            this.id,
-            "onChange",
-            () => {}
-        );
+        this.eventListener = new EventListener(this.id, () => {});
         props.onInit(this.id);
     }
 
@@ -275,8 +269,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
     componentWillUnmount() {
         this.actionSonar.close();
         this.resizeSonar.close();
-        this.listener_addTab.close();
-        this.listener_onChange.close();
+        this.eventListener.close();
     }
 
     findLastSelectedID(): number {

@@ -1,24 +1,26 @@
 import { SeedManager } from "../util";
 
-type Handler = (...args: any) => any;
+type HandlerParam = {
+    action: string;
+    param: any[];
+    callback?: (param: any) => void;
+};
+
+type Handler = (o: HandlerParam) => void;
 
 class ChannelManager {
     private static channelMap = new Map<string, Map<number, Handler>>();
 
-    public static call(eid: string, args: any[]): Array<any> {
+    public static call(eid: string, param: HandlerParam) {
         let handlerMap = ChannelManager.channelMap.get(eid);
 
         if (!handlerMap) {
             return [];
         }
 
-        let ret = new Array<any>();
-
         handlerMap.forEach((handler) => {
-            ret.push(handler(...args));
+            handler(param);
         });
-
-        return ret;
     }
 
     public static addListener(eid: string, handler: Handler): number {
@@ -68,8 +70,7 @@ export class EventListener {
     private readonly eid: string;
     private readonly handlerID: number;
 
-    constructor(target: string, action: string, handler: Handler) {
-        const eid = `${target}:${action}`;
+    constructor(eid: string, handler: Handler) {
         const handlerID = ChannelManager.addListener(eid, handler);
         this.eid = eid;
         this.handlerID = handlerID;
@@ -80,10 +81,6 @@ export class EventListener {
     }
 }
 
-export function evalEvent(
-    target: string,
-    action: string,
-    ...args: any
-): Array<any> {
-    return ChannelManager.call(`${target}:${action}`, args);
+export function evalEvent(eid: string, param: HandlerParam) {
+    return ChannelManager.call(eid, param);
 }
