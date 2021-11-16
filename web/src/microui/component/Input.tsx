@@ -20,6 +20,8 @@ import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { FocusContext } from "../context/focus";
 import { Button } from "./Button";
 import { Spin } from "./Spin";
+import { SizeContext } from "../context/size";
+import { BorderRadiusContext } from "../context/borderRadius";
 
 let themeCache = new ThemeCache((theme) => ({
     ...defaultConfig,
@@ -102,6 +104,7 @@ interface InputProps {
     innerLeft?: number;
     innerRight?: number;
     innerMargin?: number;
+    borderRadius?: number;
     style?: CSSProperties;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     onSubmit: (oldValue: string, newValue: string) => Promise<boolean>;
@@ -474,6 +477,7 @@ class InputCore extends React.Component<InputProps, InputState> {
             style = {
                 border: `1px solid ${color?.border}`,
                 boxShadow: `0px 0px ${qrHeight / 2}px ${color?.shadow}`,
+                borderRadius: this.props.borderRadius,
                 ...style,
             };
         } else {
@@ -568,11 +572,19 @@ class InputCore extends React.Component<InputProps, InputState> {
 }
 
 export const Input = (props: InputProps) => {
+    const { size } = useContext(SizeContext);
     const focusContext = useContext(FocusContext);
+    const { borderRadius } = useContext(BorderRadiusContext);
     return (
         <InputCore
             {...props}
+            size={props.size || size}
             focusable={focusContext.focusable && props.focusable}
+            borderRadius={
+                props.borderRadius !== undefined
+                    ? props.borderRadius
+                    : borderRadius
+            }
         />
     );
 };
