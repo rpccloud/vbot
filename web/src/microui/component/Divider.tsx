@@ -3,8 +3,9 @@ import { ThemeContext } from "../context/theme";
 
 interface DividerProps {
     type: "vertical" | "horizontal";
-    outline: "start" | "center" | "end" | "none";
+    outline: "start" | "center" | "end";
     space: number;
+    lineWidth: number;
     color?: string;
     style?: React.CSSProperties;
 }
@@ -25,29 +26,25 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
 
     private renderH() {
         let h = this.props.space;
+        let lw = this.props.lineWidth;
         let height = 0;
         let top = 0;
         let bottom = 0;
         switch (this.props.outline) {
             case "start":
                 top = 0;
-                bottom = h - 1;
-                height = 1;
+                bottom = h - lw;
+                height = lw;
                 break;
             case "center":
-                top = (h - 1) / 2;
-                bottom = (h - 1) / 2;
-                height = 1;
+                top = (h - lw) / 2;
+                bottom = (h - lw) / 2;
+                height = lw;
                 break;
             case "end":
-                top = h - 1;
+                top = h - lw;
                 bottom = 0;
-                height = 1;
-                break;
-            case "none":
-                top = h / 2;
-                bottom = h / 2;
-                height = 0;
+                height = lw;
                 break;
         }
         return (
@@ -65,29 +62,25 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
 
     private renderV() {
         let h = this.props.space;
+        let lw = this.props.lineWidth;
         let width = 0;
         let left = 0;
         let right = 0;
         switch (this.props.outline) {
             case "start":
                 left = 0;
-                right = h - 1;
-                width = 1;
+                right = h - lw;
+                width = lw;
                 break;
             case "center":
-                left = (h - 1) / 2;
-                right = (h - 1) / 2;
-                width = 1;
+                left = (h - lw) / 2;
+                right = (h - lw) / 2;
+                width = lw;
                 break;
             case "end":
-                left = h - 1;
+                left = h - lw;
                 right = 0;
-                width = 1;
-                break;
-            case "none":
-                left = h / 2;
-                right = h / 2;
-                width = 0;
+                width = lw;
                 break;
         }
         return (
@@ -110,5 +103,6 @@ export const Divider = (props: DividerProps) => {
 
 Divider.defaultProps = {
     type: "horizontal",
-    outline: "none",
+    lineWidth: 0,
+    outline: "center",
 };

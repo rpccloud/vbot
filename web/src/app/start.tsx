@@ -30,7 +30,7 @@ export const Start = observer((props: any) => {
                 animated={true}
                 flexFlow="row"
                 style={{
-                    flex: "1 0 0",
+                    flex: "1",
                 }}
             >
                 <Spin size="x-large" />
