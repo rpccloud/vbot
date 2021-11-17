@@ -208,6 +208,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         switch (param.action) {
             case "HookChange":
                 if (param.callback) {
+                    param.callback(this.getOnChangeParam());
                     this.changeCallbacks.push(param.callback);
                 }
                 break;
@@ -272,17 +273,21 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
 
         // fire HookChange functions
         if (this.changeCallbacks.length > 0) {
-            const param: TabBarOnChangeParam = {
-                fixedTabs: this.fixedTabs,
-                floatTabs: this.floatTabs,
-                dynamicTabs: this.dynamicTabs,
-                selectedTab: this.selectedTab,
-                tabWidth: this.totalWidth,
-            };
+            const param = this.getOnChangeParam();
             for (let i = 0; i < this.changeCallbacks.length; i++) {
                 this.changeCallbacks[i](param);
             }
         }
+    }
+
+    private getOnChangeParam(): TabBarOnChangeParam {
+        return {
+            fixedTabs: this.fixedTabs,
+            floatTabs: this.floatTabs,
+            dynamicTabs: this.dynamicTabs,
+            selectedTab: this.selectedTab,
+            tabWidth: this.totalWidth,
+        };
     }
 
     private findRecordByID(id: number): TabRecord | undefined {
