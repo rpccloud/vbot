@@ -102,7 +102,7 @@ export const ThemeContext = React.createContext<Theme>({
     },
     hover: {
         main: "#ff9100",
-        contrastText: "#FFFFFFD0",
+        contrastText: "#FFFFFFE0",
     },
     highlight: {
         main: "#ffa733",
