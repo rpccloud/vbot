@@ -84,8 +84,6 @@ const Debug = () => {
                 <TabBar
                     size="large"
                     style={{ fontWeight: 500 }}
-                    innerLeft={100}
-                    innerRight={100}
                     initialFixedTabs={[
                         {
                             width: 180,

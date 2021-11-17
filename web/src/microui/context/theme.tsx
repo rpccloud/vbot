@@ -11,7 +11,6 @@ import {
 export interface Theme {
     default?: DefaultColor;
     primary?: PaletteColor;
-    secondary?: PaletteColor;
     hover?: PaletteColor;
     highlight?: PaletteColor;
     focus?: PaletteColor;
@@ -20,6 +19,7 @@ export interface Theme {
     failed?: PaletteColor;
     disabled?: PaletteColor;
     transition?: Transition;
+    extra?: any;
 }
 
 export class ThemeCache {
@@ -90,7 +90,7 @@ export const ThemeContext = React.createContext<Theme>({
         backgroundLight: "rgb(0,32,65)",
         backgroundDark: "rgb(10, 25, 41)",
         contrastText: "#FFFFFFD0",
-        outline: "rgb(00,127,255)",
+        outline: "#888",
         divider: "rgb(255,47,76)",
         makeBackground: (light?: string, dark?: string) => {
             return `radial-gradient(${light} 0%, ${dark} 70%, ${dark} 100%)`;
@@ -98,10 +98,6 @@ export const ThemeContext = React.createContext<Theme>({
     },
     primary: {
         main: "#b26500",
-        contrastText: "#FFFFFFD0",
-    },
-    secondary: {
-        main: "#0080FFFF",
         contrastText: "#FFFFFFD0",
     },
     hover: {
@@ -117,7 +113,7 @@ export const ThemeContext = React.createContext<Theme>({
         contrastText: "#FFFFFFD0",
     },
     selected: {
-        main: "yellow",
+        main: "#ff9100",
         contrastText: "#FFFFFFD0",
     },
     successful: {
@@ -136,4 +132,5 @@ export const ThemeContext = React.createContext<Theme>({
         duration: "300ms",
         easing: "ease-in-out",
     },
+    extra: {},
 });

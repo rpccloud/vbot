@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Page } from "../microui/component/Page";
 import { TabBar } from "../microui/component/TabBar";
@@ -7,6 +7,8 @@ import { Plugin } from "./plugin";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { Divider } from "../microui/component/Divider";
 import { ThemeContext } from "../microui/context/theme";
+import { TabBarHelper } from "../microui/component/TabBarHelper";
+import { makeTransition } from "../microui/util";
 import { AppConfig } from "./AppManager";
 
 // export const Main = () => (
@@ -22,6 +24,7 @@ import { AppConfig } from "./AppManager";
 
 export const Main = () => {
     const theme = useContext(ThemeContext);
+    const margin = AppConfig.get().margin;
     return (
         <Page>
             <FlexBox
@@ -35,38 +38,23 @@ export const Main = () => {
                 <Divider space={10} />
                 <TabBar
                     size="large"
-                    style={{ fontWeight: 500 }}
-                    config={{
-                        tab: {
-                            highlight: {
-                                background: "transparent",
-                            },
-                        },
+                    style={{
+                        fontWeight: 500,
+                        marginLeft: margin,
+                        marginRight: margin,
                     }}
-                    innerLeft={AppConfig.get().margin}
-                    innerRight={AppConfig.get().margin}
                     initialFixedTabs={[
                         {
                             width: 180,
-                            title: "Test",
+                            title: "Vbot",
                             default: true,
                         },
                     ]}
                     initialFloatTabs={[
-                        {
-                            title: "TestTestTestTestTestTestTestTestTestTestTestTest",
-                            icon: <AiOutlineLock />,
-                        },
-                        { title: "Test", icon: <AiOutlineLock /> },
                         { title: "Test", icon: <AiOutlineLock /> },
                         { title: "Test", icon: <AiOutlineLock /> },
                     ]}
                     initialDynamicTabs={[
-                        {
-                            title: "TestTestTestTestTestTestTest",
-                            icon: <AiOutlineLock />,
-                        },
-                        { title: "Test", icon: <AiOutlineLock /> },
                         { title: "Test", icon: <AiOutlineLock /> },
                         { title: "Test", icon: <AiOutlineLock /> },
                     ]}

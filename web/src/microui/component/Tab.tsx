@@ -11,7 +11,7 @@ import { makeTransition, range } from "../util";
 export interface TabConfig {
     primary?: ComponentColor;
     hover?: ComponentColor;
-    highlight?: ComponentColor;
+    selected?: ComponentColor;
     transition?: Transition;
 }
 
@@ -22,7 +22,7 @@ interface TabProps {
     config: TabConfig;
     icon?: ReactNode;
     title?: string;
-    highlight: boolean;
+    selected: boolean;
     minLeft: number;
     maxRight: number;
     closable: boolean;
@@ -128,8 +128,8 @@ export class Tab extends React.Component<TabProps, TabState> {
             color = config.hover;
         }
 
-        if (this.props.highlight) {
-            color = config.highlight;
+        if (this.props.selected) {
+            color = config.selected;
         }
 
         let fontSize = getFontSize(this.props.size);
@@ -160,7 +160,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     height: height,
                     bottom: 0,
                     color: color?.font,
-                    zIndex: this.props.highlight
+                    zIndex: this.props.selected
                         ? this.context.zIndex + 1
                         : this.context.zIndex,
                 }}

@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { ThemeContext } from "../context/theme";
 import { evalEvent } from "../event/channel";
-import { FlexBox } from "./FlexBox";
-import { TabRecord } from "./TabBar";
+import { TabBarOnChangeParam } from "./TabBar";
 
 interface TabBarHelperProps {
     tabBarID: string;
+    render: (param: TabBarOnChangeParam) => React.ReactNode;
 }
-interface TabBarHelperState {}
+interface TabBarHelperState {
+    param?: TabBarOnChangeParam;
+}
 
 export class TabBarHelper extends React.Component<
     TabBarHelperProps,
@@ -28,16 +30,12 @@ export class TabBarHelper extends React.Component<
         });
     }
 
-    onTabBarChange = (param: {
-        fixedTabs: TabRecord[];
-        floatTabs: TabRecord[];
-        dynamicTabs: TabRecord[];
-        selectedTab: TabRecord;
-    }) => {
-        console.log(param);
+    onTabBarChange = (param: TabBarOnChangeParam) => {
+        this.setState({ param: param });
     };
 
     render() {
-        return <FlexBox></FlexBox>;
+        const param = this.state.param;
+        return param ? this.props.render(param) : null;
     }
 }
