@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Page } from "../microui/component/Page";
 import { TabBar } from "../microui/component/TabBar";
@@ -7,8 +7,6 @@ import { Plugin } from "./plugin";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { Divider } from "../microui/component/Divider";
 import { ThemeContext } from "../microui/context/theme";
-import { TabBarHelper } from "../microui/component/TabBarHelper";
-import { makeTransition } from "../microui/util";
 import { AppConfig } from "./AppManager";
 
 // export const Main = () => (

@@ -5,7 +5,6 @@ import { Button } from "../microui/component/Button";
 import { Input } from "../microui/component/Input";
 import { Popup } from "../microui/component/Popup";
 import { FocusContext } from "../microui/context/focus";
-import { Spin } from "../microui/component/Spin";
 import { TabBar } from "../microui/component/TabBar";
 import { sleep } from "../microui/util";
 import { FadeBox } from "../microui/component/FadeBox";

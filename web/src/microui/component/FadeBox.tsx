@@ -1,6 +1,5 @@
 import React from "react";
-import { Theme, ThemeContext } from "../context/theme";
-import { makeTransition, range } from "../util";
+import { range } from "../util";
 
 interface FadeBoxProps {
     type: "top" | "bottom" | "left" | "right";
