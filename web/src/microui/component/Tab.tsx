@@ -139,27 +139,26 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         let fontSize = getFontSize(this.props.size);
         let width = this.state.width;
-        let height = fontSize * 2;
+        let height = Math.floor(fontSize * 2.5);
         let path = makeTabPath(width, height, height / 6);
         let leftMargin = Math.round(height / 3);
         let rightMargin = Math.round(height / 3);
         let inMargin = height / 20;
-        let top = Math.round(height / 4);
-        let bottom = top;
 
         let labelWidth = range(
             width - 2 * fontSize - leftMargin - rightMargin,
             1,
             999999
         );
-        let fontDisappearFactor = range(
-            1 - (0.6 * fontSize) / labelWidth,
-            0,
-            1
-        );
+        let fontDisappearFactor = range((0.6 * fontSize) / labelWidth, 0, 1);
 
         const inner = this.props.renderInner ? (
-            this.props.renderInner()
+            this.props.renderInner(
+                this.props.icon,
+                this.props.title,
+                this.props.closable,
+                color
+            )
         ) : (
             <>
                 {this.props.icon ? (
@@ -207,18 +206,11 @@ export class Tab extends React.Component<TabProps, TabState> {
 
                 {this.props.closable ? (
                     <div
+                        style={{ display: "flex", alignItems: "center" }}
                         onPointerDown={(e) => {
                             e.stopPropagation();
                         }}
                     >
-                        <div
-                            style={{
-                                width:
-                                    this.props.icon || this.props.title
-                                        ? inMargin
-                                        : 0,
-                            }}
-                        />
                         <Button
                             round={true}
                             ghost={true}
@@ -234,6 +226,10 @@ export class Tab extends React.Component<TabProps, TabState> {
                             style={{
                                 width: fontSize,
                                 height: fontSize,
+                                marginLeft:
+                                    this.props.icon || this.props.title
+                                        ? inMargin
+                                        : 0,
                             }}
                             onClick={() => {
                                 this.props.tabBar.deleteTab(this.props.id);
@@ -248,6 +244,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                 ref={this.rootRef}
                 style={{
                     position: "absolute",
+                    fontSize: fontSize,
                     width: width,
                     height: height,
                     bottom: 0,
@@ -296,9 +293,9 @@ export class Tab extends React.Component<TabProps, TabState> {
                         display: "flex",
                         position: "absolute",
                         overflow: "hidden",
+                        top: 0,
+                        bottom: 0,
                         cursor: "pointer",
-                        top: top,
-                        bottom: bottom,
                         left: leftMargin,
                         right: rightMargin,
                     }}

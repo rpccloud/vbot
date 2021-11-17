@@ -53,6 +53,12 @@ interface FixedTabItem {
     icon?: React.ReactNode;
     param?: any;
     default?: boolean;
+    readonly renderTab?: (
+        icon?: React.ReactNode,
+        title?: string,
+        closable?: boolean,
+        color?: ComponentColor
+    ) => React.ReactNode;
 }
 
 interface FloatTabItem {
@@ -60,6 +66,12 @@ interface FloatTabItem {
     icon?: React.ReactNode;
     param?: any;
     default?: boolean;
+    readonly renderTab?: (
+        icon?: React.ReactNode,
+        title?: string,
+        closable?: boolean,
+        color?: ComponentColor
+    ) => React.ReactNode;
 }
 
 export interface TabBarConfig {
@@ -77,12 +89,6 @@ interface TabBarProps {
     readonly initialDynamicTabs?: FloatTabItem[];
     readonly style?: CSSProperties;
     readonly onInit: (id: string) => void;
-    readonly renderTab?: (
-        icon?: React.ReactNode,
-        title?: string,
-        closable?: boolean,
-        color?: ComponentColor
-    ) => React.ReactNode;
 }
 
 enum TabKind {
@@ -104,6 +110,12 @@ export interface TabRecord {
     index: number;
     tab?: Tab;
     selectedTime: number;
+    readonly renderTab?: (
+        icon?: React.ReactNode,
+        title?: string,
+        closable?: boolean,
+        color?: ComponentColor
+    ) => React.ReactNode;
 }
 
 interface TabBarState {
@@ -161,6 +173,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       kind: TabKind.Fixed,
                       index: 0,
                       selectedTime: it.default ? nowMS : 0,
+                      renderTab: it.renderTab,
                   };
               })
             : [];
@@ -178,6 +191,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       kind: TabKind.Float,
                       index: 0,
                       selectedTime: it.default ? nowMS : 0,
+                      renderTab: it.renderTab,
                   };
               })
             : [];
@@ -195,6 +209,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                       kind: TabKind.Dynamic,
                       index: 0,
                       selectedTime: it.default ? nowMS : 0,
+                      renderTab: it.renderTab,
                   };
               })
             : [];
@@ -385,7 +400,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
 
     render() {
         let fontSize = getFontSize(this.props.size);
-        let height = Math.round(fontSize * 2.3);
+        let height = Math.round(fontSize * 2.5);
         let config: TabBarConfig = extendConfig(
             themeCache.getConfig(extendTheme(this.context, this.props.theme)),
             this.props.config
@@ -410,7 +425,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 config={config.tab}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={false}
-                                renderInner={this.props.renderTab}
+                                renderInner={it.renderTab}
                             ></Tab>
                         );
                     })}
@@ -429,7 +444,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 config={config.tab}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={false}
-                                renderInner={this.props.renderTab}
+                                renderInner={it.renderTab}
                             ></Tab>
                         );
                     })}
@@ -448,7 +463,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 config={config.tab}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={true}
-                                renderInner={this.props.renderTab}
+                                renderInner={it.renderTab}
                             ></Tab>
                         );
                     })}

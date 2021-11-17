@@ -8,6 +8,7 @@ import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { Divider } from "../microui/component/Divider";
 import { ThemeContext } from "../microui/context/theme";
 import { AppConfig } from "./AppManager";
+import { ComponentColor, makeTransition } from "../microui/util";
 
 // export const Main = () => (
 //     <div
@@ -33,9 +34,9 @@ export const Main = () => {
                 justifyContent="flex-start"
                 alignItems="stretch"
             >
-                <Divider space={10} />
+                <Divider space={16} />
                 <TabBar
-                    size="large"
+                    size="medium"
                     style={{
                         fontWeight: 500,
                         marginLeft: margin,
@@ -44,8 +45,29 @@ export const Main = () => {
                     initialFixedTabs={[
                         {
                             width: 100,
-                            title: "Vbot",
                             default: true,
+                            renderTab: (_, __, ___, color?: ComponentColor) => {
+                                return (
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            width: "100%",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: 16,
+                                            fontWeight: 900,
+                                            color: color?.font,
+                                            transition: makeTransition(
+                                                ["color"],
+                                                theme.transition?.duration,
+                                                theme.transition?.easing
+                                            ),
+                                        }}
+                                    >
+                                        Vbot
+                                    </div>
+                                );
+                            },
                         },
                     ]}
                     initialFloatTabs={[
