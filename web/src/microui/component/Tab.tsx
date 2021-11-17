@@ -27,6 +27,12 @@ interface TabProps {
     minLeft: number;
     maxRight: number;
     closable: boolean;
+    renderInner?: (
+        icon?: ReactNode,
+        title?: string,
+        closable?: boolean,
+        color?: ComponentColor
+    ) => React.ReactNode;
 }
 
 interface TabState {
@@ -152,6 +158,91 @@ export class Tab extends React.Component<TabProps, TabState> {
             1
         );
 
+        const inner = this.props.renderInner ? (
+            this.props.renderInner()
+        ) : (
+            <>
+                {this.props.icon ? (
+                    <div
+                        style={{
+                            display: "flex",
+                            color: color?.font,
+                            alignItems: "center",
+                            transition: makeTransition(
+                                ["color"],
+                                config.transition?.duration,
+                                config.transition?.easing
+                            ),
+                            marginRight:
+                                this.props.title || this.props.closable
+                                    ? inMargin
+                                    : 0,
+                        }}
+                    >
+                        {this.props.icon}
+                    </div>
+                ) : null}
+
+                {this.props.title ? (
+                    <FadeBox
+                        fade={fontDisappearFactor}
+                        style={{
+                            flex: 1,
+                            minWidth: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            whiteSpace: "nowrap",
+                            color: color?.font,
+                            userSelect: "none",
+                            transition: makeTransition(
+                                ["color"],
+                                config.transition?.duration,
+                                config.transition?.easing
+                            ),
+                        }}
+                    >
+                        {this.props.title}
+                    </FadeBox>
+                ) : null}
+
+                {this.props.closable ? (
+                    <div
+                        onPointerDown={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        <div
+                            style={{
+                                width:
+                                    this.props.icon || this.props.title
+                                        ? inMargin
+                                        : 0,
+                            }}
+                        />
+                        <Button
+                            round={true}
+                            ghost={true}
+                            border={false}
+                            focusable={false}
+                            size={this.props.size}
+                            icon={<IoCloseOutline />}
+                            config={{
+                                primary: {
+                                    font: color?.font,
+                                },
+                            }}
+                            style={{
+                                width: fontSize,
+                                height: fontSize,
+                            }}
+                            onClick={() => {
+                                this.props.tabBar.deleteTab(this.props.id);
+                            }}
+                        />
+                    </div>
+                ) : null}
+            </>
+        );
         return (
             <div
                 ref={this.rootRef}
@@ -229,85 +320,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                         );
                     }}
                 >
-                    {this.props.icon ? (
-                        <div
-                            style={{
-                                display: "flex",
-                                color: color?.font,
-                                alignItems: "center",
-                                transition: makeTransition(
-                                    ["color"],
-                                    config.transition?.duration,
-                                    config.transition?.easing
-                                ),
-                                marginRight:
-                                    this.props.title || this.props.closable
-                                        ? inMargin
-                                        : 0,
-                            }}
-                        >
-                            {this.props.icon}
-                        </div>
-                    ) : null}
-
-                    {this.props.title ? (
-                        <FadeBox
-                            fade={fontDisappearFactor}
-                            style={{
-                                flex: 1,
-                                minWidth: 0,
-                                display: "flex",
-                                alignItems: "center",
-                                whiteSpace: "nowrap",
-                                color: color?.font,
-                                userSelect: "none",
-                                transition: makeTransition(
-                                    ["color"],
-                                    config.transition?.duration,
-                                    config.transition?.easing
-                                ),
-                            }}
-                        >
-                            {this.props.title}
-                        </FadeBox>
-                    ) : null}
-
-                    {this.props.closable ? (
-                        <div
-                            onPointerDown={(e) => {
-                                e.stopPropagation();
-                            }}
-                        >
-                            <div
-                                style={{
-                                    width:
-                                        this.props.icon || this.props.title
-                                            ? inMargin
-                                            : 0,
-                                }}
-                            />
-                            <Button
-                                round={true}
-                                ghost={true}
-                                border={false}
-                                focusable={false}
-                                size={this.props.size}
-                                icon={<IoCloseOutline />}
-                                config={{
-                                    primary: {
-                                        font: color?.font,
-                                    },
-                                }}
-                                style={{
-                                    width: fontSize,
-                                    height: fontSize,
-                                }}
-                                onClick={() => {
-                                    this.props.tabBar.deleteTab(this.props.id);
-                                }}
-                            />
-                        </div>
-                    ) : null}
+                    {inner}
                 </div>
             </div>
         );

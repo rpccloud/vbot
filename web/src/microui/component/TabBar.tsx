@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
 import {
+    ComponentColor,
     extendConfig,
     getFontSize,
     range,
@@ -66,17 +67,22 @@ export interface TabBarConfig {
 }
 
 interface TabBarProps {
-    size: Size;
-    fontWeight: "lighter" | "normal" | "bold" | "bolder";
-    theme?: Theme;
-    config: TabBarConfig;
-    minTabWidth: number;
-    maxTabWidth: number;
-    initialFixedTabs?: FixedTabItem[];
-    initialFloatTabs?: FloatTabItem[];
-    initialDynamicTabs?: FloatTabItem[];
-    style?: CSSProperties;
-    onInit: (id: string) => void;
+    readonly size: Size;
+    readonly theme?: Theme;
+    readonly config: TabBarConfig;
+    readonly minTabWidth: number;
+    readonly maxTabWidth: number;
+    readonly initialFixedTabs?: FixedTabItem[];
+    readonly initialFloatTabs?: FloatTabItem[];
+    readonly initialDynamicTabs?: FloatTabItem[];
+    readonly style?: CSSProperties;
+    readonly onInit: (id: string) => void;
+    readonly renderTab?: (
+        icon?: React.ReactNode,
+        title?: string,
+        closable?: boolean,
+        color?: ComponentColor
+    ) => React.ReactNode;
 }
 
 enum TabKind {
@@ -399,6 +405,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 config={config.tab}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={false}
+                                renderInner={this.props.renderTab}
                             ></Tab>
                         );
                     })}
@@ -417,6 +424,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 config={config.tab}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={false}
+                                renderInner={this.props.renderTab}
                             ></Tab>
                         );
                     })}
@@ -435,6 +443,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 config={config.tab}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={true}
+                                renderInner={this.props.renderTab}
                             ></Tab>
                         );
                     })}

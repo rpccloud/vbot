@@ -43,7 +43,7 @@ export const Main = () => {
                     }}
                     initialFixedTabs={[
                         {
-                            width: 180,
+                            width: 100,
                             title: "Vbot",
                             default: true,
                         },
@@ -57,17 +57,9 @@ export const Main = () => {
                         { title: "Test", icon: <AiOutlineLock /> },
                     ]}
                 ></TabBar>
-                <Divider
-                    space={1}
-                    lineWidth={1}
-                    color={theme.default?.outline}
-                />
+                <Divider space={1} lineWidth={1} color={theme.primary?.main} />
                 <FlexBox style={{ flex: 1 }} />
-                <Divider
-                    space={1}
-                    lineWidth={1}
-                    color={theme.default?.outline}
-                />
+                <Divider space={1} lineWidth={1} color={theme.primary?.main} />
             </FlexBox>
             <Plugin kind="footer" />
         </Page>
