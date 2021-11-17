@@ -31,7 +31,7 @@ export const Main = () => {
             <FlexBox
                 animated={true}
                 style={{
-                    flex: "1",
+                    flex: "1 1 0",
                 }}
                 justifyContent="flex-start"
                 alignItems="stretch"
@@ -94,12 +94,27 @@ export const Main = () => {
                         tabBarID={tabBarID}
                         render={(tabBarID: string, param: TabRecord) => {
                             return (
-                                <div>
+                                <div
+                                    style={{
+                                        height: 800,
+                                        width: 200,
+                                        background: "green",
+                                    }}
+                                >
                                     {JSON.stringify({
                                         tabBarID: tabBarID,
                                         tabID: param.id,
                                         // param: param,
                                     })}
+
+                                    <h1>hi</h1>
+                                    <h1>hi</h1>
+                                    <h1>hi</h1>
+                                    <h1>hi</h1>
+                                    <h1>hi</h1>
+                                    <h1>hi</h1>
+                                    <h1>hi</h1>
+                                    <h1>hi</h1>
                                 </div>
                             );
                         }}

@@ -20,7 +20,7 @@ export class TabContainer extends React.Component<
     static contextType = ThemeContext;
 
     private tabs: TabRecord[] = [];
-    private selectedTabID?: number;
+    private selectedTab?: TabRecord;
 
     constructor(props: TabContainerProps) {
         super(props);
@@ -41,8 +41,8 @@ export class TabContainer extends React.Component<
             ...param.floatTabs,
             ...param.dynamicTabs,
         ];
-        if (param.selectedTab?.id !== this.selectedTabID) {
-            this.selectedTabID = param.selectedTab?.id;
+        if (param.selectedTab?.id !== this.selectedTab?.id) {
+            this.selectedTab = param.selectedTab;
             this.setState((state) => ({
                 flushCount: state.flushCount + 1,
             }));
@@ -53,34 +53,55 @@ export class TabContainer extends React.Component<
         return (
             <div
                 style={{
-                    background: "gray",
-                    flex: 1,
                     display: "flex",
+                    flex: "1 1 0",
                     ...this.props.style,
                 }}
             >
                 <div
                     style={{
                         position: "relative",
-                        width: "100%",
-                        height: "100%",
+                        flex: "1 1 0",
                     }}
                 >
-                    {this.tabs.map((it) => (
+                    {this.tabs.map((it) => {
+                        return it.id === this.selectedTab?.id ? (
+                            <div
+                                key={it.id}
+                                style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    opacity: 0,
+                                    overflowY: "auto",
+                                }}
+                            >
+                                {this.props.render(this.props.tabBarID, it)}
+                            </div>
+                        ) : null;
+                    })}
+
+                    {this.selectedTab ? (
                         <div
-                            key={it.id}
+                            key={this.selectedTab.id}
                             style={{
                                 position: "absolute",
-                                width: "100%",
-                                height: "100%",
                                 top: 0,
                                 left: 0,
-                                opacity: it.id === this.selectedTabID ? 1 : 0,
+                                right: 0,
+                                bottom: 0,
+                                opacity: 1,
+                                overflowY: "auto",
                             }}
                         >
-                            {this.props.render(this.props.tabBarID, it)}
+                            {this.props.render(
+                                this.props.tabBarID,
+                                this.selectedTab
+                            )}
                         </div>
-                    ))}
+                    ) : null}
                 </div>
             </div>
         );
