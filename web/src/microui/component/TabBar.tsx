@@ -16,7 +16,49 @@ import { Tab, TabConfig } from "./Tab";
 import { EventListener, HandlerParam } from "../event/channel";
 
 let themeCache = new ThemeCache((theme) => ({
-    tab: {
+    fixedTabs: {
+        primary: {
+            font: theme.default?.outline,
+            background: "transparent",
+            border: theme.default?.outline,
+            shadow: "transparent",
+        },
+        hover: {
+            font: theme.hover?.contrastText,
+            background: "transparent",
+            border: theme.hover?.contrastText,
+            shadow: "transparent",
+        },
+        selected: {
+            font: theme.highlight?.main,
+            background: "transparent",
+            border: theme.highlight?.main,
+            shadow: "transparent",
+        },
+        transition: theme.transition,
+    },
+    floatTabs: {
+        primary: {
+            font: theme.default?.outline,
+            background: "transparent",
+            border: theme.default?.outline,
+            shadow: "transparent",
+        },
+        hover: {
+            font: theme.hover?.contrastText,
+            background: "transparent",
+            border: theme.hover?.contrastText,
+            shadow: "transparent",
+        },
+        selected: {
+            font: theme.highlight?.main,
+            background: "transparent",
+            border: theme.highlight?.main,
+            shadow: "transparent",
+        },
+        transition: theme.transition,
+    },
+    dynamicTabs: {
         primary: {
             font: theme.default?.outline,
             background: "transparent",
@@ -75,7 +117,9 @@ interface FloatTabItem {
 }
 
 export interface TabBarConfig {
-    tab: TabConfig;
+    fixedTabs: TabConfig;
+    floatTabs: TabConfig;
+    dynamicTabs: TabConfig;
 }
 
 interface TabBarProps {
@@ -422,7 +466,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 title={it.title}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
-                                config={config.tab}
+                                config={config.fixedTabs}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={false}
                                 renderInner={it.renderTab}
@@ -441,7 +485,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 title={it.title}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
-                                config={config.tab}
+                                config={config.floatTabs}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={false}
                                 renderInner={it.renderTab}
@@ -460,7 +504,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 title={it.title}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
-                                config={config.tab}
+                                config={config.dynamicTabs}
                                 selected={it.id === this.selectedTab?.id}
                                 closable={true}
                                 renderInner={it.renderTab}
