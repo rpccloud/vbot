@@ -31,7 +31,6 @@ interface TabProps {
 interface TabState {
     width: number;
     hover: boolean;
-    focus: boolean;
 }
 
 function makeTabPath(w: number, h: number, radius: number): string {
@@ -57,7 +56,6 @@ export class Tab extends React.Component<TabProps, TabState> {
         this.state = {
             width: 0,
             hover: false,
-            focus: false,
         };
 
         this.props.tabBar.onTabAdded(this);
@@ -159,7 +157,6 @@ export class Tab extends React.Component<TabProps, TabState> {
                     width: width,
                     height: height,
                     bottom: 0,
-                    color: color?.font,
                     zIndex: this.props.selected
                         ? this.context.zIndex + 1
                         : this.context.zIndex,
@@ -203,7 +200,6 @@ export class Tab extends React.Component<TabProps, TabState> {
                     ref={this.contentRef}
                     style={{
                         display: "flex",
-                        alignItems: "center",
                         position: "absolute",
                         overflow: "hidden",
                         cursor: "pointer",
@@ -231,17 +227,24 @@ export class Tab extends React.Component<TabProps, TabState> {
                     }}
                 >
                     {this.props.icon ? (
-                        <>
+                        <div
+                            style={{
+                                display: "flex",
+                                color: color?.font,
+                                alignItems: "center",
+                                transition: makeTransition(
+                                    ["color"],
+                                    config.transition?.duration,
+                                    config.transition?.easing
+                                ),
+                                marginRight:
+                                    this.props.title || this.props.closable
+                                        ? inMargin
+                                        : 0,
+                            }}
+                        >
                             {this.props.icon}
-                            <div
-                                style={{
-                                    width:
-                                        this.props.title || this.props.closable
-                                            ? inMargin
-                                            : 0,
-                                }}
-                            />
-                        </>
+                        </div>
                     ) : null}
 
                     {this.props.title ? (
@@ -249,18 +252,74 @@ export class Tab extends React.Component<TabProps, TabState> {
                             style={{
                                 flex: 1,
                                 minWidth: 0,
+                                position: "relative",
                             }}
                         >
                             <div
                                 style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    position: "absolute",
+                                    top: 0,
+                                    opacity: 1,
+                                    width: "100%",
+                                    height: "100%",
                                     WebkitBackgroundClip: "text",
                                     whiteSpace: "nowrap",
                                     color: "transparent",
                                     userSelect: "none",
-                                    backgroundImage: `linear-gradient(to right, ${color?.font} 0%, ${color?.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
+                                    backgroundImage: `linear-gradient(to right, ${config.primary?.font} 0%, ${config.primary?.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
                                 }}
                             >
-                                <span>{this.props.title}</span>
+                                {this.props.title}
+                            </div>
+
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    position: "absolute",
+                                    top: 0,
+                                    opacity: this.state.hover ? 1 : 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    WebkitBackgroundClip: "text",
+                                    whiteSpace: "nowrap",
+                                    color: "transparent",
+                                    userSelect: "none",
+                                    backgroundImage: `linear-gradient(to right, ${config.hover?.font} 0%, ${config.hover?.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
+                                    transition: makeTransition(
+                                        ["opacity"],
+                                        config.transition?.duration,
+                                        config.transition?.easing
+                                    ),
+                                }}
+                            >
+                                {this.props.title}
+                            </div>
+
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    position: "absolute",
+                                    top: 0,
+                                    opacity: this.props.selected ? 1 : 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    WebkitBackgroundClip: "text",
+                                    whiteSpace: "nowrap",
+                                    color: "transparent",
+                                    userSelect: "none",
+                                    backgroundImage: `linear-gradient(to right, ${config.selected?.font} 0%, ${config.selected?.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
+                                    transition: makeTransition(
+                                        ["opacity"],
+                                        config.transition?.duration,
+                                        config.transition?.easing
+                                    ),
+                                }}
+                            >
+                                {this.props.title}
                             </div>
                         </div>
                     ) : null}

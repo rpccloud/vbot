@@ -8,6 +8,7 @@ import { FocusContext } from "../microui/context/focus";
 import { Spin } from "../microui/component/Spin";
 import { TabBar } from "../microui/component/TabBar";
 import { sleep } from "../microui/util";
+import { FadeBox } from "../microui/component/FadeBox";
 
 const Container = (props: {
     children: ReactNode;
@@ -79,7 +80,9 @@ const Debug = () => {
             </div>
 
             <div>
-                <Spin color="red" speed={1} size="large" />
+                <FadeBox fade={0.5} type="bottom">
+                    <Button text="Click" ghost={true} />
+                </FadeBox>
 
                 <TabBar
                     size="large"

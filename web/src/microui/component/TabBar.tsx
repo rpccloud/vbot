@@ -25,7 +25,7 @@ let themeCache = new ThemeCache((theme) => ({
         hover: {
             font: theme.hover?.contrastText,
             background: "transparent",
-            border: theme.hover?.main,
+            border: theme.hover?.contrastText,
             shadow: "transparent",
         },
         selected: {
