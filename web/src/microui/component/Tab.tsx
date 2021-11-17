@@ -4,9 +4,10 @@ import { ActionSonar } from "../sonar/action";
 import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
 import { TabBar } from "./TabBar";
-import { AiOutlineCloseCircle } from "@react-icons/all-files/ai/AiOutlineCloseCircle";
+import { IoCloseOutline } from "@react-icons/all-files/io5/IoCloseOutline";
 import { ZIndexContext } from "../context/zIndex";
 import { makeTransition, range } from "../util";
+import { FadeBox } from "./FadeBox";
 
 export interface TabConfig {
     primary?: ComponentColor;
@@ -145,8 +146,10 @@ export class Tab extends React.Component<TabProps, TabState> {
             1,
             999999
         );
-        let fontDisappearFactor = Math.floor(
-            range(1 - (0.6 * fontSize) / labelWidth, 0, 1) * 100
+        let fontDisappearFactor = range(
+            1 - (0.6 * fontSize) / labelWidth,
+            0,
+            1
         );
 
         return (
@@ -248,80 +251,25 @@ export class Tab extends React.Component<TabProps, TabState> {
                     ) : null}
 
                     {this.props.title ? (
-                        <div
+                        <FadeBox
+                            fade={fontDisappearFactor}
                             style={{
                                 flex: 1,
                                 minWidth: 0,
-                                position: "relative",
+                                display: "flex",
+                                alignItems: "center",
+                                whiteSpace: "nowrap",
+                                color: color?.font,
+                                userSelect: "none",
+                                transition: makeTransition(
+                                    ["color"],
+                                    config.transition?.duration,
+                                    config.transition?.easing
+                                ),
                             }}
                         >
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    position: "absolute",
-                                    top: 0,
-                                    opacity: 1,
-                                    width: "100%",
-                                    height: "100%",
-                                    WebkitBackgroundClip: "text",
-                                    whiteSpace: "nowrap",
-                                    color: "transparent",
-                                    userSelect: "none",
-                                    backgroundImage: `linear-gradient(to right, ${config.primary?.font} 0%, ${config.primary?.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
-                                }}
-                            >
-                                {this.props.title}
-                            </div>
-
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    position: "absolute",
-                                    top: 0,
-                                    opacity: this.state.hover ? 1 : 0,
-                                    width: "100%",
-                                    height: "100%",
-                                    WebkitBackgroundClip: "text",
-                                    whiteSpace: "nowrap",
-                                    color: "transparent",
-                                    userSelect: "none",
-                                    backgroundImage: `linear-gradient(to right, ${config.hover?.font} 0%, ${config.hover?.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
-                                    transition: makeTransition(
-                                        ["opacity"],
-                                        config.transition?.duration,
-                                        config.transition?.easing
-                                    ),
-                                }}
-                            >
-                                {this.props.title}
-                            </div>
-
-                            <div
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    position: "absolute",
-                                    top: 0,
-                                    opacity: this.props.selected ? 1 : 0,
-                                    width: "100%",
-                                    height: "100%",
-                                    WebkitBackgroundClip: "text",
-                                    whiteSpace: "nowrap",
-                                    color: "transparent",
-                                    userSelect: "none",
-                                    backgroundImage: `linear-gradient(to right, ${config.selected?.font} 0%, ${config.selected?.font} ${fontDisappearFactor}%, rgba(0, 0, 0, 0)  100%)`,
-                                    transition: makeTransition(
-                                        ["opacity"],
-                                        config.transition?.duration,
-                                        config.transition?.easing
-                                    ),
-                                }}
-                            >
-                                {this.props.title}
-                            </div>
-                        </div>
+                            {this.props.title}
+                        </FadeBox>
                     ) : null}
 
                     {this.props.closable ? (
@@ -344,7 +292,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                                 border={false}
                                 focusable={false}
                                 size={this.props.size}
-                                icon={<AiOutlineCloseCircle />}
+                                icon={<IoCloseOutline />}
                                 config={{
                                     primary: {
                                         font: color?.font,

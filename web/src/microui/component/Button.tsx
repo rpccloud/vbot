@@ -145,9 +145,11 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
     render() {
         let config: ButtonConfig = extendConfig(
-            themeCache.getConfig(extendTheme(this.context, this.props.theme)),
+            themeCache.getConfig(extendTheme(this.context, this.props.theme))[
+                this.props.ghost ? "ghost" : "fill"
+            ],
             this.props.config
-        )[this.props.ghost ? "ghost" : "fill"];
+        );
 
         let color = config.primary;
 
