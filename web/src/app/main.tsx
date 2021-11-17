@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Page } from "../microui/component/Page";
-import { TabBar } from "../microui/component/TabBar";
+import { TabBar, TabRecord } from "../microui/component/TabBar";
 import { Plugin } from "./plugin";
 
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
@@ -9,6 +9,7 @@ import { Divider } from "../microui/component/Divider";
 import { ThemeContext } from "../microui/context/theme";
 import { AppConfig } from "./AppManager";
 import { ComponentColor, makeTransition } from "../microui/util";
+import { TabContainer } from "../microui/component/TabContainer";
 
 // export const Main = () => (
 //     <div
@@ -24,6 +25,7 @@ import { ComponentColor, makeTransition } from "../microui/util";
 export const Main = () => {
     const theme = useContext(ThemeContext);
     const margin = AppConfig.get().margin;
+    const [tabBarID, setTabBarID] = useState("");
     return (
         <Page>
             <FlexBox
@@ -37,8 +39,10 @@ export const Main = () => {
                 <Divider space={16} />
                 <TabBar
                     size="medium"
+                    onInit={(id) => {
+                        setTabBarID(id);
+                    }}
                     style={{
-                        fontWeight: 500,
                         marginLeft: margin,
                         marginRight: margin,
                     }}
@@ -77,10 +81,30 @@ export const Main = () => {
                     initialDynamicTabs={[
                         { title: "Test", icon: <AiOutlineLock /> },
                         { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
                     ]}
                 ></TabBar>
                 <Divider space={1} lineWidth={1} color={theme.primary?.main} />
-                <FlexBox style={{ flex: 1 }} />
+                {tabBarID ? (
+                    <TabContainer
+                        tabBarID={tabBarID}
+                        render={(tabBarID: string, param: TabRecord) => {
+                            return (
+                                <div>
+                                    {JSON.stringify({
+                                        tabBarID: tabBarID,
+                                        tabID: param.id,
+                                        // param: param,
+                                    })}
+                                </div>
+                            );
+                        }}
+                    />
+                ) : null}
                 <Divider space={1} lineWidth={1} color={theme.primary?.main} />
             </FlexBox>
             <Plugin kind="footer" />
