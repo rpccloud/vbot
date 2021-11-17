@@ -90,7 +90,7 @@ export const ThemeContext = React.createContext<Theme>({
         backgroundLight: "rgb(0,32,65)",
         backgroundDark: "rgb(10, 25, 41)",
         contrastText: "#FFFFFFD0",
-        outline: "#888",
+        outline: "#999",
         divider: "rgb(255,47,76)",
         makeBackground: (light?: string, dark?: string) => {
             return `radial-gradient(${light} 0%, ${dark} 70%, ${dark} 100%)`;
@@ -102,7 +102,7 @@ export const ThemeContext = React.createContext<Theme>({
     },
     hover: {
         main: "#ff9100",
-        contrastText: "#FFFFFFE0",
+        contrastText: "#FFFFFFD0",
     },
     highlight: {
         main: "#ffa733",
