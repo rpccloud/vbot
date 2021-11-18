@@ -11,17 +11,6 @@ import { AppConfig } from "./AppManager";
 import { ComponentColor, makeTransition } from "../microui/util";
 import { TabContainer } from "../microui/component/TabContainer";
 
-// export const Main = () => (
-//     <div
-//         className="vbot-fill-viewport"
-//         style={{ display: "flex", flexFlow: "column" }}
-//     >
-//         <Plugin kind="browser" />
-//         <div style={{ height: 1, background: "var(--Vbot-BorderColor)" }}></div>
-//         <Plugin kind="footer" />
-//     </div>
-// );
-
 export const Main = () => {
     const theme = useContext(ThemeContext);
     const margin = AppConfig.get().margin;

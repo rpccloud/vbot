@@ -8,7 +8,6 @@ import {
     Size,
     TimerManager,
 } from "../util";
-import { getSeed } from "../../app/plugin/browser/utils";
 import { extendTheme, Theme, ThemeCache, ThemeContext } from "../context/theme";
 import { ActionSonar } from "../sonar/action";
 import { ResizeSonar } from "../sonar/resize";
@@ -207,7 +206,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             ? props.initialFixedTabs.map((it) => {
                   this.fixedWidth += it.width;
                   return {
-                      id: getSeed(),
+                      id: SeedManager.getSeed(),
                       title: it.title,
                       icon: it.icon,
                       param: it.param,
@@ -225,7 +224,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         this.floatTabs = props.initialFloatTabs
             ? props.initialFloatTabs.map((it) => {
                   return {
-                      id: getSeed(),
+                      id: SeedManager.getSeed(),
                       title: it.title,
                       icon: it.icon,
                       param: it.param,
@@ -243,7 +242,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         this.dynamicTabs = props.initialDynamicTabs
             ? props.initialDynamicTabs.map((it) => {
                   return {
-                      id: getSeed(),
+                      id: SeedManager.getSeed(),
                       title: it.title,
                       icon: it.icon,
                       param: it.param,
