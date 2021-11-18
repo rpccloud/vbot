@@ -81,13 +81,8 @@ export const Main = () => {
                     initialDynamicTabs={[
                         { title: "Test", icon: <AiOutlineLock /> },
                         { title: "Test", icon: <AiOutlineLock /> },
-                        { title: "Test", icon: <AiOutlineLock /> },
-                        { title: "Test", icon: <AiOutlineLock /> },
-                        { title: "Test", icon: <AiOutlineLock /> },
-                        { title: "Test", icon: <AiOutlineLock /> },
-                        { title: "Test", icon: <AiOutlineLock /> },
                     ]}
-                ></TabBar>
+                />
                 <Divider space={1} lineWidth={1} color={theme.primary?.main} />
                 {tabBarID ? (
                     <TabContainer
