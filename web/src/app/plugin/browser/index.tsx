@@ -72,7 +72,7 @@ class Browser extends React.Component<{}, BrowserState> {
                         >
                             <Plugin
                                 kind={it.kind}
-                                param={it.param}
+                                data={it.data}
                                 tabID={it.tabID}
                             />
                         </div>

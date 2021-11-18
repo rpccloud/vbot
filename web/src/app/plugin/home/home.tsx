@@ -138,7 +138,7 @@ const Home = observer((props: PluginProps) => {
 
     const contentView = (
         <div style={styles.content}>
-            <Plugin kind={data.kind} param={data.id} />
+            <Plugin kind={data.kind} data={data.id} />
         </div>
     );
 

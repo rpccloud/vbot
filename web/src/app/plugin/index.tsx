@@ -12,9 +12,10 @@ import ServerList from "./server/list";
 import ServerShow from "./server/show";
 
 export interface PluginProps {
-    kind: string;
-    param?: any;
+    kind?: string;
+    data?: any;
     tabID?: number;
+    tabBarID?: string;
 }
 
 export const Plugin = (props: PluginProps) => {
@@ -24,51 +25,19 @@ export const Plugin = (props: PluginProps) => {
             return <Header />;
         case "footer":
             return <Footer />;
-        case "browser":
-            return <Browser />;
         case "home":
-            return (
-                <Home
-                    kind={props.kind}
-                    param={props.param}
-                    tabID={props.tabID}
-                />
-            );
+            return <Home {...props} />;
         case "server.create":
-            return (
-                <ServerCreate
-                    kind={props.kind}
-                    param={props.param}
-                    tabID={props.tabID}
-                />
-            );
+            return <ServerCreate {...props} />;
         case "server.show":
-            return (
-                <ServerShow
-                    kind={props.kind}
-                    param={props.param}
-                    tabID={props.tabID}
-                />
-            );
+            return <ServerShow {...props} />;
         case "server.delete":
-            return (
-                <ServerDelete
-                    kind={props.kind}
-                    param={props.param}
-                    tabID={props.tabID}
-                />
-            );
+            return <ServerDelete {...props} />;
         case "server.list":
-            return (
-                <ServerList
-                    kind={props.kind}
-                    param={props.param}
-                    tabID={props.tabID}
-                />
-            );
+            return <ServerList {...props} />;
         default:
             return (
-                <FlexBox>
+                <FlexBox style={{ flex: 1 }}>
                     <Span color={theme.failed?.main}>
                         Unknown plugin kind "{props.kind}"
                     </Span>

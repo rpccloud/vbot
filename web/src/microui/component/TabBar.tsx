@@ -93,7 +93,7 @@ interface FixedTabItem {
     width: number;
     title?: string;
     icon?: React.ReactNode;
-    param?: any;
+    param?: { kind: string; data: any };
     default?: boolean;
     readonly renderTab?: (
         icon?: React.ReactNode,
@@ -106,7 +106,7 @@ interface FixedTabItem {
 interface FloatTabItem {
     title?: string;
     icon?: React.ReactNode;
-    param?: any;
+    param?: { kind: string; data: any };
     default?: boolean;
     readonly renderTab?: (
         icon?: React.ReactNode,
@@ -146,7 +146,7 @@ export interface TabRecord {
     readonly id: number;
     title?: string;
     icon?: React.ReactNode;
-    param: any;
+    param?: { kind: string; data: any };
     left: number;
     width: number;
     minLeft: number;

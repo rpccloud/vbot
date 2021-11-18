@@ -50,6 +50,10 @@ export const Main = () => {
                         {
                             width: 100,
                             default: true,
+                            param: {
+                                kind: "home",
+                                data: "",
+                            },
                             renderTab: (_, __, ___, color?: ComponentColor) => {
                                 return (
                                     <FlexBox
@@ -84,45 +88,14 @@ export const Main = () => {
                 {tabBarID ? (
                     <TabContainer
                         tabBarID={tabBarID}
-                        render={(tabBarID: string, param: TabRecord) => {
+                        render={(tabBarID: string, record: TabRecord) => {
                             return (
-                                <div
-                                    style={{
-                                        flex: 1,
-                                        color: "white",
-                                        overflowY: "auto",
-                                    }}
-                                >
-                                    {JSON.stringify({
-                                        tabBarID: tabBarID,
-                                        tabID: param.id,
-                                        // param: param,
-                                    })}
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                    <div>hi</div>
-                                </div>
+                                <Plugin
+                                    kind={record.param?.kind}
+                                    data={record.param?.data}
+                                    tabBarID={tabBarID}
+                                    tabID={record.id}
+                                />
                             );
                         }}
                     />

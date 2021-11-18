@@ -5,7 +5,7 @@ import { TabBarOnChangeParam, TabRecord } from "./TabBar";
 
 interface TabContainerProps {
     tabBarID: string;
-    render: (tabBarID: string, param: TabRecord) => React.ReactNode;
+    render: (tabBarID: string, record: TabRecord) => React.ReactNode;
     style?: React.CSSProperties;
 }
 

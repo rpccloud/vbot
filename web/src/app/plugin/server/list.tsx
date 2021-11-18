@@ -263,7 +263,7 @@ const ServerList = observer((props: PluginProps) => {
                     <Modal visible={data.createModal} className="vbot-modal">
                         <Plugin
                             kind="server.create"
-                            param={{
+                            data={{
                                 goBack: (ok: boolean) => {
                                     data.setCreateModal(false);
 
@@ -277,7 +277,7 @@ const ServerList = observer((props: PluginProps) => {
                     <Modal visible={data.deleteModal} className="vbot-modal">
                         <Plugin
                             kind="server.delete"
-                            param={{
+                            data={{
                                 goBack: (ok: boolean) => {
                                     data.setDeleteModal(false);
 

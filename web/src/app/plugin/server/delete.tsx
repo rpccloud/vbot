@@ -7,15 +7,15 @@ import { AppUser } from "../../AppManager";
 import { PluginProps } from "..";
 
 const ServerDelete = observer((props: PluginProps) => {
-    let item = props.param.item;
+    let item = props.data.item;
     return (
         <Card
             title="Remove SSH"
             prevName="Cancel"
             width={460}
             onPrev={() => {
-                if (props.param && props.param.goBack) {
-                    props.param.goBack(false);
+                if (props.data && props.data.goBack) {
+                    props.data.goBack(false);
                 }
             }}
             nextName="Remove"
@@ -27,10 +27,10 @@ const ServerDelete = observer((props: PluginProps) => {
                         AppUser.getSessionID(),
                         item.id
                     );
-                    props.param.goBack(true);
+                    props.data.goBack(true);
                 } catch (e) {
                     message.error((e as any).getMessage());
-                    props.param.goBack(false);
+                    props.data.goBack(false);
                 }
             }}
         >

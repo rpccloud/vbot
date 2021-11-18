@@ -88,10 +88,10 @@ const ServerCreate = observer((props: PluginProps) => {
         <Card
             title="Add SSH Server"
             width={460}
-            prevName={!!props.param && !!props.param.goBack ? "Cancel" : ""}
+            prevName={!!props.data && !!props.data.goBack ? "Cancel" : ""}
             onPrev={() => {
-                if (props.param && props.param.goBack) {
-                    props.param.goBack(false);
+                if (props.data && props.data.goBack) {
+                    props.data.goBack(false);
                 }
             }}
             nextName="Add"
@@ -116,7 +116,7 @@ const ServerCreate = observer((props: PluginProps) => {
                         false
                     );
                     data.reset();
-                    props.param.goBack(true);
+                    props.data.goBack(true);
                 } catch (e) {
                     message.error((e as any).getMessage());
                 }
