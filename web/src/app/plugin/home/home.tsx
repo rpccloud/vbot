@@ -2,12 +2,14 @@ import React, { useContext, useState } from "react";
 import { PluginProps } from "..";
 
 import { FlexBox } from "../../../microui/component/FlexBox";
-import { Button } from "../../../microui/component/Button";
+import { Button, ButtonConfig } from "../../../microui/component/Button";
 import { Divider } from "../../../microui/component/Divider";
 import { ThemeContext } from "../../../microui/context/theme";
 
 import { AiOutlineLaptop } from "@react-icons/all-files/ai/AiOutlineLaptop";
 import { AiOutlineGroup } from "@react-icons/all-files/ai/AiOutlineGroup";
+
+import Color from "color";
 // import { IoLogoJavascript } from "@react-icons/all-files/io/IoLogoJavascript";
 
 interface MenuItem {
@@ -25,6 +27,26 @@ const menuList: MenuItem[] = [
 export const Home = (props: PluginProps) => {
     const theme = useContext(ThemeContext);
     let [selectedKey, setSelectedKey] = useState(menuList[0].key);
+    const menuButtonConfig: ButtonConfig = {
+        primary: {
+            font: theme.default?.outline,
+            border: "transparent",
+        },
+        hover: {
+            border: "transparent",
+            background: Color(theme.hover?.main).alpha(0.2).string(),
+        },
+        highlight: {
+            border: "transparent",
+            background: Color(theme.highlight?.main).alpha(0.3).string(),
+        },
+        selected: {
+            border: "transparent",
+        },
+        focus: {
+            border: theme.primary?.main,
+        },
+    };
     return (
         <FlexBox
             style={{
@@ -38,7 +60,7 @@ export const Home = (props: PluginProps) => {
                 style={{
                     width: 160,
                     flexFlow: "column",
-                    overflowY: "scroll",
+                    overflowY: "auto",
                     marginTop: 10,
                     marginBottom: 10,
                 }}
@@ -50,32 +72,16 @@ export const Home = (props: PluginProps) => {
                             icon={it.icon}
                             text={it.text}
                             ghost={true}
+                            border={false}
                             style={{
                                 height: 44,
                                 minHeight: 44,
                                 fontWeight: 900,
+                                borderRadius: 0,
                                 padding: "0px 10px 0px 10px",
                                 justifyContent: "flex-start",
                             }}
-                            config={{
-                                primary: {
-                                    font: theme.default?.outline,
-                                    border: "transparent",
-                                },
-                                hover: {
-                                    border: "transparent",
-                                    background: theme.hover?.main,
-                                },
-                                highlight: {
-                                    border: "transparent",
-                                },
-                                selected: {
-                                    border: "transparent",
-                                },
-                                focus: {
-                                    border: theme.primary?.main,
-                                },
-                            }}
+                            config={menuButtonConfig}
                             selected={it.key === selectedKey}
                             onClick={() => {
                                 setSelectedKey(it.key);
