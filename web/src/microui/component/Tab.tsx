@@ -20,6 +20,7 @@ interface TabProps {
     readonly id: number;
     readonly tabBar: TabBar;
     size: Size;
+    height: number;
     config: TabConfig;
     icon?: ReactNode;
     title?: string;
@@ -139,7 +140,7 @@ export class Tab extends React.Component<TabProps, TabState> {
 
         let fontSize = getFontSize(this.props.size);
         let width = this.state.width;
-        let height = Math.floor(fontSize * 2.5);
+        let height = this.props.height;
         let path = makeTabPath(width, height, height / 6);
         let leftMargin = Math.round(height / 3);
         let rightMargin = Math.round(height / 3);

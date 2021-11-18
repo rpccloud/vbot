@@ -13,9 +13,9 @@ export interface Rect {
 }
 
 const cfgFontSize = {
-    "xx-small": 6,
-    "x-small": 9,
-    small: 11,
+    "xx-small": 7,
+    "x-small": 10,
+    small: 12,
     medium: 14,
     large: 18,
     "x-large": 24,

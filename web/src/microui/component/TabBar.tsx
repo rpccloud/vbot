@@ -125,6 +125,7 @@ export interface TabBarConfig {
 interface TabBarProps {
     readonly size: Size;
     readonly theme?: Theme;
+    readonly height?: number;
     readonly config: TabBarConfig;
     readonly minTabWidth: number;
     readonly maxTabWidth: number;
@@ -444,13 +445,18 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
 
     render() {
         let fontSize = getFontSize(this.props.size);
-        let height = Math.round(fontSize * 2.5);
+        let height =
+            this.props.height !== undefined
+                ? this.props.height
+                : Math.round(fontSize * 2.3);
         let config: TabBarConfig = extendConfig(
             themeCache.getConfig(extendTheme(this.context, this.props.theme)),
             this.props.config
         );
         return (
-            <div style={{ fontWeight: 500, ...this.props.style }}>
+            <div
+                style={{ fontWeight: 500, ...this.props.style, height: height }}
+            >
                 <div
                     ref={this.rootRef}
                     style={{ height: height, position: "relative" }}
@@ -461,6 +467,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 key={it.id}
                                 id={it.id}
                                 tabBar={this}
+                                height={height}
                                 size={this.props.size}
                                 icon={it.icon}
                                 title={it.title}
@@ -480,6 +487,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 key={it.id}
                                 id={it.id}
                                 tabBar={this}
+                                height={height}
                                 size={this.props.size}
                                 icon={it.icon}
                                 title={it.title}
@@ -499,6 +507,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                                 key={it.id}
                                 id={it.id}
                                 tabBar={this}
+                                height={height}
                                 size={this.props.size}
                                 icon={it.icon}
                                 title={it.title}

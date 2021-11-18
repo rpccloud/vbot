@@ -52,12 +52,9 @@ export const Main = () => {
                             default: true,
                             renderTab: (_, __, ___, color?: ComponentColor) => {
                                 return (
-                                    <div
+                                    <FlexBox
                                         style={{
-                                            display: "flex",
-                                            width: "100%",
-                                            alignItems: "center",
-                                            justifyContent: "center",
+                                            flex: 1,
                                             fontSize: 16,
                                             fontWeight: 900,
                                             color: color?.font,
@@ -69,7 +66,7 @@ export const Main = () => {
                                         }}
                                     >
                                         Vbot
-                                    </div>
+                                    </FlexBox>
                                 );
                             },
                         },
@@ -92,6 +89,7 @@ export const Main = () => {
                                 <div
                                     style={{
                                         flex: 1,
+                                        color: "white",
                                         overflowY: "auto",
                                     }}
                                 >
@@ -100,15 +98,30 @@ export const Main = () => {
                                         tabID: param.id,
                                         // param: param,
                                     })}
-
-                                    <h1>hi</h1>
-                                    <h1>hi</h1>
-                                    <h1>hi</h1>
-                                    <h1>hi</h1>
-                                    <h1>hi</h1>
-                                    <h1>hi</h1>
-                                    <h1>hi</h1>
-                                    <h1>hi</h1>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
+                                    <div>hi</div>
                                 </div>
                             );
                         }}
