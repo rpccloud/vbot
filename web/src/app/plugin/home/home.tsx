@@ -30,19 +30,20 @@ export const Home = (props: PluginProps) => {
     const menuButtonConfig: ButtonConfig = {
         primary: {
             font: theme.default?.outline,
-            border: "transparent",
+            border: theme.default?.outline,
         },
         hover: {
-            font: theme.default?.outline,
-            border: "transparent",
-            background: Color(theme.hover?.main).alpha(0.2).string(),
+            font: theme.default?.contrastText,
+            border: theme.default?.contrastText,
+            background: theme.default?.backgroundLight,
         },
         highlight: {
-            border: "transparent",
-            background: Color(theme.highlight?.main).alpha(0.3).string(),
+            border: theme.highlight?.main,
+            background: theme.default?.backgroundLight,
         },
         selected: {
-            border: "transparent",
+            border: theme.hover?.main,
+            background: theme.default?.backgroundLight,
         },
         focus: {
             border: theme.primary?.main,
@@ -62,8 +63,6 @@ export const Home = (props: PluginProps) => {
                     width: 160,
                     flexFlow: "column",
                     overflowY: "auto",
-                    marginTop: 10,
-                    marginBottom: 10,
                 }}
             >
                 {menuList.map((it) => {
@@ -79,6 +78,7 @@ export const Home = (props: PluginProps) => {
                                 minHeight: 44,
                                 fontWeight: 900,
                                 borderRadius: 0,
+                                borderLeftWidth: 3,
                                 padding: "0px 10px 0px 10px",
                                 justifyContent: "flex-start",
                             }}
