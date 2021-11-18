@@ -76,7 +76,7 @@ export const Main = () => {
                         { title: "Test", icon: <AiOutlineLock /> },
                     ]}
                 />
-                <Divider space={1} lineWidth={1} color={theme.primary?.main} />
+                <Divider space={1} lineWidth={1} />
                 {tabBarID ? (
                     <TabContainer
                         tabBarID={tabBarID}
@@ -97,7 +97,7 @@ export const Main = () => {
                         }}
                     />
                 ) : null}
-                <Divider space={1} lineWidth={1} color={theme.primary?.main} />
+                <Divider space={1} lineWidth={1} />
             </FlexBox>
             <Plugin kind="footer" />
         </Page>

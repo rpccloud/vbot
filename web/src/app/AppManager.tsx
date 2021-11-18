@@ -10,6 +10,7 @@ import { Register } from "./register";
 import Debug from "./debug";
 import { Start } from "./start";
 import { RPCAny } from "rpccloud-client-js/build/types";
+import { Theme, ThemeContext } from "../microui/context/theme";
 
 const routeMap: Map<string, React.ReactNode> = new Map([
     ["start", <Start />],
@@ -21,7 +22,9 @@ const routeMap: Map<string, React.ReactNode> = new Map([
 
 export default observer(function () {
     return AppConfig.get().isValid() ? (
-        <>{routeMap.get(AppConfig.get().rootRoute)}</>
+        <ThemeContext.Provider value={AppConfig.get().getTheme()}>
+            {routeMap.get(AppConfig.get().rootRoute)}
+        </ThemeContext.Provider>
     ) : null;
 });
 
@@ -42,6 +45,59 @@ export class AppConfig {
     headHeight: number;
     footerHeight: number;
     margin: number;
+    private theme: Theme = {
+        default: {
+            backgroundLight: "rgb(0,32,65)",
+            backgroundDark: "rgb(10, 25, 41)",
+            contrastText: "#FFFFFFD0",
+            outline: "#999",
+            divider: "rgb(255,47,76)",
+            makeBackground: (light?: string, dark?: string) => {
+                return `radial-gradient(${light} 0%, ${dark} 70%, ${dark} 100%)`;
+            },
+        },
+        primary: {
+            main: "#b26500",
+            contrastText: "#FFFFFFD0",
+        },
+        hover: {
+            main: "#ff9100",
+            contrastText: "#FFFFFFD0",
+        },
+        highlight: {
+            main: "#ffa733",
+            contrastText: "#FFFFFFFF",
+        },
+        focus: {
+            main: "#ffa733",
+            contrastText: "#FFFFFFD0",
+        },
+        selected: {
+            main: "#ff9100",
+            contrastText: "#FFFFFFD0",
+        },
+        successful: {
+            main: "#76ff03",
+            contrastText: "#FFFFFFD0",
+        },
+        failed: {
+            main: "rgb(235, 0, 20)",
+            contrastText: "#FFFFFFD0",
+        },
+        disabled: {
+            main: "#555",
+            contrastText: "#808080C0",
+        },
+        transition: {
+            duration: "300ms",
+            easing: "ease-in-out",
+        },
+        extra: {
+            dark: "rgb(33,91,172)",
+            primary: "rgb(51,129,246)",
+            light: "rgb(51,129,246)",
+        },
+    };
 
     private constructor() {
         makeAutoObservable(this);
@@ -67,6 +123,10 @@ export class AppConfig {
 
     isValid(): boolean {
         return !!this.locale;
+    }
+
+    getTheme(): Theme {
+        return this.theme;
     }
 
     private static instance = new AppConfig();
