@@ -7,7 +7,7 @@ import Header from "./header";
 import { Home } from "./home/home";
 import ServerCreate from "./server/create";
 import ServerDelete from "./server/delete";
-import ServerList from "./server/list";
+import { ServerList } from "./server/list";
 import ServerShow from "./server/show";
 
 export interface PluginProps {

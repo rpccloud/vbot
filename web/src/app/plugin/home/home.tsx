@@ -102,6 +102,7 @@ export const Home = (props: PluginProps) => {
                         return (
                             <div
                                 style={{
+                                    display: "flex",
                                     position: "absolute",
                                     top: 0,
                                     left: 0,
