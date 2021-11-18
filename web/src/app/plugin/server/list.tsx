@@ -2,7 +2,7 @@ import React from "react";
 import { PluginProps } from "..";
 import { FlexBox } from "../../../microui/component/FlexBox";
 export const ServerList = (props: PluginProps) => {
-    return <FlexBox style={{ flex: 1 }}> </FlexBox>;
+    return <FlexBox style={{ flex: 1 }}></FlexBox>;
 };
 
 // import { makeAutoObservable, runInAction } from "mobx";

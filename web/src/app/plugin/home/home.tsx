@@ -101,6 +101,7 @@ export const Home = (props: PluginProps) => {
                     {sortedMenuList.map((it) => {
                         return (
                             <div
+                                key={it.key}
                                 style={{
                                     display: "flex",
                                     position: "absolute",

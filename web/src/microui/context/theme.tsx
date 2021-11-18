@@ -93,7 +93,7 @@ export const ThemeContext = React.createContext<Theme>({
         outline: "#999",
         divider: "rgb(255,47,76)",
         makeBackground: (light?: string, dark?: string) => {
-            return `radial-gradient(${light} 0%, ${dark} 70%, ${dark} 100%)`;
+            return `radial-gradient(circle farthest-side, ${light}, ${dark}`;
         },
     },
     primary: {

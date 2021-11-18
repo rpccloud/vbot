@@ -47,13 +47,17 @@ export class AppConfig {
     margin: number;
     private theme: Theme = {
         default: {
-            backgroundLight: "rgb(0,32,65)",
-            backgroundDark: "rgb(10, 25, 41)",
+            backgroundLight: "rgb(10,30,70)",
+            backgroundDark: "rgb(7, 20, 41)",
+            // backgroundLight: "rgb(10,80, 35)",
+            // backgroundDark: "rgb(10, 51, 25 )",
+            // backgroundLight: "rgb(10,50,20)",
+            // backgroundDark: "rgb(5,21,11)",
             contrastText: "#FFFFFFD0",
             outline: "#999",
             divider: "rgb(255,47,76)",
             makeBackground: (light?: string, dark?: string) => {
-                return `radial-gradient(${light} 0%, ${dark} 70%, ${dark} 100%)`;
+                return `radial-gradient(circle farthest-side, ${light}, ${dark}`;
             },
         },
         primary: {
@@ -90,7 +94,7 @@ export class AppConfig {
         },
         transition: {
             duration: "300ms",
-            easing: "ease-in-out",
+            easing: "ease-in",
         },
         extra: {
             dark: "rgb(33,91,172)",
