@@ -45,6 +45,7 @@ export interface Transition {
 export interface DefaultColor {
     backgroundLight?: string;
     backgroundDark?: string;
+    background?: string;
     contrastText?: string;
     outline?: string;
     divider?: string;

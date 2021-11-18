@@ -9,6 +9,7 @@ import { ThemeContext } from "../../../microui/context/theme";
 import { AiOutlineLaptop } from "@react-icons/all-files/ai/AiOutlineLaptop";
 import { AiOutlineGroup } from "@react-icons/all-files/ai/AiOutlineGroup";
 import { IoLogoJavascript } from "@react-icons/all-files/io/IoLogoJavascript";
+import Color from "color";
 
 interface MenuItem {
     key: string;
@@ -33,15 +34,21 @@ export const Home = (props: PluginProps) => {
         hover: {
             font: theme.default?.contrastText,
             border: theme.default?.contrastText,
-            background: theme.default?.backgroundLight,
+            background: Color(theme.default?.backgroundLight)
+                .alpha(0.4)
+                .string(),
         },
         highlight: {
             border: theme.highlight?.main,
-            background: theme.default?.backgroundLight,
+            background: Color(theme.default?.backgroundLight)
+                .alpha(0.4)
+                .string(),
         },
         selected: {
             border: theme.hover?.main,
-            background: theme.default?.backgroundLight,
+            background: Color(theme.default?.backgroundLight)
+                .alpha(0.4)
+                .string(),
         },
         focus: {
             border: theme.highlight?.main,
@@ -75,11 +82,15 @@ export const Home = (props: PluginProps) => {
                             ghost={true}
                             border={false}
                             style={{
-                                height: 44,
-                                minHeight: 44,
+                                height: 50,
+                                minHeight: 50,
                                 fontWeight: 900,
                                 borderRadius: 0,
                                 borderLeftWidth: 3,
+                                borderBottomColor:
+                                    theme.default?.backgroundLight,
+                                borderBottomWidth: 1,
+                                borderBottomStyle: "solid",
                                 padding: "0px 10px 0px 10px",
                                 justifyContent: "flex-start",
                             }}

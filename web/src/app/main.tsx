@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Page } from "../microui/component/Page";
-import { TabBar } from "../microui/component/TabBar";
+import { TabBar, TabBarConfig } from "../microui/component/TabBar";
 import { Plugin } from "./plugin";
 
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
@@ -10,11 +10,30 @@ import { ThemeContext } from "../microui/context/theme";
 import { AppConfig } from "./AppManager";
 import { ComponentColor, makeTransition } from "../microui/util";
 import { TabContainer } from "../microui/component/TabContainer";
+import Color from "color";
 
 export const Main = () => {
     const theme = useContext(ThemeContext);
     const margin = AppConfig.get().margin;
     const [tabBarID, setTabBarID] = useState("");
+    const tabBG = Color(theme.default?.backgroundLight).alpha(0.4).string();
+    const tabBarConfig: TabBarConfig = {
+        fixedTabs: {
+            primary: { background: tabBG },
+            hover: { background: tabBG },
+            selected: { background: tabBG },
+        },
+        floatTabs: {
+            primary: { background: tabBG },
+            hover: { background: tabBG },
+            selected: { background: tabBG },
+        },
+        dynamicTabs: {
+            primary: { background: tabBG },
+            hover: { background: tabBG },
+            selected: { background: tabBG },
+        },
+    };
     return (
         <Page>
             <FlexBox
@@ -30,6 +49,7 @@ export const Main = () => {
                     onInit={(id) => {
                         setTabBarID(id);
                     }}
+                    config={tabBarConfig}
                     style={{
                         marginLeft: margin,
                         marginRight: margin,

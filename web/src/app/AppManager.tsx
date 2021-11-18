@@ -47,8 +47,9 @@ export class AppConfig {
     margin: number;
     private theme: Theme = {
         default: {
-            backgroundLight: "rgb(10,30,70)",
             backgroundDark: "rgb(7, 20, 41)",
+            background: "rgb(10,30,70)",
+            backgroundLight: "rgb(20,37,90)",
             // backgroundLight: "rgb(10,80, 35)",
             // backgroundDark: "rgb(10, 51, 25 )",
             // backgroundLight: "rgb(10,50,20)",

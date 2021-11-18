@@ -178,7 +178,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
         let innerMargin =
             this.props.innerMargin !== undefined
                 ? this.props.innerMargin
-                : qrHeight;
+                : Math.round(height / 5);
         let innerLeft =
             this.props.innerLeft !== undefined
                 ? this.props.innerLeft
@@ -216,7 +216,10 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     display: "block",
                     borderStyle: "solid",
                     borderWidth: this.props.border ? 1 : 0,
-                    borderColor: color?.border,
+                    borderTopColor: color?.border,
+                    borderLeftColor: color?.border,
+                    borderBottomColor: color?.border,
+                    borderRightColor: color?.border,
                     borderRadius: this.props.borderRadius,
                     color: color?.font,
                     fontSize: fontSize,

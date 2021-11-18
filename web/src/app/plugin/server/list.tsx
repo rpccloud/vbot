@@ -1,8 +1,45 @@
-import React from "react";
+import React, { useContext } from "react";
 import { PluginProps } from "..";
+import { Button } from "../../../microui/component/Button";
 import { FlexBox } from "../../../microui/component/FlexBox";
+import { AppConfig } from "../../AppManager";
+import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import { AiOutlineReload } from "@react-icons/all-files/ai/AiOutlineReload";
+import { ThemeContext } from "../../../microui/context/theme";
+import Color from "color";
 export const ServerList = (props: PluginProps) => {
-    return <FlexBox style={{ flex: 1 }}></FlexBox>;
+    const theme = useContext(ThemeContext);
+    return (
+        <FlexBox style={{ flex: 1, flexFlow: "column" }}>
+            <FlexBox
+                style={{
+                    height: 50,
+                    alignItems: "center",
+                    background: Color(theme.default?.backgroundLight)
+                        .alpha(0.4)
+                        .string(),
+                    borderStyle: "solid",
+                    borderWidth: 1,
+                    borderBottomColor: theme.default?.backgroundLight,
+                }}
+            >
+                <Button
+                    size="small"
+                    ghost={true}
+                    icon={<AiOutlinePlus />}
+                    text="Add Server"
+                    style={{ marginLeft: AppConfig.get().margin }}
+                />
+                <Button
+                    size="small"
+                    ghost={true}
+                    icon={<AiOutlineReload />}
+                    text="Reload"
+                    style={{ marginLeft: 16 }}
+                />
+            </FlexBox>
+        </FlexBox>
+    );
 };
 
 // import { makeAutoObservable, runInAction } from "mobx";

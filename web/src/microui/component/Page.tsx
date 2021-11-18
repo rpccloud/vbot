@@ -23,7 +23,7 @@ export class Page extends React.Component<PageProps, PageState> {
             <div
                 style={{
                     background: config?.makeBackground(
-                        config.backgroundLight,
+                        config.background,
                         config.backgroundDark
                     ),
                     display: "flex",

@@ -75,7 +75,7 @@ export const Login = observer(() => {
                         width: 400,
                         flexFlow: "column",
                         padding: AppConfig.get().margin,
-                        backgroundColor: theme.default?.backgroundLight,
+                        backgroundColor: theme.default?.background,
                         border: `1px solid ${theme.default?.outline}`,
                         borderRadius: 10,
                     }}

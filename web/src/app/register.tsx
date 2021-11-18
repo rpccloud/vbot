@@ -95,7 +95,7 @@ const SetPassword = observer((props: { onNext: () => void }) => {
                 height: 380,
                 flexFlow: "column",
                 padding: AppConfig.get().margin,
-                backgroundColor: theme.default?.backgroundLight,
+                backgroundColor: theme.default?.background,
                 border: `1px solid ${theme.default?.outline}`,
                 borderRadius: 10,
             }}
@@ -164,7 +164,7 @@ const TermsOfService = observer(
                     height: 380,
                     flexFlow: "column",
                     padding: AppConfig.get().margin,
-                    backgroundColor: theme.default?.backgroundLight,
+                    backgroundColor: theme.default?.background,
                     border: `1px solid ${theme.default?.outline}`,
                     borderRadius: 10,
                 }}
