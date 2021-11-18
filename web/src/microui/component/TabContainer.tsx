@@ -78,20 +78,12 @@ export class TabContainer extends React.Component<
                                     opacity: selected ? 1 : 0,
                                 }}
                             >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        position: "static",
-                                        flex: 1,
-                                    }}
-                                >
-                                    {this.props.render(
-                                        this.props.tabBarID,
-                                        it.id,
-                                        it.param?.kind,
-                                        it.param?.data
-                                    )}
-                                </div>
+                                {this.props.render(
+                                    this.props.tabBarID,
+                                    it.id,
+                                    it.param?.kind,
+                                    it.param?.data
+                                )}
                             </div>
                         );
                     })}
