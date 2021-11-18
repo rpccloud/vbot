@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { PluginProps } from "..";
+import { Plugin, PluginProps } from "..";
 
 import { FlexBox } from "../../../microui/component/FlexBox";
 import { Button, ButtonConfig } from "../../../microui/component/Button";
@@ -8,9 +8,7 @@ import { ThemeContext } from "../../../microui/context/theme";
 
 import { AiOutlineLaptop } from "@react-icons/all-files/ai/AiOutlineLaptop";
 import { AiOutlineGroup } from "@react-icons/all-files/ai/AiOutlineGroup";
-
-import Color from "color";
-// import { IoLogoJavascript } from "@react-icons/all-files/io/IoLogoJavascript";
+import { IoLogoJavascript } from "@react-icons/all-files/io/IoLogoJavascript";
 
 interface MenuItem {
     key: string;
@@ -21,7 +19,7 @@ interface MenuItem {
 const menuList: MenuItem[] = [
     { key: "server.list", icon: <AiOutlineLaptop />, text: "Servers" },
     { key: "group.list", icon: <AiOutlineGroup />, text: "Groups" },
-    // { key: "script.list", icon: <IoLogoJavascript />, text: "Scripts" },
+    { key: "script.list", icon: <IoLogoJavascript />, text: "Scripts" },
 ];
 
 export const Home = (props: PluginProps) => {
@@ -46,9 +44,12 @@ export const Home = (props: PluginProps) => {
             background: theme.default?.backgroundLight,
         },
         focus: {
-            border: theme.primary?.main,
+            border: theme.highlight?.main,
         },
     };
+
+    let sortedMenuList = menuList.filter((it) => it.key !== selectedKey);
+    sortedMenuList.push(...menuList.filter((it) => it.key === selectedKey));
     return (
         <FlexBox
             style={{
@@ -95,163 +96,30 @@ export const Home = (props: PluginProps) => {
                 })}
             </FlexBox>
             <Divider type="vertical" space={1} lineWidth={1} />
-            <FlexBox style={{ flex: 1 }}></FlexBox>
+            <FlexBox style={{ flex: 1 }}>
+                <div style={{ position: "relative", flex: 1 }}>
+                    {sortedMenuList.map((it) => {
+                        return (
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    opacity: it.key === selectedKey ? 1 : 0,
+                                }}
+                            >
+                                <Plugin
+                                    kind={it.key}
+                                    tabID={props.tabID}
+                                    tabBarID={props.tabBarID}
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+            </FlexBox>
         </FlexBox>
     );
 };
-
-// import { Layout, Menu } from "antd";
-// import { LaptopOutlined, UserOutlined } from "@ant-design/icons";
-// import { Plugin, PluginProps } from "..";
-// import { makeAutoObservable, runInAction } from "mobx";
-// import { observer } from "mobx-react";
-// import { getChannel } from "../../../ui/event/event";
-// import { AiOutlineHome } from "@react-icons/all-files/ai/AiOutlineHome";
-
-// const { Sider } = Layout;
-// const { SubMenu } = Menu;
-
-// const styles = {
-//     bar: {
-//         overflow: "hidden auto",
-//         borderRight: "1px solid var(--Vbot-BorderColor)",
-//     },
-//     content: {
-//         overflow: "hidden auto",
-//         flex: "1 1 0",
-//     },
-// };
-
-// class Data {
-//     openKeys: string[];
-//     selectKeys: string[];
-//     kind: string;
-//     id: string;
-
-//     constructor() {
-//         makeAutoObservable(this);
-//         this.openKeys = [];
-//         this.selectKeys = [];
-//         this.kind = "";
-//         this.id = "";
-//         this.openKeyPath(["server.list"]);
-//     }
-
-//     reset() {
-//         runInAction(() => {
-//             this.openKeys = [""];
-//             this.selectKeys = ["server.list"];
-//             this.kind = "";
-//             this.id = "";
-//         });
-//     }
-
-//     openKeyPath(keyPath: string[]) {
-//         const key = keyPath[0];
-//         const [kind, id] = key.split(":");
-
-//         runInAction(() => {
-//             this.openKeys = keyPath;
-//             this.selectKeys = [key];
-//             this.kind = kind;
-//             this.id = id;
-//         });
-//     }
-
-//     openKey(key: string) {
-//         const [kind, id] = key.split(":");
-
-//         runInAction(() => {
-//             this.openKeys = [key];
-//             this.selectKeys = [key];
-//             this.kind = kind;
-//             this.id = id;
-//         });
-//     }
-// }
-
-// const data = new Data();
-
-// const Home = observer((props: PluginProps) => {
-//     useEffect(() => {
-//         getChannel("vbot-browser")?.call(
-//             "SetTitle",
-//             props.tabID,
-//             <AiOutlineHome />,
-//             "Vbot"
-//         );
-//     }, [props.tabID]);
-
-//     const siderView = (
-//         <Sider width={190}>
-//             <Menu
-//                 mode="inline"
-//                 selectedKeys={data.selectKeys}
-//                 openKeys={data.openKeys}
-//             >
-//                 <Menu.Item
-//                     className="vbot-menu"
-//                     key="server.list"
-//                     icon={<LaptopOutlined />}
-//                     onClick={(o) => data.openKeyPath(o.keyPath)}
-//                 >
-//                     Server
-//                 </Menu.Item>
-
-//                 <SubMenu
-//                     key="group.list"
-//                     title="Group"
-//                     icon={<UserOutlined />}
-//                     onTitleClick={(o) => data.openKey(o.key)}
-//                 >
-//                     <Menu.Item
-//                         key="1"
-//                         className="vbot-menu"
-//                         onClick={(o) => data.openKeyPath(o.keyPath)}
-//                     >
-//                         option1
-//                     </Menu.Item>
-//                     <Menu.Item
-//                         key="2"
-//                         className="vbot-menu"
-//                         onClick={(o) => data.openKeyPath(o.keyPath)}
-//                     >
-//                         option2
-//                     </Menu.Item>
-//                     <Menu.Item
-//                         key="3"
-//                         className="vbot-menu"
-//                         onClick={(o) => data.openKeyPath(o.keyPath)}
-//                     >
-//                         option3
-//                     </Menu.Item>
-//                     <Menu.Item
-//                         key="4"
-//                         className="vbot-menu"
-//                         onClick={(o) => data.openKeyPath(o.keyPath)}
-//                     >
-//                         option4
-//                     </Menu.Item>
-//                 </SubMenu>
-//             </Menu>
-//         </Sider>
-//     );
-
-//     const contentView = (
-//         <div style={styles.content}>
-//             <Plugin kind={data.kind} data={data.id} />
-//         </div>
-//     );
-
-//     return (
-//         <div style={{ display: "flex", flex: "1 0 0", flexFlow: "row" }}>
-//             <div style={styles.bar}>{siderView}</div>
-
-//             <div style={{ display: "flex", flex: "1 0 0", flexFlow: "column" }}>
-//                 {contentView}
-//             </div>
-//         </div>
-//     );
-// });
-
-// export default Home;
