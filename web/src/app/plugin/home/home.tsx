@@ -33,6 +33,7 @@ export const Home = (props: PluginProps) => {
             border: "transparent",
         },
         hover: {
+            font: theme.default?.outline,
             border: "transparent",
             background: Color(theme.hover?.main).alpha(0.2).string(),
         },

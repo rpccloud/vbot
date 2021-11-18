@@ -153,10 +153,6 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
 
         let color = config.primary;
 
-        if (this.props.selected) {
-            color = config.selected;
-        }
-
         if (this.state.hover) {
             color = config.hover;
         }
@@ -169,6 +165,9 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
             color = config.disabled;
         }
 
+        if (this.props.selected) {
+            color = config.selected;
+        }
         if (this.state.focus) {
             color = { ...color, ...config.focus };
         }
