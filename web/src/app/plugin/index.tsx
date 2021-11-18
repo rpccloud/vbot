@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { FlexBox } from "../../microui/component/FlexBox";
 import { Span } from "../../microui/component/Span";
 import { ThemeContext } from "../../microui/context/theme";
-import Browser from "./browser";
 import Footer from "./footer";
 import Header from "./header";
 import Home from "./home/home";

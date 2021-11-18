@@ -5,7 +5,12 @@ import { TabBarOnChangeParam, TabRecord } from "./TabBar";
 
 interface TabContainerProps {
     tabBarID: string;
-    render: (tabBarID: string, record: TabRecord) => React.ReactNode;
+    render: (
+        tabBarID: string,
+        tabID: number,
+        kind?: string,
+        data?: any
+    ) => React.ReactNode;
     style?: React.CSSProperties;
 }
 
@@ -80,7 +85,12 @@ export class TabContainer extends React.Component<
                                         flex: 1,
                                     }}
                                 >
-                                    {this.props.render(this.props.tabBarID, it)}
+                                    {this.props.render(
+                                        this.props.tabBarID,
+                                        it.id,
+                                        it.param?.kind,
+                                        it.param?.data
+                                    )}
                                 </div>
                             </div>
                         );

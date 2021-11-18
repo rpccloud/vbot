@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Page } from "../microui/component/Page";
-import { TabBar, TabRecord } from "../microui/component/TabBar";
+import { TabBar } from "../microui/component/TabBar";
 import { Plugin } from "./plugin";
 
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
@@ -88,13 +88,18 @@ export const Main = () => {
                 {tabBarID ? (
                     <TabContainer
                         tabBarID={tabBarID}
-                        render={(tabBarID: string, record: TabRecord) => {
+                        render={(
+                            tabBarID: string,
+                            tabID: number,
+                            kind?: string,
+                            data?: any
+                        ) => {
                             return (
                                 <Plugin
-                                    kind={record.param?.kind}
-                                    data={record.param?.data}
                                     tabBarID={tabBarID}
-                                    tabID={record.id}
+                                    tabID={tabID}
+                                    kind={kind}
+                                    data={data}
                                 />
                             );
                         }}
