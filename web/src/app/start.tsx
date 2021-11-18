@@ -1,12 +1,12 @@
 import React from "react";
 import { AppConfig, AppError, AppUser } from "./AppManager";
 import { observer } from "mobx-react-lite";
-import { delay } from "../util/util";
 import { Plugin } from "./plugin";
 import { Page } from "../microui/component/Page";
 import { Spin } from "../microui/component/Spin";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Span } from "../microui/component/Span";
+import { sleep } from "../microui/util";
 
 export const Start = observer((props: any) => {
     setTimeout(async () => {
@@ -19,7 +19,7 @@ export const Start = observer((props: any) => {
             }
         } catch (e) {
             AppError.get().report(e);
-            await delay(2000);
+            await sleep(2000);
         }
     });
 
