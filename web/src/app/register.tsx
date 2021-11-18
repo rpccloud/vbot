@@ -90,10 +90,10 @@ const SetPassword = observer((props: { onNext: () => void }) => {
     return (
         <FlexBox
             animated={true}
-            alignItems="stretch"
             style={{
-                width: 400,
-                height: 400,
+                width: 420,
+                height: 380,
+                flexFlow: "column",
                 padding: AppConfig.get().margin,
                 backgroundColor: theme.default?.backgroundLight,
                 border: `1px solid ${theme.default?.outline}`,
@@ -128,21 +128,15 @@ const SetPassword = observer((props: { onNext: () => void }) => {
 
             <Divider space={AppConfig.get().margin} />
 
-            <FlexBox style={{ flex: 1 }}>
+            <FlexBox style={{ flexFlow: "column", flex: 1 }}>
                 {errors.map((it) => {
                     return (
-                        <Span
-                            key={it}
-                            color={theme.failed?.main}
-                            style={{ marginLeft: 8 }}
-                        >
+                        <Span key={it} size="medium" color={theme.failed?.main}>
                             {it}
                         </Span>
                     );
                 })}
             </FlexBox>
-
-            <Divider space={AppConfig.get().margin} />
 
             <FlexBox flexFlow="row" justifyContent="flex-end">
                 <Button
@@ -165,10 +159,10 @@ const TermsOfService = observer(
         return (
             <FlexBox
                 animated={true}
-                alignItems="stretch"
                 style={{
-                    width: 400,
-                    height: 400,
+                    width: 420,
+                    height: 380,
+                    flexFlow: "column",
                     padding: AppConfig.get().margin,
                     backgroundColor: theme.default?.backgroundLight,
                     border: `1px solid ${theme.default?.outline}`,
@@ -179,13 +173,13 @@ const TermsOfService = observer(
 
                 <Divider space={AppConfig.get().margin} />
 
-                <FlexBox style={{ flex: 1 }}>
+                <FlexBox style={{ flex: 1, flexFlow: "column" }}>
                     <Span>TermsOfService</Span>
                 </FlexBox>
 
                 <Divider space={AppConfig.get().margin} />
 
-                <FlexBox flexFlow="row" justifyContent="flex-end">
+                <FlexBox style={{ justifyContent: "flex-end" }}>
                     <Button
                         text="I decline"
                         ghost={true}
@@ -253,13 +247,17 @@ export const Register = observer((props: any) => {
             inner = (
                 <FlexBox
                     animated={true}
-                    flexFlow="row"
                     style={{
                         flex: "1",
+                        justifyContent: "center",
+                        alignItems: "center",
                     }}
                 >
                     <Spin size="x-large" />
-                    <Span size="x-large" style={{ marginLeft: 24 }}>
+                    <Span
+                        size="x-large"
+                        style={{ marginLeft: AppConfig.get().margin }}
+                    >
                         Initializing ...
                     </Span>
                 </FlexBox>
@@ -270,7 +268,13 @@ export const Register = observer((props: any) => {
     return (
         <Page>
             <Plugin kind="header" />
-            <FlexBox style={{ flex: "1 0 0", flexFlow: "row" }}>
+            <FlexBox
+                style={{
+                    flex: "1 0 0",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
                 {inner}
             </FlexBox>
             <Plugin kind="footer" />

@@ -221,7 +221,7 @@ class InputCore extends React.Component<InputProps, InputState> {
         }
 
         const fontSize = getFontSize(this.props.size);
-        let height = Math.round(fontSize * 2.3);
+        let height = Math.round(fontSize * 2.4);
         let qrHeight = Math.round(height / 4);
         let innerMargin =
             this.props.innerMargin !== undefined

@@ -6,11 +6,10 @@ import { AppConfig } from "../AppManager";
 const Header = () => {
     return (
         <FlexBox
-            justifyContent="flex-start"
-            flexFlow="row"
             style={{
                 fontWeight: 700,
                 minHeight: AppConfig.get().headHeight,
+                alignItems: "center",
             }}
         >
             <Span size="x-large" style={{ marginLeft: AppConfig.get().margin }}>

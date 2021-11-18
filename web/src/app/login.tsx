@@ -62,12 +62,18 @@ export const Login = observer(() => {
     return (
         <Page>
             <Plugin kind="header" />
-            <FlexBox style={{ flex: "1 0 0", flexFlow: "row" }}>
+            <FlexBox
+                style={{
+                    flex: "1 0 0",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
                 <FlexBox
                     animated={true}
-                    alignItems="stretch"
                     style={{
                         width: 400,
+                        flexFlow: "column",
                         padding: AppConfig.get().margin,
                         backgroundColor: theme.default?.backgroundLight,
                         border: `1px solid ${theme.default?.outline}`,

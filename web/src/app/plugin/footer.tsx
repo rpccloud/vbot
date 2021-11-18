@@ -7,7 +7,7 @@ import { AppConfig } from "../AppManager";
 const Footer = () => {
     const theme = useContext(ThemeContext);
     return (
-        <FlexBox>
+        <FlexBox style={{ justifyContent: "center", alignItems: "center" }}>
             <Span
                 size="small"
                 style={{

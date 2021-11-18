@@ -174,7 +174,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
         }
 
         let fontSize = getFontSize(this.props.size || "medium");
-        let height = Math.round(fontSize * 2.3);
+        let height = Math.round(fontSize * 2.4);
         let qrHeight = Math.round(height / 4);
         let innerMargin =
             this.props.innerMargin !== undefined

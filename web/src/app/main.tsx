@@ -20,10 +20,9 @@ export const Main = () => {
             <FlexBox
                 animated={true}
                 style={{
-                    flex: "1 1 0",
+                    flex: 1,
+                    flexFlow: "column",
                 }}
-                justifyContent="flex-start"
-                alignItems="stretch"
             >
                 <Divider space={16} />
                 <TabBar
@@ -49,6 +48,8 @@ export const Main = () => {
                                         style={{
                                             flex: 1,
                                             fontSize: 16,
+                                            justifyContent: "center",
+                                            alignItems: "center",
                                             fontWeight: 900,
                                             color: color?.font,
                                             transition: makeTransition(
@@ -69,6 +70,8 @@ export const Main = () => {
                         { title: "Test", icon: <AiOutlineLock /> },
                     ]}
                     initialDynamicTabs={[
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
                         { title: "Test", icon: <AiOutlineLock /> },
                         { title: "Test", icon: <AiOutlineLock /> },
                     ]}

@@ -28,13 +28,17 @@ export const Start = observer((props: any) => {
             <Plugin kind="header" />
             <FlexBox
                 animated={true}
-                flexFlow="row"
                 style={{
                     flex: "1",
+                    alignItems: "center",
+                    justifyContent: "center",
                 }}
             >
                 <Spin size="x-large" />
-                <Span size="x-large" style={{ marginLeft: 24 }}>
+                <Span
+                    size="x-large"
+                    style={{ marginLeft: AppConfig.get().margin }}
+                >
                     Loading ...
                 </Span>
             </FlexBox>

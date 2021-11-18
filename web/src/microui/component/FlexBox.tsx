@@ -74,7 +74,7 @@ export const FlexBox = (props: FlexBoxProps) => {
 
 FlexBox.defaultProps = {
     animated: false,
-    flexFlow: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    flexFlow: "row nowrap",
+    justifyContent: "flex-start",
+    alignItems: "stretch",
 };

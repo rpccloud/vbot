@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeContext } from "../context/theme";
+import { Theme, ThemeContext } from "../context/theme";
 
 interface DividerProps {
     type: "vertical" | "horizontal";
@@ -25,6 +25,7 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
     }
 
     private renderH() {
+        let theme: Theme = this.context;
         let h = this.props.space;
         let lw = this.props.lineWidth;
         let height = 0;
@@ -50,7 +51,7 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
         return (
             <div
                 style={{
-                    backgroundColor: this.props.color || "transparent",
+                    backgroundColor: this.props.color || theme.default?.outline,
                     marginTop: top,
                     marginBottom: bottom,
                     ...this.props.style,
@@ -61,6 +62,7 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
     }
 
     private renderV() {
+        let theme: Theme = this.context;
         let h = this.props.space;
         let lw = this.props.lineWidth;
         let width = 0;
@@ -86,7 +88,7 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
         return (
             <div
                 style={{
-                    backgroundColor: this.props.color || "transparent",
+                    backgroundColor: this.props.color || theme.default?.outline,
                     marginLeft: left,
                     marginRight: right,
                     ...this.props.style,
