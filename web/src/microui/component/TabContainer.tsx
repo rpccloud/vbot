@@ -36,12 +36,17 @@ export class TabContainer extends React.Component<
     }
 
     onTabBarChange = (param: TabBarOnChangeParam) => {
-        this.tabs = [
-            ...param.fixedTabs,
-            ...param.floatTabs,
-            ...param.dynamicTabs,
-        ];
         if (param.selectedTab?.id !== this.selectedTab?.id) {
+            const tabs = param.fixedTabs
+                .concat(param.floatTabs, param.dynamicTabs)
+                .filter((it) => {
+                    return it.id !== param.selectedTab?.id;
+                });
+            if (param.selectedTab) {
+                tabs.push(param.selectedTab);
+            }
+
+            this.tabs = tabs;
             this.selectedTab = param.selectedTab;
             this.setState((state) => ({
                 flushCount: state.flushCount + 1,
@@ -51,57 +56,35 @@ export class TabContainer extends React.Component<
 
     render() {
         return (
-            <div
-                style={{
-                    display: "flex",
-                    flex: "1 1 0",
-                    ...this.props.style,
-                }}
-            >
-                <div
-                    style={{
-                        position: "relative",
-                        flex: "1 1 0",
-                    }}
-                >
+            <div style={{ display: "flex", flex: 1, ...this.props.style }}>
+                <div style={{ position: "relative", flex: 1 }}>
                     {this.tabs.map((it) => {
-                        return it.id === this.selectedTab?.id ? (
+                        const selected = it.id === this.selectedTab?.id;
+                        return (
                             <div
                                 key={it.id}
                                 style={{
+                                    display: "flex",
                                     position: "absolute",
                                     top: 0,
                                     left: 0,
                                     right: 0,
                                     bottom: 0,
-                                    opacity: 0,
-                                    overflowY: "auto",
+                                    opacity: selected ? 1 : 0,
                                 }}
                             >
-                                {this.props.render(this.props.tabBarID, it)}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        position: "static",
+                                        flex: 1,
+                                    }}
+                                >
+                                    {this.props.render(this.props.tabBarID, it)}
+                                </div>
                             </div>
-                        ) : null;
+                        );
                     })}
-
-                    {this.selectedTab ? (
-                        <div
-                            key={this.selectedTab.id}
-                            style={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                opacity: 1,
-                                overflowY: "auto",
-                            }}
-                        >
-                            {this.props.render(
-                                this.props.tabBarID,
-                                this.selectedTab
-                            )}
-                        </div>
-                    ) : null}
                 </div>
             </div>
         );

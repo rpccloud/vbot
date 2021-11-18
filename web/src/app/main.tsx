@@ -96,9 +96,8 @@ export const Main = () => {
                             return (
                                 <div
                                     style={{
-                                        height: 800,
-                                        width: 200,
-                                        background: "green",
+                                        flex: 1,
+                                        overflowY: "auto",
                                     }}
                                 >
                                     {JSON.stringify({
