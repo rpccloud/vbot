@@ -65,7 +65,7 @@ export const Main = () => {
                                     color: color?.font,
                                     transition: makeTransition(
                                         ["color"],
-                                        theme.transition?.duration,
+                                        theme.transition?.durationMS + "ms",
                                         theme.transition?.easing
                                     ),
                                 }}

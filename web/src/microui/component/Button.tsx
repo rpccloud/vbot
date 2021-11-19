@@ -228,7 +228,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     backgroundColor: color?.background,
                     transition: makeTransition(
                         ["background", "color", "border", "box-shadow"],
-                        config.transition?.duration,
+                        config.transition?.durationMS + "ms",
                         config.transition?.easing
                     ),
                     cursor: this.props.disabled ? "not-allowed" : "pointer",

@@ -82,7 +82,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                     if (animate) {
                         this.rootRef.current.style.transition = makeTransition(
                             ["left"],
-                            config.transition?.duration,
+                            config.transition?.durationMS + "ms",
                             config.transition?.easing
                         );
                     } else {
@@ -169,7 +169,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                             alignItems: "center",
                             transition: makeTransition(
                                 ["color"],
-                                config.transition?.duration,
+                                config.transition?.durationMS + "ms",
                                 config.transition?.easing
                             ),
                             marginRight:
@@ -195,7 +195,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                             userSelect: "none",
                             transition: makeTransition(
                                 ["color"],
-                                config.transition?.duration,
+                                config.transition?.durationMS + "ms",
                                 config.transition?.easing
                             ),
                         }}
@@ -260,7 +260,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                             strokeWidth: this.props.borderWidth,
                             transition: makeTransition(
                                 ["fill", "stroke"],
-                                config.transition?.duration,
+                                config.transition?.durationMS + "ms",
                                 config.transition?.easing
                             ),
                             cursor: "pointer",

@@ -91,7 +91,7 @@ export class AppConfig {
             contrastText: "#808080C0",
         },
         transition: {
-            duration: "300ms",
+            durationMS: 300,
             easing: "ease-in-out",
         },
     };

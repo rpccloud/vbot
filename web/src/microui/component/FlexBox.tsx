@@ -38,7 +38,7 @@ class FlexBoxCore extends React.Component<FlexBoxProps, FlexBoxState> {
                 this.rootRef.current.style.opacity = "0";
                 this.rootRef.current.style.transition = makeTransition(
                     ["opacity"],
-                    theme.transition?.duration,
+                    theme.transition?.durationMS + "ms",
                     theme.transition?.easing
                 );
                 setTimeout(() => {

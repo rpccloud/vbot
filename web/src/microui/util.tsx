@@ -38,7 +38,7 @@ export function getFontSize(value: Size): number {
 }
 
 export interface Transition {
-    duration: string;
+    durationMS: number;
     easing: string;
 }
 

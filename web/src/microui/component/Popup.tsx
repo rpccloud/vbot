@@ -15,6 +15,7 @@ interface PopupProps {
 }
 
 interface PopupState {
+    closing: boolean;
     popup: boolean;
     screenRect?: Rect;
 }
@@ -30,6 +31,8 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
     private focus = false;
     private hover = false;
     private forcePopup = false;
+    private popup = false;
+    private closing = false;
     private actionSonar = new ActionSonar([this.rootRef]);
     private resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
         this.setState({ screenRect: rect });
@@ -38,6 +41,7 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
     constructor(props: PopupProps) {
         super(props);
         this.state = {
+            closing: false,
             popup: false,
         };
     }
@@ -48,18 +52,20 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
     }
 
     updatePopup() {
-        const popup = this.hover || this.focus || this.forcePopup;
+        if (!this.closing) {
+            const popup = this.hover || this.focus || this.forcePopup;
 
-        if (this.state.popup !== popup) {
-            if (popup) {
-                this.resizeSonar.listenFast();
-            } else {
-                this.resizeSonar.listenSlow();
+            if (this.popup !== popup) {
+                this.popup = popup;
+                if (popup) {
+                    this.resizeSonar.listenFast();
+                } else {
+                    this.resizeSonar.listenSlow();
+                }
+                this.setState({
+                    popup: popup,
+                });
             }
-
-            this.setState({
-                popup: popup,
-            });
         }
     }
 
@@ -76,6 +82,11 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
     setForcePopup(forcePopup: boolean) {
         this.forcePopup = forcePopup;
         this.updatePopup();
+    }
+
+    setClosing(closing: boolean) {
+        this.closing = closing;
+        this.setState({ closing: closing });
     }
 
     render() {
@@ -130,19 +141,24 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
                     <div
                         style={{
                             position: "fixed",
-                            left: popup
-                                ? 0
-                                : screenRect.x + screenRect.width / 2,
-                            top: popup
-                                ? 0
-                                : screenRect.y + screenRect.height / 2,
-                            transform: popup ? `scale(1)` : `scale(0)`,
+                            left:
+                                popup && !this.state.closing
+                                    ? 0
+                                    : screenRect.x + screenRect.width / 2,
+                            top:
+                                popup && !this.state.closing
+                                    ? 0
+                                    : screenRect.y + screenRect.height / 2,
+                            transform:
+                                popup && !this.state.closing
+                                    ? `scale(1)`
+                                    : `scale(0)`,
                             transformOrigin: "top left",
-                            opacity: popup ? 1 : 0,
+                            opacity: popup && !this.state.closing ? 1 : 0,
                             zIndex: this.props.popupZIndex,
                             transition: makeTransition(
                                 ["opacity", "transform", "left", "top"],
-                                theme.transition?.duration,
+                                theme.transition?.durationMS + "ms",
                                 theme.transition?.easing
                             ),
                         }}
@@ -152,7 +168,13 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
                     >
                         {popup
                             ? this.props.renderPopup(screenRect, () => {
-                                  this.setForcePopup(false);
+                                  if (!this.closing) {
+                                      this.setClosing(true);
+                                      setTimeout(() => {
+                                          this.setClosing(false);
+                                          this.setForcePopup(false);
+                                      }, theme.transition?.durationMS);
+                                  }
                               })
                             : null}
                     </div>

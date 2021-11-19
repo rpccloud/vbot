@@ -316,7 +316,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                         fontWeight: "inherit",
                         transition: makeTransition(
                             ["background"],
-                            config.transition?.duration,
+                            config.transition?.durationMS + "ms",
                             config.transition?.easing
                         ),
                     }}
@@ -505,7 +505,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                     backgroundColor: color?.background,
                     transition: makeTransition(
                         ["background", "color", "border", "box-shadow"],
-                        config.transition?.duration,
+                        config.transition?.durationMS + "ms",
                         config.transition?.easing
                     ),
                     ...style,
