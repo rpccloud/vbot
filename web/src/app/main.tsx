@@ -32,87 +32,6 @@ export const Main = () => {
         },
     };
 
-    const tabBar = (
-        <TabBar
-            size="medium"
-            onInit={(id) => {
-                setTabBarID(id);
-            }}
-            config={tabBarConfig}
-            height={38}
-            borderWidth={2}
-            style={{
-                marginLeft: 0,
-                marginRight: 0,
-            }}
-            initialFixedTabs={[
-                {
-                    width: 100,
-                    default: true,
-                    param: {
-                        kind: "home",
-                        data: "",
-                    },
-                    renderTab: (_, __, ___, color?: ComponentColor) => {
-                        return (
-                            <FlexBox
-                                style={{
-                                    flex: 1,
-                                    fontSize: 16,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    fontWeight: 900,
-                                    color: color?.font,
-                                    transition: makeTransition(
-                                        ["color"],
-                                        theme.transition?.durationMS + "ms",
-                                        theme.transition?.easing
-                                    ),
-                                }}
-                            >
-                                Vbot
-                            </FlexBox>
-                        );
-                    },
-                },
-            ]}
-            initialFloatTabs={[
-                { title: "Test", icon: <AiOutlineLock /> },
-                { title: "Test", icon: <AiOutlineLock /> },
-            ]}
-            initialDynamicTabs={[
-                { title: "Test", icon: <AiOutlineLock /> },
-                { title: "Test", icon: <AiOutlineLock /> },
-                { title: "Test", icon: <AiOutlineLock /> },
-                { title: "Test", icon: <AiOutlineLock /> },
-            ]}
-        />
-    );
-
-    const tabBarContainer = tabBarID ? (
-        <TabContainer
-            tabBarID={tabBarID}
-            style={{
-                background: `radial-gradient(circle farthest-side, ${ExtraColor.appBG}, ${ExtraColor.appDarkBG})`,
-            }}
-            render={(
-                tabBarID: string,
-                tabID: number,
-                kind?: string,
-                data?: any
-            ) => {
-                return (
-                    <Plugin
-                        tabBarID={tabBarID}
-                        tabID={tabID}
-                        kind={kind}
-                        data={data}
-                    />
-                );
-            }}
-        />
-    ) : null;
-
     return (
         <Page>
             <FlexBox
@@ -123,23 +42,85 @@ export const Main = () => {
                 }}
             >
                 <Divider space={16} />
-                {tabBar}
-                <div
-                    style={{
-                        position: "relative",
-                        height: 0,
+                <TabBar
+                    size="medium"
+                    onInit={(id) => {
+                        setTabBarID(id);
                     }}
-                >
-                    <div
+                    config={tabBarConfig}
+                    height={38}
+                    borderWidth={2}
+                    style={{
+                        marginLeft: 0,
+                        marginRight: 0,
+                    }}
+                    initialFixedTabs={[
+                        {
+                            width: 100,
+                            default: true,
+                            param: {
+                                kind: "home",
+                                data: "",
+                            },
+                            renderTab: (_, __, ___, color?: ComponentColor) => {
+                                return (
+                                    <FlexBox
+                                        style={{
+                                            flex: 1,
+                                            fontSize: 16,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            fontWeight: 900,
+                                            color: color?.font,
+                                            transition: makeTransition(
+                                                ["color"],
+                                                theme.transition?.durationMS +
+                                                    "ms",
+                                                theme.transition?.easing
+                                            ),
+                                        }}
+                                    >
+                                        Vbot
+                                    </FlexBox>
+                                );
+                            },
+                        },
+                    ]}
+                    initialFloatTabs={[
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                    ]}
+                    initialDynamicTabs={[
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                        { title: "Test", icon: <AiOutlineLock /> },
+                    ]}
+                />
+                <Divider space={2} lineWidth={2} color={theme.primary?.main} />
+                {tabBarID ? (
+                    <TabContainer
+                        tabBarID={tabBarID}
                         style={{
-                            position: "relative",
-                            height: 2,
-                            top: -2,
-                            background: theme.primary?.main,
+                            background: `radial-gradient(circle farthest-side, ${ExtraColor.appBG}, ${ExtraColor.appDarkBG})`,
+                        }}
+                        render={(
+                            tabBarID: string,
+                            tabID: number,
+                            kind?: string,
+                            data?: any
+                        ) => {
+                            return (
+                                <Plugin
+                                    tabBarID={tabBarID}
+                                    tabID={tabID}
+                                    kind={kind}
+                                    data={data}
+                                />
+                            );
                         }}
                     />
-                </div>
-                {tabBarContainer}
+                ) : null}
                 <Divider space={2} lineWidth={2} color={theme.primary?.main} />
             </FlexBox>
             <Plugin kind="footer" />
