@@ -1,44 +1,99 @@
-import React, { useContext } from "react";
+import React from "react";
 import { PluginProps } from "..";
 import { Button } from "../../../microui/component/Button";
 import { FlexBox } from "../../../microui/component/FlexBox";
-import { AppConfig, ExtraColor } from "../../AppManager";
+import { AppConfig, AppError, AppUser, ExtraColor } from "../../AppManager";
 import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
 import { AiOutlineReload } from "@react-icons/all-files/ai/AiOutlineReload";
-import { ThemeContext } from "../../../microui/context/theme";
+import { Theme, ThemeContext } from "../../../microui/context/theme";
+import { toObject } from "rpccloud-client-js/build/types";
 
-export const ServerList = (props: PluginProps) => {
-    const theme = useContext(ThemeContext);
-    return (
-        <FlexBox style={{ flex: 1, flexFlow: "column" }}>
-            <FlexBox
-                style={{
-                    height: 50,
-                    alignItems: "center",
-                    background: ExtraColor.appBG,
-                    borderStyle: "solid",
-                    borderWidth: 1,
-                    borderBottomColor: theme.default?.divider,
-                }}
-            >
-                <Button
-                    ghost={true}
-                    border={false}
-                    icon={<AiOutlinePlusCircle />}
-                    text="Add Server"
-                    style={{ marginLeft: AppConfig.get().margin, height: 30 }}
-                />
-                <Button
-                    ghost={true}
-                    border={false}
-                    icon={<AiOutlineReload />}
-                    text="Reload"
-                    style={{ height: 28 }}
-                />
+interface ServerListState {
+    loading: boolean;
+    servers: object[];
+}
+
+export class ServerList extends React.Component<PluginProps, ServerListState> {
+    static contextType = ThemeContext;
+
+    private loading: boolean = false;
+
+    constructor(props: PluginProps) {
+        super(props);
+        this.state = {
+            loading: false,
+            servers: [],
+        };
+    }
+
+    private setLoading(loading: boolean) {
+        this.loading = loading;
+        this.setState({ loading: loading });
+    }
+
+    private updateServers = () => {
+        if (this.loading === false) {
+            this.setLoading(true);
+            AppUser.send(8000, "#.server:List", AppUser.getSessionID(), true)
+                .then((v) => {
+                    this.setState({ servers: toObject(v) });
+                })
+                .catch((e) => {
+                    AppError.get().report((e as any).getMessage());
+                })
+                .finally(() => {
+                    this.setLoading(false);
+                });
+        }
+    };
+
+    componentDidMount() {
+        this.updateServers();
+    }
+
+    render() {
+        const theme: Theme = this.context;
+        return (
+            <FlexBox style={{ flex: 1, flexFlow: "column" }}>
+                <FlexBox
+                    style={{
+                        height: 50,
+                        alignItems: "center",
+                        background: ExtraColor.appBG,
+                        borderStyle: "solid",
+                        borderWidth: 1,
+                        borderBottomColor: theme.default?.divider,
+                    }}
+                >
+                    <Button
+                        ghost={true}
+                        border={false}
+                        disabled={this.state.loading}
+                        icon={<AiOutlinePlusCircle />}
+                        text="Add Server"
+                        style={{
+                            marginLeft: AppConfig.get().margin,
+                            height: 30,
+                        }}
+                    />
+                    <Button
+                        ghost={true}
+                        border={false}
+                        disabled={this.state.loading}
+                        icon={<AiOutlineReload />}
+                        text="Reload"
+                        style={{ height: 28 }}
+                        onClick={this.updateServers}
+                    />
+                </FlexBox>
+
+                <FlexBox style={{ flex: 1, background: "gray" }}>
+                    {JSON.stringify(this.state.servers)}
+                </FlexBox>
             </FlexBox>
-        </FlexBox>
-    );
-};
+        );
+    }
+}
 
 // import { makeAutoObservable, runInAction } from "mobx";
 // import { ConfigProvider, message, Modal, Table, Tooltip } from "antd";
