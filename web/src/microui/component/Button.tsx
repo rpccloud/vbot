@@ -223,6 +223,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     borderRadius: this.props.borderRadius,
                     color: color?.font,
                     fontSize: fontSize,
+                    fontWeight: 600,
                     padding: 0,
                     backgroundColor: color?.background,
                     transition: makeTransition(

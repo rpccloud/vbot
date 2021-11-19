@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { makeAutoObservable, runInAction } from "mobx";
 import { observer } from "mobx-react-lite";
 import { passwordStrength } from "check-password-strength";
-import { AppConfig, AppError, AppUser } from "./AppManager";
+import { AppConfig, AppError, AppUser, ExtraColor } from "./AppManager";
 import { Plugin } from "./plugin";
 import { ThemeContext } from "../microui/context/theme";
 import { FlexBox } from "../microui/component/FlexBox";
@@ -95,7 +95,7 @@ const SetPassword = observer((props: { onNext: () => void }) => {
                 height: 380,
                 flexFlow: "column",
                 padding: AppConfig.get().margin,
-                backgroundColor: theme.default?.background,
+                backgroundColor: ExtraColor.appBG,
                 border: `1px solid ${theme.default?.outline}`,
                 borderRadius: 10,
             }}
@@ -164,7 +164,7 @@ const TermsOfService = observer(
                     height: 380,
                     flexFlow: "column",
                     padding: AppConfig.get().margin,
-                    backgroundColor: theme.default?.background,
+                    backgroundColor: ExtraColor.appBG,
                     border: `1px solid ${theme.default?.outline}`,
                     borderRadius: 10,
                 }}

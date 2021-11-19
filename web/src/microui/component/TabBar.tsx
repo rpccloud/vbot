@@ -454,7 +454,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         );
         return (
             <div
-                style={{ fontWeight: 500, ...this.props.style, height: height }}
+                style={{ fontWeight: 600, ...this.props.style, height: height }}
             >
                 <div
                     ref={this.rootRef}

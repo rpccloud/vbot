@@ -39,6 +39,15 @@ export class AppError {
     }
 }
 
+export const ExtraColor = {
+    tabFixedBG: "rgba(7,30,58)",
+    tabFloatBG: "rgba(7,30,58)",
+    tabDynamicBG: "rgba(7,30,58)",
+    appDarkBG: "rgba(12, 22, 37)",
+    appBG: "rgba(7,30,58)",
+    appLightBG: "rgba(15,32,70)",
+};
+
 export class AppConfig {
     locale?: Locale;
     rootRoute: string;
@@ -47,30 +56,21 @@ export class AppConfig {
     margin: number;
     private theme: Theme = {
         default: {
-            backgroundDark: "rgb(7, 20, 41)",
-            background: "rgb(10,30,70)",
-            backgroundLight: "rgb(20,37,90)",
-            // backgroundLight: "rgb(10,80, 35)",
-            // backgroundDark: "rgb(10, 51, 25 )",
-            // backgroundLight: "rgb(10,50,20)",
-            // backgroundDark: "rgb(5,21,11)",
+            pageBackground: "rgb(7, 15, 25)",
             contrastText: "#FFFFFFD0",
-            outline: "#999",
-            divider: "rgb(255,47,76)",
-            makeBackground: (light?: string, dark?: string) => {
-                return `radial-gradient(circle farthest-side, ${light}, ${dark}`;
-            },
+            outline: "#a0a0a0",
+            divider: "rgb(30, 73, 118)",
         },
         primary: {
-            main: "#b26500",
+            main: "#cc7e00",
             contrastText: "#FFFFFFD0",
         },
         hover: {
-            main: "#ff9100",
-            contrastText: "#FFFFFFD0",
+            main: "#ff9c00",
+            contrastText: "#FFFFFFE0",
         },
         highlight: {
-            main: "#ffa733",
+            main: "#ffb133",
             contrastText: "#FFFFFFFF",
         },
         focus: {
@@ -95,12 +95,7 @@ export class AppConfig {
         },
         transition: {
             duration: "300ms",
-            easing: "ease-in",
-        },
-        extra: {
-            dark: "rgb(33,91,172)",
-            primary: "rgb(51,129,246)",
-            light: "rgb(51,129,246)",
+            easing: "ease-in-out",
         },
     };
 

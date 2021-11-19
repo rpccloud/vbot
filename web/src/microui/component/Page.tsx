@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeContext } from "../context/theme";
+import { Theme, ThemeContext } from "../context/theme";
 
 interface PageProps {
     style?: React.CSSProperties;
@@ -17,15 +17,12 @@ export class Page extends React.Component<PageProps, PageState> {
     }
 
     render() {
-        const config = this.context.default;
+        const theme: Theme = this.context;
 
         return (
             <div
                 style={{
-                    background: config?.makeBackground(
-                        config.background,
-                        config.backgroundDark
-                    ),
+                    background: theme.default?.pageBackground,
                     display: "flex",
                     flexFlow: "column",
                     width: "100vw",

@@ -43,13 +43,10 @@ export interface Transition {
 }
 
 export interface DefaultColor {
-    backgroundLight?: string;
-    backgroundDark?: string;
-    background?: string;
+    pageBackground?: string;
     contrastText?: string;
     outline?: string;
     divider?: string;
-    makeBackground?: (light?: string, dark?: string) => string;
 }
 
 export interface PaletteColor {

@@ -19,7 +19,6 @@ export interface Theme {
     failed?: PaletteColor;
     disabled?: PaletteColor;
     transition?: Transition;
-    extra?: any;
 }
 
 export class ThemeCache {
@@ -87,14 +86,11 @@ export function getThemeHashKey(theme: Theme | undefined): string {
 
 export const ThemeContext = React.createContext<Theme>({
     default: {
-        backgroundLight: "rgb(0,32,65)",
-        backgroundDark: "rgb(10, 25, 41)",
+        pageBackground:
+            "radial-gradient(circle farthest-side, rgb(7, 20, 41), rgb(10,30,70)",
         contrastText: "#FFFFFFD0",
         outline: "#999",
-        divider: "rgb(255,47,76)",
-        makeBackground: (light?: string, dark?: string) => {
-            return `radial-gradient(circle farthest-side, ${light}, ${dark}`;
-        },
+        divider: "rgb(15, 35, 90)",
     },
     primary: {
         main: "#b26500",
@@ -132,5 +128,4 @@ export const ThemeContext = React.createContext<Theme>({
         duration: "300ms",
         easing: "ease-in-out",
     },
-    extra: {},
 });

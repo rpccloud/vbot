@@ -13,7 +13,7 @@ import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { Divider } from "../microui/component/Divider";
 import { ThemeContext } from "../microui/context/theme";
 import { Button } from "../microui/component/Button";
-import { AppConfig, AppError, AppUser } from "./AppManager";
+import { AppConfig, AppError, AppUser, ExtraColor } from "./AppManager";
 import { RPCMap } from "rpccloud-client-js/build/types";
 import { sleep } from "../microui/util";
 
@@ -75,7 +75,7 @@ export const Login = observer(() => {
                         width: 400,
                         flexFlow: "column",
                         padding: AppConfig.get().margin,
-                        backgroundColor: theme.default?.background,
+                        backgroundColor: ExtraColor.appBG,
                         border: `1px solid ${theme.default?.outline}`,
                         borderRadius: 10,
                     }}

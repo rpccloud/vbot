@@ -2,11 +2,11 @@ import React, { useContext } from "react";
 import { PluginProps } from "..";
 import { Button } from "../../../microui/component/Button";
 import { FlexBox } from "../../../microui/component/FlexBox";
-import { AppConfig } from "../../AppManager";
+import { AppConfig, ExtraColor } from "../../AppManager";
 import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
 import { AiOutlineReload } from "@react-icons/all-files/ai/AiOutlineReload";
 import { ThemeContext } from "../../../microui/context/theme";
-import Color from "color";
+
 export const ServerList = (props: PluginProps) => {
     const theme = useContext(ThemeContext);
     return (
@@ -15,12 +15,10 @@ export const ServerList = (props: PluginProps) => {
                 style={{
                     height: 50,
                     alignItems: "center",
-                    background: Color(theme.default?.backgroundLight)
-                        .alpha(0.4)
-                        .string(),
+                    background: ExtraColor.appBG,
                     borderStyle: "solid",
                     borderWidth: 1,
-                    borderBottomColor: theme.default?.backgroundLight,
+                    borderBottomColor: theme.default?.divider,
                 }}
             >
                 <Button
@@ -35,7 +33,7 @@ export const ServerList = (props: PluginProps) => {
                     border={false}
                     icon={<AiOutlineReload />}
                     text="Reload"
-                    style={{ marginLeft: 16, height: 28 }}
+                    style={{ height: 28 }}
                 />
             </FlexBox>
         </FlexBox>

@@ -9,27 +9,26 @@ import { Divider } from "../microui/component/Divider";
 import { ThemeContext } from "../microui/context/theme";
 import { ComponentColor, makeTransition } from "../microui/util";
 import { TabContainer } from "../microui/component/TabContainer";
-import Color from "color";
+import { ExtraColor } from "./AppManager";
 
 export const Main = () => {
     const theme = useContext(ThemeContext);
     const [tabBarID, setTabBarID] = useState("");
-    const tabBG = Color(theme.default?.backgroundLight).alpha(0.4).string();
     const tabBarConfig: TabBarConfig = {
         fixedTabs: {
-            primary: { background: tabBG },
-            hover: { background: tabBG },
-            selected: { background: tabBG },
+            primary: { background: ExtraColor.tabFixedBG },
+            hover: { background: ExtraColor.tabFixedBG },
+            selected: { background: ExtraColor.tabFixedBG },
         },
         floatTabs: {
-            primary: { background: tabBG },
-            hover: { background: tabBG },
-            selected: { background: tabBG },
+            primary: { background: ExtraColor.tabFloatBG },
+            hover: { background: ExtraColor.tabFloatBG },
+            selected: { background: ExtraColor.tabFloatBG },
         },
         dynamicTabs: {
-            primary: { background: tabBG },
-            hover: { background: tabBG },
-            selected: { background: tabBG },
+            primary: { background: ExtraColor.tabDynamicBG },
+            hover: { background: ExtraColor.tabDynamicBG },
+            selected: { background: ExtraColor.tabDynamicBG },
         },
     };
     return (
@@ -99,6 +98,7 @@ export const Main = () => {
                 {tabBarID ? (
                     <TabContainer
                         tabBarID={tabBarID}
+                        style={{ background: ExtraColor.appDarkBG }}
                         render={(
                             tabBarID: string,
                             tabID: number,

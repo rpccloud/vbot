@@ -9,7 +9,7 @@ import { ThemeContext } from "../../../microui/context/theme";
 import { AiOutlineLaptop } from "@react-icons/all-files/ai/AiOutlineLaptop";
 import { AiOutlineGroup } from "@react-icons/all-files/ai/AiOutlineGroup";
 import { IoLogoJavascript } from "@react-icons/all-files/io/IoLogoJavascript";
-import Color from "color";
+import { ExtraColor } from "../../AppManager";
 
 interface MenuItem {
     key: string;
@@ -34,21 +34,15 @@ export const Home = (props: PluginProps) => {
         hover: {
             font: theme.default?.contrastText,
             border: theme.default?.contrastText,
-            background: Color(theme.default?.backgroundLight)
-                .alpha(0.4)
-                .string(),
+            background: ExtraColor.appBG,
         },
         highlight: {
             border: theme.highlight?.main,
-            background: Color(theme.default?.backgroundLight)
-                .alpha(0.4)
-                .string(),
+            background: ExtraColor.appBG,
         },
         selected: {
             border: theme.hover?.main,
-            background: Color(theme.default?.backgroundLight)
-                .alpha(0.4)
-                .string(),
+            background: ExtraColor.appBG,
         },
         focus: {
             border: theme.highlight?.main,
@@ -87,8 +81,7 @@ export const Home = (props: PluginProps) => {
                                 fontWeight: 900,
                                 borderRadius: 0,
                                 borderLeftWidth: 3,
-                                borderBottomColor:
-                                    theme.default?.backgroundLight,
+                                borderBottomColor: theme.default?.divider,
                                 borderBottomWidth: 1,
                                 borderBottomStyle: "solid",
                                 padding: "0px 10px 0px 10px",
