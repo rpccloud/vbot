@@ -1,11 +1,7 @@
 import React, { useContext, useState } from "react";
 import { FlexBox } from "../microui/component/FlexBox";
 import { Page } from "../microui/component/Page";
-import {
-    TabBar,
-    TabBarConfig,
-    TabBarOnChangeParam,
-} from "../microui/component/TabBar";
+import { TabBar, TabBarConfig } from "../microui/component/TabBar";
 import { Plugin } from "./plugin";
 
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
@@ -14,7 +10,6 @@ import { ThemeContext } from "../microui/context/theme";
 import { ComponentColor, makeTransition } from "../microui/util";
 import { TabContainer } from "../microui/component/TabContainer";
 import { ExtraColor } from "./AppManager";
-import { TabBarHelper } from "../microui/component/TabBarHelper";
 
 export const Main = () => {
     const theme = useContext(ThemeContext);
