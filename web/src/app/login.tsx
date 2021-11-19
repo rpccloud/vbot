@@ -60,7 +60,11 @@ const data = new Data();
 export const Login = observer(() => {
     const theme = useContext(ThemeContext);
     return (
-        <Page>
+        <Page
+            style={{
+                background: `radial-gradient(circle farthest-side, ${ExtraColor.appBG}, ${ExtraColor.appDarkBG})`,
+            }}
+        >
             <Plugin kind="header" />
             <FlexBox
                 style={{

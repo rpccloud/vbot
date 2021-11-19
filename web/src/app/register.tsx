@@ -266,7 +266,11 @@ export const Register = observer((props: any) => {
     }
 
     return (
-        <Page>
+        <Page
+            style={{
+                background: `radial-gradient(circle farthest-side, ${ExtraColor.appBG}, ${ExtraColor.appDarkBG})`,
+            }}
+        >
             <Plugin kind="header" />
             <FlexBox
                 style={{

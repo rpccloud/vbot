@@ -1,5 +1,5 @@
 import React from "react";
-import { AppConfig, AppError, AppUser } from "./AppManager";
+import { AppConfig, AppError, AppUser, ExtraColor } from "./AppManager";
 import { observer } from "mobx-react-lite";
 import { Plugin } from "./plugin";
 import { Page } from "../microui/component/Page";
@@ -24,7 +24,11 @@ export const Start = observer((props: any) => {
     });
 
     return (
-        <Page>
+        <Page
+            style={{
+                background: `radial-gradient(circle farthest-side, ${ExtraColor.appBG}, ${ExtraColor.appDarkBG})`,
+            }}
+        >
             <Plugin kind="header" />
             <FlexBox
                 animated={true}

@@ -98,7 +98,9 @@ export const Main = () => {
                 {tabBarID ? (
                     <TabContainer
                         tabBarID={tabBarID}
-                        style={{ background: ExtraColor.appDarkBG }}
+                        style={{
+                            background: `radial-gradient(circle farthest-side, ${ExtraColor.appBG}, ${ExtraColor.appDarkBG})`,
+                        }}
                         render={(
                             tabBarID: string,
                             tabID: number,
