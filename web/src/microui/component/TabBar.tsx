@@ -280,7 +280,9 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         const resizeTabs = this.floatTabs.length + this.dynamicTabs.length;
 
         const tabWidth = range(
-            Math.floor((this.totalWidth - this.fixedWidth) / resizeTabs),
+            Math.floor(
+                ((this.totalWidth - this.fixedWidth) * 100) / resizeTabs
+            ) / 100,
             this.props.minTabWidth,
             this.props.maxTabWidth
         );

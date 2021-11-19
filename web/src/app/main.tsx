@@ -94,58 +94,6 @@ export const Main = () => {
         />
     );
 
-    const tabBarIndicator = tabBarID ? (
-        <TabBarHelper
-            tabBarID={tabBarID}
-            render={(o: TabBarOnChangeParam) => {
-                const selectedID = o.selectedTab?.id;
-                return (
-                    <div
-                        style={{
-                            position: "relative",
-                            height: 0,
-                        }}
-                    >
-                        <div
-                            style={{
-                                position: "relative",
-                                height: 2,
-                                top: -2,
-                                background: theme.primary?.main,
-                            }}
-                        >
-                            {[
-                                ...o.fixedTabs,
-                                ...o.floatTabs,
-                                ...o.dynamicTabs,
-                            ].map((it) => {
-                                return (
-                                    <div
-                                        style={{
-                                            position: "absolute",
-                                            width: it.width,
-                                            left: it.left,
-                                            height: 2,
-                                            background:
-                                                it.id !== selectedID
-                                                    ? "transparent"
-                                                    : theme.default?.divider,
-                                            transition: makeTransition(
-                                                ["background"],
-                                                theme.transition?.duration,
-                                                theme.transition?.easing
-                                            ),
-                                        }}
-                                    ></div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                );
-            }}
-        />
-    ) : null;
-
     const tabBarContainer = tabBarID ? (
         <TabContainer
             tabBarID={tabBarID}
@@ -179,9 +127,23 @@ export const Main = () => {
                     flexFlow: "column",
                 }}
             >
-                <Divider space={18} />
+                <Divider space={16} />
                 {tabBar}
-                {tabBarIndicator}
+                <div
+                    style={{
+                        position: "relative",
+                        height: 0,
+                    }}
+                >
+                    <div
+                        style={{
+                            position: "relative",
+                            height: 2,
+                            top: -2,
+                            background: theme.primary?.main,
+                        }}
+                    />
+                </div>
                 {tabBarContainer}
                 <Divider space={2} lineWidth={2} color={theme.primary?.main} />
             </FlexBox>
