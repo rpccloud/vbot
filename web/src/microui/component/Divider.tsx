@@ -51,7 +51,7 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
         return (
             <div
                 style={{
-                    backgroundColor: this.props.color || theme.default?.outline,
+                    backgroundColor: this.props.color || theme.default?.divider,
                     marginTop: top,
                     marginBottom: bottom,
                     ...this.props.style,
@@ -88,7 +88,7 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
         return (
             <div
                 style={{
-                    backgroundColor: this.props.color || theme.default?.outline,
+                    backgroundColor: this.props.color || theme.default?.divider,
                     marginLeft: left,
                     marginRight: right,
                     ...this.props.style,

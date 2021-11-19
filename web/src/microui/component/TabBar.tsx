@@ -128,6 +128,7 @@ interface TabBarProps {
     readonly config: TabBarConfig;
     readonly minTabWidth: number;
     readonly maxTabWidth: number;
+    readonly borderWidth: number;
     readonly initialFixedTabs?: FixedTabItem[];
     readonly initialFloatTabs?: FloatTabItem[];
     readonly initialDynamicTabs?: FloatTabItem[];
@@ -172,6 +173,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         size: "medium",
         fontWeight: "normal",
         config: {},
+        borderWidth: 1,
         minTabWidth: 58,
         maxTabWidth: 240,
         onInit: () => {},
@@ -452,6 +454,27 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
             themeCache.getConfig(extendTheme(this.context, this.props.theme)),
             this.props.config
         );
+
+        let renderTabs: TabRecord[] = [
+            ...this.fixedTabs.filter((it) => it.id !== this.selectedTab?.id),
+            ...this.floatTabs.filter((it) => it.id !== this.selectedTab?.id),
+            ...this.dynamicTabs.filter((it) => it.id !== this.selectedTab?.id),
+        ];
+        if (this.selectedTab) {
+            renderTabs.push(this.selectedTab);
+        }
+
+        const getConfig = (kind: TabKind) => {
+            switch (kind) {
+                case TabKind.Fixed:
+                    return config.fixedTabs;
+                case TabKind.Float:
+                    return config.floatTabs;
+                case TabKind.Dynamic:
+                    return config.dynamicTabs;
+            }
+        };
+
         return (
             <div
                 style={{ fontWeight: 600, ...this.props.style, height: height }}
@@ -460,63 +483,24 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
                     ref={this.rootRef}
                     style={{ height: height, position: "relative" }}
                 >
-                    {this.fixedTabs.map((it) => {
+                    {renderTabs.map((it) => {
                         return (
                             <Tab
                                 key={it.id}
                                 id={it.id}
                                 tabBar={this}
                                 height={height}
+                                borderWidth={this.props.borderWidth}
                                 size={this.props.size}
                                 icon={it.icon}
                                 title={it.title}
                                 minLeft={it.minLeft}
                                 maxRight={it.maxRight}
-                                config={config.fixedTabs}
+                                config={getConfig(it.kind)}
                                 selected={it.id === this.selectedTab?.id}
-                                closable={false}
+                                closable={it.kind === TabKind.Dynamic}
                                 renderInner={it.renderTab}
-                            ></Tab>
-                        );
-                    })}
-
-                    {this.floatTabs.map((it) => {
-                        return (
-                            <Tab
-                                key={it.id}
-                                id={it.id}
-                                tabBar={this}
-                                height={height}
-                                size={this.props.size}
-                                icon={it.icon}
-                                title={it.title}
-                                minLeft={it.minLeft}
-                                maxRight={it.maxRight}
-                                config={config.floatTabs}
-                                selected={it.id === this.selectedTab?.id}
-                                closable={false}
-                                renderInner={it.renderTab}
-                            ></Tab>
-                        );
-                    })}
-
-                    {this.dynamicTabs.map((it) => {
-                        return (
-                            <Tab
-                                key={it.id}
-                                id={it.id}
-                                tabBar={this}
-                                height={height}
-                                size={this.props.size}
-                                icon={it.icon}
-                                title={it.title}
-                                minLeft={it.minLeft}
-                                maxRight={it.maxRight}
-                                config={config.dynamicTabs}
-                                selected={it.id === this.selectedTab?.id}
-                                closable={true}
-                                renderInner={it.renderTab}
-                            ></Tab>
+                            />
                         );
                     })}
                 </div>

@@ -5,7 +5,6 @@ import { PointerManager } from "../sonar/pointer";
 import { Button } from "./Button";
 import { TabBar } from "./TabBar";
 import { IoCloseOutline } from "@react-icons/all-files/io5/IoCloseOutline";
-import { ZIndexContext } from "../context/zIndex";
 import { makeTransition, range } from "../util";
 import { FadeBox } from "./FadeBox";
 
@@ -21,6 +20,7 @@ interface TabProps {
     readonly tabBar: TabBar;
     size: Size;
     height: number;
+    borderWidth: number;
     config: TabConfig;
     icon?: ReactNode;
     title?: string;
@@ -47,7 +47,6 @@ function makeTabPath(w: number, h: number, radius: number): string {
 }
 
 export class Tab extends React.Component<TabProps, TabState> {
-    static contextType = ZIndexContext;
     private rootRef = React.createRef<HTMLDivElement>();
     private contentRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<SVGPathElement>();
@@ -249,9 +248,6 @@ export class Tab extends React.Component<TabProps, TabState> {
                     width: width,
                     height: height,
                     bottom: 0,
-                    zIndex: this.props.selected
-                        ? this.context.zIndex + 1
-                        : this.context.zIndex,
                 }}
             >
                 <svg height={height} width={width}>
@@ -261,6 +257,7 @@ export class Tab extends React.Component<TabProps, TabState> {
                         style={{
                             fill: color?.background,
                             stroke: color?.border,
+                            strokeWidth: this.props.borderWidth,
                             transition: makeTransition(
                                 ["fill", "stroke"],
                                 config.transition?.duration,
