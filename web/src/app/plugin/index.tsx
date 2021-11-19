@@ -5,7 +5,7 @@ import { ThemeContext } from "../../microui/context/theme";
 import Footer from "./footer";
 import Header from "./header";
 import { Home } from "./home/home";
-import ServerCreate from "./server/create";
+import ServerAdd from "./server/add";
 import ServerDelete from "./server/delete";
 import { ServerList } from "./server/list";
 import ServerShow from "./server/show";
@@ -26,8 +26,8 @@ export const Plugin = (props: PluginProps) => {
             return <Footer />;
         case "home":
             return <Home {...props} />;
-        case "server.create":
-            return <ServerCreate {...props} />;
+        case "server.add":
+            return <ServerAdd {...props} />;
         case "server.show":
             return <ServerShow {...props} />;
         case "server.delete":

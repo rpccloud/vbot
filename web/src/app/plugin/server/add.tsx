@@ -84,7 +84,7 @@ class Data {
 
 const data = new Data();
 
-const ServerCreate = observer((props: PluginProps) => {
+const ServerAdd = observer((props: PluginProps) => {
     return (
         <Card
             title="Add SSH Server"
@@ -176,4 +176,4 @@ const ServerCreate = observer((props: PluginProps) => {
     );
 });
 
-export default ServerCreate;
+export default ServerAdd;

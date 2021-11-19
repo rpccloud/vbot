@@ -130,16 +130,18 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
                     <div
                         style={{
                             position: "fixed",
-                            top: popup
-                                ? 0
-                                : screenRect.y + screenRect.height / 2,
                             left: popup
                                 ? 0
                                 : screenRect.x + screenRect.width / 2,
+                            top: popup
+                                ? 0
+                                : screenRect.y + screenRect.height / 2,
+                            transform: popup ? `scale(1)` : `scale(0)`,
+                            transformOrigin: "top left",
                             opacity: popup ? 1 : 0,
                             zIndex: this.props.popupZIndex,
                             transition: makeTransition(
-                                ["opacity", "width", "height", "top", "left"],
+                                ["opacity", "transform", "left", "top"],
                                 theme.transition?.duration,
                                 theme.transition?.easing
                             ),

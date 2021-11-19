@@ -1,5 +1,5 @@
 import React from "react";
-import { PluginProps } from "..";
+import { Plugin, PluginProps } from "..";
 import { Button } from "../../../microui/component/Button";
 import { FlexBox } from "../../../microui/component/FlexBox";
 import { AppConfig, AppError, AppUser, ExtraColor } from "../../AppManager";
@@ -7,6 +7,8 @@ import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCirc
 import { AiOutlineReload } from "@react-icons/all-files/ai/AiOutlineReload";
 import { Theme, ThemeContext } from "../../../microui/context/theme";
 import { toObject } from "rpccloud-client-js/build/types";
+import { Popup } from "../../../microui/component/Popup";
+import { Page } from "../../../microui/component/Page";
 
 interface ServerListState {
     loading: boolean;
@@ -65,17 +67,42 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                         borderBottomColor: theme.default?.divider,
                     }}
                 >
-                    <Button
-                        ghost={true}
-                        border={false}
-                        disabled={this.state.loading}
-                        icon={<AiOutlinePlusCircle />}
-                        text="Add Server"
-                        style={{
-                            marginLeft: AppConfig.get().margin,
-                            height: 30,
+                    <Popup
+                        action={["click"]}
+                        renderPopup={(_, closePopup) => {
+                            return (
+                                <Page
+                                    style={{
+                                        opacity: 0.85,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Plugin
+                                        kind="server.add"
+                                        data={{
+                                            goBack: () => {
+                                                closePopup();
+                                            },
+                                        }}
+                                    />
+                                </Page>
+                            );
                         }}
-                    />
+                    >
+                        <Button
+                            ghost={true}
+                            border={false}
+                            disabled={this.state.loading}
+                            icon={<AiOutlinePlusCircle />}
+                            text="Add Server"
+                            style={{
+                                marginLeft: AppConfig.get().margin,
+                                height: 30,
+                            }}
+                        />
+                    </Popup>
+
                     <Button
                         ghost={true}
                         border={false}
