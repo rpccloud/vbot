@@ -53,7 +53,7 @@ export class AppConfig {
     margin: number;
     private theme: Theme = {
         default: {
-            pageBackground: "rgb(8, 16, 25)",
+            pageBackground: "rgb(18, 23, 30)",
             contrastText: "#FFFFFFD0",
             outline: "#a0a0a0",
             divider: "rgb(30, 73, 118)",

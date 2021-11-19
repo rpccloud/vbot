@@ -99,7 +99,12 @@ export const Home = (props: PluginProps) => {
                     );
                 })}
             </FlexBox>
-            <Divider type="vertical" space={1} lineWidth={1} />
+            <Divider
+                type="vertical"
+                space={1}
+                lineWidth={1}
+                color={theme.default?.outline}
+            />
             <FlexBox style={{ flex: 1 }}>
                 <div style={{ position: "relative", flex: 1 }}>
                     {sortedMenuList.map((it) => {
