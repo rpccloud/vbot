@@ -3,7 +3,7 @@ import { PluginProps } from "..";
 import { Button } from "../../../microui/component/Button";
 import { FlexBox } from "../../../microui/component/FlexBox";
 import { AppConfig } from "../../AppManager";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
 import { AiOutlineReload } from "@react-icons/all-files/ai/AiOutlineReload";
 import { ThemeContext } from "../../../microui/context/theme";
 import Color from "color";
@@ -24,18 +24,18 @@ export const ServerList = (props: PluginProps) => {
                 }}
             >
                 <Button
-                    size="small"
                     ghost={true}
-                    icon={<AiOutlinePlus />}
+                    border={false}
+                    icon={<AiOutlinePlusCircle />}
                     text="Add Server"
-                    style={{ marginLeft: AppConfig.get().margin }}
+                    style={{ marginLeft: AppConfig.get().margin, height: 30 }}
                 />
                 <Button
-                    size="small"
                     ghost={true}
+                    border={false}
                     icon={<AiOutlineReload />}
                     text="Reload"
-                    style={{ marginLeft: 16 }}
+                    style={{ marginLeft: 16, height: 28 }}
                 />
             </FlexBox>
         </FlexBox>

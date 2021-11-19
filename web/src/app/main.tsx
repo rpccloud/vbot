@@ -7,14 +7,12 @@ import { Plugin } from "./plugin";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { Divider } from "../microui/component/Divider";
 import { ThemeContext } from "../microui/context/theme";
-import { AppConfig } from "./AppManager";
 import { ComponentColor, makeTransition } from "../microui/util";
 import { TabContainer } from "../microui/component/TabContainer";
 import Color from "color";
 
 export const Main = () => {
     const theme = useContext(ThemeContext);
-    const margin = AppConfig.get().margin;
     const [tabBarID, setTabBarID] = useState("");
     const tabBG = Color(theme.default?.backgroundLight).alpha(0.4).string();
     const tabBarConfig: TabBarConfig = {
@@ -43,16 +41,17 @@ export const Main = () => {
                     flexFlow: "column",
                 }}
             >
-                <Divider space={16} />
+                <Divider space={18} />
                 <TabBar
                     size="medium"
                     onInit={(id) => {
                         setTabBarID(id);
                     }}
                     config={tabBarConfig}
+                    height={38}
                     style={{
-                        marginLeft: margin,
-                        marginRight: margin,
+                        marginLeft: 0,
+                        marginRight: 0,
                     }}
                     initialFixedTabs={[
                         {
