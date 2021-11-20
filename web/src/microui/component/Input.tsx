@@ -58,8 +58,8 @@ let themeCache = new ThemeCache((theme) => ({
         border: theme.failed?.main,
         shadow: "transparent",
     },
-    labelColor: theme.primary?.main,
-    iconColor: theme.primary?.main,
+    labelColor: theme.primary?.contrastText,
+    iconColor: theme.primary?.contrastText,
     placeholderColor: theme.disabled?.contrastText,
     validateErrorColor: theme.failed?.main,
     transition: theme.transition,
@@ -226,13 +226,6 @@ class InputCore extends React.Component<InputProps, InputState> {
             color = config.successful;
         }
 
-        if (!this.props.valid && color) {
-            color = { ...color, border: config.validateErrorColor };
-            if (color.shadow && color.shadow !== "transparent") {
-                color.shadow = config.validateErrorColor;
-            }
-        }
-
         const fontSize = getFontSize(this.props.size);
         let height = Math.round(fontSize * 2.3);
         let qrHeight = Math.round(height / 4);
@@ -281,7 +274,9 @@ class InputCore extends React.Component<InputProps, InputState> {
                     width: fontSize,
                     alignItems: "center",
                     justifyContent: "center",
-                    color: config.iconColor,
+                    color: this.props.valid
+                        ? config.iconColor
+                        : config.validateErrorColor,
                     marginRight: innerMargin,
                     transition: "inherit",
                 }}

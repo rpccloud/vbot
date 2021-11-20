@@ -198,7 +198,6 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     onChange={(e) => {
                         this.setState({ alias: e.target.value });
                     }}
-                    valid={userOK}
                 />
 
                 <Divider space={24} />
