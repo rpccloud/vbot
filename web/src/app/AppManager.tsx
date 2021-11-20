@@ -99,7 +99,7 @@ export class AppConfig {
     private constructor() {
         makeAutoObservable(this);
         this.setLang(window.navigator.language);
-        this.rootRoute = "start";
+        this.rootRoute = "register";
         this.headHeight = 48;
         this.footerHeight = 24;
         this.margin = 24;

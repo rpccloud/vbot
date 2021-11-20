@@ -1,6 +1,5 @@
 import React from "react";
 import { Theme, ThemeContext } from "../context/theme";
-import "../microui.css";
 
 interface PageProps {
     style?: React.CSSProperties;
@@ -19,6 +18,11 @@ export class Page extends React.Component<PageProps, PageState> {
 
     render() {
         const theme: Theme = this.context;
+
+        const body = document.body;
+        body.style.padding = "0px";
+        body.style.margin = "0px";
+        body.style.backgroundColor = theme.default?.pageBackground || "black";
 
         return (
             <div

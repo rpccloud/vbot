@@ -17,8 +17,8 @@ const cfgFontSize = {
     "x-small": 10,
     small: 12,
     medium: 14,
-    large: 18,
-    "x-large": 24,
+    large: 16,
+    "x-large": 22,
     "xx-large": 32,
     "xxx-large": 64,
 };

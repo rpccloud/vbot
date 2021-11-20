@@ -91,8 +91,8 @@ const SetPassword = observer((props: { onNext: () => void }) => {
         <FlexBox
             animated={true}
             style={{
-                width: 420,
-                height: 380,
+                width: 400,
+                height: 280,
                 flexFlow: "column",
                 padding: AppConfig.get().margin,
                 backgroundColor: ExtraColor.appBG,
@@ -160,8 +160,8 @@ const TermsOfService = observer(
             <FlexBox
                 animated={true}
                 style={{
-                    width: 420,
-                    height: 380,
+                    width: 400,
+                    height: 300,
                     flexFlow: "column",
                     padding: AppConfig.get().margin,
                     backgroundColor: ExtraColor.appBG,
