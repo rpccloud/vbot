@@ -88,7 +88,6 @@ export const ThemeContext = React.createContext<Theme>({
     default: {
         pageBackground:
             "radial-gradient(circle farthest-side, rgb(7, 20, 41), rgb(10,30,70)",
-        contrastText: "#FFFFFFD0",
         outline: "#999",
         divider: "rgb(15, 35, 90)",
     },

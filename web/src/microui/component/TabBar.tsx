@@ -17,9 +17,9 @@ import { EventListener, HandlerParam } from "../event/channel";
 let themeCache = new ThemeCache((theme) => ({
     fixedTabs: {
         primary: {
-            font: theme.default?.outline,
+            font: theme.primary?.contrastText,
             background: "transparent",
-            border: theme.default?.outline,
+            border: theme.primary?.contrastText,
             shadow: "transparent",
         },
         hover: {
@@ -38,9 +38,9 @@ let themeCache = new ThemeCache((theme) => ({
     },
     floatTabs: {
         primary: {
-            font: theme.default?.outline,
+            font: theme.primary?.contrastText,
             background: "transparent",
-            border: theme.default?.outline,
+            border: theme.primary?.contrastText,
             shadow: "transparent",
         },
         hover: {
@@ -59,9 +59,9 @@ let themeCache = new ThemeCache((theme) => ({
     },
     dynamicTabs: {
         primary: {
-            font: theme.default?.outline,
+            font: theme.primary?.contrastText,
             background: "transparent",
-            border: theme.default?.outline,
+            border: theme.primary?.contrastText,
             shadow: "transparent",
         },
         hover: {

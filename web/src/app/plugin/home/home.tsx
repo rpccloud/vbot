@@ -28,12 +28,12 @@ export const Home = (props: PluginProps) => {
     let [selectedKey, setSelectedKey] = useState(menuList[0].key);
     const menuButtonConfig: ButtonConfig = {
         primary: {
-            font: theme.default?.outline,
-            border: theme.default?.outline,
+            font: theme.primary?.contrastText,
+            border: theme.primary?.contrastText,
         },
         hover: {
-            font: theme.default?.contrastText,
-            border: theme.default?.contrastText,
+            font: theme.hover?.contrastText,
+            border: theme.hover?.contrastText,
             background: ExtraColor.appBG,
         },
         highlight: {

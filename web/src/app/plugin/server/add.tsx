@@ -75,7 +75,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     label="Host:"
                     labelWidth={80}
                     defaultValue={this.state.host}
-                    placeholder="SSH host (192.168.0.1 or www.example.com)"
+                    placeholder="SSH host (IP or hostname)"
                     icon={<AiOutlineGlobal />}
                     onChange={(e) => {
                         this.setState({ host: e.target.value });
@@ -102,7 +102,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     type="text"
                     outline="underline"
                     size="large"
-                    label="UserName:"
+                    label="Username:"
                     labelWidth={80}
                     defaultValue={this.state.user}
                     placeholder="SSH username"

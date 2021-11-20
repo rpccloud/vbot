@@ -41,7 +41,7 @@ export class AppError {
 
 export const ExtraColor = {
     appDarkBG: "rgb(20,20,20)",
-    appBG: "rgba(37,37,37)",
+    appBG: "rgba(35,35,35)",
     appLightBG: "rgba(51,129,246)",
 };
 
@@ -54,13 +54,12 @@ export class AppConfig {
     private theme: Theme = {
         default: {
             pageBackground: "rgb(14, 14, 14)",
-            contrastText: "#FFFFFFD0",
             outline: "rgb(160, 160, 160)",
             divider: "rgb(80, 80, 80)",
         },
         primary: {
             main: "#cc7e00",
-            contrastText: "#FFFFFFD0",
+            contrastText: "#FFFFFFB0",
         },
         hover: {
             main: "#ff9c00",

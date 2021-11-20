@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { SizeContext } from "../context/size";
-import { ThemeContext } from "../context/theme";
+import { Theme, ThemeContext } from "../context/theme";
 
 import { getFontSize, Size } from "../util";
 
@@ -22,6 +22,7 @@ class SpanCore extends React.Component<SpanProps, SpanState> {
     }
 
     render() {
+        let theme: Theme = this.context;
         let fontSize = getFontSize(this.props.size || "medium");
 
         return (
@@ -30,8 +31,7 @@ class SpanCore extends React.Component<SpanProps, SpanState> {
                     fontSize: fontSize,
                     display: "flex",
                     alignItems: "center",
-                    color:
-                        this.props.color || this.context.default.contrastText,
+                    color: this.props.color || theme.primary?.contrastText,
                     padding: 0,
                     margin: 0,
                     border: 0,

@@ -44,7 +44,6 @@ export interface Transition {
 
 export interface DefaultColor {
     pageBackground?: string;
-    contrastText?: string;
     outline?: string;
     divider?: string;
 }
