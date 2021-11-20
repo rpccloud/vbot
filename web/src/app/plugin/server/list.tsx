@@ -83,6 +83,7 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                                         kind="server.add"
                                         data={{
                                             goBack: () => {
+                                                this.updateServers();
                                                 closePopup();
                                             },
                                         }}
@@ -116,7 +117,7 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                 </FlexBox>
 
                 <FlexBox style={{ flex: 1 }}>
-                    {/* {JSON.stringify(this.state.servers)} */}
+                    {JSON.stringify(this.state.servers)}
                 </FlexBox>
             </FlexBox>
         );

@@ -5,7 +5,7 @@ import { FlexBox } from "../../../microui/component/FlexBox";
 import { Input } from "../../../microui/component/Input";
 import { Span } from "../../../microui/component/Span";
 import { Theme, ThemeContext } from "../../../microui/context/theme";
-import { AppConfig, ExtraColor } from "../../AppManager";
+import { AppConfig, AppError, AppUser, ExtraColor } from "../../AppManager";
 
 import { AiOutlineGlobal } from "@react-icons/all-files/ai/AiOutlineGlobal";
 import { AiOutlineAim } from "@react-icons/all-files/ai/AiOutlineAim";
@@ -14,6 +14,7 @@ import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { isValidHost } from "../../../microui/validator/host";
 import { isValidPort } from "../../../microui/validator/port";
 import { Button } from "../../../microui/component/Button";
+import { Spin } from "../../../microui/component/Spin";
 
 interface ServerAddState {
     loading: boolean;
@@ -46,15 +47,69 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
         }
     }
 
-    private goBack() {
+    private goBack = () => {
         if (this.props.data && this.props.data.goBack) {
             this.props.data.goBack(false);
         }
-    }
+    };
+
+    private addServer = () => {
+        if (this.loading === false) {
+            this.setLoading(true);
+
+            AppUser.send(
+                8000,
+                "#.server:Create",
+                AppUser.getSessionID(),
+                this.state.host,
+                this.state.port,
+                this.state.user,
+                this.state.password,
+                "",
+                "",
+                false
+            )
+                .then((v) => {
+                    this.setState({
+                        host: "",
+                        port: "22",
+                        user: "",
+                        password: "",
+                    });
+                    this.goBack();
+                })
+                .catch((e) => {
+                    AppError.get().report((e as any).getMessage());
+                    this.setLoading(false);
+                })
+                .finally(() => {});
+        }
+    };
 
     render() {
         const theme: Theme = this.context;
-        return (
+        const hostOK = isValidHost(this.state.host);
+        const portOK = isValidPort(this.state.port);
+        const userOK = this.state.user.length > 0;
+        const passOK = this.state.password.length > 0;
+        return this.state.loading ? (
+            <FlexBox
+                animated={true}
+                style={{
+                    flex: "1",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Spin size="x-large" />
+                <Span
+                    size="x-large"
+                    style={{ marginLeft: AppConfig.get().margin }}
+                >
+                    Loading ...
+                </Span>
+            </FlexBox>
+        ) : (
             <FlexBox
                 animated={true}
                 style={{
@@ -80,7 +135,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     onChange={(e) => {
                         this.setState({ host: e.target.value });
                     }}
-                    validator={isValidHost}
+                    valid={hostOK}
                 />
                 <Divider space={16} />
                 <Input
@@ -95,7 +150,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     onChange={(e) => {
                         this.setState({ port: e.target.value });
                     }}
-                    validator={isValidPort}
+                    valid={portOK}
                 />
                 <Divider space={16} />
                 <Input
@@ -110,9 +165,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     onChange={(e) => {
                         this.setState({ user: e.target.value });
                     }}
-                    validator={(value) => {
-                        return value.length > 0;
-                    }}
+                    valid={userOK}
                 />
                 <Divider space={16} />
                 <Input
@@ -127,7 +180,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     onChange={(e) => {
                         this.setState({ password: e.target.value });
                     }}
-                    validator={isValidPort}
+                    valid={passOK}
                 />
 
                 <Divider space={24} />
@@ -136,197 +189,20 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     <Button
                         text="Cancel"
                         ghost={true}
-                        style={{ marginRight: 16 }}
-                        onClick={this.goBack.bind(this)}
-                        onEnter={this.goBack.bind(this)}
+                        style={{ marginRight: 16, width: 50 }}
+                        onClick={this.goBack}
+                        onEnter={this.goBack}
                     />
                     <Button
                         text="Add"
+                        disabled={!hostOK || !portOK || !userOK || !passOK}
                         ghost={true}
-                        // style={{ marginLeft: AppConfig.get().margin }}
-                        // onClick={() => props.onNext()}
-                        // onEnter={() => props.onNext()}
+                        style={{ width: 50 }}
+                        onClick={this.addServer}
+                        onEnter={this.addServer}
                     />
                 </FlexBox>
             </FlexBox>
         );
     }
 }
-
-// import {
-//     AimOutlined,
-//     GlobalOutlined,
-//     UserOutlined,
-//     LockOutlined,
-// } from "@ant-design/icons";
-
-// import { message } from "antd";
-// import { observer } from "mobx-react-lite";
-// import Card from "../../../ui/component/Card";
-// import { makeAutoObservable, runInAction } from "mobx";
-// import { AppUser } from "../../AppManager";
-// import Input from "../../../ui/component/Input";
-// import { PluginProps } from "..";
-// import { isValidHost } from "../../../microui/validator/host";
-// import { isValidPort } from "../../../microui/validator/port";
-
-// class Data {
-//     loading: boolean;
-//     host: string;
-//     port: string;
-//     user: string;
-//     password: string;
-//     isValidHost: boolean;
-//     isValidPort: boolean;
-
-//     constructor() {
-//         makeAutoObservable(this);
-//         this.loading = false;
-//         this.host = "";
-//         this.port = "22";
-//         this.user = "";
-//         this.password = "";
-//         this.isValidHost = false;
-//         this.isValidPort = true;
-//     }
-
-//     setLoading(loading: boolean) {
-//         runInAction(() => {
-//             this.loading = loading;
-//         });
-//     }
-
-//     setHost(host: string) {
-//         runInAction(() => {
-//             this.host = host;
-//             this.isValidHost = isValidHost(this.host);
-//         });
-//     }
-
-//     setPort(port: string) {
-//         runInAction(() => {
-//             this.port = port;
-//             this.isValidPort = isValidPort(this.port);
-//         });
-//     }
-
-//     setUser(user: string) {
-//         runInAction(() => {
-//             this.user = user;
-//         });
-//     }
-
-//     setPassword(password: string) {
-//         runInAction(() => {
-//             this.password = password;
-//         });
-//     }
-
-//     reset() {
-//         runInAction(() => {
-//             this.loading = false;
-//             this.host = "";
-//             this.port = "22";
-//             this.user = "";
-//             this.password = "";
-//             this.isValidHost = false;
-//             this.isValidPort = true;
-//         });
-//     }
-// }
-
-// const data = new Data();
-
-// const ServerAdd = observer((props: PluginProps) => {
-//     return (
-//         <Card
-//             title="Add SSH Server"
-//             width={460}
-//             prevName={!!props.data && !!props.data.goBack ? "Cancel" : ""}
-//             onPrev={() => {
-//                 if (props.data && props.data.goBack) {
-//                     props.data.goBack(false);
-//                 }
-//             }}
-//             nextName="Add"
-//             canNext={
-//                 data.isValidPort &&
-//                 data.isValidHost &&
-//                 !!data.user &&
-//                 !!data.password
-//             }
-//             onNext={async () => {
-//                 try {
-//                     await AppUser.send(
-//                         8000,
-//                         "#.server:Create",
-//                         AppUser.getSessionID(),
-//                         data.host,
-//                         data.port,
-//                         data.user,
-//                         data.password,
-//                         "",
-//                         "",
-//                         false
-//                     );
-//                     data.reset();
-//                     props.data.goBack(true);
-//                 } catch (e) {
-//                     message.error((e as any).getMessage());
-//                 }
-//             }}
-//         >
-//             <div style={{ height: 20 }} />
-//             <Input
-//                 type="text"
-//                 size="medium"
-//                 placeholder="SSH Host (192.168.0.1 or www.example.com)"
-//                 defaultValue={data.host}
-//                 prefixIcon={<GlobalOutlined />}
-//                 onChange={(value) => {
-//                     data.setHost(value);
-//                 }}
-//                 validator={() => data.isValidHost}
-//             />
-//             <div style={{ height: 20 }} />
-//             <Input
-//                 type="text"
-//                 size="medium"
-//                 placeholder="SSH Port (0 - 65535)"
-//                 defaultValue={data.port}
-//                 prefixIcon={<AimOutlined />}
-//                 onChange={(value) => {
-//                     data.setPort(value);
-//                 }}
-//                 validator={() => data.isValidPort}
-//             />
-//             <div style={{ height: 20 }} />
-//             <Input
-//                 type="text"
-//                 size="medium"
-//                 placeholder="SSH Username"
-//                 defaultValue={data.user}
-//                 prefixIcon={<UserOutlined />}
-//                 onChange={(value) => {
-//                     data.setUser(value);
-//                 }}
-//                 validator={(v) => v !== ""}
-//             />
-//             <div style={{ height: 20 }} />
-//             <Input
-//                 type="password"
-//                 size="medium"
-//                 placeholder="SSH Password"
-//                 defaultValue={data.password}
-//                 prefixIcon={<LockOutlined />}
-//                 onChange={(value) => {
-//                     data.setPassword(value);
-//                 }}
-//                 validator={(v) => v !== ""}
-//             />
-//             <div style={{ height: 20 }} />
-//         </Card>
-//     );
-// });
-
-// export default ServerAdd;

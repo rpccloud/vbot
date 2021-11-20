@@ -105,7 +105,7 @@ interface InputProps {
     placeholder: string;
     focusable: boolean;
     submittable: boolean;
-    validator: (value: any) => boolean;
+    valid: boolean;
     innerLeft?: number;
     innerRight?: number;
     innerMargin?: number;
@@ -168,7 +168,7 @@ class InputCore extends React.Component<InputProps, InputState> {
         placeholder: "",
         focusable: true,
         submittable: false,
-        validator: () => true,
+        valid: true,
         onChange: () => void {},
         onSubmit: () => {
             return new Promise((resolve, reject) => {
@@ -226,7 +226,7 @@ class InputCore extends React.Component<InputProps, InputState> {
             color = config.successful;
         }
 
-        if (!this.props.validator(this.state.value) && color) {
+        if (!this.props.valid && color) {
             color = { ...color, border: config.validateErrorColor };
             if (color.shadow && color.shadow !== "transparent") {
                 color.shadow = config.validateErrorColor;
