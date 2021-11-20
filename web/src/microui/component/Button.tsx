@@ -224,6 +224,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     color: color?.font,
                     fontSize: fontSize,
                     fontWeight: 600,
+                    userSelect: "none",
                     padding: this.props.round ? 0 : padding,
                     backgroundColor: color?.background,
                     transition: makeTransition(
@@ -291,6 +292,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                         width: "100%",
                         height: "100%",
                         display: "flex",
+                        outline: "none",
                         justifyContent:
                             this.props.style?.justifyContent || "center",
                         alignItems: this.props.style?.alignItems || "center",

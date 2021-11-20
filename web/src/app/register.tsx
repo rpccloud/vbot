@@ -183,14 +183,13 @@ const TermsOfService = observer(
                     <Button
                         text="I decline"
                         ghost={true}
-                        style={{ marginLeft: AppConfig.get().margin }}
+                        style={{ marginRight: 16 }}
                         onClick={() => props.onPrev()}
                         onEnter={() => props.onPrev()}
                     />
                     <Button
                         text="I agree"
                         ghost={true}
-                        style={{ marginLeft: AppConfig.get().margin }}
                         onClick={() => props.onNext()}
                         onEnter={() => props.onNext()}
                     />

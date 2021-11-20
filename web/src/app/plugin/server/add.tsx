@@ -94,6 +94,12 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
         }
     }
 
+    private goBack() {
+        if (this.props.data && this.props.data.goBack) {
+            this.props.data.goBack(false);
+        }
+    }
+
     render() {
         const theme: Theme = this.context;
         return (
@@ -140,9 +146,16 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
 
                 <FlexBox flexFlow="row" justifyContent="flex-end">
                     <Button
+                        text="Cancel"
+                        ghost={true}
+                        style={{ marginRight: 16 }}
+                        onClick={this.goBack.bind(this)}
+                        onEnter={this.goBack.bind(this)}
+                    />
+                    <Button
                         text="Add"
                         ghost={true}
-                        style={{ marginLeft: AppConfig.get().margin }}
+                        // style={{ marginLeft: AppConfig.get().margin }}
                         // onClick={() => props.onNext()}
                         // onEnter={() => props.onNext()}
                     />

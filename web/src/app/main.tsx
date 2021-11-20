@@ -49,7 +49,6 @@ export const Main = () => {
                     }}
                     config={tabBarConfig}
                     height={38}
-                    borderWidth={2}
                     style={{
                         marginLeft: 0,
                         marginRight: 0,
@@ -97,7 +96,7 @@ export const Main = () => {
                         { title: "Test", icon: <AiOutlineLock /> },
                     ]}
                 />
-                <Divider space={2} lineWidth={2} color={theme.primary?.main} />
+                <Divider space={1} lineWidth={1} color={theme.primary?.main} />
                 {tabBarID ? (
                     <TabContainer
                         tabBarID={tabBarID}
@@ -121,7 +120,7 @@ export const Main = () => {
                         }}
                     />
                 ) : null}
-                <Divider space={2} lineWidth={2} color={theme.primary?.main} />
+                <Divider space={1} lineWidth={1} color={theme.primary?.main} />
             </FlexBox>
             <Plugin kind="footer" />
         </Page>

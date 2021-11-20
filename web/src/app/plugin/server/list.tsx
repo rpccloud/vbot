@@ -73,10 +73,9 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                             return (
                                 <Page
                                     style={{
-                                        opacity: 0.85,
+                                        opacity: 0.75,
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        background: `radial-gradient(circle farthest-side, ${ExtraColor.appBG}, ${ExtraColor.appDarkBG})`,
                                     }}
                                 >
                                     <Plugin
