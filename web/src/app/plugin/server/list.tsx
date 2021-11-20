@@ -10,6 +10,9 @@ import { toObject } from "rpccloud-client-js/build/types";
 import { Popup } from "../../../microui/component/Popup";
 import { Page } from "../../../microui/component/Page";
 
+import { RiComputerLine } from "@react-icons/all-files/ri/RiComputerLine";
+import { Span } from "../../../microui/component/Span";
+
 interface ServerListState {
     loading: boolean;
     servers: object[];
@@ -116,8 +119,48 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                     />
                 </FlexBox>
 
-                <FlexBox style={{ flex: 1 }}>
-                    {JSON.stringify(this.state.servers)}
+                <FlexBox
+                    style={{
+                        flex: 1,
+                        padding: 12,
+                        flexFlow: "row",
+                        alignItems: "baseline",
+                        justifyContent: "flex-start",
+                        alignContent: "flex-start",
+                        flexWrap: "wrap",
+                        overflowY: "auto",
+                    }}
+                >
+                    {this.state.servers.map((it) => {
+                        return (
+                            <FlexBox
+                                style={{
+                                    width: 140,
+                                    height: 100,
+                                    margin: 12,
+                                    flexFlow: "column",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <RiComputerLine
+                                    color="rgb(40,80,160)"
+                                    style={{
+                                        width: 60,
+                                        height: 60,
+                                    }}
+                                />
+                                <div
+                                    style={{
+                                        fontWeight: 400,
+                                        maxWidth: 140,
+                                        overflowWrap: "break-word",
+                                    }}
+                                >
+                                    <Span>{(it as any).name}</Span>
+                                </div>
+                            </FlexBox>
+                        );
+                    })}
                 </FlexBox>
             </FlexBox>
         );

@@ -29,8 +29,6 @@ class SpanCore extends React.Component<SpanProps, SpanState> {
             <span
                 style={{
                     fontSize: fontSize,
-                    display: "flex",
-                    alignItems: "center",
                     color: this.props.color || theme.primary?.contrastText,
                     padding: 0,
                     margin: 0,

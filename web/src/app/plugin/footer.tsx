@@ -7,12 +7,17 @@ import { AppConfig } from "../AppManager";
 const Footer = () => {
     const theme = useContext(ThemeContext);
     return (
-        <FlexBox style={{ justifyContent: "center", alignItems: "center" }}>
+        <FlexBox
+            style={{
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: AppConfig.get().footerHeight,
+            }}
+        >
             <Span
                 size="small"
                 style={{
                     color: theme.disabled?.contrastText,
-                    minHeight: AppConfig.get().footerHeight,
                 }}
             >
                 Copyright rpccloud.com ©2021 Created by tianshuo
