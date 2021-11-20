@@ -116,6 +116,7 @@ export const Login = observer(() => {
                             disabled={
                                 !data.user || !data.password || data.loading
                             }
+                            style={{ width: 50 }}
                             ghost={true}
                             onClick={async () => {
                                 try {

@@ -11,6 +11,7 @@ import { AiOutlineGlobal } from "@react-icons/all-files/ai/AiOutlineGlobal";
 import { AiOutlineAim } from "@react-icons/all-files/ai/AiOutlineAim";
 import { AiOutlineUser } from "@react-icons/all-files/ai/AiOutlineUser";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
+import { AiOutlinePaperClip } from "@react-icons/all-files/ai/AiOutlinePaperClip";
 import { isValidHost } from "../../../microui/validator/host";
 import { isValidPort } from "../../../microui/validator/port";
 import { Button } from "../../../microui/component/Button";
@@ -22,6 +23,7 @@ interface ServerAddState {
     port: string;
     user: string;
     password: string;
+    alias: string;
 }
 
 export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
@@ -37,6 +39,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
             port: "22",
             user: "",
             password: "",
+            alias: "",
         };
     }
 
@@ -65,7 +68,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                 this.state.port,
                 this.state.user,
                 this.state.password,
-                "",
+                this.state.alias,
                 "",
                 false
             )
@@ -75,6 +78,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                         port: "22",
                         user: "",
                         password: "",
+                        alias: "",
                     });
                     this.goBack();
                 })
@@ -181,6 +185,20 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                         this.setState({ password: e.target.value });
                     }}
                     valid={passOK}
+                />
+                <Divider space={16} />
+                <Input
+                    type="text"
+                    outline="underline"
+                    size="large"
+                    label="Alias:"
+                    labelWidth={80}
+                    defaultValue={this.state.alias}
+                    icon={<AiOutlinePaperClip />}
+                    onChange={(e) => {
+                        this.setState({ alias: e.target.value });
+                    }}
+                    valid={userOK}
                 />
 
                 <Divider space={24} />

@@ -143,7 +143,7 @@ const SetPassword = observer((props: { onNext: () => void }) => {
                     text="Next"
                     disabled={!canNext}
                     ghost={true}
-                    style={{ marginLeft: AppConfig.get().margin }}
+                    style={{ width: 50 }}
                     onClick={() => props.onNext()}
                     onEnter={() => props.onNext()}
                 />
@@ -183,13 +183,14 @@ const TermsOfService = observer(
                     <Button
                         text="I decline"
                         ghost={true}
-                        style={{ marginRight: 16 }}
+                        style={{ marginRight: 16, width: 50 }}
                         onClick={() => props.onPrev()}
                         onEnter={() => props.onPrev()}
                     />
                     <Button
                         text="I agree"
                         ghost={true}
+                        style={{ width: 50 }}
                         onClick={() => props.onNext()}
                         onEnter={() => props.onNext()}
                     />
