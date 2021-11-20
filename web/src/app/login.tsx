@@ -117,7 +117,6 @@ export const Login = observer(() => {
                                 !data.user || !data.password || data.loading
                             }
                             ghost={true}
-                            style={{ marginLeft: AppConfig.get().margin }}
                             onClick={async () => {
                                 try {
                                     let ret = await AppUser.send(

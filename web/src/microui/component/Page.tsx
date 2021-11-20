@@ -1,5 +1,6 @@
 import React from "react";
 import { Theme, ThemeContext } from "../context/theme";
+import "../microui.css";
 
 interface PageProps {
     style?: React.CSSProperties;

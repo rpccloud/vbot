@@ -221,7 +221,7 @@ class InputCore extends React.Component<InputProps, InputState> {
         }
 
         const fontSize = getFontSize(this.props.size);
-        let height = Math.round(fontSize * 2.4);
+        let height = Math.round(fontSize * 2.3);
         let qrHeight = Math.round(height / 4);
         let innerMargin =
             this.props.innerMargin !== undefined
@@ -294,15 +294,15 @@ class InputCore extends React.Component<InputProps, InputState> {
         ) : null;
 
         const inputView = (
-            <form style={{ flex: 1 }}>
+            <form style={{ flex: 1, display: "flex", fontSize: "inherit" }}>
                 <input
                     ref={this.inputRef}
                     tabIndex={-1}
                     autoComplete="off"
                     style={{
-                        width: "100%",
+                        flex: 1,
                         outline: "none",
-                        minWidth: fontSize,
+                        fontSize: "inherit",
                         border: 0,
                         padding: 0,
                         cursor: this.state.focus ? "text" : "inherit",

@@ -173,7 +173,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
         }
 
         let fontSize = getFontSize(this.props.size || "medium");
-        let height = Math.round(fontSize * 2.4);
+        let height = Math.round(fontSize * 2.3);
         let qrHeight = Math.round(height / 4);
         let innerMargin =
             this.props.innerMargin !== undefined
@@ -224,7 +224,7 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                     color: color?.font,
                     fontSize: fontSize,
                     fontWeight: 600,
-                    padding: 0,
+                    padding: this.props.round ? 0 : padding,
                     backgroundColor: color?.background,
                     transition: makeTransition(
                         ["background", "color", "border", "box-shadow"],
@@ -294,7 +294,6 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                         justifyContent:
                             this.props.style?.justifyContent || "center",
                         alignItems: this.props.style?.alignItems || "center",
-                        padding: this.props.round ? 0 : padding,
                     }}
                 >
                     {this.props.icon}

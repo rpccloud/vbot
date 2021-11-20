@@ -451,7 +451,7 @@ export class TabBar extends React.Component<TabBarProps, TabBarState> {
         let height =
             this.props.height !== undefined
                 ? this.props.height
-                : Math.round(fontSize * 2.4);
+                : Math.round(fontSize * 2.3);
         let config: TabBarConfig = extendConfig(
             themeCache.getConfig(extendTheme(this.context, this.props.theme)),
             this.props.config
