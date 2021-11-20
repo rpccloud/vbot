@@ -76,6 +76,7 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                                         opacity: 0.85,
                                         justifyContent: "center",
                                         alignItems: "center",
+                                        background: `radial-gradient(circle farthest-side, ${ExtraColor.appBG}, ${ExtraColor.appDarkBG})`,
                                     }}
                                 >
                                     <Plugin
@@ -114,8 +115,8 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                     />
                 </FlexBox>
 
-                <FlexBox style={{ flex: 1, background: "gray" }}>
-                    {JSON.stringify(this.state.servers)}
+                <FlexBox style={{ flex: 1 }}>
+                    {/* {JSON.stringify(this.state.servers)} */}
                 </FlexBox>
             </FlexBox>
         );
