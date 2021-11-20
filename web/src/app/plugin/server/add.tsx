@@ -72,6 +72,8 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     type="text"
                     outline="underline"
                     size="large"
+                    label="Host:"
+                    labelWidth={80}
                     defaultValue={this.state.host}
                     placeholder="SSH host (192.168.0.1 or www.example.com)"
                     icon={<AiOutlineGlobal />}
@@ -85,6 +87,8 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     type="text"
                     outline="underline"
                     size="large"
+                    label="Port:"
+                    labelWidth={80}
                     defaultValue={this.state.port}
                     placeholder="SSH port (0 - 65535)"
                     icon={<AiOutlineAim />}
@@ -98,6 +102,8 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     type="text"
                     outline="underline"
                     size="large"
+                    label="UserName:"
+                    labelWidth={80}
                     defaultValue={this.state.user}
                     placeholder="SSH username"
                     icon={<AiOutlineUser />}
@@ -113,6 +119,8 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                     type="password"
                     outline="underline"
                     size="large"
+                    label="Password:"
+                    labelWidth={80}
                     defaultValue={this.state.password}
                     placeholder="SSH password"
                     icon={<AiOutlineLock />}

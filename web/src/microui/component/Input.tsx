@@ -58,6 +58,8 @@ let themeCache = new ThemeCache((theme) => ({
         border: theme.failed?.main,
         shadow: "transparent",
     },
+    labelColor: theme.primary?.main,
+    iconColor: theme.primary?.main,
     placeholderColor: theme.disabled?.contrastText,
     validateErrorColor: theme.failed?.main,
     transition: theme.transition,
@@ -83,6 +85,8 @@ export interface InputConfig {
     focus?: ComponentColor;
     successful?: ComponentColor;
     failed?: ComponentColor;
+    labelColor?: string;
+    iconColor?: string;
     placeholderColor?: string;
     validateErrorColor?: string;
     transition?: Transition;
@@ -96,6 +100,7 @@ interface InputProps {
     config: InputConfig;
     icon?: React.ReactNode;
     label: string;
+    labelWidth: "auto" | number;
     defaultValue: string;
     placeholder: string;
     focusable: boolean;
@@ -158,6 +163,7 @@ class InputCore extends React.Component<InputProps, InputState> {
         fontWeight: "normal",
         config: {},
         label: "",
+        labelWidth: "auto",
         defaultValue: "",
         placeholder: "",
         focusable: true,
@@ -220,6 +226,13 @@ class InputCore extends React.Component<InputProps, InputState> {
             color = config.successful;
         }
 
+        if (!this.props.validator(this.state.value) && color) {
+            color = { ...color, border: config.validateErrorColor };
+            if (color.shadow && color.shadow !== "transparent") {
+                color.shadow = config.validateErrorColor;
+            }
+        }
+
         const fontSize = getFontSize(this.props.size);
         let height = Math.round(fontSize * 2.3);
         let qrHeight = Math.round(height / 4);
@@ -268,9 +281,7 @@ class InputCore extends React.Component<InputProps, InputState> {
                     width: fontSize,
                     alignItems: "center",
                     justifyContent: "center",
-                    color: !this.props.validator(this.state.value)
-                        ? config.validateErrorColor
-                        : color?.font,
+                    color: config.iconColor,
                     marginRight: innerMargin,
                     transition: "inherit",
                 }}
@@ -282,11 +293,10 @@ class InputCore extends React.Component<InputProps, InputState> {
         const labelView = this.props.label ? (
             <div
                 style={{
-                    color: !this.props.validator(this.state.value)
-                        ? config.validateErrorColor
-                        : color?.font,
+                    color: config.labelColor,
                     marginRight: innerMargin,
                     transition: "inherit",
+                    width: this.props.labelWidth,
                 }}
             >
                 {this.props.label}

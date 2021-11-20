@@ -62,8 +62,9 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                         height: 50,
                         alignItems: "center",
                         background: ExtraColor.appBG,
+                        borderWidth: 0,
                         borderStyle: "solid",
-                        borderWidth: 1,
+                        borderBottomWidth: 1,
                         borderBottomColor: theme.default?.divider,
                     }}
                 >
@@ -73,7 +74,7 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                             return (
                                 <Page
                                     style={{
-                                        opacity: 0.75,
+                                        opacity: 0.85,
                                         justifyContent: "center",
                                         alignItems: "center",
                                     }}

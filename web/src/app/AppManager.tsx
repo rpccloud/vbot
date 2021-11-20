@@ -40,8 +40,8 @@ export class AppError {
 }
 
 export const ExtraColor = {
-    appDarkBG: "rgb(13,13,13)",
-    appBG: "rgba(35,35,35)",
+    appDarkBG: "rgb(20,20,20)",
+    appBG: "rgba(37,37,37)",
     appLightBG: "rgba(51,129,246)",
 };
 
@@ -53,7 +53,7 @@ export class AppConfig {
     margin: number;
     private theme: Theme = {
         default: {
-            pageBackground: "rgb(5, 5, 5)",
+            pageBackground: "rgb(14, 14, 14)",
             contrastText: "#FFFFFFD0",
             outline: "rgb(160, 160, 160)",
             divider: "rgb(80, 80, 80)",
