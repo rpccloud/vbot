@@ -100,8 +100,7 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
             <FlexBox
                 animated={true}
                 style={{
-                    width: 420,
-                    height: 380,
+                    width: 400,
                     flexFlow: "column",
                     padding: AppConfig.get().margin,
                     backgroundColor: ExtraColor.appBG,

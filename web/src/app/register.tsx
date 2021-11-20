@@ -161,7 +161,7 @@ const TermsOfService = observer(
                 animated={true}
                 style={{
                     width: 400,
-                    height: 300,
+                    height: 280,
                     flexFlow: "column",
                     padding: AppConfig.get().margin,
                     backgroundColor: ExtraColor.appBG,
