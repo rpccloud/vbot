@@ -76,7 +76,7 @@ export const Login = observer(() => {
                 <FlexBox
                     animated={true}
                     style={{
-                        width: 400,
+                        width: 380,
                         flexFlow: "column",
                         padding: AppConfig.get().margin,
                         backgroundColor: ExtraColor.appBG,
@@ -85,7 +85,7 @@ export const Login = observer(() => {
                     }}
                 >
                     <Span size="x-large">Login</Span>
-                    <Divider space={AppConfig.get().margin} />
+                    <Divider space={16} />
                     <Input
                         type="text"
                         outline="underline"
@@ -97,7 +97,7 @@ export const Login = observer(() => {
                             data.setUser(e.target.value);
                         }}
                     />
-                    <Divider space={AppConfig.get().margin} />
+                    <Divider space={16} />
                     <Input
                         type="password"
                         outline="underline"
@@ -109,7 +109,7 @@ export const Login = observer(() => {
                             data.setPassword(e.target.value);
                         }}
                     />
-                    <Divider space={AppConfig.get().margin} />
+                    <Divider space={24} />
                     <FlexBox flexFlow="row" justifyContent="flex-end">
                         <Button
                             text="Login"

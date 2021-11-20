@@ -7,61 +7,13 @@ import { Span } from "../../../microui/component/Span";
 import { Theme, ThemeContext } from "../../../microui/context/theme";
 import { AppConfig, ExtraColor } from "../../AppManager";
 
-// import { AiOutlineGlobal } from "@react-icons/all-files/ai/AiOutlineGlobal";
-// import { AiOutlineAim } from "@react-icons/all-files/ai/AiOutlineAim";
-// import { AiOutlineUser } from "@react-icons/all-files/ai/AiOutlineUser";
+import { AiOutlineGlobal } from "@react-icons/all-files/ai/AiOutlineGlobal";
+import { AiOutlineAim } from "@react-icons/all-files/ai/AiOutlineAim";
+import { AiOutlineUser } from "@react-icons/all-files/ai/AiOutlineUser";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { isValidHost } from "../../../microui/validator/host";
 import { isValidPort } from "../../../microui/validator/port";
 import { Button } from "../../../microui/component/Button";
-
-//             <Input
-//                 type="text"
-//                 size="medium"
-//                 placeholder="SSH Host (192.168.0.1 or www.example.com)"
-//                 defaultValue={data.host}
-//                 prefixIcon={<GlobalOutlined />}
-//                 onChange={(value) => {
-//                     data.setHost(value);
-//                 }}
-//                 validator={() => data.isValidHost}
-//             />
-//             <div style={{ height: 20 }} />
-//             <Input
-//                 type="text"
-//                 size="medium"
-//                 placeholder="SSH Port (0 - 65535)"
-//                 defaultValue={data.port}
-//                 prefixIcon={<AimOutlined />}
-//                 onChange={(value) => {
-//                     data.setPort(value);
-//                 }}
-//                 validator={() => data.isValidPort}
-//             />
-//             <div style={{ height: 20 }} />
-//             <Input
-//                 type="text"
-//                 size="medium"
-//                 placeholder="SSH Username"
-//                 defaultValue={data.user}
-//                 prefixIcon={<UserOutlined />}
-//                 onChange={(value) => {
-//                     data.setUser(value);
-//                 }}
-//                 validator={(v) => v !== ""}
-//             />
-//             <div style={{ height: 20 }} />
-//             <Input
-//                 type="password"
-//                 size="medium"
-//                 placeholder="SSH Password"
-//                 defaultValue={data.password}
-//                 prefixIcon={<LockOutlined />}
-//                 onChange={(value) => {
-//                     data.setPassword(value);
-//                 }}
-//                 validator={(v) => v !== ""}
-//             />
 
 interface ServerAddState {
     loading: boolean;
@@ -115,34 +67,62 @@ export class ServerAdd extends React.Component<PluginProps, ServerAddState> {
                 }}
             >
                 <Span size="x-large">Add Server</Span>
-                <Divider space={AppConfig.get().margin} />
+                <Divider space={16} />
                 <Input
                     type="text"
                     outline="underline"
                     size="large"
                     defaultValue={this.state.host}
-                    placeholder="SSH Host (192.168.0.1 or www.example.com)"
-                    icon={<AiOutlineLock />}
+                    placeholder="SSH host (192.168.0.1 or www.example.com)"
+                    icon={<AiOutlineGlobal />}
                     onChange={(e) => {
                         this.setState({ host: e.target.value });
                     }}
                     validator={isValidHost}
                 />
-                <Divider space={AppConfig.get().margin} />
+                <Divider space={16} />
                 <Input
                     type="text"
                     outline="underline"
                     size="large"
                     defaultValue={this.state.port}
-                    placeholder="SSH Port (0 - 65535)"
-                    icon={<AiOutlineLock />}
+                    placeholder="SSH port (0 - 65535)"
+                    icon={<AiOutlineAim />}
                     onChange={(e) => {
                         this.setState({ port: e.target.value });
                     }}
                     validator={isValidPort}
                 />
+                <Divider space={16} />
+                <Input
+                    type="text"
+                    outline="underline"
+                    size="large"
+                    defaultValue={this.state.user}
+                    placeholder="SSH username"
+                    icon={<AiOutlineUser />}
+                    onChange={(e) => {
+                        this.setState({ user: e.target.value });
+                    }}
+                    validator={(value) => {
+                        return value.length > 0;
+                    }}
+                />
+                <Divider space={16} />
+                <Input
+                    type="password"
+                    outline="underline"
+                    size="large"
+                    defaultValue={this.state.password}
+                    placeholder="SSH password"
+                    icon={<AiOutlineLock />}
+                    onChange={(e) => {
+                        this.setState({ password: e.target.value });
+                    }}
+                    validator={isValidPort}
+                />
 
-                <Divider space={AppConfig.get().margin} />
+                <Divider space={24} />
 
                 <FlexBox flexFlow="row" justifyContent="flex-end">
                     <Button

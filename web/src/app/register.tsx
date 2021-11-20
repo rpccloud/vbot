@@ -91,8 +91,8 @@ const SetPassword = observer((props: { onNext: () => void }) => {
         <FlexBox
             animated={true}
             style={{
-                width: 400,
-                height: 280,
+                width: 380,
+                height: 260,
                 flexFlow: "column",
                 padding: AppConfig.get().margin,
                 backgroundColor: ExtraColor.appBG,
@@ -101,7 +101,7 @@ const SetPassword = observer((props: { onNext: () => void }) => {
             }}
         >
             <Span size="x-large">Set admin password</Span>
-            <Divider space={AppConfig.get().margin} />
+            <Divider space={16} />
             <Input
                 type="password"
                 outline="underline"
@@ -113,7 +113,7 @@ const SetPassword = observer((props: { onNext: () => void }) => {
                     data.setPassword(e.target.value);
                 }}
             />
-            <Divider space={AppConfig.get().margin} />
+            <Divider space={16} />
             <Input
                 type="password"
                 outline="underline"
@@ -126,7 +126,7 @@ const SetPassword = observer((props: { onNext: () => void }) => {
                 }}
             />
 
-            <Divider space={AppConfig.get().margin} />
+            <Divider space={16} />
 
             <FlexBox style={{ flexFlow: "column", flex: 1 }}>
                 {errors.map((it) => {
@@ -160,8 +160,8 @@ const TermsOfService = observer(
             <FlexBox
                 animated={true}
                 style={{
-                    width: 400,
-                    height: 280,
+                    width: 380,
+                    height: 260,
                     flexFlow: "column",
                     padding: AppConfig.get().margin,
                     backgroundColor: ExtraColor.appBG,
@@ -171,13 +171,13 @@ const TermsOfService = observer(
             >
                 <Span size="x-large">Terms Of Service</Span>
 
-                <Divider space={AppConfig.get().margin} />
+                <Divider space={16} />
 
                 <FlexBox style={{ flex: 1, flexFlow: "column" }}>
                     <Span>TermsOfService</Span>
                 </FlexBox>
 
-                <Divider space={AppConfig.get().margin} />
+                <Divider space={24} />
 
                 <FlexBox style={{ justifyContent: "flex-end" }}>
                     <Button
