@@ -5,7 +5,7 @@ import { ThemeContext } from "../../microui/context/theme";
 import Footer from "./footer";
 import Header from "./header";
 import { Home } from "./home/home";
-import ServerAdd from "./server/add";
+import { ServerAdd } from "./server/add";
 import ServerDelete from "./server/delete";
 import { ServerList } from "./server/list";
 import ServerShow from "./server/show";
