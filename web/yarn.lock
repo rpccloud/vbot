@@ -10627,10 +10627,10 @@ rollup@^1.31.1:
     "@types/node" "*"
     acorn "^7.1.0"
 
-rpccloud-client-js@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/rpccloud-client-js/-/rpccloud-client-js-0.0.15.tgz#410a1cafe77bcaffeb0fc239c5847cb3f3a2c761"
-  integrity sha512-aS5BDu5OeCLpAjCke2SyTdGI8CYghQCLPsAwJzvgASaOrmXnZuY7/LtOqPGID0gtzbleyogEUddHvgkcN002VQ==
+rpccloud-client-js@^0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/rpccloud-client-js/-/rpccloud-client-js-0.0.16.tgz#2d4f176fd5cb254c4f43e06785b7c6bafbbcdb60"
+  integrity sha512-bcnCcyPKwNtuBjzxmUVgfQyZdfHmsagL2zMPThgS7kjdkxVZiXxknwuB0D7VL7LC8dTBu22mVnGji/DpcAW7JA==
 
 rsvp@^4.8.4:
   version "4.8.5"

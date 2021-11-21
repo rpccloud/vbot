@@ -18,18 +18,6 @@ function getSeed() {
     return seed++;
 }
 
-export class EventSubscription {
-    private id: string;
-    private eventName: string;
-    private handleID: number;
-
-    constructor(id: string, eventName: string, handleID: number) {
-        this.id = id;
-        this.eventName = eventName;
-        this.handleID = handleID;
-    }
-}
-
 export class EventListener {
     private channelID: string;
     private eventName: string;

@@ -20,7 +20,7 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-scripts": "4.0.3",
-        "rpccloud-client-js": "^0.0.15",
+        "rpccloud-client-js": "^0.0.16",
         "typescript": "^4.1.2",
         "xterm": "^4.14.1",
         "xterm-addon-fit": "^0.5.0"

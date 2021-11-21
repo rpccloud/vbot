@@ -15,7 +15,7 @@ import { Span } from "../../../microui/component/Span";
 
 interface ServerListState {
     loading: boolean;
-    servers: object[];
+    servers: any[];
 }
 
 export class ServerList extends React.Component<PluginProps, ServerListState> {
@@ -134,9 +134,9 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                     {this.state.servers.map((it) => {
                         return (
                             <FlexBox
+                                key={it.id}
                                 style={{
                                     width: 140,
-                                    height: 100,
                                     margin: 12,
                                     flexFlow: "column",
                                     alignItems: "center",
@@ -153,10 +153,12 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                                     style={{
                                         fontWeight: 400,
                                         maxWidth: 140,
+                                        height: 40,
                                         overflowWrap: "break-word",
+                                        overflowY: "hidden",
                                     }}
                                 >
-                                    <Span>{(it as any).name}</Span>
+                                    <Span>{it.name}</Span>
                                 </div>
                             </FlexBox>
                         );
