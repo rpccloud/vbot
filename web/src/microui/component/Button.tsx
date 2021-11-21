@@ -117,6 +117,7 @@ interface ButtonProps {
     style?: CSSProperties;
     onClick: (e: React.MouseEvent<HTMLDivElement>) => void;
     onEnter: () => void;
+    render?: (color?: ComponentColor) => React.ReactNode;
 }
 
 interface ButtonState {
@@ -298,17 +299,23 @@ class ButtonCore extends React.Component<ButtonProps, ButtonState> {
                         alignItems: this.props.style?.alignItems || "center",
                     }}
                 >
-                    {this.props.icon}
-                    <span
-                        style={{
-                            width:
-                                this.props.icon && this.props.text
-                                    ? innerMargin
-                                    : 0,
-                            height: 0,
-                        }}
-                    />
-                    {this.props.text}
+                    {this.props.render ? (
+                        this.props.render(color)
+                    ) : (
+                        <>
+                            {this.props.icon}
+                            <span
+                                style={{
+                                    width:
+                                        this.props.icon && this.props.text
+                                            ? innerMargin
+                                            : 0,
+                                    height: 0,
+                                }}
+                            />
+                            {this.props.text}
+                        </>
+                    )}
                 </div>
             </div>
         );

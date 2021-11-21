@@ -12,6 +12,7 @@ import { Page } from "../../../microui/component/Page";
 
 import { RiComputerLine } from "@react-icons/all-files/ri/RiComputerLine";
 import { Span } from "../../../microui/component/Span";
+import { Divider } from "../../../microui/component/Divider";
 
 interface ServerListState {
     loading: boolean;
@@ -54,6 +55,92 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
 
     componentDidMount() {
         this.updateServers();
+    }
+
+    renderServers() {
+        const theme: Theme = this.context;
+        return (
+            <FlexBox
+                style={{
+                    flex: 1,
+                    padding: 12,
+                    flexFlow: "row",
+                    alignItems: "baseline",
+                    justifyContent: "flex-start",
+                    alignContent: "flex-start",
+                    flexWrap: "wrap",
+                    overflowY: "auto",
+                }}
+            >
+                {this.state.servers.map((it) => {
+                    return (
+                        <Button
+                            key={it.id}
+                            style={{
+                                width: 120,
+                                height: 120,
+                                margin: 12,
+                            }}
+                            config={{
+                                primary: {
+                                    font: theme.primary?.contrastText,
+                                    background: "transparent",
+                                    border: "transparent",
+                                },
+                                hover: {
+                                    font: theme.hover?.main,
+                                    background: "transparent",
+                                    border: "transparent",
+                                },
+                                highlight: {
+                                    font: theme.highlight?.main,
+                                    background: "transparent",
+                                    border: theme.highlight?.main,
+                                    shadow: "transparent",
+                                },
+                                focus: {
+                                    background: "transparent",
+                                    // border: "transparent",
+                                },
+                            }}
+                            render={(color) => {
+                                return (
+                                    <FlexBox
+                                        style={{
+                                            flexFlow: "column",
+                                            alignItems: "center",
+                                            flex: 1,
+                                        }}
+                                    >
+                                        <RiComputerLine
+                                            color="rgb(40,80,160)"
+                                            style={{
+                                                width: 54,
+                                                height: 54,
+                                            }}
+                                        />
+                                        <Divider space={6} />
+                                        <div
+                                            style={{
+                                                fontWeight: 400,
+                                                maxWidth: 120,
+                                                height: 36,
+                                                overflowWrap: "break-word",
+                                                overflowY: "hidden",
+                                            }}
+                                        >
+                                            <Span color={color?.font}>
+                                                {it.name}
+                                            </Span>
+                                        </div>
+                                    </FlexBox>
+                                );
+                            }}
+                        ></Button>
+                    );
+                })}
+            </FlexBox>
+        );
     }
 
     render() {
@@ -119,51 +206,7 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                     />
                 </FlexBox>
 
-                <FlexBox
-                    style={{
-                        flex: 1,
-                        padding: 12,
-                        flexFlow: "row",
-                        alignItems: "baseline",
-                        justifyContent: "flex-start",
-                        alignContent: "flex-start",
-                        flexWrap: "wrap",
-                        overflowY: "auto",
-                    }}
-                >
-                    {this.state.servers.map((it) => {
-                        return (
-                            <FlexBox
-                                key={it.id}
-                                style={{
-                                    width: 140,
-                                    margin: 12,
-                                    flexFlow: "column",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <RiComputerLine
-                                    color="rgb(40,80,160)"
-                                    style={{
-                                        width: 60,
-                                        height: 60,
-                                    }}
-                                />
-                                <div
-                                    style={{
-                                        fontWeight: 400,
-                                        maxWidth: 140,
-                                        height: 40,
-                                        overflowWrap: "break-word",
-                                        overflowY: "hidden",
-                                    }}
-                                >
-                                    <Span>{it.name}</Span>
-                                </div>
-                            </FlexBox>
-                        );
-                    })}
-                </FlexBox>
+                {this.renderServers()}
             </FlexBox>
         );
     }

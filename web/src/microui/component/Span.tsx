@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { SizeContext } from "../context/size";
 import { Theme, ThemeContext } from "../context/theme";
 
-import { getFontSize, Size } from "../util";
+import { getFontSize, makeTransition, Size } from "../util";
 
 interface SpanProps {
     children?: React.ReactNode;
@@ -33,6 +33,11 @@ class SpanCore extends React.Component<SpanProps, SpanState> {
                     padding: 0,
                     margin: 0,
                     border: 0,
+                    transition: makeTransition(
+                        ["color"],
+                        theme.transition?.durationMS + "ms",
+                        theme.transition?.easing
+                    ),
                     ...this.props.style,
                 }}
             >
