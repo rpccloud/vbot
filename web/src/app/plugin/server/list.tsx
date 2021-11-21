@@ -84,22 +84,22 @@ export class ServerList extends React.Component<PluginProps, ServerListState> {
                             config={{
                                 primary: {
                                     font: theme.primary?.contrastText,
-                                    background: "transparent",
-                                    border: "transparent",
+                                    background: ExtraColor.appBG,
+                                    border: theme.primary?.contrastText,
                                 },
                                 hover: {
-                                    font: theme.hover?.main,
-                                    background: "transparent",
-                                    border: "transparent",
+                                    font: theme.hover?.contrastText,
+                                    background: ExtraColor.appLightBG,
+                                    border: theme.hover?.main,
                                 },
                                 highlight: {
-                                    font: theme.highlight?.main,
-                                    background: "transparent",
+                                    font: theme.highlight?.contrastText,
+                                    background: ExtraColor.appLightBG,
                                     border: theme.highlight?.main,
-                                    shadow: "transparent",
+                                    shadow: theme.highlight?.main,
                                 },
                                 focus: {
-                                    background: "transparent",
+                                    // background: "transparent",
                                     // border: "transparent",
                                 },
                             }}
