@@ -11,8 +11,10 @@ import Debug from "./debug";
 import { Start } from "./start";
 import { RPCAny } from "rpccloud-client-js/build/types";
 import { Theme, ThemeContext } from "../microui/context/theme";
+import { NuiDebug } from "../nui/debug";
 
 const routeMap: Map<string, React.ReactNode> = new Map([
+    ["nui", <NuiDebug />],
     ["start", <Start />],
     ["main", <Main />],
     ["login", <Login />],
