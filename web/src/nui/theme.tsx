@@ -5,8 +5,14 @@ export interface Theme {
     palette: {
         primary: {
             main: string;
-            hover: string;
-            active: string;
+            contrastText: string;
+        };
+        hover: {
+            main: string;
+            contrastText: string;
+        };
+        active: {
+            main: string;
             contrastText: string;
         };
         focus: {
@@ -49,9 +55,15 @@ export const ThemeContext = React.createContext<Theme>({
     palette: {
         primary: {
             main: "#cc7e00",
-            hover: "#ff9c00",
-            active: "#ffb133",
             contrastText: "#FFFFFFB0",
+        },
+        hover: {
+            main: "#ff9c00",
+            contrastText: "#FFFFFFD0",
+        },
+        active: {
+            main: "#ffb133",
+            contrastText: "#FFFFFFFF",
         },
         focus: {
             main: "#ffa733",

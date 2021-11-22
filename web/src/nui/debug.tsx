@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./components/Button";
 import { Page } from "./components/Page";
+import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 
 interface DebugProps {}
 
@@ -15,7 +16,7 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
     render() {
         return (
             <Page>
-                <Button label="test" />
+                <Button icon={<AiOutlineLock />} round={true} />
             </Page>
         );
     }

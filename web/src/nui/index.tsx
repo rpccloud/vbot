@@ -11,15 +11,15 @@ export interface Rect {
 }
 
 const cfgFontSize = {
-    "xxx-small": 5,
+    "xxx-small": 6,
     "xx-small": 8,
-    "x-small": 11,
-    small: 14,
-    medium: 16,
-    large: 20,
-    "x-large": 32,
-    "xx-large": 64,
-    "xxx-large": 128,
+    "x-small": 10,
+    small: 12,
+    medium: 14,
+    large: 16,
+    "x-large": 20,
+    "xx-large": 32,
+    "xxx-large": 64,
 };
 
 export type FontWeight = "normal" | "bold" | "bolder" | "lighter";
