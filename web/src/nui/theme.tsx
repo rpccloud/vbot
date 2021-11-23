@@ -3,7 +3,7 @@ import { FontWeight, Size } from ".";
 
 export interface Theme {
     palette: {
-        primary: {
+        normal: {
             main: string;
             contrastText: string;
         };
@@ -53,7 +53,7 @@ export interface Theme {
 
 export const ThemeContext = React.createContext<Theme>({
     palette: {
-        primary: {
+        normal: {
             main: "#cc7e00",
             contrastText: "#FFFFFFB0",
         },

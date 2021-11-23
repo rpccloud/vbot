@@ -14,9 +14,22 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
     }
 
     render() {
+        let array: number[] = [];
+        for (let i = 0; i < 10; i++) {
+            array.push(i);
+        }
         return (
-            <Page>
-                <Button icon={<AiOutlineLock />} round={true} />
+            <Page background="white">
+                {array.map((it, index) => {
+                    return (
+                        <Button
+                            key={it}
+                            round={true}
+                            icon={<AiOutlineLock />}
+                            ghost={index % 2 === 0}
+                        />
+                    );
+                })}
             </Page>
         );
     }

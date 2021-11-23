@@ -1,8 +1,10 @@
 import React from "react";
+import { withDefault } from "..";
 import { Theme, ThemeContext } from "../theme";
 
 interface PageProps {
     children?: React.ReactNode;
+    background?: string;
 }
 
 interface PageState {}
@@ -17,16 +19,20 @@ export class Page extends React.Component<PageProps, PageState> {
 
     render() {
         const theme: Theme = this.context;
+        const background = withDefault(
+            this.props.background,
+            theme.palette.background
+        );
 
         const body = document.body;
         body.style.padding = "0px";
         body.style.margin = "0px";
-        body.style.backgroundColor = theme.palette.background;
+        body.style.backgroundColor = background;
 
         return (
             <div
                 style={{
-                    background: theme.palette.background,
+                    background: background,
                     display: "flex",
                     width: "100vw",
                     height: "100vh",

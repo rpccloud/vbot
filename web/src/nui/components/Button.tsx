@@ -6,22 +6,23 @@ import { Theme, ThemeContext } from "../theme";
 export type ButtonPalette = {
     icon?: string;
     label?: string;
-    background?: string;
-    hoverBackground?: string;
-    activeBackground?: string;
     border?: string;
-    outline?: string;
     shadow?: string;
 };
 
 export type ButtonCurrentState = {
-    isGhost: boolean;
     isHover: boolean;
     isActive: boolean;
     isFocus: boolean;
     isSelected: boolean;
     isLoading: boolean;
 };
+
+interface ButtonBackground {
+    normal?: string;
+    hover?: string;
+    active?: string;
+}
 
 interface ButtonProps {
     icon?: React.ReactNode;
@@ -51,22 +52,18 @@ interface ButtonProps {
     ) => ButtonPalette;
     renderBackground?: (
         theme: Theme,
-        palette: ButtonPalette,
         currentState: ButtonCurrentState
     ) => React.ReactNode;
     renderFocus?: (
         theme: Theme,
-        palette: ButtonPalette,
         currentState: ButtonCurrentState
     ) => React.ReactNode;
     renderHover?: (
         theme: Theme,
-        palette: ButtonPalette,
         currentState: ButtonCurrentState
     ) => React.ReactNode;
     renderActive?: (
         theme: Theme,
-        palette: ButtonPalette,
         currentState: ButtonCurrentState
     ) => React.ReactNode;
     renderContent?: (
@@ -134,37 +131,25 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     ): ButtonPalette {
         const palette = theme.palette;
         let ret = {
-            icon: palette.primary.contrastText,
-            label: palette.primary.contrastText,
-            background: palette.primary.main,
-            hoverBackground: "transparent",
-            activeBackground: "transparent",
-            border: palette.primary.main,
-            outline: "transparent",
+            icon: palette.normal.contrastText,
+            label: palette.normal.contrastText,
+            border: palette.normal.main,
             shadow: "transparent",
         };
-        if (currentState.isFocus) {
-            ret.outline = palette.focus.main;
-        }
         if (currentState.isHover) {
             ret.icon = palette.hover.contrastText;
             ret.label = palette.hover.contrastText;
-            ret.hoverBackground = palette.hover.main;
             ret.border = palette.hover.main;
-            ret.outline = "transparent";
         }
         if (currentState.isActive) {
             ret.icon = palette.active.contrastText;
             ret.label = palette.active.contrastText;
-            ret.activeBackground = palette.active.main;
             ret.border = palette.active.main;
             ret.shadow = palette.active.main;
-            ret.outline = "transparent";
         }
         if (currentState.isSelected) {
             ret.icon = palette.selected.contrastText;
             ret.label = palette.selected.contrastText;
-            ret.background = palette.selected.main;
             ret.border = palette.selected.main;
         }
         return ret;
@@ -176,30 +161,21 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     ): ButtonPalette {
         const palette = theme.palette;
         let ret = {
-            icon: palette.primary.main,
-            label: palette.primary.main,
-            background: "transparent",
-            hoverBackground: "transparent",
-            activeBackground: "transparent",
-            border: palette.primary.main,
-            outline: "transparent",
+            icon: palette.normal.main,
+            label: palette.normal.main,
+            border: palette.normal.main,
             shadow: "transparent",
         };
-        if (currentState.isFocus) {
-            ret.outline = palette.focus.main;
-        }
         if (currentState.isHover) {
             ret.icon = palette.hover.main;
             ret.label = palette.hover.main;
             ret.border = palette.hover.main;
-            ret.outline = "transparent";
         }
         if (currentState.isActive) {
             ret.icon = palette.active.main;
             ret.label = palette.active.main;
             ret.border = palette.active.main;
             ret.shadow = palette.active.main;
-            ret.outline = "transparent";
         }
         if (currentState.isSelected) {
             ret.icon = palette.selected.main;
@@ -274,7 +250,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private getCurrentState = (): ButtonCurrentState => ({
-        isGhost: this.props.ghost,
         isHover: this.state.hover,
         isActive: this.state.active,
         isFocus: this.state.focus,
@@ -284,11 +259,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     private renderBackground = (
         theme: Theme,
-        palette: ButtonPalette,
         currentState: ButtonCurrentState
     ): React.ReactNode => {
         if (this.props.renderBackground) {
-            return this.props.renderBackground(theme, palette, currentState);
+            return this.props.renderBackground(theme, currentState);
         } else {
             return (
                 <div
@@ -298,7 +272,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         top: 0,
                         right: 0,
                         bottom: 0,
-                        backgroundColor: palette.background,
+                        opacity: this.props.ghost ? 0 : 1,
+                        backgroundColor: theme.palette.normal.main,
                     }}
                 />
             );
@@ -307,19 +282,19 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     private renderHover = (
         theme: Theme,
-        palette: ButtonPalette,
         currentState: ButtonCurrentState
     ): React.ReactNode => {
         if (this.props.renderHover) {
-            return this.props.renderHover(theme, palette, currentState);
+            return this.props.renderHover(theme, currentState);
         } else {
+            const showOpacity = this.props.ghost ? 0.15 : 1;
             return (
                 <div
                     style={{
                         position: "absolute",
                         inset: 0,
-                        opacity: this.state.hover ? 1 : 0,
-                        backgroundColor: palette.hoverBackground,
+                        opacity: this.state.hover ? showOpacity : 0,
+                        backgroundColor: theme.palette.hover.main,
                     }}
                 />
             );
@@ -328,19 +303,19 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     private renderActive = (
         theme: Theme,
-        palette: ButtonPalette,
         currentState: ButtonCurrentState
     ): React.ReactNode => {
         if (this.props.renderActive) {
-            return this.props.renderActive(theme, palette, currentState);
+            return this.props.renderActive(theme, currentState);
         } else {
+            const showOpacity = this.props.ghost ? 0.1 : 1;
             return (
                 <div
                     style={{
                         position: "absolute",
                         inset: 0,
-                        opacity: this.state.active ? 1 : 0,
-                        backgroundColor: palette.activeBackground,
+                        opacity: this.state.active ? showOpacity : 0,
+                        backgroundColor: theme.palette.active.main,
                     }}
                 />
             );
@@ -349,11 +324,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     private renderFocus = (
         theme: Theme,
-        palette: ButtonPalette,
         currentState: ButtonCurrentState
     ): React.ReactNode => {
         if (this.props.renderActive) {
-            return this.props.renderActive(theme, palette, currentState);
+            return this.props.renderActive(theme, currentState);
         } else {
             return (
                 <div
@@ -361,7 +335,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         position: "absolute",
                         inset: 2,
                         opacity: this.state.focus ? 1 : 0,
-                        border: `1px dash ${palette.outline}`,
+                        border: `1px dash ${theme.palette.focus.main}`,
                     }}
                 />
             );
@@ -505,6 +479,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 onClick={this.onClick}
                 onKeyPress={this.onKeyPress}
                 style={{
+                    display: "block",
                     height: this.height,
                     borderStyle: "solid",
                     borderWidth: this.props.border ? 1 : 0,
@@ -524,10 +499,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         position: "relative",
                     }}
                 >
-                    {this.renderBackground(theme, palette, currentState)}
-                    {this.renderFocus(theme, palette, currentState)}
-                    {this.renderHover(theme, palette, currentState)}
-                    {this.renderActive(theme, palette, currentState)}
+                    {this.renderBackground(theme, currentState)}
+                    {this.renderFocus(theme, currentState)}
+                    {this.renderHover(theme, currentState)}
+                    {this.renderActive(theme, currentState)}
                 </div>
 
                 <div
