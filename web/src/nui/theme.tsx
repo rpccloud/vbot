@@ -3,7 +3,11 @@ import { FontWeight, Size } from ".";
 
 export interface Theme {
     palette: {
-        normal: {
+        default: {
+            main: string;
+            contrastText: string;
+        };
+        primary: {
             main: string;
             contrastText: string;
         };
@@ -12,10 +16,6 @@ export interface Theme {
             contrastText: string;
         };
         active: {
-            main: string;
-            contrastText: string;
-        };
-        focus: {
             main: string;
             contrastText: string;
         };
@@ -35,10 +35,14 @@ export interface Theme {
             main: string;
             contrastText: string;
         };
+        focus: string;
         outline: string;
         shadow: string;
         divider: string;
-        background: string;
+    };
+    ghostButton: {
+        hoverOpacity: number;
+        activeOpacity: number;
     };
     transition: {
         durationMS: number;
@@ -53,21 +57,21 @@ export interface Theme {
 
 export const ThemeContext = React.createContext<Theme>({
     palette: {
-        normal: {
-            main: "#cc7e00",
+        default: {
+            main: "rgb(25, 25, 25)",
             contrastText: "#FFFFFFB0",
         },
-        hover: {
+        primary: {
             main: "#ff9c00",
             contrastText: "#FFFFFFD0",
+        },
+        hover: {
+            main: "#cc7e00",
+            contrastText: "#FFFFFFB0",
         },
         active: {
             main: "#ffb133",
             contrastText: "#FFFFFFFF",
-        },
-        focus: {
-            main: "#ffa733",
-            contrastText: "#FFFFFFD0",
         },
         error: {
             main: "rgb(235, 0, 20)",
@@ -85,10 +89,14 @@ export const ThemeContext = React.createContext<Theme>({
             main: "#555",
             contrastText: "#808080C0",
         },
-        background: "rgb(25, 25, 25)",
-        shadow: "rgb(200,200,200)",
+        focus: "#8A2BE2",
+        shadow: "rgb(0,0,0, 0.3)",
         outline: "rgb(160, 160, 160)",
         divider: "rgb(80, 80, 80)",
+    },
+    ghostButton: {
+        hoverOpacity: 0.15,
+        activeOpacity: 0.15,
     },
     transition: {
         durationMS: 300,

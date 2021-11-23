@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "./components/Button";
 import { Page } from "./components/Page";
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
+import { Divider } from "../microui/component/Divider";
 
 interface DebugProps {}
 
@@ -14,22 +15,45 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
     }
 
     render() {
-        let array: number[] = [];
-        for (let i = 0; i < 10; i++) {
-            array.push(i);
-        }
         return (
-            <Page background="white">
-                {array.map((it, index) => {
-                    return (
-                        <Button
-                            key={it}
-                            round={true}
-                            icon={<AiOutlineLock />}
-                            ghost={index % 2 === 0}
-                        />
-                    );
-                })}
+            <Page background={"#fff"}>
+                <div style={{ display: "flex", margin: 10 }}>
+                    <Button
+                        // icon={<AiOutlineLock />}
+                        label="H"
+                        round={true}
+                        ghost={true}
+                    />
+                    <Button
+                        icon={<AiOutlineLock />}
+                        round={false}
+                        ghost={true}
+                    />
+                    <Button
+                        icon={<AiOutlineLock />}
+                        round={true}
+                        ghost={false}
+                    />
+                    <Button
+                        icon={<AiOutlineLock />}
+                        round={false}
+                        ghost={false}
+                    />
+                    <Divider type="vertical" space={10} />
+                    <Button
+                        icon={<AiOutlineLock />}
+                        round={false}
+                        ghost={false}
+                        config={{
+                            border: {
+                                hover: "red",
+                                active: "green",
+                            },
+                        }}
+                        label="Test"
+                        labelSize="large"
+                    />
+                </div>
             </Page>
         );
     }

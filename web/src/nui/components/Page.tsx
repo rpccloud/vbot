@@ -21,7 +21,7 @@ export class Page extends React.Component<PageProps, PageState> {
         const theme: Theme = this.context;
         const background = withDefault(
             this.props.background,
-            theme.palette.background
+            theme.palette.default.main
         );
 
         const body = document.body;
