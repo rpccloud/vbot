@@ -34,6 +34,7 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
                         round={true}
                         ghost={false}
                     />
+                    <Divider type="vertical" space={10} />
                     <Button
                         icon={<AiOutlineLock />}
                         round={false}
@@ -43,7 +44,8 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
                     <Button
                         icon={<AiOutlineLock />}
                         round={false}
-                        ghost={false}
+                        ghost={true}
+                        border={false}
                         config={{
                             border: {
                                 hover: "red",

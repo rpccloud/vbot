@@ -369,57 +369,22 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     ): React.ReactNode => {
         if (this.props.renderContent) {
             return this.props.renderContent(theme, config, actionState);
-        } else if (this.props.round) {
-            return (
-                <div
-                    style={{
-                        display: "flex",
-                        height: "100%",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexFlow: "row",
-                        userSelect: "none",
-                        transition: "inherit",
-                    }}
-                >
-                    <div
-                        style={{
-                            display: this.props.icon ? "block" : "none",
-                            color: getStateColor(config.icon, actionState),
-                            width: this.iconFontSize,
-                            height: this.iconFontSize,
-                            fontSize: this.iconFontSize,
-                            transition: "inherit",
-                        }}
-                    >
-                        {this.props.icon}
-                    </div>
-                    <span
-                        style={{
-                            display: this.props.label ? "block" : "none",
-                            color: getStateColor(config.label, actionState),
-                            fontSize: this.labelFontSize,
-                            whiteSpace: "nowrap",
-                            transition: "inherit",
-                        }}
-                    >
-                        {this.props.label}
-                    </span>
-                </div>
-            );
         } else {
             const makeSpacerStyle = (
+                display: boolean,
                 value: number | undefined,
                 defaultValue: number
             ): React.CSSProperties => {
                 if (value !== undefined) {
                     return {
                         flex: 0,
+                        display: display ? "flex" : "none",
                         minWidth: value,
                     };
                 } else {
                     return {
                         flex: "1 0 0",
+                        display: display ? "block" : "none",
                         minWidth: defaultValue,
                     };
                 }
@@ -431,13 +396,20 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         display: "flex",
                         height: "100%",
                         alignItems: "center",
+                        justifyContent: this.props.round
+                            ? "center"
+                            : "flex-start",
                         flexFlow: "row",
                         userSelect: "none",
                         transition: "inherit",
                     }}
                 >
                     <div
-                        style={makeSpacerStyle(this.props.leftMargin, h / 4)}
+                        style={makeSpacerStyle(
+                            !this.props.round,
+                            this.props.leftMargin,
+                            h / 4
+                        )}
                     />
                     <div
                         style={{
@@ -453,11 +425,13 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     </div>
                     <div
                         style={{
-                            display:
-                                this.props.icon && this.props.label
-                                    ? "display"
-                                    : "none",
-                            ...makeSpacerStyle(this.props.middleMargin, h / 8),
+                            ...makeSpacerStyle(
+                                !this.props.round &&
+                                    !!this.props.icon &&
+                                    !!this.props.label,
+                                this.props.middleMargin,
+                                h / 8
+                            ),
                         }}
                     />
                     <span
@@ -472,7 +446,11 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         {this.props.label}
                     </span>
                     <div
-                        style={makeSpacerStyle(this.props.rightMargin, h / 4)}
+                        style={makeSpacerStyle(
+                            !this.props.round,
+                            this.props.rightMargin,
+                            h / 4
+                        )}
                     />
                 </div>
             );
@@ -490,7 +468,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         );
         this.height = withDefault(
             this.props.height,
-            Math.round(Math.max(this.iconFontSize, this.labelFontSize) * 2)
+            Math.round(Math.max(this.iconFontSize, this.labelFontSize) * 2.3)
         );
 
         const config: ButtonConfig = extendConfig(
