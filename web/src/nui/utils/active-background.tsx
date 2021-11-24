@@ -1,5 +1,5 @@
 import { range } from "..";
-import { makeTransition } from "../../microui/util";
+import { makeTransition } from "..";
 import { PointerManager } from "./pointer-manager";
 
 export class ActionBackground {
@@ -73,17 +73,18 @@ export class ActionBackground {
                 this.hoverElement = document.createElement("div");
                 this.hoverElement.style.position = "absolute";
                 this.hoverElement.style.inset = "0px";
-                this.hoverElement.style.transition = makeTransition(
-                    ["opacity", "transform"],
-                    transaction.durationMS + "ms",
-                    transaction.easing
-                );
                 this.hoverElement.style.opacity = "0";
                 this.hoverElement.style.transform = hasScaleEffect
                     ? "scale(0)"
                     : "scale(1)";
                 this.root.appendChild(this.hoverElement);
             }
+
+            this.hoverElement.style.transition = makeTransition(
+                ["opacity", "transform"],
+                transaction.durationMS + "ms",
+                transaction.easing
+            );
 
             this.prepareEffect(
                 this.hoverElement,
@@ -95,6 +96,64 @@ export class ActionBackground {
             this.flush();
         }
     }
+
+    public setActive(
+        active: boolean,
+        color: string,
+        activeOpacity: number,
+        hasScaleEffect: boolean,
+        transaction: { durationMS: number; easing: string }
+    ) {
+        if (this.active !== active) {
+            this.active = active;
+            this.activeOpacity = activeOpacity;
+            this.hasActiveScaleEffect = hasScaleEffect;
+
+            if (!this.activeElement) {
+                this.activeElement = document.createElement("div");
+                this.activeElement.style.position = "absolute";
+                this.activeElement.style.inset = "0px";
+                this.activeElement.style.opacity = "0";
+                this.activeElement.style.transform = hasScaleEffect
+                    ? "scale(0)"
+                    : "scale(1)";
+                this.root.appendChild(this.activeElement);
+            }
+
+            this.activeElement.style.transition = makeTransition(
+                ["opacity", "transform"],
+                transaction.durationMS + "ms",
+                transaction.easing
+            );
+
+            this.prepareEffect(
+                this.activeElement,
+                color,
+                hasScaleEffect,
+                !active
+            );
+
+            this.flush();
+        }
+    }
+
+    // private initialElements(transaction: {}) {
+    //     const createElement = () => {
+    //         const elem = document.createElement("div");
+    //         elem.style.position = "absolute";
+    //         elem.style.inset = "0px";
+    //         elem.style.transition = makeTransition(
+    //             ["opacity", "transform"],
+    //             transaction.durationMS + "ms",
+    //             transaction.easing
+    //         );
+    //         this.activeElement.style.opacity = "0";
+    //         this.activeElement.style.transform = hasScaleEffect
+    //             ? "scale(0)"
+    //             : "scale(1)";
+    //         this.root.appendChild(this.activeElement);
+    //     };
+    // }
 
     private flush() {
         if (this.hoverElement) {
@@ -112,7 +171,7 @@ export class ActionBackground {
         if (this.activeElement) {
             if (this.active) {
                 this.activeElement.style.transform = "scale(1)";
-                this.activeElement.style.opacity = `${this.hoverOpacity}`;
+                this.activeElement.style.opacity = `${this.activeOpacity}`;
             } else {
                 if (this.hasActiveScaleEffect) {
                     this.activeElement.style.transform = "scale(0)";

@@ -91,8 +91,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         selected: false,
         focusable: true,
         shadowEffect: true,
-        hoverEffect: false,
-        activeEffect: false,
+        hoverEffect: true,
+        activeEffect: true,
         onClick: () => {},
     };
 
@@ -182,7 +182,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private checkHover = (e: React.MouseEvent<HTMLDivElement>) => {
-        // console.log(window.event);
         const theme: Theme = this.context;
         this.actionSonar?.checkHover(
             () => {
@@ -191,13 +190,19 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     true,
                     this.config?.background?.hover || "transparent",
                     this.props.ghost ? theme.ghostButton.hoverOpacity : 1,
-                    true,
+                    this.props.hoverEffect,
                     theme.transition
                 );
             },
             () => {
                 this.setState({ hover: false });
-                this.background?.setHover(false, "", 0, true, theme.transition);
+                this.background?.setHover(
+                    false,
+                    "",
+                    0,
+                    this.props.hoverEffect,
+                    theme.transition
+                );
             }
         );
     };
@@ -216,12 +221,28 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private checkActive = () => {
+        const theme: Theme = this.context;
+
         this.actionSonar?.checkActive(
             () => {
                 this.setState({ active: true });
+                this.background?.setActive(
+                    true,
+                    this.config?.background?.active || "transparent",
+                    this.props.ghost ? theme.ghostButton.activeOpacity : 1,
+                    this.props.activeEffect,
+                    theme.transition
+                );
             },
             () => {
                 this.setState({ active: false });
+                this.background?.setActive(
+                    false,
+                    this.config?.background?.active || "transparent",
+                    this.props.ghost ? theme.ghostButton.activeOpacity : 1,
+                    this.props.activeEffect,
+                    theme.transition
+                );
             }
         );
     };
