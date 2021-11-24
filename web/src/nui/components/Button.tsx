@@ -47,26 +47,6 @@ interface ButtonProps {
     middleMargin?: number;
     rightMargin?: number;
     onClick: (e: React.MouseEvent<HTMLDivElement>) => Promise<boolean>;
-    renderBackground?: (
-        theme: Theme,
-        config: ButtonConfig,
-        actionState: ActionState
-    ) => React.ReactNode;
-    renderFocus?: (
-        theme: Theme,
-        config: ButtonConfig,
-        actionState: ActionState
-    ) => React.ReactNode;
-    renderHover?: (
-        theme: Theme,
-        config: ButtonConfig,
-        actionState: ActionState
-    ) => React.ReactNode;
-    renderActive?: (
-        theme: Theme,
-        config: ButtonConfig,
-        actionState: ActionState
-    ) => React.ReactNode;
     renderContent?: (
         theme: Theme,
         config: ButtonConfig,
@@ -98,6 +78,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     private config?: ButtonConfig;
     private height = 0;
+    private borderRadius = 0;
     private iconFontSize = 0;
     private labelFontSize = 0;
     private rootRef = React.createRef<HTMLDivElement>();
@@ -208,13 +189,30 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private checkFocus = () => {
+        const theme: Theme = this.context;
         if (this.canFocus()) {
             this.actionSonar?.checkFocus(
                 () => {
                     this.setState({ focus: true });
+                    this.background?.setFocus(
+                        true,
+                        theme.palette.focus,
+                        "dashed",
+                        1,
+                        this.height / 20,
+                        this.borderRadius
+                    );
                 },
                 () => {
                     this.setState({ focus: false });
+                    this.background?.setFocus(
+                        false,
+                        theme.palette.focus,
+                        "dashed",
+                        1,
+                        this.height / 25,
+                        this.borderRadius
+                    );
                 }
             );
         }
@@ -264,109 +262,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         isActive: this.state.active,
         isSelected: this.props.selected,
     });
-
-    private renderBackground = (
-        theme: Theme,
-        config: ButtonConfig,
-        actionState: ActionState
-    ): React.ReactNode => {
-        if (this.props.renderBackground) {
-            return this.props.renderBackground(theme, config, actionState);
-        } else {
-            return (
-                <div
-                    style={{
-                        position: "absolute",
-                        left: 0,
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        opacity: this.props.ghost ? 0 : 1,
-                        backgroundColor: config.background?.normal,
-                    }}
-                />
-            );
-        }
-    };
-
-    private renderHover = (
-        theme: Theme,
-        config: ButtonConfig,
-        actionState: ActionState
-    ): React.ReactNode => {
-        if (this.props.renderHover) {
-            return this.props.renderHover(theme, config, actionState);
-        } else {
-            const showOpacity = this.props.ghost
-                ? theme.ghostButton.hoverOpacity
-                : 1;
-            return (
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        opacity: this.state.hover ? showOpacity : 0,
-                        transition: "inherit",
-                        backgroundColor: theme.palette.hover.main,
-                    }}
-                />
-            );
-        }
-    };
-
-    private renderActive = (
-        theme: Theme,
-        config: ButtonConfig,
-        actionState: ActionState
-    ): React.ReactNode => {
-        if (this.props.renderActive) {
-            return this.props.renderActive(theme, config, actionState);
-        } else {
-            const showOpacity = this.props.ghost
-                ? theme.ghostButton.activeOpacity
-                : 1;
-            return (
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        opacity: this.state.active ? showOpacity : 0,
-                        transition: "inherit",
-                        backgroundColor: theme.palette.active.main,
-                    }}
-                />
-            );
-        }
-    };
-
-    private renderFocus = (
-        theme: Theme,
-        config: ButtonConfig,
-        actionState: ActionState
-    ): React.ReactNode => {
-        if (this.props.renderFocus) {
-            return this.props.renderFocus(theme, config, actionState);
-        } else {
-            return (
-                <div
-                    style={{
-                        position: "absolute",
-                        inset: 0,
-                        margin: 2,
-                        opacity: this.state.focus ? 1 : 0,
-                        borderRadius: this.props.round
-                            ? this.height / 2
-                            : withDefault(
-                                  this.props.borderRadius,
-                                  theme.borderRadius
-                              ),
-                        border: `1px dashed ${theme.palette.focus}`,
-                        transition: "inherit",
-                    }}
-                />
-            );
-        }
-    };
 
     private renderContent = (
         theme: Theme,
@@ -480,6 +375,9 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         this.config = extendConfig(this.getConfig(theme), this.props.config);
         const actionState = this.getCurrentState();
         const borderColor = getStateColor(this.config?.border, actionState);
+        this.borderRadius = this.props.round
+            ? this.height / 2
+            : withDefault(this.props.borderRadius, theme.borderRadius);
 
         return (
             <div
@@ -498,12 +396,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     borderLeftColor: borderColor,
                     borderRightColor: borderColor,
                     borderBottomColor: borderColor,
-                    borderRadius: this.props.round
-                        ? this.height / 2
-                        : withDefault(
-                              this.props.borderRadius,
-                              theme.borderRadius
-                          ),
+                    borderRadius: this.borderRadius,
                     transition: makeTransition(
                         ["opacity", "color", "border", "box-shadow"],
                         theme.transition.durationMS + "ms",

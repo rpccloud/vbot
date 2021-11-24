@@ -57,6 +57,38 @@ export class ActionBackground {
         }
     }
 
+    public setFocus(
+        focus: boolean,
+        color: string,
+        lineStyle: string,
+        lineWidth: number,
+        inset: number,
+        borderRadius: number
+    ) {
+        if (this.focus !== focus) {
+            this.focus = focus;
+
+            if (!this.focusElement) {
+                this.focusElement = document.createElement("div");
+                this.focusElement.style.position = "absolute";
+                this.focusElement.style.inset = "0px";
+                this.focusElement.style.opacity = "0";
+                this.root.insertBefore(this.focusElement, this.root.firstChild);
+            }
+
+            if (focus) {
+                this.focusElement.style.inset = `${inset}px`;
+                this.focusElement.style.borderWidth = `${lineWidth}px`;
+                this.focusElement.style.borderStyle = `${lineStyle}`;
+                this.focusElement.style.borderColor = `${color}`;
+                this.focusElement.style.borderRadius = `${borderRadius}px`;
+                this.focusElement.style.opacity = "1";
+            } else {
+                this.focusElement.style.opacity = "0";
+            }
+        }
+    }
+
     public setHover(
         hover: boolean,
         color: string,
@@ -77,7 +109,7 @@ export class ActionBackground {
                 this.hoverElement.style.transform = hasScaleEffect
                     ? "scale(0)"
                     : "scale(1)";
-                this.root.appendChild(this.hoverElement);
+                this.root.insertBefore(this.hoverElement, null);
             }
 
             this.hoverElement.style.transition = makeTransition(
@@ -117,7 +149,7 @@ export class ActionBackground {
                 this.activeElement.style.transform = hasScaleEffect
                     ? "scale(0)"
                     : "scale(1)";
-                this.root.appendChild(this.activeElement);
+                this.root.insertBefore(this.activeElement, null);
             }
 
             this.activeElement.style.transition = makeTransition(
@@ -136,24 +168,6 @@ export class ActionBackground {
             this.flush();
         }
     }
-
-    // private initialElements(transaction: {}) {
-    //     const createElement = () => {
-    //         const elem = document.createElement("div");
-    //         elem.style.position = "absolute";
-    //         elem.style.inset = "0px";
-    //         elem.style.transition = makeTransition(
-    //             ["opacity", "transform"],
-    //             transaction.durationMS + "ms",
-    //             transaction.easing
-    //         );
-    //         this.activeElement.style.opacity = "0";
-    //         this.activeElement.style.transform = hasScaleEffect
-    //             ? "scale(0)"
-    //             : "scale(1)";
-    //         this.root.appendChild(this.activeElement);
-    //     };
-    // }
 
     private flush() {
         if (this.hoverElement) {
