@@ -16,6 +16,8 @@ export class PointerManager {
     private mouseDownPoint?: Point;
     private sonarMap = new Map<number, PointerListener>();
 
+    private mouseLocation: Point = { x: 0, y: 0 };
+
     constructor() {
         window.addEventListener(
             "pointerdown",
@@ -30,6 +32,8 @@ export class PointerManager {
         window.addEventListener(
             "pointermove",
             (e) => {
+                this.mouseLocation.x = e.clientX;
+                this.mouseLocation.y = e.clientY;
                 if (this.mouseDownPoint) {
                     const deltaX = e.clientX - this.mouseDownPoint.x;
                     const deltaY = e.clientY - this.mouseDownPoint.y;
@@ -70,5 +74,9 @@ export class PointerManager {
         } else {
             return false;
         }
+    }
+
+    public getMouseLocation(): Point {
+        return { x: this.mouseLocation.x, y: this.mouseLocation.y };
     }
 }

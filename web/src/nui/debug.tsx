@@ -16,7 +16,7 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
 
     render() {
         return (
-            <Page background={"#fff"}>
+            <Page background={"#222"}>
                 <div style={{ display: "flex", margin: 10 }}>
                     <Button
                         // icon={<AiOutlineLock />}
@@ -33,6 +33,7 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
                         icon={<AiOutlineLock />}
                         round={true}
                         ghost={false}
+                        iconSize="xxx-large"
                     />
                     <Divider type="vertical" space={10} />
                     <Button
@@ -44,7 +45,7 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
                     <Button
                         icon={<AiOutlineLock />}
                         round={false}
-                        ghost={true}
+                        ghost={false}
                         border={false}
                         config={{
                             border: {

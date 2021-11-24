@@ -14,6 +14,7 @@ import {
 } from "../";
 import { ActionSonar } from "../utils/action-sonar";
 import { Theme, ThemeContext } from "../theme";
+import { ActionBackground } from "../utils/active-background";
 
 export interface ButtonConfig {
     icon?: ColorSet;
@@ -95,12 +96,15 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         onClick: () => {},
     };
 
+    private config?: ButtonConfig;
     private height = 0;
     private iconFontSize = 0;
     private labelFontSize = 0;
     private rootRef = React.createRef<HTMLDivElement>();
+    private bgRef = React.createRef<HTMLDivElement>();
     private loading: boolean = false;
     private actionSonar?: ActionSonar;
+    private background?: ActionBackground;
 
     constructor(props: ButtonProps) {
         super(props);
@@ -114,11 +118,16 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     componentDidMount() {
         this.actionSonar = new ActionSonar([this.rootRef]);
+
+        if (this.bgRef.current) {
+            this.background = new ActionBackground(this.bgRef.current);
+        }
     }
 
     componentWillUnmount() {
         this.actionSonar?.close();
         this.actionSonar = undefined;
+        this.background = undefined;
     }
 
     private getConfig(theme: Theme): ButtonConfig {
@@ -128,71 +137,37 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         const sr = this.height / 10;
         const sc = palette.shadow;
 
-        if (this.props.ghost) {
-            return {
-                icon: {
-                    normal: palette.primary.main,
-                    hover: palette.hover.main,
-                    active: palette.active.main,
-                    selected: palette.selected.main,
-                },
-                label: {
-                    normal: palette.primary.main,
-                    hover: palette.hover.main,
-                    active: palette.active.main,
-                    selected: palette.selected.main,
-                },
-                border: {
-                    normal: palette.primary.main,
-                    hover: palette.hover.main,
-                    active: palette.active.main,
-                    selected: palette.selected.main,
-                },
-                shadow: {
-                    normal: `0px ${sy}px ${sr}px ${sc}`,
-                    hover: `0px ${sy * 2}px ${sr * 2}px ${sc}`,
-                    active: `0px ${sy * 3}px ${sr * 3}px ${sc}`,
-                },
-                background: {
-                    normal: "transparent",
-                    hover: "transparent",
-                    active: "transparent",
-                    selected: "transparent",
-                },
-            };
-        } else {
-            return {
-                icon: {
-                    normal: palette.primary.contrastText,
-                    hover: palette.hover.contrastText,
-                    active: palette.active.contrastText,
-                    selected: palette.selected.contrastText,
-                },
-                label: {
-                    normal: palette.primary.contrastText,
-                    hover: palette.hover.contrastText,
-                    active: palette.active.contrastText,
-                    selected: palette.selected.contrastText,
-                },
-                border: {
-                    normal: palette.primary.main,
-                    hover: palette.hover.main,
-                    active: palette.active.main,
-                    selected: palette.selected.main,
-                },
-                shadow: {
-                    normal: `0px ${sy}px ${sr}px ${sc}`,
-                    hover: `0px ${sy * 2}px ${sr * 2}px ${sc}`,
-                    active: `0px ${sy * 3}px ${sr * 3}px ${sc}`,
-                },
-                background: {
-                    normal: palette.primary.main,
-                    hover: palette.hover.main,
-                    active: palette.active.main,
-                    selected: palette.selected.main,
-                },
-            };
-        }
+        return {
+            icon: {
+                normal: palette.primary.contrastText,
+                hover: palette.hover.contrastText,
+                active: palette.active.contrastText,
+                selected: palette.selected.contrastText,
+            },
+            label: {
+                normal: palette.primary.contrastText,
+                hover: palette.hover.contrastText,
+                active: palette.active.contrastText,
+                selected: palette.selected.contrastText,
+            },
+            border: {
+                normal: palette.primary.main,
+                hover: palette.hover.main,
+                active: palette.active.main,
+                selected: palette.selected.main,
+            },
+            shadow: {
+                normal: `0px ${sy}px ${sr}px ${sc}`,
+                hover: `0px ${sy * 2}px ${sr * 2}px ${sc}`,
+                active: `0px ${sy * 3}px ${sr * 3}px ${sc}`,
+            },
+            background: {
+                normal: palette.primary.main,
+                hover: palette.hover.main,
+                active: palette.active.main,
+                selected: palette.selected.main,
+            },
+        };
     }
 
     private setLoading(loading: boolean) {
@@ -206,13 +181,23 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         return this.props.focusable && !this.props.disabled;
     };
 
-    private checkHover = () => {
+    private checkHover = (e: React.MouseEvent<HTMLDivElement>) => {
+        // console.log(window.event);
+        const theme: Theme = this.context;
         this.actionSonar?.checkHover(
             () => {
                 this.setState({ hover: true });
+                this.background?.setHover(
+                    true,
+                    this.config?.background?.hover || "transparent",
+                    this.props.ghost ? theme.ghostButton.hoverOpacity : 1,
+                    true,
+                    theme.transition
+                );
             },
             () => {
                 this.setState({ hover: false });
+                this.background?.setHover(false, "", 0, true, theme.transition);
             }
         );
     };
@@ -471,12 +456,9 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             Math.round(Math.max(this.iconFontSize, this.labelFontSize) * 2.3)
         );
 
-        const config: ButtonConfig = extendConfig(
-            this.getConfig(theme),
-            this.props.config
-        );
+        this.config = extendConfig(this.getConfig(theme), this.props.config);
         const actionState = this.getCurrentState();
-        const borderColor = getStateColor(config.border, actionState);
+        const borderColor = getStateColor(this.config?.border, actionState);
 
         return (
             <div
@@ -487,7 +469,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 onClick={this.onClick}
                 onKeyPress={this.onKeyPress}
                 style={{
-                    display: "block",
+                    display: "inline-block",
                     height: this.height,
                     borderStyle: "solid",
                     borderWidth: this.props.border ? 1 : 0,
@@ -508,36 +490,41 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     ),
                     overflow: "hidden",
                     boxShadow: this.props.shadowEffect
-                        ? getStateShadow(config.shadow, actionState)
+                        ? getStateShadow(this.config?.shadow, actionState)
                         : "",
                 }}
             >
                 <div
-                    tabIndex={this.canFocus() ? 0 : -1}
+                    ref={this.bgRef}
                     style={{
-                        width: withDefault(this.props.width, "auto"),
-                        height: this.height,
-                        outline: "none",
                         position: "relative",
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: this.props.ghost
+                            ? "transparent"
+                            : this.config?.background?.normal,
                         transition: "inherit",
                     }}
-                >
-                    {this.renderBackground(theme, config, actionState)}
-                    {this.renderFocus(theme, config, actionState)}
+                />
+                {/* {this.renderBackground(theme, config, actionState)}
                     {this.renderHover(theme, config, actionState)}
                     {this.renderActive(theme, config, actionState)}
-                </div>
+                    {this.renderFocus(theme, config, actionState)} */}
 
                 <div
+                    tabIndex={this.canFocus() ? 0 : -1}
                     style={{
                         position: "relative",
+                        outline: "none",
                         top: -this.height,
                         height: this.height,
-                        width: this.props.round ? this.height : "auto",
+                        width: this.props.round
+                            ? this.height
+                            : withDefault(this.props.width, "auto"),
                         transition: "inherit",
                     }}
                 >
-                    {this.renderContent(theme, config, actionState)}
+                    {this.renderContent(theme, this.config!!, actionState)}
                 </div>
             </div>
         );

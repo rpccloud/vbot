@@ -141,3 +141,15 @@ export function extendConfig(left: any, right: any): any {
         return ret;
     }
 }
+
+export function range(v: number, min: number, max: number): number {
+    if (v < min) {
+        v = min;
+    }
+
+    if (v > max) {
+        v = max;
+    }
+
+    return v;
+}
