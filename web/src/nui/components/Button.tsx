@@ -476,6 +476,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             this.props.config
         );
         const actionState = this.getCurrentState();
+        const borderColor = getStateColor(config.border, actionState);
 
         return (
             <div
@@ -490,7 +491,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     height: this.height,
                     borderStyle: "solid",
                     borderWidth: this.props.border ? 1 : 0,
-                    borderColor: getStateColor(config.border, actionState),
+                    borderTopColor: borderColor,
+                    borderLeftColor: borderColor,
+                    borderRightColor: borderColor,
+                    borderBottomColor: borderColor,
                     borderRadius: this.props.round
                         ? this.height / 2
                         : withDefault(
@@ -498,7 +502,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                               theme.borderRadius
                           ),
                     transition: makeTransition(
-                        ["all"],
+                        ["opacity", "color", "border", "box-shadow"],
                         theme.transition.durationMS + "ms",
                         theme.transition.easing
                     ),

@@ -70,7 +70,7 @@ export const ThemeContext = React.createContext<Theme>({
             contrastText: "#FFFFFFB0",
         },
         active: {
-            main: "#ffb133",
+            main: "#ff9c00",
             contrastText: "#FFFFFFFF",
         },
         error: {
@@ -95,7 +95,7 @@ export const ThemeContext = React.createContext<Theme>({
         divider: "rgb(80, 80, 80)",
     },
     ghostButton: {
-        hoverOpacity: 0.15,
+        hoverOpacity: 0.2,
         activeOpacity: 0.15,
     },
     transition: {
