@@ -333,6 +333,9 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                                 height: this.startIconFontSize,
                                 fontSize: this.startIconFontSize,
                                 transition: "inherit",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                             }}
                         >
                             {this.props.startIcon}
@@ -367,6 +370,9 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                                 height: this.endIconFontSize,
                                 fontSize: this.endIconFontSize,
                                 transition: "inherit",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
                             }}
                         >
                             {this.props.endIcon}
