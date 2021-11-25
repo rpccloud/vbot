@@ -15,6 +15,7 @@ import {
 import { ActionSonar } from "../utils/action-sonar";
 import { Theme, ThemeContext } from "../theme";
 import { ActionBackground } from "../utils/active-background";
+import { FadeBox } from "./FadeBox";
 
 export interface ButtonConfig {
     startIcon?: ColorSet;
@@ -24,6 +25,16 @@ export interface ButtonConfig {
     shadow?: ShadowSet;
     background?: ColorSet;
 }
+
+type RenderIconFunction = (
+    theme: Theme,
+    width: number,
+    height: number,
+    config: ButtonConfig,
+    actionState: ActionState
+) => React.ReactNode;
+
+type RenderLabelFunction = (actionState: ActionState) => string;
 
 interface ButtonProps {
     round: boolean;
@@ -36,15 +47,16 @@ interface ButtonProps {
     hoverEffect: boolean;
     activeEffect: boolean;
     config?: ButtonConfig;
-    label?: string;
+    label?: string | RenderLabelFunction;
+    labelWidth?: number;
     labelSize?: Size;
     startMarginLeft?: number;
     startMarginRight?: number;
-    startIcon?: React.ReactNode;
+    startIcon?: React.ReactNode | RenderIconFunction;
     startIconSize?: Size;
     endMarginLeft?: number;
     endMarginRight?: number;
-    endIcon?: React.ReactNode;
+    endIcon?: React.ReactNode | RenderIconFunction;
     endIconSize?: Size;
     fontWeight?: FontWeight;
     width?: number;
@@ -307,6 +319,22 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             const canEndFlex =
                 !!this.props.endIcon &&
                 (!!this.props.label || !!this.props.startIcon);
+
+            const labelView = (
+                <span
+                    style={{
+                        color: getStateColor(config.label, actionState),
+                        whiteSpace: "nowrap",
+                        fontSize: this.labelFontSize,
+                        transition: "inherit",
+                        overflow: "hidden",
+                    }}
+                >
+                    {typeof this.props.label === "function"
+                        ? this.props.label(actionState)
+                        : this.props.label}
+                </span>
+            );
             return (
                 <div
                     style={{
@@ -338,7 +366,15 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                                 alignItems: "center",
                             }}
                         >
-                            {this.props.startIcon}
+                            {typeof this.props.startIcon === "function"
+                                ? this.props.startIcon(
+                                      theme,
+                                      this.startIconFontSize,
+                                      this.startIconFontSize,
+                                      config,
+                                      actionState
+                                  )
+                                : this.props.startIcon}
                         </div>
                     ) : null}
                     {makeSpacerStyle(
@@ -347,16 +383,22 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         0
                     )}
                     {this.props.label ? (
-                        <span
-                            style={{
-                                color: getStateColor(config.label, actionState),
-                                whiteSpace: "nowrap",
-                                fontSize: this.labelFontSize,
-                                transition: "inherit",
-                            }}
-                        >
-                            {this.props.label}
-                        </span>
+                        this.props.labelWidth === undefined ? (
+                            labelView
+                        ) : (
+                            <FadeBox
+                                style={{
+                                    minWidth: this.props.labelWidth,
+                                    flex: 0,
+                                }}
+                                fade={
+                                    (0.6 * this.labelFontSize) /
+                                    this.props.labelWidth
+                                }
+                            >
+                                {labelView}
+                            </FadeBox>
+                        )
                     ) : null}
                     {makeSpacerStyle(canEndFlex, this.props.endMarginLeft, 0)}
                     {this.props.endIcon ? (
@@ -375,7 +417,15 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                                 alignItems: "center",
                             }}
                         >
-                            {this.props.endIcon}
+                            {typeof this.props.endIcon === "function"
+                                ? this.props.endIcon(
+                                      theme,
+                                      this.endIconFontSize,
+                                      this.endIconFontSize,
+                                      config,
+                                      actionState
+                                  )
+                                : this.props.endIcon}
                         </div>
                     ) : null}
                     {makeSpacerStyle(true, this.props.endMarginRight, h / 4)}

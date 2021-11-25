@@ -43,7 +43,12 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
                     />
                     <Divider type="vertical" space={10} />
                     <Button
-                        startIcon={<AiOutlineLock />}
+                        startIcon={() => {
+                            return <AiOutlineLock />;
+                        }}
+                        label={() => {
+                            return "aabbccddeeffgg";
+                        }}
                         endIcon={<AiOutlineLock />}
                         round={false}
                         ghost={false}
@@ -54,15 +59,12 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
                                 active: "green",
                             },
                         }}
-                        // label="Test"
-                        // labelSize="large"
                         startIconSize={"large"}
                         endIconSize={"large"}
-                        // style={{ width: 100 }}
                         startMarginLeft={10}
-                        // startMarginRight={3}
-                        // endMarginLeft={10}
                         endMarginRight={10}
+                        labelWidth={30}
+                        width={100}
                     />
                 </div>
             </Page>
