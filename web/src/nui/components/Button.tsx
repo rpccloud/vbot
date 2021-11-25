@@ -343,6 +343,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         fontSize: this.labelFontSize,
                         transition: "inherit",
                         overflow: "hidden",
+                        flex: "none",
                     }}
                 >
                     {typeof this.props.label === "function"
@@ -364,7 +365,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         transition: "inherit",
                     }}
                 >
-                    {makeSpacerStyle(true, this.props.startMarginLeft, h / 4)}
+                    {makeSpacerStyle(true, this.props.startMarginLeft, h / 2)}
                     {this.props.startIcon ? (
                         <div
                             style={{
@@ -443,7 +444,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                                 : this.props.endIcon}
                         </div>
                     ) : null}
-                    {makeSpacerStyle(true, this.props.endMarginRight, h / 4)}
+                    {makeSpacerStyle(true, this.props.endMarginRight, h / 2)}
                 </div>
             );
         }
@@ -474,7 +475,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
         this.config = extendConfig(this.getConfig(theme), this.props.config);
         this.borderRadius = this.props.round
-            ? this.height / 2
+            ? this.height / 2 + 1
             : withDefault(this.props.borderRadius, theme.borderRadius);
     }
 
