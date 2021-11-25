@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Theme, ThemeContext } from "../theme";
 
 import { getFontSize, makeTransition, Size, withDefault } from "..";
@@ -12,7 +12,7 @@ interface SpanProps {
 
 interface SpanState {}
 
-class Span extends React.Component<SpanProps, SpanState> {
+export class Span extends React.Component<SpanProps, SpanState> {
     static contextType = ThemeContext;
 
     constructor(props: SpanProps) {

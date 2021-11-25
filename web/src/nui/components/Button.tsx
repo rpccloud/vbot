@@ -158,35 +158,41 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 hover: palette.hover.contrastText,
                 active: palette.active.contrastText,
                 selected: palette.selected.contrastText,
+                disabled: palette.disabled.contrastText,
             },
             endIcon: {
                 normal: palette.primary.contrastText,
                 hover: palette.hover.contrastText,
                 active: palette.active.contrastText,
                 selected: palette.selected.contrastText,
+                disabled: palette.disabled.contrastText,
             },
             label: {
                 normal: palette.primary.contrastText,
                 hover: palette.hover.contrastText,
                 active: palette.active.contrastText,
                 selected: palette.selected.contrastText,
+                disabled: palette.disabled.contrastText,
             },
             border: {
                 normal: palette.primary.main,
                 hover: palette.hover.main,
                 active: palette.active.main,
                 selected: palette.selected.main,
+                disabled: palette.disabled.contrastText,
             },
             shadow: {
                 normal: `0px ${sy}px ${sr}px ${sc}`,
                 hover: `0px ${sy * 2}px ${sr * 2}px ${sc}`,
                 active: `0px ${sy * 3}px ${sr * 3}px ${sc}`,
+                disabled: "",
             },
             background: {
                 normal: palette.primary.main,
                 hover: palette.hover.main,
                 active: palette.active.main,
                 selected: palette.selected.main,
+                disabled: palette.disabled.main,
             },
         };
     }
@@ -203,6 +209,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private checkHover = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (this.props.disabled) {
+            return;
+        }
+
         const theme: Theme = this.context;
         this.actionSonar?.checkHover(
             () => {
@@ -259,6 +269,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private checkActive = () => {
+        if (this.props.disabled) {
+            return;
+        }
+
         const theme: Theme = this.context;
 
         this.actionSonar?.checkActive(
@@ -301,6 +315,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         isHover: this.state.hover,
         isActive: this.state.active,
         isSelected: this.props.selected,
+        isDisabled: this.props.disabled || this.state.loading,
     });
 
     private renderContent = (
@@ -468,7 +483,9 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         this.updateConfig();
 
         const actionState = this.getCurrentState();
-        const borderColor = getStateColor(this.config?.border, actionState);
+        const borderColor = this.props.border
+            ? getStateColor(this.config?.border, actionState)
+            : "transparent";
 
         return (
             <div
@@ -483,7 +500,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     display: "inline-block",
                     height: this.height,
                     borderStyle: "solid",
-                    borderWidth: this.props.border ? 1 : 0,
+                    borderWidth: 1,
                     borderTopColor: borderColor,
                     borderLeftColor: borderColor,
                     borderRightColor: borderColor,
@@ -495,6 +512,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         theme.transition.easing
                     ),
                     overflow: "hidden",
+                    cursor: this.props.disabled ? "not-allowed" : "pointer",
                     boxShadow: this.props.shadowEffect
                         ? getStateShadow(this.config?.shadow, actionState)
                         : "",
@@ -508,6 +526,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         height: "100%",
                         backgroundColor: this.props.ghost
                             ? "transparent"
+                            : this.props.disabled
+                            ? this.config?.background?.disabled
                             : this.config?.background?.normal,
                         transition: "inherit",
                     }}

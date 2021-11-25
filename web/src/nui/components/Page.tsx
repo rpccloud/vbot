@@ -5,6 +5,7 @@ import { Theme, ThemeContext } from "../theme";
 interface PageProps {
     children?: React.ReactNode;
     background?: string;
+    style?: React.CSSProperties;
 }
 
 interface PageState {}
@@ -33,6 +34,7 @@ export class Page extends React.Component<PageProps, PageState> {
             <div
                 style={{
                     background: background,
+                    ...this.props.style,
                     display: "flex",
                     width: "100vw",
                     height: "100vh",

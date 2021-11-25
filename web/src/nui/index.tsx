@@ -16,6 +16,7 @@ export type ActionState = {
     isHover: boolean;
     isActive: boolean;
     isSelected: boolean;
+    isDisabled: boolean;
 };
 
 export type ColorSet = {
@@ -23,13 +24,16 @@ export type ColorSet = {
     hover?: string;
     active?: string;
     selected?: string;
+    disabled?: string;
 };
 
 export function getStateColor(
     colorSet: ColorSet | undefined,
     state: ActionState
 ): string {
-    if (state.isSelected) {
+    if (state.isDisabled) {
+        return colorSet?.disabled || "transparent";
+    } else if (state.isSelected) {
         return colorSet?.selected || "transparent";
     } else if (state.isActive) {
         return colorSet?.active || "transparent";
@@ -44,13 +48,16 @@ export type ShadowSet = {
     normal?: string;
     hover?: string;
     active?: string;
+    disabled?: string;
 };
 
 export function getStateShadow(
     shadowSet: ShadowSet | undefined,
     state: ActionState
 ): string {
-    if (state.isActive) {
+    if (state.isDisabled) {
+        return shadowSet?.disabled || "transparent";
+    } else if (state.isActive) {
         return shadowSet?.active || "transparent";
     } else if (state.isHover) {
         return shadowSet?.hover || "transparent";

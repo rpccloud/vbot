@@ -1,0 +1,167 @@
+import React from "react";
+import { Divider } from "../../microui/component/Divider";
+import { Button } from "../components/Button";
+import { Span } from "../components/Span";
+import { DebugUnit } from "./DebugUnit";
+
+import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
+
+export const DebugButton = (props: {}) => {
+    const VSpacer = <Divider type="vertical" space={16} />;
+    return (
+        <div style={{ padding: 16 }}>
+            <Span size="xx-large">Button</Span>
+            <Divider space={16} />
+            <div style={{ display: "flex", flexFlow: "row" }}>
+                <DebugUnit
+                    title="empty button"
+                    desc="all the props is default"
+                    width={150}
+                    height={150}
+                >
+                    <Button />
+                </DebugUnit>
+                <DebugUnit
+                    title="round button"
+                    desc="with only startIcon"
+                    width={150}
+                    height={150}
+                >
+                    <Button
+                        round={true}
+                        ghost={false}
+                        startIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        startIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        border={false}
+                        startIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        border={false}
+                        shadowEffect={false}
+                        startIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        disabled={true}
+                        ghost={true}
+                        border={false}
+                        startIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        disabled={true}
+                        ghost={false}
+                        border={false}
+                        startIcon={<AiOutlineLock />}
+                    />
+                </DebugUnit>
+                <DebugUnit
+                    title="round button"
+                    desc="with only label"
+                    width={150}
+                    height={150}
+                >
+                    <Button round={true} ghost={false} label="H" />
+                    {VSpacer}
+                    <Button round={true} ghost={true} label="H" />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        border={false}
+                        label="H"
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        border={false}
+                        shadowEffect={false}
+                        label="H"
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        disabled={true}
+                        ghost={true}
+                        border={false}
+                        label="H"
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        disabled={true}
+                        ghost={false}
+                        border={false}
+                        label="H"
+                    />
+                </DebugUnit>
+
+                <DebugUnit
+                    title="round button"
+                    desc="with only endIcon"
+                    width={150}
+                    height={150}
+                >
+                    <Button
+                        round={true}
+                        ghost={false}
+                        endIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        endIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        border={false}
+                        endIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        border={false}
+                        shadowEffect={false}
+                        endIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        disabled={true}
+                        ghost={true}
+                        border={false}
+                        endIcon={<AiOutlineLock />}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        disabled={true}
+                        ghost={false}
+                        border={false}
+                        endIcon={<AiOutlineLock />}
+                    />
+                </DebugUnit>
+            </div>
+        </div>
+    );
+};
