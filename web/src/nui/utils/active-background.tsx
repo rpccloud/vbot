@@ -1,5 +1,6 @@
 import { range } from "..";
 import { makeTransition } from "..";
+import { TimerManager } from "../../microui/util";
 import { PointerManager } from "./pointer-manager";
 
 export class ActionBackground {
@@ -16,6 +17,7 @@ export class ActionBackground {
     private activeOpacity: number = 0;
     private hasHoverScaleEffect: boolean = false;
     private hasActiveScaleEffect: boolean = false;
+    private activeTimeMS = 0;
 
     constructor(root: HTMLDivElement) {
         this.root = root;
@@ -165,7 +167,21 @@ export class ActionBackground {
                 !active
             );
 
-            this.flush();
+            const nowMS = TimerManager.get().getNowMS();
+
+            if (this.active) {
+                this.activeTimeMS = nowMS;
+                this.flush();
+            } else {
+                const deltaTime = nowMS - this.activeTimeMS;
+                if (deltaTime < transaction.durationMS) {
+                    setTimeout(() => {
+                        this.flush();
+                    }, transaction.durationMS - deltaTime);
+                } else {
+                    this.flush();
+                }
+            }
         }
     }
 

@@ -17,7 +17,8 @@ import { Theme, ThemeContext } from "../theme";
 import { ActionBackground } from "../utils/active-background";
 
 export interface ButtonConfig {
-    icon?: ColorSet;
+    startIcon?: ColorSet;
+    endIcon?: ColorSet;
     label?: ColorSet;
     border?: ColorSet;
     shadow?: ShadowSet;
@@ -35,17 +36,21 @@ interface ButtonProps {
     hoverEffect: boolean;
     activeEffect: boolean;
     config?: ButtonConfig;
-    icon?: React.ReactNode;
-    iconSize?: Size;
     label?: string;
     labelSize?: Size;
+    startMarginLeft?: number;
+    startMarginRight?: number;
+    startIcon?: React.ReactNode;
+    startIconSize?: Size;
+    endMarginLeft?: number;
+    endMarginRight?: number;
+    endIcon?: React.ReactNode;
+    endIconSize?: Size;
     fontWeight?: FontWeight;
     width?: number;
     height?: number;
     borderRadius?: number;
-    leftMargin?: number;
-    middleMargin?: number;
-    rightMargin?: number;
+    style?: React.CSSProperties;
     onClick: (e: React.MouseEvent<HTMLDivElement>) => Promise<boolean>;
     renderContent?: (
         theme: Theme,
@@ -53,6 +58,22 @@ interface ButtonProps {
         actionState: ActionState
     ) => React.ReactNode;
 }
+
+const makeSpacerStyle = (
+    canFlex: boolean,
+    value: number | undefined,
+    defaultValue: number
+): React.ReactNode => {
+    return (
+        <div
+            style={{
+                flex: value === undefined && canFlex ? 1 : 0,
+                width: value !== undefined ? value : defaultValue,
+                minWidth: value !== undefined ? value : 0,
+            }}
+        />
+    );
+};
 
 interface ButtonState {
     hover: boolean;
@@ -71,7 +92,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         selected: false,
         focusable: true,
         shadowEffect: true,
-        hoverEffect: true,
+        hoverEffect: false,
         activeEffect: true,
         onClick: () => {},
     };
@@ -79,7 +100,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     private config?: ButtonConfig;
     private height = 0;
     private borderRadius = 0;
-    private iconFontSize = 0;
+    private startIconFontSize = 0;
+    private endIconFontSize = 0;
     private labelFontSize = 0;
     private rootRef = React.createRef<HTMLDivElement>();
     private bgRef = React.createRef<HTMLDivElement>();
@@ -119,7 +141,13 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         const sc = palette.shadow;
 
         return {
-            icon: {
+            startIcon: {
+                normal: palette.primary.contrastText,
+                hover: palette.hover.contrastText,
+                active: palette.active.contrastText,
+                selected: palette.selected.contrastText,
+            },
+            endIcon: {
                 normal: palette.primary.contrastText,
                 hover: palette.hover.contrastText,
                 active: palette.active.contrastText,
@@ -271,26 +299,14 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         if (this.props.renderContent) {
             return this.props.renderContent(theme, config, actionState);
         } else {
-            const makeSpacerStyle = (
-                display: boolean,
-                value: number | undefined,
-                defaultValue: number
-            ): React.CSSProperties => {
-                if (value !== undefined) {
-                    return {
-                        flex: 0,
-                        display: display ? "flex" : "none",
-                        minWidth: value,
-                    };
-                } else {
-                    return {
-                        flex: "1 0 0",
-                        display: display ? "block" : "none",
-                        minWidth: defaultValue,
-                    };
-                }
-            };
             const h = this.height;
+
+            const canStartFlex =
+                !!this.props.startIcon &&
+                (!!this.props.label || !!this.props.endIcon);
+            const canEndFlex =
+                !!this.props.endIcon &&
+                (!!this.props.label || !!this.props.startIcon);
             return (
                 <div
                     style={{
@@ -305,79 +321,98 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         transition: "inherit",
                     }}
                 >
-                    <div
-                        style={makeSpacerStyle(
-                            !this.props.round,
-                            this.props.leftMargin,
-                            h / 4
-                        )}
-                    />
-                    <div
-                        style={{
-                            display: this.props.icon ? "block" : "none",
-                            color: getStateColor(config.icon, actionState),
-                            width: this.iconFontSize,
-                            height: this.iconFontSize,
-                            fontSize: this.iconFontSize,
-                            transition: "inherit",
-                        }}
-                    >
-                        {this.props.icon}
-                    </div>
-                    <div
-                        style={{
-                            ...makeSpacerStyle(
-                                !this.props.round &&
-                                    !!this.props.icon &&
-                                    !!this.props.label,
-                                this.props.middleMargin,
-                                h / 8
-                            ),
-                        }}
-                    />
-                    <span
-                        style={{
-                            display: this.props.label ? "block" : "none",
-                            color: getStateColor(config.label, actionState),
-                            whiteSpace: "nowrap",
-                            fontSize: this.labelFontSize,
-                            transition: "inherit",
-                        }}
-                    >
-                        {this.props.label}
-                    </span>
-                    <div
-                        style={makeSpacerStyle(
-                            !this.props.round,
-                            this.props.rightMargin,
-                            h / 4
-                        )}
-                    />
+                    {makeSpacerStyle(true, this.props.startMarginLeft, h / 4)}
+                    {this.props.startIcon ? (
+                        <div
+                            style={{
+                                color: getStateColor(
+                                    config.startIcon,
+                                    actionState
+                                ),
+                                width: this.startIconFontSize,
+                                height: this.startIconFontSize,
+                                fontSize: this.startIconFontSize,
+                                transition: "inherit",
+                            }}
+                        >
+                            {this.props.startIcon}
+                        </div>
+                    ) : null}
+                    {makeSpacerStyle(
+                        canStartFlex,
+                        this.props.startMarginRight,
+                        0
+                    )}
+                    {this.props.label ? (
+                        <span
+                            style={{
+                                color: getStateColor(config.label, actionState),
+                                whiteSpace: "nowrap",
+                                fontSize: this.labelFontSize,
+                                transition: "inherit",
+                            }}
+                        >
+                            {this.props.label}
+                        </span>
+                    ) : null}
+                    {makeSpacerStyle(canEndFlex, this.props.endMarginLeft, 0)}
+                    {this.props.endIcon ? (
+                        <div
+                            style={{
+                                color: getStateColor(
+                                    config.endIcon,
+                                    actionState
+                                ),
+                                width: this.endIconFontSize,
+                                height: this.endIconFontSize,
+                                fontSize: this.endIconFontSize,
+                                transition: "inherit",
+                            }}
+                        >
+                            {this.props.endIcon}
+                        </div>
+                    ) : null}
+                    {makeSpacerStyle(true, this.props.endMarginRight, h / 4)}
                 </div>
             );
         }
     };
 
-    render() {
+    private updateConfig() {
         const theme: Theme = this.context;
 
-        this.iconFontSize = getFontSize(
-            withDefault(this.props.iconSize, theme.size)
+        this.startIconFontSize = getFontSize(
+            withDefault(this.props.startIconSize, theme.size)
+        );
+        this.endIconFontSize = getFontSize(
+            withDefault(this.props.endIconSize, theme.size)
         );
         this.labelFontSize = getFontSize(
             withDefault(this.props.labelSize, theme.size)
         );
         this.height = withDefault(
             this.props.height,
-            Math.round(Math.max(this.iconFontSize, this.labelFontSize) * 2.3)
+            Math.round(
+                Math.max(
+                    this.startIconFontSize,
+                    this.endIconFontSize,
+                    this.labelFontSize
+                ) * 2.3
+            )
         );
 
         this.config = extendConfig(this.getConfig(theme), this.props.config);
-        const actionState = this.getCurrentState();
-        const borderColor = getStateColor(this.config?.border, actionState);
         this.borderRadius = this.props.round
             ? this.height / 2
             : withDefault(this.props.borderRadius, theme.borderRadius);
+    }
+
+    render() {
+        const theme: Theme = this.context;
+        this.updateConfig();
+
+        const actionState = this.getCurrentState();
+        const borderColor = getStateColor(this.config?.border, actionState);
 
         return (
             <div
@@ -388,6 +423,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 onClick={this.onClick}
                 onKeyPress={this.onKeyPress}
                 style={{
+                    ...this.props.style,
                     display: "inline-block",
                     height: this.height,
                     borderStyle: "solid",
@@ -420,10 +456,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         transition: "inherit",
                     }}
                 />
-                {/* {this.renderBackground(theme, config, actionState)}
-                    {this.renderHover(theme, config, actionState)}
-                    {this.renderActive(theme, config, actionState)}
-                    {this.renderFocus(theme, config, actionState)} */}
 
                 <div
                     tabIndex={this.canFocus() ? 0 : -1}

@@ -25,25 +25,26 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
                         ghost={true}
                     />
                     <Button
-                        icon={<AiOutlineLock />}
+                        startIcon={<AiOutlineLock />}
                         round={false}
                         ghost={true}
                     />
                     <Button
-                        icon={<AiOutlineLock />}
+                        startIcon={<AiOutlineLock />}
                         round={true}
                         ghost={false}
-                        iconSize="xxx-large"
+                        startIconSize="xxx-large"
                     />
                     <Divider type="vertical" space={10} />
                     <Button
-                        icon={<AiOutlineLock />}
+                        startIcon={<AiOutlineLock />}
                         round={false}
                         ghost={false}
                     />
                     <Divider type="vertical" space={10} />
                     <Button
-                        icon={<AiOutlineLock />}
+                        startIcon={<AiOutlineLock />}
+                        endIcon={<AiOutlineLock />}
                         round={false}
                         ghost={false}
                         border={false}
@@ -53,8 +54,15 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
                                 active: "green",
                             },
                         }}
-                        label="Test"
-                        labelSize="large"
+                        // label="Test"
+                        // labelSize="large"
+                        startIconSize={"large"}
+                        endIconSize={"large"}
+                        // style={{ width: 100 }}
+                        startMarginLeft={10}
+                        // startMarginRight={3}
+                        // endMarginLeft={10}
+                        endMarginRight={10}
                     />
                 </div>
             </Page>
