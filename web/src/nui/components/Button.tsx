@@ -10,12 +10,14 @@ import {
     makeTransition,
     ShadowSet,
     Size,
+    UiCSSProperties,
     withDefault,
 } from "../";
 import { ActionSonar } from "../utils/action-sonar";
 import { Theme, ThemeContext } from "../theme";
 import { ActionBackground } from "../utils/active-background";
 import { FadeBox } from "./FadeBox";
+import { Spin } from "./Spin";
 
 export interface ButtonConfig {
     startIcon?: ColorSet;
@@ -59,11 +61,10 @@ interface ButtonProps {
     endIcon?: React.ReactNode | RenderIconFunction;
     endIconSize?: Size;
     fontWeight?: FontWeight;
-    width?: number;
-    height?: number;
     borderRadius?: number;
-    style?: React.CSSProperties;
-    onClick: (e: React.MouseEvent<HTMLDivElement>) => Promise<boolean>;
+    style?: UiCSSProperties;
+    loading?: "startIcon" | "endIcon" | "none";
+    onClick: (e: React.MouseEvent<HTMLDivElement>) => Promise<void>;
     renderContent?: (
         theme: Theme,
         config: ButtonConfig,
@@ -106,6 +107,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         shadowEffect: true,
         hoverEffect: false,
         activeEffect: true,
+        loading: "startIcon",
         onClick: () => {},
     };
 
@@ -116,10 +118,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     private endIconFontSize = 0;
     private labelFontSize = 0;
     private rootRef = React.createRef<HTMLDivElement>();
-    private bgRef = React.createRef<HTMLDivElement>();
+    private effectRef = React.createRef<HTMLDivElement>();
     private loading: boolean = false;
     private actionSonar?: ActionSonar;
-    private background?: ActionBackground;
+    private effect?: ActionBackground;
 
     constructor(props: ButtonProps) {
         super(props);
@@ -134,15 +136,15 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     componentDidMount() {
         this.actionSonar = new ActionSonar([this.rootRef]);
 
-        if (this.bgRef.current) {
-            this.background = new ActionBackground(this.bgRef.current);
+        if (this.effectRef.current) {
+            this.effect = new ActionBackground(this.effectRef.current);
         }
     }
 
     componentWillUnmount() {
         this.actionSonar?.close();
         this.actionSonar = undefined;
-        this.background = undefined;
+        this.effect = undefined;
     }
 
     private getConfig(theme: Theme): ButtonConfig {
@@ -217,7 +219,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         this.actionSonar?.checkHover(
             () => {
                 this.setState({ hover: true });
-                this.background?.setHover(
+                this.effect?.setHover(
                     true,
                     this.config?.background?.hover || "transparent",
                     this.props.ghost ? theme.ghostButton.hoverOpacity : 1,
@@ -227,7 +229,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             },
             () => {
                 this.setState({ hover: false });
-                this.background?.setHover(
+                this.effect?.setHover(
                     false,
                     "",
                     0,
@@ -244,7 +246,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             this.actionSonar?.checkFocus(
                 () => {
                     this.setState({ focus: true });
-                    this.background?.setFocus(
+                    this.effect?.setFocus(
                         true,
                         theme.palette.focus,
                         "dashed",
@@ -255,7 +257,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 },
                 () => {
                     this.setState({ focus: false });
-                    this.background?.setFocus(
+                    this.effect?.setFocus(
                         false,
                         theme.palette.focus,
                         "dashed",
@@ -278,7 +280,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         this.actionSonar?.checkActive(
             () => {
                 this.setState({ active: true });
-                this.background?.setActive(
+                this.effect?.setActive(
                     true,
                     this.config?.background?.active || "transparent",
                     this.props.ghost ? theme.ghostButton.activeOpacity : 1,
@@ -288,7 +290,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             },
             () => {
                 this.setState({ active: false });
-                this.background?.setActive(
+                this.effect?.setActive(
                     false,
                     this.config?.background?.active || "transparent",
                     this.props.ghost ? theme.ghostButton.activeOpacity : 1,
@@ -300,8 +302,14 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private onClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!this.props.disabled) {
-            this.props.onClick(e);
+        if (!this.props.disabled && !this.loading) {
+            const v = this.props.onClick(e);
+            if (v instanceof Promise) {
+                this.setLoading(true);
+                v.finally(() => {
+                    this.setLoading(false);
+                });
+            }
         }
     };
 
@@ -351,6 +359,36 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         : this.props.label}
                 </span>
             );
+
+            const startIcon =
+                typeof this.props.startIcon === "function" ? (
+                    this.props.startIcon(
+                        theme,
+                        this.startIconFontSize,
+                        this.startIconFontSize,
+                        config,
+                        actionState
+                    )
+                ) : this.props.loading === "startIcon" && this.state.loading ? (
+                    <Spin size={this.props.startIconSize} />
+                ) : (
+                    this.props.startIcon
+                );
+            const endIcon =
+                typeof this.props.endIcon === "function" ? (
+                    this.props.endIcon(
+                        theme,
+                        this.endIconFontSize,
+                        this.endIconFontSize,
+                        config,
+                        actionState
+                    )
+                ) : this.props.loading === "endIcon" && this.state.loading ? (
+                    <Spin size={this.props.endIconSize} />
+                ) : (
+                    this.props.endIcon
+                );
+
             return (
                 <div
                     style={{
@@ -366,7 +404,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     }}
                 >
                     {makeSpacerStyle(true, this.props.startMarginLeft, h / 2)}
-                    {this.props.startIcon ? (
+                    {startIcon ? (
                         <div
                             style={{
                                 color: getStateColor(
@@ -382,15 +420,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                                 alignItems: "center",
                             }}
                         >
-                            {typeof this.props.startIcon === "function"
-                                ? this.props.startIcon(
-                                      theme,
-                                      this.startIconFontSize,
-                                      this.startIconFontSize,
-                                      config,
-                                      actionState
-                                  )
-                                : this.props.startIcon}
+                            {startIcon}
                         </div>
                     ) : null}
                     {makeSpacerStyle(
@@ -417,7 +447,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         )
                     ) : null}
                     {makeSpacerStyle(canEndFlex, this.props.endMarginLeft, 0)}
-                    {this.props.endIcon ? (
+                    {endIcon ? (
                         <div
                             style={{
                                 color: getStateColor(
@@ -433,15 +463,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                                 alignItems: "center",
                             }}
                         >
-                            {typeof this.props.endIcon === "function"
-                                ? this.props.endIcon(
-                                      theme,
-                                      this.endIconFontSize,
-                                      this.endIconFontSize,
-                                      config,
-                                      actionState
-                                  )
-                                : this.props.endIcon}
+                            {endIcon}
                         </div>
                     ) : null}
                     {makeSpacerStyle(true, this.props.endMarginRight, h / 2)}
@@ -463,7 +485,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             withDefault(this.props.labelSize, theme.size)
         );
         this.height = withDefault(
-            this.props.height,
+            this.props.style?.height,
             Math.round(
                 Math.max(
                     this.startIconFontSize,
@@ -507,6 +529,11 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     borderRightColor: borderColor,
                     borderBottomColor: borderColor,
                     borderRadius: this.borderRadius,
+                    backgroundColor: this.props.ghost
+                        ? "transparent"
+                        : this.props.disabled || this.state.loading
+                        ? this.config?.background?.disabled
+                        : this.config?.background?.normal,
                     transition: makeTransition(
                         ["opacity", "color", "border", "box-shadow"],
                         theme.transition.durationMS + "ms",
@@ -520,17 +547,16 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 }}
             >
                 <div
-                    ref={this.bgRef}
+                    ref={this.effectRef}
                     style={{
                         position: "relative",
                         width: "100%",
                         height: "100%",
-                        backgroundColor: this.props.ghost
-                            ? "transparent"
-                            : this.props.disabled
-                            ? this.config?.background?.disabled
-                            : this.config?.background?.normal,
                         transition: "inherit",
+                        opacity:
+                            this.props.disabled || this.state.loading
+                                ? "0"
+                                : "1",
                     }}
                 />
 
@@ -543,7 +569,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         height: this.height,
                         width: this.props.round
                             ? this.height
-                            : withDefault(this.props.width, "auto"),
+                            : withDefault(this.props.style?.width, "auto"),
                         transition: "inherit",
                     }}
                 >

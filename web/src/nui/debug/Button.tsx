@@ -5,6 +5,7 @@ import { Span } from "../components/Span";
 import { DebugUnit } from "./DebugUnit";
 
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
+import { sleep } from "../../microui/util";
 
 export const DebugButton = (props: {}) => {
     const VSpacer = <Divider type="vertical" space={16} />;
@@ -233,7 +234,7 @@ export const DebugButton = (props: {}) => {
                     <Button
                         round={true}
                         ghost={false}
-                        height={90}
+                        style={{ height: 90 }}
                         startIcon={<AiOutlineLock />}
                         label={"Button"}
                         endIcon={<AiOutlineLock />}
@@ -242,7 +243,7 @@ export const DebugButton = (props: {}) => {
                     <Button
                         round={true}
                         ghost={true}
-                        height={90}
+                        style={{ height: 90 }}
                         startIcon={<AiOutlineLock />}
                         label={"Button"}
                         endIcon={<AiOutlineLock />}
@@ -313,6 +314,62 @@ export const DebugButton = (props: {}) => {
                         startIcon={<AiOutlineLock />}
                         label={"Button"}
                         config={{ border: { normal: "red" } }}
+                    />
+                </DebugUnit>
+
+                <DebugUnit title="Button-async" width={260} height={150}>
+                    <Button
+                        round={true}
+                        ghost={true}
+                        startIcon={<AiOutlineLock />}
+                        onClick={async () => {
+                            await sleep(2000);
+                        }}
+                    />
+                    {VSpacer}
+                    <Button
+                        ghost={true}
+                        startIcon={<AiOutlineLock />}
+                        label={"Button"}
+                        onClick={async () => {
+                            await sleep(2000);
+                        }}
+                    />
+                    {VSpacer}
+                    <Button
+                        ghost={false}
+                        startIcon={<AiOutlineLock />}
+                        label={"Button"}
+                        onClick={async () => {
+                            await sleep(2000);
+                        }}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={true}
+                        startIcon={<AiOutlineLock />}
+                        onClick={(): any => {
+                            return true;
+                        }}
+                    />
+                    {VSpacer}
+                    <Button
+                        ghost={true}
+                        startIcon={<AiOutlineLock />}
+                        label={"Button"}
+                        onClick={(): any => {
+                            return true;
+                        }}
+                    />
+                    {VSpacer}
+                    <Button
+                        ghost={false}
+                        startIcon={<AiOutlineLock />}
+                        label={"Button"}
+                        onClick={(): any => {
+                            return true;
+                        }}
                     />
                 </DebugUnit>
             </div>

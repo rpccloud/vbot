@@ -51,6 +51,11 @@ export type ShadowSet = {
     disabled?: string;
 };
 
+export interface UiCSSProperties extends React.CSSProperties {
+    width?: number;
+    height?: number;
+}
+
 export function getStateShadow(
     shadowSet: ShadowSet | undefined,
     state: ActionState

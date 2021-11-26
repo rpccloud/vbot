@@ -1,4 +1,5 @@
 import React from "react";
+import { UiCSSProperties } from "..";
 import { Theme, ThemeContext } from "../theme";
 
 interface DividerProps {
@@ -7,7 +8,7 @@ interface DividerProps {
     space: number;
     lineWidth: number;
     color?: string;
-    style?: React.CSSProperties;
+    style?: UiCSSProperties;
 }
 
 interface DividerState {}
