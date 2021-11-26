@@ -207,7 +207,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     }
 
     private canFocus = (): boolean => {
-        return this.props.focusable && !this.props.disabled;
+        const theme: Theme = this.context;
+        return this.props.focusable && theme.focusable && !this.props.disabled;
     };
 
     private checkHover = (e: React.MouseEvent<HTMLDivElement>) => {
