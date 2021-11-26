@@ -53,7 +53,11 @@ export interface ITheme {
     borderRadius?: number;
     size?: Size;
     zIndex?: number;
-    focusable?: boolean;
+    focus?: {
+        focusable?: boolean;
+        borderStyle?: string;
+        borderWidth?: number;
+    };
     fontWeight?: FontWeight;
 }
 
@@ -106,10 +110,14 @@ export interface Theme {
         durationMS: number;
         easing: string;
     };
+    focus: {
+        focusable: boolean;
+        borderStyle: string;
+        borderWidth: number;
+    };
     borderRadius: number;
     size: Size;
     zIndex: number;
-    focusable: boolean;
     fontWeight: FontWeight;
 }
 
@@ -165,6 +173,10 @@ export const ThemeContext = React.createContext<Theme>({
     borderRadius: 8,
     size: "medium",
     zIndex: 0,
-    focusable: true,
+    focus: {
+        focusable: true,
+        borderStyle: "dashed",
+        borderWidth: 1,
+    },
     fontWeight: "normal",
 });

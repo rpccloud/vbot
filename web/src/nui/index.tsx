@@ -12,14 +12,14 @@ export interface Rect {
     height: number;
 }
 
-export type ActionState = {
+export type UIState = {
     isHover: boolean;
     isActive: boolean;
     isSelected: boolean;
     isDisabled: boolean;
 };
 
-export type ColorSet = {
+export type UIStateConfig = {
     normal?: string;
     hover?: string;
     active?: string;
@@ -28,8 +28,8 @@ export type ColorSet = {
 };
 
 export function getStateColor(
-    colorSet: ColorSet | undefined,
-    state: ActionState
+    colorSet: UIStateConfig | undefined,
+    state: UIState
 ): string {
     if (state.isDisabled) {
         return colorSet?.disabled || "transparent";
@@ -58,7 +58,7 @@ export interface UiCSSProperties extends React.CSSProperties {
 
 export function getStateShadow(
     shadowSet: ShadowSet | undefined,
-    state: ActionState
+    state: UIState
 ): string {
     if (state.isDisabled) {
         return shadowSet?.disabled || "transparent";

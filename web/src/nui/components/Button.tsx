@@ -1,7 +1,7 @@
 import React from "react";
 import {
-    ActionState,
-    ColorSet,
+    UIState,
+    UIStateConfig,
     extendConfig,
     FontWeight,
     getFontSize,
@@ -20,12 +20,12 @@ import { FadeBox } from "./FadeBox";
 import { Spin } from "./Spin";
 
 export interface ButtonConfig {
-    startIcon?: ColorSet;
-    endIcon?: ColorSet;
-    label?: ColorSet;
-    border?: ColorSet;
-    shadow?: ShadowSet;
-    background?: ColorSet;
+    startIcon?: UIStateConfig;
+    endIcon?: UIStateConfig;
+    label?: UIStateConfig;
+    border?: UIStateConfig;
+    shadow?: UIStateConfig;
+    background?: UIStateConfig;
 }
 
 type RenderIconFunction = (
@@ -33,10 +33,10 @@ type RenderIconFunction = (
     width: number,
     height: number,
     config: ButtonConfig,
-    actionState: ActionState
+    actionState: UIState
 ) => React.ReactNode;
 
-type RenderLabelFunction = (actionState: ActionState) => string;
+type RenderLabelFunction = (actionState: UIState) => string;
 
 interface ButtonProps {
     round: boolean;
@@ -68,7 +68,7 @@ interface ButtonProps {
     renderContent?: (
         theme: Theme,
         config: ButtonConfig,
-        actionState: ActionState
+        actionState: UIState
     ) => React.ReactNode;
 }
 
@@ -208,7 +208,11 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     private canFocus = (): boolean => {
         const theme: Theme = this.context;
-        return this.props.focusable && theme.focusable && !this.props.disabled;
+        return (
+            this.props.focusable &&
+            theme.focus.focusable &&
+            !this.props.disabled
+        );
     };
 
     private checkHover = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -320,7 +324,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         }
     };
 
-    private getCurrentState = (): ActionState => ({
+    private getCurrentState = (): UIState => ({
         isHover: this.state.hover,
         isActive: this.state.active,
         isSelected: this.props.selected,
@@ -330,7 +334,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     private renderContent = (
         theme: Theme,
         config: ButtonConfig,
-        actionState: ActionState
+        actionState: UIState
     ): React.ReactNode => {
         if (this.props.renderContent) {
             return this.props.renderContent(theme, config, actionState);
