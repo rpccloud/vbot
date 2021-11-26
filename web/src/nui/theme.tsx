@@ -1,6 +1,62 @@
 import React from "react";
 import { FontWeight, Size } from ".";
 
+export interface ITheme {
+    palette?: {
+        default?: {
+            main?: string;
+            contrastText?: string;
+        };
+        primary?: {
+            main?: string;
+            contrastText?: string;
+        };
+        hover?: {
+            main?: string;
+            contrastText?: string;
+        };
+        active?: {
+            main?: string;
+            contrastText?: string;
+        };
+        error?: {
+            main?: string;
+            contrastText?: string;
+        };
+        success?: {
+            main?: string;
+            contrastText?: string;
+        };
+        selected?: {
+            main?: string;
+            contrastText?: string;
+        };
+        disabled?: {
+            main?: string;
+            contrastText?: string;
+        };
+        focus?: string;
+        outline?: string;
+        shadow?: string;
+        divider?: string;
+    };
+    button?: {
+        ghost?: {
+            hoverOpacity?: number;
+            activeOpacity?: number;
+        };
+    };
+    transition?: {
+        durationMS?: number;
+        easing?: string;
+    };
+    borderRadius?: number;
+    size?: Size;
+    zIndex?: number;
+    focusable?: boolean;
+    fontWeight?: FontWeight;
+}
+
 export interface Theme {
     palette: {
         default: {
@@ -40,9 +96,11 @@ export interface Theme {
         shadow: string;
         divider: string;
     };
-    ghostButton: {
-        hoverOpacity: number;
-        activeOpacity: number;
+    button: {
+        ghost: {
+            hoverOpacity: number;
+            activeOpacity: number;
+        };
     };
     transition: {
         durationMS: number;
@@ -94,9 +152,11 @@ export const ThemeContext = React.createContext<Theme>({
         outline: "rgb(160, 160, 160)",
         divider: "rgb(80, 80, 80)",
     },
-    ghostButton: {
-        hoverOpacity: 0.2,
-        activeOpacity: 0.15,
+    button: {
+        ghost: {
+            hoverOpacity: 0.2,
+            activeOpacity: 0.15,
+        },
     },
     transition: {
         durationMS: 300,

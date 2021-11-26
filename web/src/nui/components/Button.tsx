@@ -222,7 +222,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 this.effect?.setHover(
                     true,
                     this.config?.background?.hover || "transparent",
-                    this.props.ghost ? theme.ghostButton.hoverOpacity : 1,
+                    this.props.ghost ? theme.button.ghost.hoverOpacity : 1,
                     this.props.hoverEffect,
                     theme.transition
                 );
@@ -231,8 +231,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 this.setState({ hover: false });
                 this.effect?.setHover(
                     false,
-                    "",
-                    0,
+                    this.config?.background?.hover || "transparent",
+                    this.props.ghost ? theme.button.ghost.hoverOpacity : 1,
                     this.props.hoverEffect,
                     theme.transition
                 );
@@ -283,7 +283,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 this.effect?.setActive(
                     true,
                     this.config?.background?.active || "transparent",
-                    this.props.ghost ? theme.ghostButton.activeOpacity : 1,
+                    this.props.ghost ? theme.button.ghost.activeOpacity : 1,
                     this.props.activeEffect,
                     theme.transition
                 );
@@ -293,7 +293,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 this.effect?.setActive(
                     false,
                     this.config?.background?.active || "transparent",
-                    this.props.ghost ? theme.ghostButton.activeOpacity : 1,
+                    this.props.ghost ? theme.button.ghost.activeOpacity : 1,
                     this.props.activeEffect,
                     theme.transition
                 );

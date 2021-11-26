@@ -1,9 +1,9 @@
 import React from "react";
 import { extendConfig } from "..";
-import { Theme, ThemeContext } from "../theme";
+import { ITheme, ThemeContext } from "../theme";
 
 interface ConfigProps {
-    value: Theme;
+    value: ITheme;
     children?: React.ReactNode;
 }
 

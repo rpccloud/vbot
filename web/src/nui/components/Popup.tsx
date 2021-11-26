@@ -1,8 +1,9 @@
 import React, { CSSProperties, ReactNode, useContext } from "react";
-import { makeTransition, Rect } from "..";
+import { makeTransition, Rect, withDefault } from "..";
 import { ActionSonar } from "../utils/action-sonar";
 import { ResizeSonar } from "../utils/resize-sonar";
 import { Theme, ThemeContext } from "../theme";
+import { Config } from "./Config";
 
 interface PopupProps {
     action: Array<"hover" | "click" | "focus">;
@@ -19,7 +20,7 @@ interface PopupState {
     screenRect?: Rect;
 }
 
-export class PopupCore extends React.Component<PopupProps, PopupState> {
+export class Popup extends React.Component<PopupProps, PopupState> {
     static contextType = ThemeContext;
     static defaultProps = {
         action: ["click"],
@@ -97,6 +98,9 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
             width: 0,
             height: 0,
         };
+        const currZIndex = withDefault(this.props.popupZIndex, theme.zIndex);
+        const popupZIndex =
+            currZIndex < 99999999 ? 99999999 : currZIndex + this.props.zStep;
         return (
             <div
                 ref={this.rootRef}
@@ -134,9 +138,7 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
                     }
                 }}
             >
-                <ZIndexContext.Provider
-                    value={{ zIndex: this.props.popupZIndex || 0 }}
-                >
+                <Config value={{ zIndex: popupZIndex }}>
                     <div
                         style={{
                             position: "fixed",
@@ -177,24 +179,10 @@ export class PopupCore extends React.Component<PopupProps, PopupState> {
                               })
                             : null}
                     </div>
-                </ZIndexContext.Provider>
+                </Config>
 
                 {this.props.children}
             </div>
         );
     }
 }
-
-export const Popup = (props: PopupProps) => {
-    const { zIndex } = useContext(ZIndexContext);
-
-    const popupZIndex = props.popupZIndex
-        ? props.popupZIndex
-        : zIndex < 99999999
-        ? 99999999
-        : zIndex + props.zStep;
-
-    return <PopupCore {...props} popupZIndex={popupZIndex} />;
-};
-
-Popup.defaultProps = PopupCore.defaultProps;
