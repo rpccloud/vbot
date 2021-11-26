@@ -321,7 +321,7 @@ export const DebugButton = (props: {}) => {
                     <Button
                         round={true}
                         ghost={true}
-                        startIcon={<AiOutlineLock />}
+                        label="H"
                         onClick={async () => {
                             await sleep(2000);
                         }}

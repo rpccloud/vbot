@@ -23,13 +23,16 @@ export class Span extends React.Component<SpanProps, SpanState> {
     render() {
         let theme: Theme = this.context;
         let fontSize = getFontSize(withDefault(this.props.size, theme.size));
-
+        let color = withDefault(
+            this.props.color,
+            this.props.style?.color,
+            theme.palette.default.contrastText
+        );
         return (
             <span
                 style={{
                     fontSize: fontSize,
-                    color:
-                        this.props.color || theme.palette.default.contrastText,
+                    color: color,
                     padding: 0,
                     margin: 0,
                     border: 0,

@@ -1,5 +1,5 @@
 import React from "react";
-import { UiCSSProperties } from "..";
+import { withDefault } from "..";
 import { Theme, ThemeContext } from "../theme";
 
 interface DividerProps {
@@ -8,13 +8,17 @@ interface DividerProps {
     space: number;
     lineWidth: number;
     color?: string;
-    style?: UiCSSProperties;
 }
 
 interface DividerState {}
 
-class DividerCore extends React.Component<DividerProps, DividerState> {
+export class Divider extends React.Component<DividerProps, DividerState> {
     static contextType = ThemeContext;
+    static defaultProps = {
+        type: "horizontal",
+        lineWidth: 0,
+        outline: "center",
+    };
 
     constructor(props: DividerProps) {
         super(props);
@@ -49,13 +53,13 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
                 height = lw;
                 break;
         }
+        const color = withDefault(this.props.color, theme.palette.divider);
         return (
             <div
                 style={{
-                    backgroundColor: this.props.color || theme.palette.divider,
+                    backgroundColor: color,
                     marginTop: top,
                     marginBottom: bottom,
-                    ...this.props.style,
                     height: height,
                 }}
             />
@@ -86,13 +90,13 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
                 width = lw;
                 break;
         }
+
         return (
             <div
                 style={{
                     backgroundColor: this.props.color || theme.palette.divider,
                     marginLeft: left,
                     marginRight: right,
-                    ...this.props.style,
                     width: width,
                 }}
             />
@@ -100,12 +104,10 @@ class DividerCore extends React.Component<DividerProps, DividerState> {
     }
 }
 
-export const Divider = (props: DividerProps) => {
-    return <DividerCore {...props} />;
+export const VDivider = (props: DividerProps) => {
+    return <Divider {...props} type="vertical" />;
 };
 
-Divider.defaultProps = {
-    type: "horizontal",
-    lineWidth: 0,
-    outline: "center",
+export const HDivider = (props: DividerProps) => {
+    return <Divider {...props} type="horizontal" />;
 };
