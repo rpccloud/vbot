@@ -6,6 +6,7 @@ import { DebugUnit } from "./DebugUnit";
 
 import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
 import { sleep } from "../../microui/util";
+import { Config } from "../components/Config";
 
 export const DebugButton = (props: {}) => {
     const VSpacer = <Divider type="vertical" space={16} />;
@@ -310,11 +311,63 @@ export const DebugButton = (props: {}) => {
                     {VSpacer}
                     <Button
                         ghost={false}
-                        border={false}
+                        border={true}
                         startIcon={<AiOutlineLock />}
                         label={"Button"}
                         config={{ border: { normal: "red" } }}
                     />
+                </DebugUnit>
+
+                <DebugUnit title="Button-disabled" width={160} height={150}>
+                    <Button
+                        round={true}
+                        ghost={true}
+                        disabled={true}
+                        label="H"
+                        onClick={async () => {
+                            await sleep(2000);
+                        }}
+                    />
+                    {VSpacer}
+                    <Button
+                        ghost={true}
+                        disabled={true}
+                        startIcon={<AiOutlineLock />}
+                        label={"Button"}
+                    />
+                    {VSpacer}
+                    <Button
+                        round={true}
+                        ghost={false}
+                        disabled={true}
+                        label="H"
+                        onClick={async () => {
+                            await sleep(2000);
+                        }}
+                    />
+                    {VSpacer}
+                    <Button
+                        ghost={false}
+                        disabled={true}
+                        startIcon={<AiOutlineLock />}
+                        label={"Button"}
+                    />
+                </DebugUnit>
+
+                <DebugUnit title="Button-selected" width={160} height={150}>
+                    <Config
+                        value={{
+                            palette: {
+                                selected: { main: "red", contrastText: "blue" },
+                            },
+                        }}
+                    >
+                        <Button
+                            selected={true}
+                            startIcon={<AiOutlineLock />}
+                            label={"Button"}
+                        />
+                    </Config>
                 </DebugUnit>
 
                 <DebugUnit title="Button-async" width={260} height={150}>

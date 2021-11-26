@@ -534,6 +534,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         ? "transparent"
                         : this.props.disabled || this.state.loading
                         ? this.config?.background?.disabled
+                        : this.props.selected
+                        ? this.config?.background?.selected
                         : this.config?.background?.normal,
                     transition: makeTransition(
                         ["opacity", "color", "border", "box-shadow"],
