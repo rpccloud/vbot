@@ -29,8 +29,8 @@ interface FrameState {
 
 class Frame extends React.Component<FrameProps, FrameState> {
     private effectRef = React.createRef<HTMLDivElement>();
-    private minEffectTime = 0;
-    private effectStartTime = 0;
+    private minScaleTime = 0;
+    private startScaleTime = 0;
     private show: boolean;
 
     constructor(props: FrameProps) {
@@ -55,39 +55,37 @@ class Frame extends React.Component<FrameProps, FrameState> {
             this.show = this.props.show;
             if (this.show) {
                 if (this.props.scaleEffect) {
-                    this.effectStartTime = TimerManager.get().getNowMS();
-                    this.minEffectTime = this.props.transition.durationMS;
+                    this.startScaleTime = TimerManager.get().getNowMS();
+                    this.minScaleTime = this.props.transition.durationMS;
                 }
-                this.flushShow();
+                setTimeout(() => {
+                    this.setState({ show: this.show });
+                });
             } else {
-                const nowMS = TimerManager.get().getNowMS();
-                const effectLastingMS = nowMS - this.effectStartTime;
+                const dur = TimerManager.get().getNowMS() - this.startScaleTime;
                 setTimeout(
                     () => {
-                        this.flushShow();
+                        this.setState({ show: this.show });
                     },
-                    effectLastingMS > this.minEffectTime
-                        ? 0
-                        : this.minEffectTime - effectLastingMS
+                    dur > this.minScaleTime ? 0 : this.minScaleTime - dur
                 );
             }
         }
     }
 
-    private flushShow() {
-        this.setState({ show: this.show });
-    }
-
     private renderWithEffect() {
         this.updateShow();
         let {
+            scaleEffect,
+            inset,
             borderWidth,
             borderColor,
-            backgroundColor,
             borderRadius,
             boxShadow,
             transition,
             borderStyle,
+            backgroundColor,
+            backgroundOpacity,
         } = this.props;
 
         const effectElem = this.effectRef.current;
@@ -114,7 +112,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
                 ref={this.effectRef}
                 style={{
                     position: "absolute",
-                    inset: this.props.inset,
+                    inset: inset,
                     transition: makeTransition(
                         ["opacity"],
                         transition.durationMS + "ms",
@@ -136,11 +134,9 @@ class Frame extends React.Component<FrameProps, FrameState> {
                             transition.durationMS + "ms",
                             transition.easing
                         ),
-                        opacity: this.props.backgroundOpacity,
+                        opacity: backgroundOpacity,
                         transform:
-                            show || !this.props.scaleEffect
-                                ? "scale(1)"
-                                : "scale(0)",
+                            show || !scaleEffect ? "scale(1)" : "scale(0)",
                         left: mouseX - radius,
                         top: mouseY - radius,
                         width: 2 * radius,
@@ -155,6 +151,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
 
     private renderWithoutEffect() {
         let {
+            inset,
             borderWidth,
             borderColor,
             backgroundColor,
@@ -168,9 +165,9 @@ class Frame extends React.Component<FrameProps, FrameState> {
                 ref={this.effectRef}
                 style={{
                     position: "absolute",
-                    inset: this.props.inset,
+                    inset: inset,
                     boxSizing: "border-box",
-                    opacity: this.state.show ? 1 : 0,
+                    opacity: this.props.show ? 1 : 0,
                     border: `${borderWidth}px ${borderStyle} ${borderColor}`,
                     borderRadius: borderRadius,
                     boxShadow: boxShadow,
@@ -249,18 +246,36 @@ export class Background extends React.Component<BackgroundProps, {}> {
 
         return uiState.isDisabled ? (
             <div
-                style={{
-                    position: "relative",
-                    width: "100%",
-                    height: "100%",
-                    boxSizing: "border-box",
-                    backgroundColor: uiBackground.disabled,
-                    border: `${borderWidth}px solid ${uiBorder.disabled}`,
-                    borderRadius: borderRadius,
-                    boxShadow: uiShadow.disabled,
-                }}
-            />
+                style={{ position: "relative", width: "100%", height: "100%" }}
+            >
+                <Frame
+                    show={true}
+                    scaleEffect={false}
+                    opacityEffect={false}
+                    inset={0}
+                    transition={theme.transition}
+                    borderRadius={borderRadius}
+                    borderStyle="solid"
+                    borderWidth={borderWidth}
+                    borderColor={uiBorder.disabled}
+                    backgroundColor={uiBackground.disabled}
+                    backgroundOpacity={uiOpacity.normal}
+                    boxShadow={uiShadow.disabled}
+                />
+            </div>
         ) : (
+            // <div
+            //     style={{
+            //         position: "relative",
+            //         width: "100%",
+            //         height: "100%",
+            //         boxSizing: "border-box",
+            //         backgroundColor: uiBackground.disabled,
+            //         border: `${borderWidth}px solid ${uiBorder.disabled}`,
+            //         borderRadius: borderRadius,
+            //         boxShadow: uiShadow.disabled,
+            //     }}
+            // />
             <div
                 style={{ position: "relative", width: "100%", height: "100%" }}
             >
