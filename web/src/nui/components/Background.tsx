@@ -158,7 +158,14 @@ class Frame extends React.Component<FrameProps, FrameState> {
             borderRadius,
             boxShadow,
             borderStyle,
+            transition,
         } = this.props;
+
+        const transitionString = makeTransition(
+            ["all"],
+            transition.durationMS + "ms",
+            transition.easing
+        );
 
         return (
             <div
@@ -172,11 +179,13 @@ class Frame extends React.Component<FrameProps, FrameState> {
                     borderRadius: borderRadius,
                     boxShadow: boxShadow,
                     overflow: "hidden",
+                    transition: transitionString,
                 }}
             >
                 <div
                     style={{
                         position: "absolute",
+                        transition: transitionString,
                         inset: 0,
                         opacity: this.props.backgroundOpacity,
                         backgroundColor: backgroundColor,
@@ -212,11 +221,10 @@ interface BackgroundProps {
 
 export class Background extends React.Component<BackgroundProps, {}> {
     private hasFrame: boolean = false;
+
     constructor(props: BackgroundProps) {
         super(props);
-        this.state = {
-            init: false,
-        };
+        this.state = {};
     }
 
     render() {
@@ -237,14 +245,15 @@ export class Background extends React.Component<BackgroundProps, {}> {
 
         if (!this.hasFrame) {
             this.hasFrame =
-                !uiState.isDisabled &&
-                (uiState.isHover ||
-                    uiState.isActive ||
-                    uiState.isSelected ||
-                    isFocus);
+                uiState.isHover ||
+                uiState.isActive ||
+                uiState.isSelected ||
+                isFocus;
         }
 
-        return uiState.isDisabled ? (
+        const isDisabled = uiState.isDisabled;
+
+        return (
             <div
                 style={{ position: "relative", width: "100%", height: "100%" }}
             >
@@ -257,43 +266,16 @@ export class Background extends React.Component<BackgroundProps, {}> {
                     borderRadius={borderRadius}
                     borderStyle="solid"
                     borderWidth={borderWidth}
-                    borderColor={uiBorder.disabled}
-                    backgroundColor={uiBackground.disabled}
                     backgroundOpacity={uiOpacity.normal}
-                    boxShadow={uiShadow.disabled}
+                    borderColor={
+                        isDisabled ? uiBorder.disabled : uiBorder.normal
+                    }
+                    backgroundColor={
+                        isDisabled ? uiBackground.disabled : uiBackground.normal
+                    }
+                    boxShadow={isDisabled ? uiShadow.disabled : uiShadow.normal}
                 />
-            </div>
-        ) : (
-            // <div
-            //     style={{
-            //         position: "relative",
-            //         width: "100%",
-            //         height: "100%",
-            //         boxSizing: "border-box",
-            //         backgroundColor: uiBackground.disabled,
-            //         border: `${borderWidth}px solid ${uiBorder.disabled}`,
-            //         borderRadius: borderRadius,
-            //         boxShadow: uiShadow.disabled,
-            //     }}
-            // />
-            <div
-                style={{ position: "relative", width: "100%", height: "100%" }}
-            >
-                <Frame
-                    show={true}
-                    scaleEffect={false}
-                    opacityEffect={false}
-                    inset={0}
-                    transition={theme.transition}
-                    borderRadius={borderRadius}
-                    borderStyle="solid"
-                    borderWidth={borderWidth}
-                    borderColor={uiBorder.normal}
-                    backgroundColor={uiBackground.normal}
-                    backgroundOpacity={uiOpacity.normal}
-                    boxShadow={uiShadow.normal}
-                />
-                {this.hasFrame ? (
+                {this.hasFrame && !isDisabled ? (
                     <>
                         <Frame
                             show={uiState.isHover}

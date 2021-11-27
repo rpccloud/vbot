@@ -314,6 +314,9 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 </span>
             );
 
+            const startIconColor = getStateColor(config.startIcon, actionState);
+            const endIconColor = getStateColor(config.endIcon, actionState);
+
             const startIcon =
                 typeof this.props.startIcon === "function" ? (
                     this.props.startIcon(
@@ -324,7 +327,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         actionState
                     )
                 ) : this.props.loading === "startIcon" && this.state.loading ? (
-                    <Spin size={this.props.startIconSize} />
+                    <Spin
+                        size={this.props.startIconSize}
+                        style={{ color: startIconColor }}
+                    />
                 ) : (
                     this.props.startIcon
                 );
@@ -338,7 +344,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         actionState
                     )
                 ) : this.props.loading === "endIcon" && this.state.loading ? (
-                    <Spin size={this.props.endIconSize} />
+                    <Spin
+                        size={this.props.endIconSize}
+                        style={{ color: endIconColor }}
+                    />
                 ) : (
                     this.props.endIcon
                 );
@@ -361,10 +370,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     {startIcon ? (
                         <div
                             style={{
-                                color: getStateColor(
-                                    config.startIcon,
-                                    actionState
-                                ),
+                                color: startIconColor,
                                 width: this.startIconFontSize,
                                 height: this.startIconFontSize,
                                 fontSize: this.startIconFontSize,
@@ -404,10 +410,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     {endIcon ? (
                         <div
                             style={{
-                                color: getStateColor(
-                                    config.endIcon,
-                                    actionState
-                                ),
+                                color: endIconColor,
                                 width: this.endIconFontSize,
                                 height: this.endIconFontSize,
                                 fontSize: this.endIconFontSize,

@@ -161,12 +161,12 @@ export const ThemeContext = React.createContext<Theme>({
     },
     button: {
         ghost: {
-            hoverOpacity: 0.05,
+            hoverOpacity: 0.1,
             activeOpacity: 0.1,
         },
     },
     transition: {
-        durationMS: 500,
+        durationMS: 300,
         easing: "ease-in-out",
     },
     borderRadius: 8,

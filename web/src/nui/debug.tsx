@@ -15,7 +15,7 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
 
     render() {
         return (
-            <Page style={{ padding: 16, background: "#fff" }}>
+            <Page style={{ padding: 16 }}>
                 <DebugButton />
                 <DebugSpin />
             </Page>
