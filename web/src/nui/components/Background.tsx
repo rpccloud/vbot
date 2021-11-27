@@ -14,11 +14,11 @@ interface FrameProps {
         easing: string;
     };
     borderRadius: number;
-    maxOpacity: number;
     borderWidth: number;
     borderStyle: string;
     borderColor?: string;
     backgroundColor?: string;
+    backgroundOpacity: number;
     boxShadow?: string;
 }
 
@@ -67,7 +67,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
                         this.flushShow();
                     },
                     effectLastingMS > this.minEffectTime
-                        ? 10
+                        ? 0
                         : this.minEffectTime - effectLastingMS
                 );
             }
@@ -136,7 +136,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
                             transition.durationMS + "ms",
                             transition.easing
                         ),
-                        opacity: this.props.maxOpacity,
+                        opacity: this.props.backgroundOpacity,
                         transform:
                             show || !this.props.scaleEffect
                                 ? "scale(1)"
@@ -181,7 +181,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
                     style={{
                         position: "absolute",
                         inset: 0,
-                        opacity: this.props.maxOpacity,
+                        opacity: this.props.backgroundOpacity,
                         backgroundColor: backgroundColor,
                     }}
                 />
@@ -271,11 +271,11 @@ export class Background extends React.Component<BackgroundProps, {}> {
                     inset={0}
                     transition={theme.transition}
                     borderRadius={borderRadius}
-                    maxOpacity={uiOpacity.normal}
                     borderStyle="solid"
                     borderWidth={borderWidth}
                     borderColor={uiBorder.normal}
                     backgroundColor={uiBackground.normal}
+                    backgroundOpacity={uiOpacity.normal}
                     boxShadow={uiShadow.normal}
                 />
                 {this.hasFrame ? (
@@ -287,11 +287,11 @@ export class Background extends React.Component<BackgroundProps, {}> {
                             inset={0}
                             transition={theme.transition}
                             borderRadius={borderRadius}
-                            maxOpacity={uiOpacity.hover}
                             borderStyle="solid"
                             borderWidth={borderWidth}
                             borderColor={uiBorder.hover}
                             backgroundColor={uiBackground.hover}
+                            backgroundOpacity={uiOpacity.hover}
                             boxShadow={uiShadow.hover}
                         />
                         <Frame
@@ -301,11 +301,11 @@ export class Background extends React.Component<BackgroundProps, {}> {
                             inset={0}
                             transition={theme.transition}
                             borderRadius={borderRadius}
-                            maxOpacity={uiOpacity.active}
                             borderStyle="solid"
                             borderWidth={borderWidth}
                             borderColor={uiBorder.active}
                             backgroundColor={uiBackground.active}
+                            backgroundOpacity={uiOpacity.active}
                             boxShadow={uiShadow.active}
                         />
                         <Frame
@@ -315,11 +315,11 @@ export class Background extends React.Component<BackgroundProps, {}> {
                             inset={0}
                             transition={theme.transition}
                             borderRadius={borderRadius}
-                            maxOpacity={1}
                             borderStyle="solid"
                             borderWidth={borderWidth}
                             borderColor={uiBorder.selected}
                             backgroundColor={uiBackground.selected}
+                            backgroundOpacity={1}
                             boxShadow={uiShadow.selected}
                         />
                         <Frame
@@ -329,11 +329,11 @@ export class Background extends React.Component<BackgroundProps, {}> {
                             inset={focusInset}
                             transition={theme.transition}
                             borderRadius={borderRadius}
-                            maxOpacity={1}
                             borderStyle={theme.focus.borderStyle}
                             borderWidth={theme.focus.borderWidth}
                             borderColor={theme.focus.borderColor}
                             backgroundColor={"transparent"}
+                            backgroundOpacity={1}
                             boxShadow={""}
                         />
                     </>
