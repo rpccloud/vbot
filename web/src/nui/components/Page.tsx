@@ -8,9 +8,7 @@ interface PageProps {
     style?: React.CSSProperties;
 }
 
-interface PageState {}
-
-export class Page extends React.Component<PageProps, PageState> {
+export class Page extends React.Component<PageProps, {}> {
     static contextType = ThemeContext;
 
     constructor(props: PageProps) {
