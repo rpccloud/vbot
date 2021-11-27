@@ -4,7 +4,7 @@ import {
     UIStateConfig,
     extendConfig,
     getFontSize,
-    getStateColor,
+    getStateValue,
     makeTransition,
     Size,
     UiCSSProperties,
@@ -103,7 +103,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         shadowEffect: true,
         hoverEffect: false,
         activeEffect: true,
-        loading: "startIcon",
+        loadingIconPosition: "startIcon",
         onClick: () => {},
     };
 
@@ -218,7 +218,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         );
     };
 
-    private checkHover = (e: React.MouseEvent<HTMLDivElement>) => {
+    private checkHover = () => {
         this.actionSonar?.checkHover(
             () => {
                 this.setState({ hover: true });
@@ -266,7 +266,13 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private onKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        if (this.canFocus()) {
+        if (
+            this.canFocus() &&
+            !e.ctrlKey &&
+            !e.altKey &&
+            !e.shiftKey &&
+            e.code === "Enter"
+        ) {
             this.rootRef.current?.click();
         }
     };
@@ -291,7 +297,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             const labelView = (
                 <span
                     style={{
-                        color: getStateColor(config.label, actionState),
+                        color: getStateValue(config.label, actionState),
                         whiteSpace: "nowrap",
                         fontSize: this.labelFontSize,
                         transition: "inherit",
@@ -305,8 +311,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 </span>
             );
 
-            const startIconColor = getStateColor(config.startIcon, actionState);
-            const endIconColor = getStateColor(config.endIcon, actionState);
+            const startIconColor = getStateValue(config.startIcon, actionState);
+            const endIconColor = getStateValue(config.endIcon, actionState);
 
             const startIcon =
                 typeof this.props.startIcon === "function" ? (
@@ -391,7 +397,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                                     flex: 0,
                                 }}
                                 fade={
-                                    (0.6 * this.labelFontSize) /
+                                    (0.8 * this.labelFontSize) /
                                     this.props.labelWidth
                                 }
                             >
@@ -447,7 +453,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
         this.config = extendConfig(this.getConfig(theme), this.props.config);
         this.borderRadius = this.props.round
-            ? this.height / 2 + 1
+            ? this.height / 2
             : withDefault(this.props.borderRadius, theme.borderRadius);
     }
 
@@ -471,11 +477,11 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 onClick={this.onClick}
                 onKeyPress={this.onKeyPress}
                 style={{
-                    fontWeight: 600,
-                    ...this.props.style,
                     display: "inline-block",
-                    height: this.height,
+                    fontWeight: 600,
                     cursor: this.props.disabled ? "not-allowed" : "pointer",
+                    ...this.props.style,
+                    height: this.height,
                 }}
             >
                 <Background
@@ -496,9 +502,9 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                             ? theme.button.ghost.activeOpacity
                             : 1,
                     }}
-                    uiBorder={this.config?.border!!}
-                    uiBackground={this.config?.background!!}
-                    uiShadow={this.config?.shadow!!}
+                    uiBorder={this.config?.border || {}}
+                    uiBackground={this.config?.background || {}}
+                    uiShadow={this.config?.shadow || {}}
                 />
 
                 <div
@@ -514,7 +520,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         borderRadius: this.borderRadius,
                         overflow: "hidden",
                         transition: makeTransition(
-                            ["opacity", "color", "border", "box-shadow"],
+                            ["all"],
                             theme.transition.durationMS + "ms",
                             theme.transition.easing
                         ),

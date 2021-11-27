@@ -27,7 +27,7 @@ export type UIStateConfig = {
     disabled?: string;
 };
 
-export function getStateColor(
+export function getStateValue(
     colorSet: UIStateConfig | undefined,
     state: UIState
 ): string {
