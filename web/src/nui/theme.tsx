@@ -166,7 +166,7 @@ export const ThemeContext = React.createContext<Theme>({
         },
     },
     transition: {
-        durationMS: 300,
+        durationMS: 500,
         easing: "ease-in-out",
     },
     borderRadius: 8,

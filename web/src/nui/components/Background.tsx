@@ -6,6 +6,7 @@ import { PointerManager } from "../utils/pointer-manager";
 
 interface FrameProps {
     show: boolean;
+    opacityEffect: boolean;
     scaleEffect: boolean;
     inset: number;
     transition: {
@@ -22,6 +23,7 @@ interface FrameProps {
 }
 
 interface FrameState {
+    init: boolean;
     show: boolean;
 }
 
@@ -29,20 +31,24 @@ class Frame extends React.Component<FrameProps, FrameState> {
     private effectRef = React.createRef<HTMLDivElement>();
     private minEffectTime = 0;
     private effectStartTime = 0;
-    private show = false;
+    private show: boolean;
 
     constructor(props: FrameProps) {
         super(props);
+        this.show = this.props.show;
         this.state = {
-            show: false,
+            init: !this.props.scaleEffect && !this.props.opacityEffect,
+            show: this.props.show,
         };
     }
 
-    // componentDidMount() {
-    //     setTimeout(() => {
-    //         this.setState({ init: true });
-    //     });
-    // }
+    componentDidMount() {
+        if (!this.state.init) {
+            setTimeout(() => {
+                this.setState({ init: true });
+            }, 30);
+        }
+    }
 
     private updateShow() {
         if (this.show !== this.props.show) {
@@ -52,10 +58,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
                     this.effectStartTime = TimerManager.get().getNowMS();
                     this.minEffectTime = this.props.transition.durationMS;
                 }
-
-                setTimeout(() => {
-                    this.flushShow();
-                });
+                this.flushShow();
             } else {
                 const nowMS = TimerManager.get().getNowMS();
                 const effectLastingMS = nowMS - this.effectStartTime;
@@ -64,7 +67,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
                         this.flushShow();
                     },
                     effectLastingMS > this.minEffectTime
-                        ? 0
+                        ? 10
                         : this.minEffectTime - effectLastingMS
                 );
             }
@@ -104,6 +107,8 @@ class Frame extends React.Component<FrameProps, FrameState> {
             Math.sqrt(Math.pow(maxDeltaX, 2) + Math.pow(maxDeltaY, 2))
         );
 
+        const show = this.state.init && this.state.show;
+
         return (
             <div
                 ref={this.effectRef}
@@ -116,7 +121,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
                         transition.easing
                     ),
                     boxSizing: "border-box",
-                    opacity: this.state.show ? this.props.maxOpacity : 0,
+                    opacity: show ? 1 : 0,
                     border: `${borderWidth}px ${borderStyle} ${borderColor}`,
                     borderRadius: borderRadius,
                     boxShadow: boxShadow,
@@ -126,13 +131,16 @@ class Frame extends React.Component<FrameProps, FrameState> {
                 <div
                     style={{
                         position: "absolute",
-                        inset: this.props.inset,
                         transition: makeTransition(
                             ["transform"],
                             transition.durationMS + "ms",
                             transition.easing
                         ),
-                        transform: this.state.show ? "scale(1)" : "scale(0)",
+                        opacity: this.props.maxOpacity,
+                        transform:
+                            show || !this.props.scaleEffect
+                                ? "scale(1)"
+                                : "scale(0)",
                         left: mouseX - radius,
                         top: mouseY - radius,
                         width: 2 * radius,
@@ -146,41 +154,43 @@ class Frame extends React.Component<FrameProps, FrameState> {
     }
 
     private renderWithoutEffect() {
-        this.updateShow();
-
         let {
             borderWidth,
             borderColor,
             backgroundColor,
             borderRadius,
             boxShadow,
-            transition,
             borderStyle,
         } = this.props;
 
         return (
             <div
+                ref={this.effectRef}
                 style={{
                     position: "absolute",
                     inset: this.props.inset,
-                    transition: makeTransition(
-                        ["opacity"],
-                        transition.durationMS + "ms",
-                        transition.easing
-                    ),
                     boxSizing: "border-box",
-                    opacity: this.state.show ? this.props.maxOpacity : 0,
-                    backgroundColor: backgroundColor,
+                    opacity: this.state.show ? 1 : 0,
                     border: `${borderWidth}px ${borderStyle} ${borderColor}`,
                     borderRadius: borderRadius,
                     boxShadow: boxShadow,
+                    overflow: "hidden",
                 }}
-            />
+            >
+                <div
+                    style={{
+                        position: "absolute",
+                        inset: 0,
+                        opacity: this.props.maxOpacity,
+                        backgroundColor: backgroundColor,
+                    }}
+                />
+            </div>
         );
     }
 
     render() {
-        if (this.props.scaleEffect) {
+        if (this.props.scaleEffect || this.props.opacityEffect) {
             return this.renderWithEffect();
         } else {
             return this.renderWithoutEffect();
@@ -197,7 +207,7 @@ interface BackgroundProps {
     borderWidth: number;
     borderRadius: number;
     uiState: UIState;
-    uiOpacity: { hover: number; active: number };
+    uiOpacity: { normal: number; hover: number; active: number };
     uiBorder: UIStateConfig;
     uiBackground: UIStateConfig;
     uiShadow: UIStateConfig;
@@ -257,10 +267,11 @@ export class Background extends React.Component<BackgroundProps, {}> {
                 <Frame
                     show={true}
                     scaleEffect={false}
+                    opacityEffect={false}
                     inset={0}
                     transition={theme.transition}
                     borderRadius={borderRadius}
-                    maxOpacity={1}
+                    maxOpacity={uiOpacity.normal}
                     borderStyle="solid"
                     borderWidth={borderWidth}
                     borderColor={uiBorder.normal}
@@ -272,6 +283,7 @@ export class Background extends React.Component<BackgroundProps, {}> {
                         <Frame
                             show={uiState.isHover}
                             scaleEffect={hoverScaleEffect}
+                            opacityEffect={true}
                             inset={0}
                             transition={theme.transition}
                             borderRadius={borderRadius}
@@ -285,6 +297,7 @@ export class Background extends React.Component<BackgroundProps, {}> {
                         <Frame
                             show={uiState.isActive}
                             scaleEffect={activeScaleEffect}
+                            opacityEffect={true}
                             inset={0}
                             transition={theme.transition}
                             borderRadius={borderRadius}
@@ -298,6 +311,7 @@ export class Background extends React.Component<BackgroundProps, {}> {
                         <Frame
                             show={uiState.isSelected}
                             scaleEffect={false}
+                            opacityEffect={true}
                             inset={0}
                             transition={theme.transition}
                             borderRadius={borderRadius}
@@ -311,6 +325,7 @@ export class Background extends React.Component<BackgroundProps, {}> {
                         <Frame
                             show={isFocus}
                             scaleEffect={false}
+                            opacityEffect={true}
                             inset={focusInset}
                             transition={theme.transition}
                             borderRadius={borderRadius}

@@ -145,26 +145,39 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         const sr = this.height / 10;
         const sc = this.props.shadowEffect ? palette.shadow : "transparent";
 
+        const fgNormal = this.props.ghost
+            ? palette.primary.main
+            : palette.primary.contrastText;
+        const fgHover = this.props.ghost
+            ? palette.hover.main
+            : palette.hover.contrastText;
+        const fgActive = this.props.ghost
+            ? palette.active.main
+            : palette.active.contrastText;
+        const fgSelected = this.props.ghost
+            ? palette.selected.main
+            : palette.selected.contrastText;
+
         return {
             startIcon: {
-                normal: palette.primary.contrastText,
-                hover: palette.hover.contrastText,
-                active: palette.active.contrastText,
-                selected: palette.selected.contrastText,
+                normal: fgNormal,
+                hover: fgHover,
+                active: fgActive,
+                selected: fgSelected,
                 disabled: palette.disabled.contrastText,
             },
             endIcon: {
-                normal: palette.primary.contrastText,
-                hover: palette.hover.contrastText,
-                active: palette.active.contrastText,
-                selected: palette.selected.contrastText,
+                normal: fgNormal,
+                hover: fgHover,
+                active: fgActive,
+                selected: fgSelected,
                 disabled: palette.disabled.contrastText,
             },
             label: {
-                normal: palette.primary.contrastText,
-                hover: palette.hover.contrastText,
-                active: palette.active.contrastText,
-                selected: palette.selected.contrastText,
+                normal: fgNormal,
+                hover: fgHover,
+                active: fgActive,
+                selected: fgSelected,
                 disabled: palette.disabled.contrastText,
             },
             border: {
@@ -457,6 +470,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 onClick={this.onClick}
                 onKeyPress={this.onKeyPress}
                 style={{
+                    fontWeight: 600,
                     ...this.props.style,
                     display: "inline-block",
                     height: this.height,
@@ -479,6 +493,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     borderRadius={this.borderRadius}
                     uiState={uiState}
                     uiOpacity={{
+                        normal: this.props.ghost ? 0 : 1,
                         hover: this.props.ghost
                             ? theme.button.ghost.hoverOpacity
                             : 1,

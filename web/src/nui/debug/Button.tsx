@@ -23,6 +23,7 @@ export const DebugButton = (props: {}) => {
                 >
                     <Button
                         label="Button"
+                        hoverEffect={true}
                         config={{
                             background: { normal: "gray", hover: "green" },
                             border: { normal: "blue", hover: "red" },
