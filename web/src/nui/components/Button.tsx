@@ -474,12 +474,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     ...this.props.style,
                     display: "inline-block",
                     height: this.height,
-                    transition: makeTransition(
-                        ["opacity", "color", "border", "box-shadow"],
-                        theme.transition.durationMS + "ms",
-                        theme.transition.easing
-                    ),
-                    overflow: "hidden",
                     cursor: this.props.disabled ? "not-allowed" : "pointer",
                 }}
             >
@@ -516,7 +510,13 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         width: this.props.round
                             ? this.height
                             : withDefault(this.props.style?.width, "auto"),
-                        transition: "inherit",
+                        borderRadius: this.borderRadius,
+                        overflow: "hidden",
+                        transition: makeTransition(
+                            ["opacity", "color", "border", "box-shadow"],
+                            theme.transition.durationMS + "ms",
+                            theme.transition.easing
+                        ),
                     }}
                 >
                     {this.renderContent(theme, this.config!!, uiState)}
