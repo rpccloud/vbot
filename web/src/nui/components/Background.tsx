@@ -93,7 +93,7 @@ class Frame extends React.Component<FrameProps, FrameState> {
             ? effectElem.getBoundingClientRect()
             : { x: 0, y: 0, width: 0, height: 0 };
 
-        const mousePT = PointerManager.get().getMouseLocation();
+        const mousePT = PointerManager.getMouseLocation();
         const pt = { x: mousePT.x - effectRect.x, y: mousePT.y - effectRect.y };
         const rw = effectRect.width;
         const rh = effectRect.height;

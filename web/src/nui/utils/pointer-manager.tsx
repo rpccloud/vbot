@@ -6,19 +6,34 @@ interface PointerListener {
 }
 
 export class PointerManager {
-    private static instance = new PointerManager();
+    private static seed: number = 1;
+    private static mouseDownPoint?: Point;
+    private static sonarMap = new Map<number, PointerListener>();
+    private static mouseLocation: Point = { x: 0, y: 0 };
 
-    public static get() {
-        return PointerManager.instance;
+    public static checkPointerMove(
+        onPointerDown: () => void,
+        onPointerMove: (xDelta: number, yDelta: number) => void,
+        onPointerUp: () => void
+    ): boolean {
+        if (this.mouseDownPoint) {
+            const id = this.seed++;
+            onPointerDown();
+            this.sonarMap.set(id, {
+                onPointerMove: onPointerMove,
+                onPointerUp: onPointerUp,
+            });
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    private seed: number = 1;
-    private mouseDownPoint?: Point;
-    private sonarMap = new Map<number, PointerListener>();
+    public static getMouseLocation(): Point {
+        return { x: this.mouseLocation.x, y: this.mouseLocation.y };
+    }
 
-    private mouseLocation: Point = { x: 0, y: 0 };
-
-    constructor() {
+    private static _ = (() => {
         window.addEventListener(
             "pointerdown",
             (e) => {
@@ -56,27 +71,5 @@ export class PointerManager {
             },
             true
         );
-    }
-
-    public checkPointerMove(
-        onPointerDown: () => void,
-        onPointerMove: (xDelta: number, yDelta: number) => void,
-        onPointerUp: () => void
-    ): boolean {
-        if (this.mouseDownPoint) {
-            const id = this.seed++;
-            onPointerDown();
-            this.sonarMap.set(id, {
-                onPointerMove: onPointerMove,
-                onPointerUp: onPointerUp,
-            });
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public getMouseLocation(): Point {
-        return { x: this.mouseLocation.x, y: this.mouseLocation.y };
-    }
+    })();
 }
