@@ -1,6 +1,6 @@
 import React from "react";
 import { makeTransition, range, UIState, UIStateConfig } from "..";
-import { TimerManager } from "../../microui/util";
+import { TimerManager } from "../utils/time-manager";
 import { Theme } from "../theme";
 import { PointerManager } from "../utils/pointer-manager";
 
@@ -55,14 +55,14 @@ class Frame extends React.Component<FrameProps, FrameState> {
             this.show = this.props.show;
             if (this.show) {
                 if (this.props.scaleEffect) {
-                    this.startScaleTime = TimerManager.get().getNowMS();
+                    this.startScaleTime = TimerManager.getNowMS();
                     this.minScaleTime = this.props.transition.durationMS;
                 }
                 setTimeout(() => {
                     this.setState({ show: this.show });
                 });
             } else {
-                const dur = TimerManager.get().getNowMS() - this.startScaleTime;
+                const dur = TimerManager.getNowMS() - this.startScaleTime;
                 setTimeout(
                     () => {
                         this.setState({ show: this.show });
