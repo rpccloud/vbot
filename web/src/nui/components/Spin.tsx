@@ -1,8 +1,8 @@
 import React from "react";
 import { Theme, ThemeContext } from "../theme";
 import { AiOutlineLoading3Quarters } from "@react-icons/all-files/ai/AiOutlineLoading3Quarters";
-import { Size, UiCSSProperties, withDefault } from "..";
-import { getFontSize, TimerManager } from "../../microui/util";
+import { getFontSize, Size, UiCSSProperties, withDefault } from "..";
+import { TimerManager } from "../utils/time-manager";
 
 type RenderIconFunction = (
     theme: Theme,
@@ -41,15 +41,14 @@ export class Spin extends React.Component<SpinProps, SpinState> {
 
     componentDidMount() {
         if (this.timer === undefined) {
-            const timerManager = TimerManager.get();
-            this.timer = timerManager.attach(this);
-            timerManager.fast(this.timer);
+            this.timer = TimerManager.attach(this);
+            TimerManager.fast(this.timer);
         }
     }
 
     componentWillUnmount() {
         if (this.timer) {
-            TimerManager.get().detach(this.timer);
+            TimerManager.detach(this.timer);
             this.timer = undefined;
         }
     }
