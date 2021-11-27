@@ -3,7 +3,6 @@ import {
     UIState,
     UIStateConfig,
     extendConfig,
-    FontWeight,
     getFontSize,
     getStateColor,
     makeTransition,
@@ -36,6 +35,22 @@ type RenderIconFunction = (
 
 type RenderLabelFunction = (actionState: UIState) => string;
 
+const makeSpacerElem = (
+    canFlex: boolean,
+    value: number | undefined,
+    defaultValue: number
+): React.ReactNode => {
+    return (
+        <div
+            style={{
+                flex: value === undefined && canFlex ? 1 : 0,
+                width: withDefault(value, defaultValue),
+                minWidth: withDefault(value, 0),
+            }}
+        />
+    );
+};
+
 interface ButtonProps {
     round: boolean;
     ghost: boolean;
@@ -58,7 +73,6 @@ interface ButtonProps {
     endMarginRight?: number;
     endIcon?: React.ReactNode | RenderIconFunction;
     endIconSize?: Size;
-    fontWeight?: FontWeight;
     borderRadius?: number;
     style?: UiCSSProperties;
     loading?: "startIcon" | "endIcon" | "none";
@@ -69,22 +83,6 @@ interface ButtonProps {
         actionState: UIState
     ) => React.ReactNode;
 }
-
-const makeSpacerStyle = (
-    canFlex: boolean,
-    value: number | undefined,
-    defaultValue: number
-): React.ReactNode => {
-    return (
-        <div
-            style={{
-                flex: value === undefined && canFlex ? 1 : 0,
-                width: value !== undefined ? value : defaultValue,
-                minWidth: value !== undefined ? value : 0,
-            }}
-        />
-    );
-};
 
 interface ButtonState {
     hover: boolean;
@@ -273,13 +271,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         }
     };
 
-    private getCurrentState = (): UIState => ({
-        isHover: this.state.hover,
-        isActive: this.state.active,
-        isSelected: this.props.selected,
-        isDisabled: this.props.disabled || this.state.loading,
-    });
-
     private renderContent = (
         theme: Theme,
         config: ButtonConfig,
@@ -366,7 +357,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         transition: "inherit",
                     }}
                 >
-                    {makeSpacerStyle(true, this.props.startMarginLeft, h / 2)}
+                    {makeSpacerElem(true, this.props.startMarginLeft, h / 2)}
                     {startIcon ? (
                         <div
                             style={{
@@ -383,7 +374,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                             {startIcon}
                         </div>
                     ) : null}
-                    {makeSpacerStyle(
+                    {makeSpacerElem(
                         canStartFlex,
                         this.props.startMarginRight,
                         0
@@ -406,7 +397,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                             </FadeBox>
                         )
                     ) : null}
-                    {makeSpacerStyle(canEndFlex, this.props.endMarginLeft, 0)}
+                    {makeSpacerElem(canEndFlex, this.props.endMarginLeft, 0)}
                     {endIcon ? (
                         <div
                             style={{
@@ -423,7 +414,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                             {endIcon}
                         </div>
                     ) : null}
-                    {makeSpacerStyle(true, this.props.endMarginRight, h / 2)}
+                    {makeSpacerElem(true, this.props.endMarginRight, h / 2)}
                 </div>
             );
         }
@@ -462,7 +453,12 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         const theme: Theme = this.context;
         this.updateConfig();
 
-        const uiState = this.getCurrentState();
+        const uiState = {
+            isHover: this.state.hover,
+            isActive: this.state.active,
+            isSelected: this.props.selected,
+            isDisabled: this.props.disabled || this.state.loading,
+        };
 
         return (
             <div

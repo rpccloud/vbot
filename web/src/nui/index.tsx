@@ -61,8 +61,6 @@ const cfgFontSize = {
     "xxx-large": 64,
 };
 
-export type FontWeight = "normal" | "bold" | "bolder" | "lighter";
-
 export type Size =
     | "xxx-small"
     | "xx-small"

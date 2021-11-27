@@ -1,5 +1,5 @@
 import React from "react";
-import { FontWeight, Size } from ".";
+import { Size } from ".";
 
 export interface ITheme {
     palette?: {
@@ -58,7 +58,6 @@ export interface ITheme {
         borderStyle?: string;
         borderWidth?: number;
     };
-    fontWeight?: FontWeight;
 }
 
 export interface Theme {
@@ -118,7 +117,6 @@ export interface Theme {
     borderRadius: number;
     size: Size;
     zIndex: number;
-    fontWeight: FontWeight;
 }
 
 export const ThemeContext = React.createContext<Theme>({
@@ -178,5 +176,4 @@ export const ThemeContext = React.createContext<Theme>({
         borderStyle: "dashed",
         borderWidth: 1,
     },
-    fontWeight: "normal",
 });
