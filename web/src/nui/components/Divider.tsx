@@ -4,20 +4,18 @@ import { Theme, ThemeContext } from "../theme";
 
 interface DividerProps {
     type: "vertical" | "horizontal";
-    outline: "start" | "center" | "end";
-    space: number;
+    linePosition: "start" | "center" | "end";
     lineWidth: number;
-    color?: string;
+    lineColor?: string;
+    space: number;
 }
 
-interface DividerState {}
-
-export class Divider extends React.Component<DividerProps, DividerState> {
+export class Divider extends React.Component<DividerProps, {}> {
     static contextType = ThemeContext;
     static defaultProps = {
         type: "horizontal",
+        linePosition: "center",
         lineWidth: 0,
-        outline: "center",
     };
 
     constructor(props: DividerProps) {
@@ -36,7 +34,7 @@ export class Divider extends React.Component<DividerProps, DividerState> {
         let height = 0;
         let top = 0;
         let bottom = 0;
-        switch (this.props.outline) {
+        switch (this.props.linePosition) {
             case "start":
                 top = 0;
                 bottom = h - lw;
@@ -53,7 +51,7 @@ export class Divider extends React.Component<DividerProps, DividerState> {
                 height = lw;
                 break;
         }
-        const color = withDefault(this.props.color, theme.palette.divider);
+        const color = withDefault(this.props.lineColor, theme.palette.divider);
         return (
             <div
                 style={{
@@ -73,7 +71,7 @@ export class Divider extends React.Component<DividerProps, DividerState> {
         let width = 0;
         let left = 0;
         let right = 0;
-        switch (this.props.outline) {
+        switch (this.props.linePosition) {
             case "start":
                 left = 0;
                 right = h - lw;
@@ -90,11 +88,11 @@ export class Divider extends React.Component<DividerProps, DividerState> {
                 width = lw;
                 break;
         }
-
+        const color = withDefault(this.props.lineColor, theme.palette.divider);
         return (
             <div
                 style={{
-                    backgroundColor: this.props.color || theme.palette.divider,
+                    backgroundColor: color,
                     marginLeft: left,
                     marginRight: right,
                     width: width,

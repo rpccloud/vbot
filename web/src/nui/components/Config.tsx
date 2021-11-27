@@ -7,9 +7,7 @@ interface ConfigProps {
     children?: React.ReactNode;
 }
 
-interface ConfigState {}
-
-export class Config extends React.Component<ConfigProps, ConfigState> {
+export class Config extends React.Component<ConfigProps, {}> {
     static contextType = ThemeContext;
     static defaultProps = {
         value: {},
