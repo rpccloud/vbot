@@ -75,7 +75,7 @@ interface ButtonProps {
     endIconSize?: Size;
     borderRadius?: number;
     style?: UiCSSProperties;
-    loading?: "startIcon" | "endIcon" | "none";
+    loadingIconPosition?: "startIcon" | "endIcon" | "none";
     onClick: (e: React.MouseEvent<HTMLDivElement>) => Promise<void>;
     renderContent?: (
         theme: Theme,
@@ -187,8 +187,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             },
             shadow: {
                 normal: `0px ${sy}px ${sr}px ${sc}`,
-                hover: `0px ${sy * 2}px ${sr * 2}px ${sc}`,
-                active: `0px ${sy * 3}px ${sr * 3}px ${sc}`,
+                hover: `0px ${sy}px ${sr * 2}px ${sc}`,
+                active: `0px ${sy}px ${sr * 4}px ${sc}`,
                 selected: "",
                 disabled: "",
             },
@@ -317,7 +317,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         config,
                         actionState
                     )
-                ) : this.props.loading === "startIcon" && this.state.loading ? (
+                ) : this.props.loadingIconPosition === "startIcon" &&
+                  this.state.loading ? (
                     <Spin
                         size={this.props.startIconSize}
                         style={{ color: startIconColor }}
@@ -334,7 +335,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         config,
                         actionState
                     )
-                ) : this.props.loading === "endIcon" && this.state.loading ? (
+                ) : this.props.loadingIconPosition === "endIcon" &&
+                  this.state.loading ? (
                     <Spin
                         size={this.props.endIconSize}
                         style={{ color: endIconColor }}
