@@ -526,7 +526,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         ),
                     }}
                 >
-                    {this.renderContent(theme, this.config!!, uiState)}
+                    {this.renderContent(theme, this.config || {}, uiState)}
                 </div>
             </div>
         );
