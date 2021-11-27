@@ -35,7 +35,6 @@ export interface ITheme {
             main?: string;
             contrastText?: string;
         };
-        focus?: string;
         outline?: string;
         shadow?: string;
         divider?: string;
@@ -55,6 +54,7 @@ export interface ITheme {
     zIndex?: number;
     focus?: {
         focusable?: boolean;
+        borderColor?: string;
         borderStyle?: string;
         borderWidth?: number;
     };
@@ -95,7 +95,6 @@ export interface Theme {
             main: string;
             contrastText: string;
         };
-        focus: string;
         outline: string;
         shadow: string;
         divider: string;
@@ -112,6 +111,7 @@ export interface Theme {
     };
     focus: {
         focusable: boolean;
+        borderColor: string;
         borderStyle: string;
         borderWidth: number;
     };
@@ -155,7 +155,6 @@ export const ThemeContext = React.createContext<Theme>({
             main: "#555",
             contrastText: "#808080C0",
         },
-        focus: "#8A2BE2",
         shadow: "rgb(0,0,0, 0.3)",
         outline: "rgb(160, 160, 160)",
         divider: "rgb(80, 80, 80)",
@@ -175,6 +174,7 @@ export const ThemeContext = React.createContext<Theme>({
     zIndex: 0,
     focus: {
         focusable: true,
+        borderColor: "#8A2BE2",
         borderStyle: "dashed",
         borderWidth: 1,
     },

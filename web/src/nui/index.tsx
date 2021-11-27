@@ -44,31 +44,9 @@ export function getStateColor(
     }
 }
 
-export type ShadowSet = {
-    normal?: string;
-    hover?: string;
-    active?: string;
-    disabled?: string;
-};
-
 export interface UiCSSProperties extends React.CSSProperties {
     width?: number;
     height?: number;
-}
-
-export function getStateShadow(
-    shadowSet: ShadowSet | undefined,
-    state: UIState
-): string {
-    if (state.isDisabled) {
-        return shadowSet?.disabled || "transparent";
-    } else if (state.isActive) {
-        return shadowSet?.active || "transparent";
-    } else if (state.isHover) {
-        return shadowSet?.hover || "transparent";
-    } else {
-        return shadowSet?.normal || "transparent";
-    }
 }
 
 const cfgFontSize = {

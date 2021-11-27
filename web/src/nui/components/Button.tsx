@@ -6,18 +6,16 @@ import {
     FontWeight,
     getFontSize,
     getStateColor,
-    getStateShadow,
     makeTransition,
-    ShadowSet,
     Size,
     UiCSSProperties,
     withDefault,
 } from "../";
 import { ActionSonar } from "../utils/action-sonar";
 import { Theme, ThemeContext } from "../theme";
-import { ActionBackground } from "../utils/active-background";
 import { FadeBox } from "./FadeBox";
 import { Spin } from "./Spin";
+import { Background } from "./Background";
 
 export interface ButtonConfig {
     startIcon?: UIStateConfig;
@@ -118,10 +116,8 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     private endIconFontSize = 0;
     private labelFontSize = 0;
     private rootRef = React.createRef<HTMLDivElement>();
-    private effectRef = React.createRef<HTMLDivElement>();
     private loading: boolean = false;
     private actionSonar?: ActionSonar;
-    private effect?: ActionBackground;
 
     constructor(props: ButtonProps) {
         super(props);
@@ -135,16 +131,11 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     componentDidMount() {
         this.actionSonar = new ActionSonar([this.rootRef]);
-
-        if (this.effectRef.current) {
-            this.effect = new ActionBackground(this.effectRef.current);
-        }
     }
 
     componentWillUnmount() {
         this.actionSonar?.close();
         this.actionSonar = undefined;
-        this.effect = undefined;
     }
 
     private getConfig(theme: Theme): ButtonConfig {
@@ -152,7 +143,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
         const sy = this.height / 20;
         const sr = this.height / 10;
-        const sc = palette.shadow;
+        const sc = this.props.shadowEffect ? palette.shadow : "transparent";
 
         return {
             startIcon: {
@@ -187,6 +178,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 normal: `0px ${sy}px ${sr}px ${sc}`,
                 hover: `0px ${sy * 2}px ${sr * 2}px ${sc}`,
                 active: `0px ${sy * 3}px ${sr * 3}px ${sc}`,
+                selected: "",
                 disabled: "",
             },
             background: {
@@ -216,92 +208,36 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
     };
 
     private checkHover = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (this.props.disabled) {
-            return;
-        }
-
-        const theme: Theme = this.context;
         this.actionSonar?.checkHover(
             () => {
                 this.setState({ hover: true });
-                this.effect?.setHover(
-                    true,
-                    this.config?.background?.hover || "transparent",
-                    this.props.ghost ? theme.button.ghost.hoverOpacity : 1,
-                    this.props.hoverEffect,
-                    theme.transition
-                );
             },
             () => {
                 this.setState({ hover: false });
-                this.effect?.setHover(
-                    false,
-                    this.config?.background?.hover || "transparent",
-                    this.props.ghost ? theme.button.ghost.hoverOpacity : 1,
-                    this.props.hoverEffect,
-                    theme.transition
-                );
             }
         );
     };
 
     private checkFocus = () => {
-        const theme: Theme = this.context;
         if (this.canFocus()) {
             this.actionSonar?.checkFocus(
                 () => {
                     this.setState({ focus: true });
-                    this.effect?.setFocus(
-                        true,
-                        theme.palette.focus,
-                        "dashed",
-                        1,
-                        this.height / 20,
-                        this.borderRadius
-                    );
                 },
                 () => {
                     this.setState({ focus: false });
-                    this.effect?.setFocus(
-                        false,
-                        theme.palette.focus,
-                        "dashed",
-                        1,
-                        this.height / 25,
-                        this.borderRadius
-                    );
                 }
             );
         }
     };
 
     private checkActive = () => {
-        if (this.props.disabled) {
-            return;
-        }
-
-        const theme: Theme = this.context;
-
         this.actionSonar?.checkActive(
             () => {
                 this.setState({ active: true });
-                this.effect?.setActive(
-                    true,
-                    this.config?.background?.active || "transparent",
-                    this.props.ghost ? theme.button.ghost.activeOpacity : 1,
-                    this.props.activeEffect,
-                    theme.transition
-                );
             },
             () => {
                 this.setState({ active: false });
-                this.effect?.setActive(
-                    false,
-                    this.config?.background?.active || "transparent",
-                    this.props.ghost ? theme.button.ghost.activeOpacity : 1,
-                    this.props.activeEffect,
-                    theme.transition
-                );
             }
         );
     };
@@ -510,10 +446,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         const theme: Theme = this.context;
         this.updateConfig();
 
-        const actionState = this.getCurrentState();
-        const borderColor = this.props.border
-            ? getStateColor(this.config?.border, actionState)
-            : "transparent";
+        const uiState = this.getCurrentState();
 
         return (
             <div
@@ -527,20 +460,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     ...this.props.style,
                     display: "inline-block",
                     height: this.height,
-                    borderStyle: "solid",
-                    borderWidth: 1,
-                    borderTopColor: borderColor,
-                    borderLeftColor: borderColor,
-                    borderRightColor: borderColor,
-                    borderBottomColor: borderColor,
-                    borderRadius: this.borderRadius,
-                    backgroundColor: this.props.ghost
-                        ? "transparent"
-                        : this.props.disabled || this.state.loading
-                        ? this.config?.background?.disabled
-                        : this.props.selected
-                        ? this.config?.background?.selected
-                        : this.config?.background?.normal,
                     transition: makeTransition(
                         ["opacity", "color", "border", "box-shadow"],
                         theme.transition.durationMS + "ms",
@@ -548,23 +467,28 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     ),
                     overflow: "hidden",
                     cursor: this.props.disabled ? "not-allowed" : "pointer",
-                    boxShadow: this.props.shadowEffect
-                        ? getStateShadow(this.config?.shadow, actionState)
-                        : "",
                 }}
             >
-                <div
-                    ref={this.effectRef}
-                    style={{
-                        position: "relative",
-                        width: "100%",
-                        height: "100%",
-                        transition: "inherit",
-                        opacity:
-                            this.props.disabled || this.state.loading
-                                ? "0"
-                                : "1",
+                <Background
+                    theme={theme}
+                    hoverScaleEffect={this.props.hoverEffect}
+                    activeScaleEffect={this.props.activeEffect}
+                    isFocus={this.state.focus}
+                    focusInset={this.height / 20}
+                    borderWidth={1}
+                    borderRadius={this.borderRadius}
+                    uiState={uiState}
+                    uiOpacity={{
+                        hover: this.props.ghost
+                            ? theme.button.ghost.hoverOpacity
+                            : 1,
+                        active: this.props.ghost
+                            ? theme.button.ghost.activeOpacity
+                            : 1,
                     }}
+                    uiBorder={this.config?.border!!}
+                    uiBackground={this.config?.background!!}
+                    uiShadow={this.config?.shadow!!}
                 />
 
                 <div
@@ -580,7 +504,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         transition: "inherit",
                     }}
                 >
-                    {this.renderContent(theme, this.config!!, actionState)}
+                    {this.renderContent(theme, this.config!!, uiState)}
                 </div>
             </div>
         );

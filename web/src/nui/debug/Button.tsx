@@ -21,7 +21,13 @@ export const DebugButton = (props: {}) => {
                     width={150}
                     height={150}
                 >
-                    <Button />
+                    <Button
+                        label="Button"
+                        config={{
+                            background: { normal: "gray", hover: "green" },
+                            border: { normal: "blue", hover: "red" },
+                        }}
+                    />
                 </DebugUnit>
                 <DebugUnit
                     title="round button"
