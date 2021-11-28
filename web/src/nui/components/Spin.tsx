@@ -11,7 +11,7 @@ type RenderIconFunction = (
 ) => React.ReactNode;
 
 interface SpinProps {
-    size: Size;
+    size?: Size;
     icon: React.ReactNode | RenderIconFunction;
     speed: number;
     style?: UiCSSProperties;
@@ -24,7 +24,6 @@ interface SpinState {
 export class Spin extends React.Component<SpinProps, SpinState> {
     static contextType = ThemeContext;
     static defaultProps = {
-        size: "medium",
         speed: 1,
         icon: <AiOutlineLoading3Quarters />,
     };
