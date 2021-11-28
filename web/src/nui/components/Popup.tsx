@@ -1,5 +1,5 @@
-import React, { CSSProperties, ReactNode, useContext } from "react";
-import { makeTransition, Rect, withDefault } from "..";
+import React, { CSSProperties, ReactNode } from "react";
+import { makeTransition, Rect } from "..";
 import { ActionSonar } from "../utils/action-sonar";
 import { ResizeSonar } from "../utils/resize-sonar";
 import { Theme, ThemeContext } from "../theme";
@@ -7,10 +7,9 @@ import { Config } from "./Config";
 
 interface PopupProps {
     action: Array<"hover" | "click" | "focus">;
+    zStep: number;
     renderPopup: (rect: Rect, closePopup: () => void) => ReactNode;
     children?: ReactNode;
-    popupZIndex?: number;
-    zStep: number;
     style?: CSSProperties;
 }
 
@@ -24,7 +23,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     static contextType = ThemeContext;
     static defaultProps = {
         action: ["click"],
-        zStep: 1024,
+        zStep: 65536,
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
@@ -33,10 +32,8 @@ export class Popup extends React.Component<PopupProps, PopupState> {
     private forcePopup = false;
     private popup = false;
     private closing = false;
-    private actionSonar = new ActionSonar([this.rootRef]);
-    private resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
-        this.setState({ screenRect: rect });
-    });
+    private actionSonar?: ActionSonar;
+    private resizeSonar?: ResizeSonar;
 
     constructor(props: PopupProps) {
         super(props);
@@ -46,9 +43,28 @@ export class Popup extends React.Component<PopupProps, PopupState> {
         };
     }
 
+    componentDidMount() {
+        if (this.actionSonar === undefined) {
+            this.actionSonar = new ActionSonar([this.rootRef]);
+        }
+
+        if (this.resizeSonar === undefined) {
+            this.resizeSonar = new ResizeSonar(this.rootRef, (rect) => {
+                this.setState({ screenRect: rect });
+            });
+        }
+    }
+
     componentWillUnmount() {
-        this.actionSonar.close();
-        this.resizeSonar.close();
+        if (this.actionSonar !== undefined) {
+            this.actionSonar.close();
+            this.actionSonar = undefined;
+        }
+
+        if (this.resizeSonar !== undefined) {
+            this.resizeSonar.close();
+            this.resizeSonar = undefined;
+        }
     }
 
     updatePopup() {
@@ -58,9 +74,9 @@ export class Popup extends React.Component<PopupProps, PopupState> {
             if (this.popup !== popup) {
                 this.popup = popup;
                 if (popup) {
-                    this.resizeSonar.listenFast();
+                    this.resizeSonar?.listenFast();
                 } else {
-                    this.resizeSonar.listenSlow();
+                    this.resizeSonar?.listenSlow();
                 }
                 this.setState({
                     popup: popup,
@@ -98,9 +114,9 @@ export class Popup extends React.Component<PopupProps, PopupState> {
             width: 0,
             height: 0,
         };
-        const currZIndex = withDefault(this.props.popupZIndex, theme.zIndex);
+
         const popupZIndex =
-            currZIndex < 99999999 ? 99999999 : currZIndex + this.props.zStep;
+            theme.zIndex < 9990000 ? 9990000 : theme.zIndex + this.props.zStep;
         return (
             <div
                 ref={this.rootRef}
@@ -115,7 +131,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                 }}
                 onMouseMove={() => {
                     if (this.props.action.includes("hover")) {
-                        this.actionSonar.checkHover(
+                        this.actionSonar?.checkHover(
                             () => {
                                 this.setHover(true);
                             },
@@ -127,7 +143,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                 }}
                 onFocus={(e) => {
                     if (this.props.action.includes("focus")) {
-                        this.actionSonar.checkFocus(
+                        this.actionSonar?.checkFocus(
                             () => {
                                 this.setFocus(true);
                             },
@@ -156,7 +172,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                                     : `scale(0)`,
                             transformOrigin: "top left",
                             opacity: popup && !this.state.closing ? 1 : 0,
-                            zIndex: this.props.popupZIndex,
+                            zIndex: popupZIndex,
                             transition: makeTransition(
                                 ["opacity", "transform", "left", "top"],
                                 theme.transition?.durationMS + "ms",
