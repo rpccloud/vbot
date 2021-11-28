@@ -3,12 +3,14 @@ import { Theme, ThemeContext } from "../theme";
 import { makeTransition } from "..";
 
 interface FlexBoxProps {
-    animated: boolean;
+    loadAnimate: boolean;
     style?: React.CSSProperties;
     children?: React.ReactNode;
 }
 
-interface FlexBoxState {}
+interface FlexBoxState {
+    init: boolean;
+}
 
 export class FlexBox extends React.Component<FlexBoxProps, FlexBoxState> {
     static contextType = ThemeContext;
@@ -20,35 +22,34 @@ export class FlexBox extends React.Component<FlexBoxProps, FlexBoxState> {
 
     constructor(props: FlexBoxProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            init: !this.props.loadAnimate,
+        };
     }
 
     componentDidMount() {
-        if (this.props.animated) {
-            const theme: Theme = this.context;
-
-            if (this.rootRef.current) {
-                this.rootRef.current.style.opacity = "0";
-                this.rootRef.current.style.transition = makeTransition(
-                    ["opacity"],
-                    theme.transition?.durationMS + "ms",
-                    theme.transition?.easing
-                );
-                setTimeout(() => {
-                    if (this.rootRef.current) {
-                        this.rootRef.current.style.opacity = "1";
-                    }
-                }, 10);
-            }
+        if (!this.state.init) {
+            setTimeout(() => {
+                this.setState({ init: true });
+            }, 30);
         }
     }
 
     render() {
+        const theme: Theme = this.context;
         return (
             <div
                 ref={this.rootRef}
                 style={{
                     display: "flex",
+                    opacity: this.state.init ? 1 : 0,
+                    transition: this.props.loadAnimate
+                        ? makeTransition(
+                              ["opacity"],
+                              theme.transition?.durationMS + "ms",
+                              theme.transition?.easing
+                          )
+                        : "",
                     ...this.props.style,
                 }}
             >

@@ -1,10 +1,8 @@
 import React from "react";
-import { withDefault } from "..";
 import { Theme, ThemeContext } from "../theme";
 
 interface PageProps {
     children?: React.ReactNode;
-    background?: string;
     style?: React.CSSProperties;
 }
 
@@ -18,23 +16,19 @@ export class Page extends React.Component<PageProps, {}> {
 
     render() {
         const theme: Theme = this.context;
-        const background = withDefault(
-            this.props.background,
-            theme.palette.default.main
-        );
 
         const body = document.body;
         body.style.padding = "0px";
         body.style.margin = "0px";
-        body.style.backgroundColor = background;
+        body.style.backgroundColor = theme.palette.default.main;
 
         return (
             <div
                 style={{
-                    background: background,
-                    ...this.props.style,
                     display: "flex",
                     flexFlow: "column",
+                    background: theme.palette.default.main,
+                    ...this.props.style,
                     width: "100vw",
                     height: "100vh",
                 }}

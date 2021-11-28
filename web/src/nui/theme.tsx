@@ -159,7 +159,7 @@ export const ThemeContext = React.createContext<Theme>({
     },
     button: {
         ghost: {
-            hoverOpacity: 0.1,
+            hoverOpacity: 0.08,
             activeOpacity: 0.1,
         },
     },

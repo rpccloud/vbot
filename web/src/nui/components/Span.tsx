@@ -6,7 +6,6 @@ import { getFontSize, makeTransition, Size, withDefault } from "..";
 interface SpanProps {
     children?: React.ReactNode;
     size?: Size;
-    color?: string;
     style?: React.CSSProperties;
 }
 
@@ -24,15 +23,14 @@ export class Span extends React.Component<SpanProps, SpanState> {
         let theme: Theme = this.context;
         let fontSize = getFontSize(withDefault(this.props.size, theme.size));
         let color = withDefault(
-            this.props.color,
             this.props.style?.color,
             theme.palette.default.contrastText
         );
         return (
             <span
                 style={{
-                    fontSize: fontSize,
                     color: color,
+                    fontSize: fontSize,
                     padding: 0,
                     margin: 0,
                     border: 0,
