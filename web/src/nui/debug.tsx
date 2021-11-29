@@ -1,6 +1,7 @@
 import React from "react";
 import { Page } from "./components/Page";
 import { DebugButton } from "./debug/Button";
+import { DebugPopup } from "./debug/Popup";
 import { DebugSpin } from "./debug/Spin";
 
 interface DebugProps {}
@@ -16,6 +17,7 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
     render() {
         return (
             <Page style={{ padding: 16 }}>
+                <DebugPopup />
                 <DebugButton />
                 <DebugSpin />
             </Page>
