@@ -513,6 +513,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         position: "relative",
                         outline: "none",
                         top: -this.height,
+                        marginBottom: -this.height,
                         height: this.height,
                         width: this.props.round
                             ? this.height

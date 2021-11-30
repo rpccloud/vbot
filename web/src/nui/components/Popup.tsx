@@ -213,7 +213,10 @@ export class Popup extends React.Component<PopupProps, PopupState> {
         return (
             <div
                 ref={this.rootRef}
-                style={this.props.style}
+                style={{
+                    display: "inline-block",
+                    ...this.props.style,
+                }}
                 onMouseDown={() => {
                     if (this.props.action.includes("click")) {
                         this.actionSonar?.checkActive(
