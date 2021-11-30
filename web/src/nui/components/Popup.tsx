@@ -215,6 +215,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                 ref={this.rootRef}
                 style={{
                     display: "inline-block",
+                    alignSelf: "flex-start",
                     ...this.props.style,
                 }}
                 onMouseDown={() => {

@@ -25,7 +25,7 @@ export const DebugPopup = (props: {}) => {
                             );
                         }}
                     >
-                        <Button />
+                        <Button startIconSize="large" />
                     </Popup>
                 </DebugUnit>
             </div>
