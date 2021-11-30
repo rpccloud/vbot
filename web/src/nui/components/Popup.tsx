@@ -280,6 +280,12 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                         onClick={(e) => {
                             e.stopPropagation();
                         }}
+                        onMouseMove={(e) => {
+                            e.stopPropagation();
+                        }}
+                        onFocus={(e) => {
+                            e.stopPropagation();
+                        }}
                     >
                         {showPopup
                             ? this.props.renderPopup(screenRect, () => {
