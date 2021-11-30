@@ -1,5 +1,6 @@
 import React from "react";
-import { range } from "..";
+import { getFontSize, range, withDefault } from "..";
+import { Theme, ThemeContext } from "../theme";
 
 interface FadeBoxProps {
     type: "top" | "bottom" | "left" | "right";
@@ -11,6 +12,7 @@ interface FadeBoxProps {
 interface FadeBoxState {}
 
 export class FadeBox extends React.Component<FadeBoxProps, FadeBoxState> {
+    static contextType = ThemeContext;
     static defaultProps = {
         type: "right",
         fade: 0.1,
@@ -24,6 +26,7 @@ export class FadeBox extends React.Component<FadeBoxProps, FadeBoxState> {
     }
 
     render() {
+        let theme: Theme = this.context;
         const fade = range(this.props.fade, 0, 1);
 
         let start = "";
@@ -72,6 +75,10 @@ export class FadeBox extends React.Component<FadeBoxProps, FadeBoxState> {
             <div
                 ref={this.rootRef}
                 style={{
+                    fontSize: withDefault(
+                        this.props.style?.fontSize,
+                        getFontSize(theme.size)
+                    ),
                     WebkitMaskImage: `-webkit-gradient(linear, ${start}, ${end}, color-stop(0.00, rgba(0,0,0,${startOpacity})), color-stop(${fadePercentage},  rgba(0,0,0,${ctrlOpacity})),  color-stop(1,  rgba(0,0,0,${endOpacity})))`,
                     ...this.props.style,
                 }}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Theme, ThemeContext } from "../theme";
-import { makeTransition } from "..";
+import { getFontSize, makeTransition, withDefault } from "..";
 
 interface FlexBoxProps {
     loadAnimate: boolean;
@@ -43,6 +43,10 @@ export class FlexBox extends React.Component<FlexBoxProps, FlexBoxState> {
                 style={{
                     display: "flex",
                     opacity: this.state.init ? 1 : 0,
+                    fontSize: withDefault(
+                        this.props.style?.fontSize,
+                        getFontSize(theme.size)
+                    ),
                     transition: this.props.loadAnimate
                         ? makeTransition(
                               ["opacity"],

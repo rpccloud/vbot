@@ -1,4 +1,5 @@
 import React from "react";
+import { getFontSize, withDefault } from "..";
 import { Theme, ThemeContext } from "../theme";
 
 interface PageProps {
@@ -27,6 +28,10 @@ export class Page extends React.Component<PageProps, {}> {
                 style={{
                     display: "flex",
                     flexFlow: "column",
+                    fontSize: withDefault(
+                        this.props.style?.fontSize,
+                        getFontSize(theme.size)
+                    ),
                     background: theme.palette.default.main,
                     ...this.props.style,
                     width: "100vw",

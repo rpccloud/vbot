@@ -478,6 +478,10 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                 onKeyPress={this.onKeyPress}
                 style={{
                     display: "inline-block",
+                    fontSize: withDefault(
+                        this.props.style?.fontSize,
+                        getFontSize(theme.size)
+                    ),
                     fontWeight: 600,
                     cursor: this.props.disabled ? "not-allowed" : "pointer",
                     ...this.props.style,

@@ -1,10 +1,14 @@
-import React, { CSSProperties, ReactNode } from "react";
+import React, { CSSProperties, ReactElement, ReactNode } from "react";
 import { makeTransition, Rect } from "..";
 import { ActionSonar } from "../utils/action-sonar";
 import { ResizeSonar } from "../utils/resize-sonar";
 import { Theme, ThemeContext } from "../theme";
 import { Config } from "./Config";
 import { TimerManager } from "../utils/time-manager";
+import { FlexBox } from "./FlexBox";
+import { Button } from "./Button";
+import { Span } from "./Span";
+import { FadeBox } from "./FadeBox";
 
 interface PopupProps {
     action: Array<"hover" | "click" | "focus">;
@@ -14,7 +18,7 @@ interface PopupProps {
     minDuration: number;
     closeDelay: number;
     renderPopup: (rect: Rect, closePopup: () => void) => ReactNode;
-    children?: ReactNode;
+    children?: ReactElement<Button | Span | FlexBox | FadeBox>;
     style?: CSSProperties;
 }
 
@@ -295,7 +299,7 @@ export class Popup extends React.Component<PopupProps, PopupState> {
                     </div>
                 </Config>
 
-                {this.props.children}
+                <div style={{ fontSize: 0 }}> {this.props.children}</div>
             </div>
         );
     }
