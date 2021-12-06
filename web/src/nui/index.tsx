@@ -17,6 +17,8 @@ export type UIState = {
     isActive: boolean;
     isSelected: boolean;
     isDisabled: boolean;
+    isSuccess: boolean;
+    isError: boolean;
 };
 
 export type UIStateConfig = {
@@ -25,6 +27,8 @@ export type UIStateConfig = {
     active?: string;
     selected?: string;
     disabled?: string;
+    success?: string;
+    error?: string;
 };
 
 export function getStateValue(
@@ -33,6 +37,10 @@ export function getStateValue(
 ): string {
     if (state.isDisabled) {
         return colorSet?.disabled || "transparent";
+    } else if (state.isError) {
+        return colorSet?.error || "transparent";
+    } else if (state.isSuccess) {
+        return colorSet?.success || "transparent";
     } else if (state.isSelected) {
         return colorSet?.selected || "transparent";
     } else if (state.isActive) {

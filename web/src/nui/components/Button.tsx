@@ -73,7 +73,6 @@ interface ButtonProps {
     endMarginRight?: number;
     endIcon?: React.ReactNode | RenderIconFunction;
     endIconSize?: Size;
-    borderRadius?: number;
     style?: UiCSSProperties;
     loadingIconPosition?: "startIcon" | "endIcon" | "none";
     onClick: (e: React.MouseEvent<HTMLDivElement>) => Promise<void>;
@@ -109,7 +108,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
 
     private config?: ButtonConfig;
     private height = 0;
-    private borderRadius = 0;
+    // private borderRadius = 0;
     private startIconFontSize = 0;
     private endIconFontSize = 0;
     private labelFontSize = 0;
@@ -452,9 +451,6 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
         );
 
         this.config = extendConfig(this.getConfig(theme), this.props.config);
-        this.borderRadius = this.props.round
-            ? this.height / 2
-            : withDefault(this.props.borderRadius, theme.borderRadius);
     }
 
     render() {
@@ -466,7 +462,13 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
             isActive: this.state.active,
             isSelected: this.props.selected,
             isDisabled: this.props.disabled || this.state.loading,
+            isSuccess: false,
+            isError: false,
         };
+
+        const borderRadius = this.props.round
+            ? this.height / 2
+            : withDefault(this.props.style?.borderRadius, theme.borderRadius);
 
         return (
             <div
@@ -495,7 +497,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                     isFocus={this.state.focus}
                     focusInset={this.height / 20}
                     borderWidth={1}
-                    borderRadius={this.borderRadius}
+                    borderRadius={borderRadius}
                     uiState={uiState}
                     uiOpacity={{
                         normal: this.props.ghost ? 0 : 1,
@@ -522,7 +524,7 @@ export class Button extends React.Component<ButtonProps, ButtonState> {
                         width: this.props.round
                             ? this.height
                             : withDefault(this.props.style?.width, "auto"),
-                        borderRadius: this.borderRadius,
+                        borderRadius: borderRadius,
                         overflow: "hidden",
                         transition: makeTransition(
                             ["all"],
