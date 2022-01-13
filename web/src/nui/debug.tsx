@@ -19,9 +19,9 @@ export class NuiDebug extends React.Component<DebugProps, DebugState> {
         return (
             <Page style={{ padding: 16 }}>
                 <DebugInput />
-                {/* <DebugPopup />
+                <DebugPopup />
                 <DebugButton />
-                <DebugSpin /> */}
+                <DebugSpin />
             </Page>
         );
     }

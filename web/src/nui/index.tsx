@@ -31,6 +31,16 @@ export type UIStateConfig = {
     error?: string;
 };
 
+export const transparentUIStateConfig = {
+    normal: "transparent",
+    hover: "transparent",
+    active: "transparent",
+    selected: "transparent",
+    disabled: "transparent",
+    success: "transparent",
+    error: "transparent",
+};
+
 export function getStateValue(
     colorSet: UIStateConfig | undefined,
     state: UIState

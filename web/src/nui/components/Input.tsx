@@ -13,21 +13,22 @@ import {
 import { Theme, ThemeContext } from "../theme";
 import { ActionSonar } from "../utils/action-sonar";
 import { ShortLivedValue } from "../utils/short-lived-value";
-import { ButtonConfig } from "./Button";
+import { Background } from "./Background";
+import { Button, ButtonConfig } from "./Button";
 
 import { AiOutlineEye } from "@react-icons/all-files/ai/AiOutlineEye";
 import { AiOutlineEyeInvisible } from "@react-icons/all-files/ai/AiOutlineEyeInvisible";
-import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
-import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
-import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
+// import { AiOutlineLock } from "@react-icons/all-files/ai/AiOutlineLock";
+// import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
+// import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 
-const defaultConfig = {
-    revertIcon: <AiOutlineClose />,
-    submitIcon: <AiOutlineCheck />,
-    editIcon: <AiOutlineLock />,
-    passwordShowIcon: <AiOutlineEye />,
-    passwordHiddenIcon: <AiOutlineEyeInvisible />,
-};
+// const defaultConfig = {
+//     revertIcon: <AiOutlineClose />,
+//     submitIcon: <AiOutlineCheck />,
+//     editIcon: <AiOutlineLock />,
+//     passwordShowIcon: <AiOutlineEye />,
+//     passwordHiddenIcon: <AiOutlineEyeInvisible />,
+// };
 
 export interface InputConfig {
     icon?: UIStateConfig;
@@ -53,7 +54,7 @@ type RenderFunc = (
 
 interface InputProps {
     type: "password" | "text";
-    outline: "bare" | "underline" | "rectangle";
+    outline: "bare" | "underline" | "edge";
     size?: Size;
     config?: InputConfig;
     icon?: React.ReactNode | RenderFunc;
@@ -71,11 +72,12 @@ interface InputProps {
     validator: (v: string) => boolean;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSubmit: (oldValue: string, newValue: string) => Promise<boolean>;
+    passwordShowButton: React.ReactNode;
+    passwordHiddenButton: React.ReactNode;
 }
 
 interface InputState {
     hover: boolean;
-    active: boolean;
     focus: boolean;
     showPassword: boolean;
     value: string;
@@ -87,7 +89,7 @@ export class Input extends React.Component<InputProps, InputState> {
     static contextType = ThemeContext;
     static defaultProps = {
         type: "text",
-        outline: "border",
+        outline: "edge",
         label: "",
         labelWidth: "auto",
         initialValue: "",
@@ -102,6 +104,8 @@ export class Input extends React.Component<InputProps, InputState> {
                 resolve(true);
             });
         },
+        passwordShowButton: <AiOutlineEye />,
+        passwordHiddenButton: <AiOutlineEyeInvisible />,
     };
 
     private rootRef = React.createRef<HTMLDivElement>();
@@ -113,7 +117,6 @@ export class Input extends React.Component<InputProps, InputState> {
         super(props);
         this.state = {
             hover: false,
-            active: false,
             focus: false,
             showPassword: false,
             value: props.initialValue,
@@ -140,14 +143,15 @@ export class Input extends React.Component<InputProps, InputState> {
     private getConfig(theme: Theme, height: number): InputConfig {
         const palette = theme.palette;
 
-        const sy = height / 20;
         const sr = height / 10;
-        const sc = this.props.shadowEffect ? palette.shadow : "transparent";
+        const sc = this.props.shadowEffect
+            ? palette.active.main
+            : "transparent";
 
         const assistConfig = {
-            normal: palette.primary.main,
-            hover: palette.hover.main,
-            active: palette.active.main,
+            normal: palette.primary.contrastText,
+            hover: palette.hover.contrastText,
+            active: palette.active.contrastText,
             disabled: palette.disabled.contrastText,
             success: palette.success.main,
             error: palette.error.main,
@@ -163,13 +167,13 @@ export class Input extends React.Component<InputProps, InputState> {
             },
             border: {
                 normal: palette.outline,
-                hover: palette.hover?.contrastText,
-                active: palette.active?.contrastText,
+                hover: palette.hover?.main,
+                active: palette.active?.main,
             },
             shadow: {
-                normal: `0px ${sy}px ${sr}px ${sc}`,
-                hover: `0px ${sy}px ${sr * 2}px ${sc}`,
-                active: `0px ${sy}px ${sr * 4}px ${sc}`,
+                normal: `0px 0px 0px transparent`,
+                hover: `0px 0px 0px transparent`,
+                active: `0px 0px ${sr}px ${sc}`,
             },
             loadingIcon: assistConfig,
             successIcon: assistConfig,
@@ -210,17 +214,6 @@ export class Input extends React.Component<InputProps, InputState> {
         }
     };
 
-    private checkActive = () => {
-        this.actionSonar?.checkActive(
-            () => {
-                this.setState({ active: true });
-            },
-            () => {
-                this.setState({ active: false });
-            }
-        );
-    };
-
     render() {
         const theme: Theme = this.context;
         const fontSize = getFontSize(withDefault(this.props.size, theme.size));
@@ -235,7 +228,7 @@ export class Input extends React.Component<InputProps, InputState> {
 
         const uiState = {
             isHover: this.state.hover,
-            isActive: this.state.active,
+            isActive: this.state.focus,
             isSelected: false,
             isDisabled: this.state.status === "submit",
             isSuccess: this.state.status === "success",
@@ -250,25 +243,17 @@ export class Input extends React.Component<InputProps, InputState> {
         const isShowPassword =
             this.props.type === "password" && this.state.showPassword;
 
-        const middleMargin = (
-            <div
-                style={{
-                    flex: "none",
-                    width: withDefault(this.props.innerMiddle, height / 4),
-                }}
-            />
-        );
-
         let componentList: Array<React.ReactNode> = [];
 
         // push left margin
         componentList.push(
             <div
+                key="left-mg"
                 style={{
                     flex: "none",
                     width: withDefault(
                         this.props.innerLeft,
-                        this.props.outline === "rectangle" ? height / 4 : 0
+                        this.props.outline === "edge" ? height / 4 : 0
                     ),
                 }}
             />
@@ -276,57 +261,78 @@ export class Input extends React.Component<InputProps, InputState> {
 
         // push icon
         if (!!this.props.icon) {
-            const view =
-                typeof this.props.icon === "function" ? (
-                    this.props.icon(theme, config, uiState)
-                ) : (
-                    <div
-                        style={{
-                            display: "flex",
-                            height: fontSize,
-                            width: fontSize,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            color: getStateValue(config.icon, uiState),
-                            transition: "inherit",
-                        }}
-                    >
-                        {this.props.icon}
-                    </div>
-                );
+            const view = (
+                <div
+                    key="icon"
+                    style={{
+                        display: "flex",
+                        height: fontSize,
+                        width: fontSize,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: getStateValue(config.icon, uiState),
+                        transition: "inherit",
+                    }}
+                >
+                    {typeof this.props.icon === "function"
+                        ? this.props.icon(theme, config, uiState)
+                        : this.props.icon}
+                </div>
+            );
+
             componentList.push(view);
         }
 
         // push label
         if (!!this.props.label) {
-            const view =
-                typeof this.props.label === "function" ? (
-                    this.props.label(theme, config, uiState)
-                ) : (
-                    <div
-                        style={{
-                            color: getStateValue(config.label, uiState),
-                            transition: "inherit",
-                            width: this.props.labelWidth,
-                        }}
-                    >
-                        {this.props.label}
-                    </div>
-                );
-
             if (componentList.length > 1) {
-                componentList.push(middleMargin);
+                componentList.push(
+                    <div
+                        key="label-mg"
+                        style={{
+                            flex: "none",
+                            width: withDefault(
+                                this.props.innerMiddle,
+                                height / 4
+                            ),
+                        }}
+                    />
+                );
             }
 
-            componentList.push(view);
+            componentList.push(
+                <div
+                    key="label"
+                    style={{
+                        color: getStateValue(config.label, uiState),
+                        transition: "inherit",
+                        width: this.props.labelWidth,
+                    }}
+                >
+                    {typeof this.props.label === "function"
+                        ? this.props.label(theme, config, uiState)
+                        : this.props.label}
+                </div>
+            );
         }
 
         // push input
         if (componentList.length > 1) {
-            componentList.push(middleMargin);
+            componentList.push(
+                <div
+                    key="input-mg"
+                    style={{
+                        flex: "none",
+                        width: withDefault(this.props.innerMiddle, height / 4),
+                    }}
+                />
+            );
         }
         componentList.push(
-            <form style={{ flex: 1, display: "flex", fontSize: "inherit" }}>
+            <form
+                key="input"
+                style={{ flex: 1, display: "flex", fontSize: "inherit" }}
+            >
                 <input
                     ref={this.inputRef}
                     tabIndex={-1}
@@ -396,14 +402,50 @@ export class Input extends React.Component<InputProps, InputState> {
             </form>
         );
 
+        // push type button
+        switch (this.props.type) {
+            case "password":
+                if (componentList.length > 1) {
+                    componentList.push(
+                        <div
+                            key="password-mg"
+                            style={{
+                                flex: "none",
+                                width: withDefault(
+                                    this.props.innerMiddle,
+                                    height / 4
+                                ),
+                            }}
+                        />
+                    );
+                }
+
+                componentList.push(
+                    <Button
+                        startIconSize={this.props.size}
+                        round={true}
+                        border={false}
+                        ghost={true}
+                        startIcon={
+                            this.state.showPassword
+                                ? this.props.passwordShowButton
+                                : this.props.passwordHiddenButton
+                        }
+                        style={{ width: height * 0.6, height: height * 0.6 }}
+                    />
+                );
+                break;
+        }
+
         // push right margin
         componentList.push(
             <div
+                key="right-mg"
                 style={{
                     flex: "none",
                     width: withDefault(
                         this.props.innerLeft,
-                        this.props.outline === "rectangle" ? height / 4 : 0
+                        this.props.outline === "edge" ? height / 4 : 0
                     ),
                 }}
             />
@@ -414,24 +456,71 @@ export class Input extends React.Component<InputProps, InputState> {
                 ref={this.rootRef}
                 tabIndex={this.canFocus() ? 0 : -1}
                 onMouseMove={this.checkHover}
-                onMouseDown={this.checkActive}
                 onFocus={() => {
                     this.inputRef.current?.focus();
                     this.checkFocus();
                 }}
+                style={{
+                    display: "inline-block",
+                    fontSize: withDefault(
+                        this.props.style?.fontSize,
+                        getFontSize(theme.size)
+                    ),
+                    fontWeight: 600,
+                    ...this.props.style,
+                    height: height,
+                }}
             >
+                <Background
+                    theme={theme}
+                    hoverScaleEffect={false}
+                    activeScaleEffect={false}
+                    isFocus={false}
+                    focusInset={Math.ceil(height / 20)}
+                    borderWidth={1}
+                    borderRadius={borderRadius}
+                    uiState={uiState}
+                    uiOpacity={{
+                        normal: 1,
+                        hover: 1,
+                        active: 1,
+                    }}
+                    uiBorder={config.border || {}}
+                    uiBackground={config.background || {}}
+                    uiShadow={config.shadow || {}}
+                />
+
                 <div
+                    tabIndex={this.canFocus() ? 0 : -1}
                     style={{
-                        display: "flex",
                         position: "relative",
-                        alignItems: "center",
-                        flexFlow: "row",
-                        width: "100%",
-                        height: "100%",
-                        transition: "inherit",
+                        outline: "none",
+                        top: -height,
+                        marginBottom: -height,
+                        height: height,
+                        width: withDefault(this.props.style?.width, "auto"),
+                        borderRadius: borderRadius,
+                        overflow: "hidden",
+                        transition: makeTransition(
+                            ["all"],
+                            theme.transition.durationMS + "ms",
+                            theme.transition.easing
+                        ),
                     }}
                 >
-                    {componentList}
+                    <div
+                        style={{
+                            display: "flex",
+                            position: "relative",
+                            alignItems: "center",
+                            flexFlow: "row",
+                            width: "100%",
+                            height: "100%",
+                            transition: "inherit",
+                        }}
+                    >
+                        {componentList}
+                    </div>
                 </div>
             </div>
         );
